@@ -1,5 +1,6 @@
+Week 1: Extract to Text & Vietnamese Translation
 | **Original (English)**                                                                              | **Vietnamese (Dịch)**                                                                         |
-
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | **AGAI PREREQUISITES**                                                                              | **Học phần Tiên quyết AGAI**                                                                  |
 | **Week 1: Python Basics and Introduction to Data Science**                                          | **Tuần 1: Python cơ bản và Giới thiệu Khoa học Dữ liệu**                                      |
 | **Environment Setup and Configuration**                                                             | **Thiết lập và Cấu hình Môi trường**                                                          |
@@ -15,8 +16,9 @@
 | Creating strings and basic operations (concatenation, slicing, formatting).                         | Tạo chuỗi và các thao tác cơ bản (nối chuỗi, cắt chuỗi, định dạng chuỗi).                     |
 | Common string methods: .upper(), .lower(), .strip(), .split(), .replace().                          | Các phương thức chuỗi thường dùng: .upper(), .lower(), .strip(), .split(), .replace().        |
 | **Exercise: Simple string processing (e.g., counting characters, reversing strings).**              | **Bài tập: Xử lý chuỗi đơn giản (ví dụ: đếm ký tự, đảo ngược chuỗi).**                        |
-| **Original (English)**                                                                                                        | **Vietnamese (Dịch)**                                                                                  |
-| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+
+
+----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Week 2: Mathematical Foundations**                                                                                          | **Tuần 2: Nền tảng Toán học**                                                                          |
 | **Introduction to Linear Algebra**                                                                                            | **Giới thiệu Đại số tuyến tính**                                                                       |
 | Overview of linear algebra in data science.                                                                                   | Tổng quan về đại số tuyến tính trong khoa học dữ liệu.                                                 |
