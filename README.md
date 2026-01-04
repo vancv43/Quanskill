@@ -1,7 +1,11 @@
-Week 1: Extract to Text & Vietnamese Translation
-| **Original (English)**                                                                              | **Vietnamese (Dịch)**                                                                         |
+
+
+**AGAI PREREQUISITES**                                                                              | **Học phần Tiên quyết AGAI**                                                                  |
+
+**Week 1: Extract to Text & Vietnamese Translation**
+| **English**                                                                              | **Vietnamese**                                                                         |
 | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| **AGAI PREREQUISITES**                                                                              | **Học phần Tiên quyết AGAI**                                                                  |
+| 
 | **Week 1: Python Basics and Introduction to Data Science**                                          | **Tuần 1: Python cơ bản và Giới thiệu Khoa học Dữ liệu**                                      |
 | **Environment Setup and Configuration**                                                             | **Thiết lập và Cấu hình Môi trường**                                                          |
 | Guide to installing Python, Anaconda, and essential tools (Jupyter Notebook, VS Code).              | Hướng dẫn cài đặt Python, Anaconda và các công cụ cần thiết (Jupyter Notebook, VS Code).      |
@@ -17,8 +21,9 @@ Week 1: Extract to Text & Vietnamese Translation
 | Common string methods: .upper(), .lower(), .strip(), .split(), .replace().                          | Các phương thức chuỗi thường dùng: .upper(), .lower(), .strip(), .split(), .replace().        |
 | **Exercise: Simple string processing (e.g., counting characters, reversing strings).**              | **Bài tập: Xử lý chuỗi đơn giản (ví dụ: đếm ký tự, đảo ngược chuỗi).**                        |
 
-
------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+**Week 2 → Week 6: Extracted Text & Vietnamese Translation**
+| **English**                                                                                                        | **Vietnamese**                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Week 2: Mathematical Foundations**                                                                                          | **Tuần 2: Nền tảng Toán học**                                                                          |
 | **Introduction to Linear Algebra**                                                                                            | **Giới thiệu Đại số tuyến tính**                                                                       |
 | Overview of linear algebra in data science.                                                                                   | Tổng quan về đại số tuyến tính trong khoa học dữ liệu.                                                 |
@@ -83,9 +88,10 @@ Week 1: Extract to Text & Vietnamese Translation
 | **Conclusion**                                                                                                                | **Kết luận**                                                                                           |
 | Apply learned skills to a real-world problem.                                                                                 | Áp dụng các kỹ năng đã học vào bài toán thực tế.                                                       |
 
-PRACTICES VS THỰC HÀNH 
 
-| **Original (English)**                                   | **Vietnamese (Dịch)**                              |
+**PRACTICES VS THỰC HÀNH**
+
+| **English**                                   | **Vietnamese**                              |
 | -------------------------------------------------------- | -------------------------------------------------- |
 | **Python Basics & Introduction to Data Science**         | **Python Cơ bản & Giới thiệu Khoa học Dữ liệu**    |
 | Variables and Operators ▪ Primitive Data Types & Strings | Biến và Toán tử ▪ Kiểu dữ liệu nguyên thủy & Chuỗi |
