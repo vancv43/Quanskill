@@ -3,9 +3,9 @@
 **AGAI PREREQUISITES**                                                                              | **Học phần Tiên quyết AGAI**                                                                  |
 
 **Week 1: Extract to Text & Vietnamese Translation**
-| **English**                                                                              | **Vietnamese**                                                                         |
+| **Original (English)**                                                                              | **Vietnamese (Dịch)**                                                                         |
 | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| 
+| **AGAI PREREQUISITES**                                                                              | **Học phần Tiên quyết AGAI**                                                                  |
 | **Week 1: Python Basics and Introduction to Data Science**                                          | **Tuần 1: Python cơ bản và Giới thiệu Khoa học Dữ liệu**                                      |
 | **Environment Setup and Configuration**                                                             | **Thiết lập và Cấu hình Môi trường**                                                          |
 | Guide to installing Python, Anaconda, and essential tools (Jupyter Notebook, VS Code).              | Hướng dẫn cài đặt Python, Anaconda và các công cụ cần thiết (Jupyter Notebook, VS Code).      |
@@ -20,6 +20,7 @@
 | Creating strings and basic operations (concatenation, slicing, formatting).                         | Tạo chuỗi và các thao tác cơ bản (nối chuỗi, cắt chuỗi, định dạng chuỗi).                     |
 | Common string methods: .upper(), .lower(), .strip(), .split(), .replace().                          | Các phương thức chuỗi thường dùng: .upper(), .lower(), .strip(), .split(), .replace().        |
 | **Exercise: Simple string processing (e.g., counting characters, reversing strings).**              | **Bài tập: Xử lý chuỗi đơn giản (ví dụ: đếm ký tự, đảo ngược chuỗi).**                        |
+
 
 **Week 2 → Week 6: Extracted Text & Vietnamese Translation**
 | **English**                                                                                                        | **Vietnamese**                                                                                  |
