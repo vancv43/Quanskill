@@ -1,5 +1,5 @@
 | **Original (English)**                                                                              | **Vietnamese (Dịch)**                                                                         |
-| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+
 | **AGAI PREREQUISITES**                                                                              | **Học phần Tiên quyết AGAI**                                                                  |
 | **Week 1: Python Basics and Introduction to Data Science**                                          | **Tuần 1: Python cơ bản và Giới thiệu Khoa học Dữ liệu**                                      |
 | **Environment Setup and Configuration**                                                             | **Thiết lập và Cấu hình Môi trường**                                                          |
