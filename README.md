@@ -80,3 +80,18 @@
 | Practice: Create plots and analyze characteristics of penguin species.                                                        | Thực hành: Tạo biểu đồ và phân tích đặc điểm các loài chim cánh cụt.                                   |
 | **Conclusion**                                                                                                                | **Kết luận**                                                                                           |
 | Apply learned skills to a real-world problem.                                                                                 | Áp dụng các kỹ năng đã học vào bài toán thực tế.                                                       |
+
+PRACTICES VS THỰC HÀNH 
+
+| **Original (English)**                                   | **Vietnamese (Dịch)**                              |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| **Python Basics & Introduction to Data Science**         | **Python Cơ bản & Giới thiệu Khoa học Dữ liệu**    |
+| Variables and Operators ▪ Primitive Data Types & Strings | Biến và Toán tử ▪ Kiểu dữ liệu nguyên thủy & Chuỗi |
+| **Quanskill**                                            | **Quanskill**                                      |
+| **Agenda**                                               | **Nội dung buổi học**                              |
+| Environment Setup & Tools (35 min)                       | Thiết lập môi trường & Công cụ (35 phút)           |
+| Variables & Operators (25 min)                           | Biến & Toán tử (25 phút)                           |
+| Data Types & Casting (15 min)                            | Kiểu dữ liệu & Ép kiểu (15 phút)                   |
+| Strings (35 min)                                         | Chuỗi (35 phút)                                    |
+| Practical Applications (10 min)                          | Ứng dụng thực hành (10 phút)                       |
+
