@@ -15,7 +15,6 @@
 | Creating strings and basic operations (concatenation, slicing, formatting).                         | Tạo chuỗi và các thao tác cơ bản (nối chuỗi, cắt chuỗi, định dạng chuỗi).                     |
 | Common string methods: .upper(), .lower(), .strip(), .split(), .replace().                          | Các phương thức chuỗi thường dùng: .upper(), .lower(), .strip(), .split(), .replace().        |
 | **Exercise: Simple string processing (e.g., counting characters, reversing strings).**              | **Bài tập: Xử lý chuỗi đơn giản (ví dụ: đếm ký tự, đảo ngược chuỗi).**                        |
-Week 2 → Week 6: Extracted Text & Vietnamese Translation
 | **Original (English)**                                                                                                        | **Vietnamese (Dịch)**                                                                                  |
 | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Week 2: Mathematical Foundations**                                                                                          | **Tuần 2: Nền tảng Toán học**                                                                          |
