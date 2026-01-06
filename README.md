@@ -104,3 +104,10 @@
 | Strings (35 min)                                         | Chuỗi (35 phút)                                    |
 | Practical Applications (10 min)                          | Ứng dụng thực hành (10 phút)                       |
 
+
+
+Some commands github update  :
+git add .
+git commit -m "update"
+git pull
+git push
