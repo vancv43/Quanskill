@@ -107,7 +107,28 @@
 
 
 Some commands github update  :
+# 1) Vào đúng thư mục dự án
+cd /duong/dan/toi/Quanskill
+
+# 2) Kéo bản mới nhất từ GitHub về trước khi sửa/đẩy
+git pull origin main
+
+# 3) Kiểm tra file nào đã thay đổi
+git status
+
+# 4) Add các thay đổi
 git add .
-git commit -m "update"
-git pull
-git push
+
+# 5) Commit (ghi chú ngắn gọn)
+git commit -m "Update content"
+
+# 6) Push lên GitHub
+
+
+
+-------update readme 
+git add README.md
+git commit -m "Update README"
+git push origin main
+
+# Vu Hoang Song Update practices 
