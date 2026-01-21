@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 12: Classification with SVM Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-equation {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="range"] {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 160px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 80px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(255, 144, 0, 0.05) 100%);
+            border: 1px solid var(--quanskill-blue);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 12 Â· Support Vector Machines</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Binary Classification</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Hyperplane</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Decision Function</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Normal Vector</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Classification Rule</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Margin Definition</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: SVM Goal</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Linearly Separable</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Hard Margin</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Soft Margin</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Slack Variable</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Hinge Loss</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Regularization C</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Margin = 1/â€—wâ€—</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Constraint Form</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Support Vectors</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Primal Objective</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Dual SVM</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Representer Thm</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Lagrangian</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: KKT Conditions</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Kernel Trick</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Gram Matrix</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Convex Hull</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Classification with Support Vector Machines</h1>
+                <p class="hero-subtitle">
+                    Master SVMs with 25 questions and 15 interactive labs covering hyperplanes, margins, soft/hard margin formulations, kernels, and the dual problem.
+                </p>
+                <div class="hero-equation">
+                    <strong>SVM:</strong> min (1/2)â€—wâ€—Â² + C Î£Î¾â‚™<br>
+                    <strong>s.t.</strong> yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 - Î¾â‚™, Î¾â‚™ â‰¥ 0
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Binary Classification</span>
+                    <span class="topic-tag">Hyperplanes</span>
+                    <span class="topic-tag">Maximum Margin</span>
+                    <span class="topic-tag">Soft Margin</span>
+                    <span class="topic-tag">Hinge Loss</span>
+                    <span class="topic-tag">Dual Problem</span>
+                    <span class="topic-tag">Kernels</span>
+                    <span class="topic-tag">Support Vectors</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build geometric intuition for SVMs through hands-on exploration. These labs cover from basic hyperplanes to kernels and the dual formulation.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Why SVMs matter for AI agents:</strong> Agents make binary decisions constantly - safe/unsafe, relevant/irrelevant, approach/avoid. SVMs provide principled decision boundaries with maximum margin, making agents robust to small perturbations in observations.</p>
+            </div>
+
+            <!-- Lab 1: Separating Hyperplane -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Separating Hyperplane in 2D</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>wâ‚</label>
+                        <input type="range" id="w1" min="-2" max="2" step="0.1" value="1">
+                    </div>
+                    <div class="control-group">
+                        <label>wâ‚‚</label>
+                        <input type="range" id="w2" min="-2" max="2" step="0.1" value="1">
+                    </div>
+                    <div class="control-group">
+                        <label>b (bias)</label>
+                        <input type="range" id="bias" min="-3" max="3" step="0.1" value="0">
+                    </div>
+                    <button class="btn btn-primary" onclick="drawHyperplane()">Draw Hyperplane</button>
+                </div>
+                <canvas id="hyperplaneCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="hyperplaneOutput">Adjust w and b to see the separating hyperplane âŸ¨w,xâŸ© + b = 0...</div>
+            </div>
+
+            <!-- Lab 2: Margin Visualization -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Margin Visualization</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>â€—wâ€— (norm)</label>
+                        <input type="range" id="wNorm" min="0.5" max="3" step="0.1" value="1">
+                    </div>
+                    <button class="btn btn-orange" onclick="showMargin()">Show Margin</button>
+                </div>
+                <canvas id="marginCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="marginOutput">See how margin = 1/â€—wâ€— changes with the weight norm...</div>
+            </div>
+
+            <!-- Lab 3: Hard vs Soft Margin -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Hard vs Soft Margin SVM</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Margin Type</label>
+                        <select id="marginType">
+                            <option value="hard">Hard Margin</option>
+                            <option value="soft">Soft Margin</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="compareMargins()">Compare</button>
+                </div>
+                <canvas id="compareMarginCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="compareMarginOutput">Compare hard margin (no errors) vs soft margin (allows slack)...</div>
+            </div>
+
+            <!-- Lab 4: Slack Variables -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Slack Variables Î¾â‚™</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>C (regularization)</label>
+                        <input type="range" id="regC" min="0.1" max="10" step="0.1" value="1">
+                    </div>
+                    <button class="btn btn-orange" onclick="showSlack()">Visualize Slack</button>
+                </div>
+                <canvas id="slackCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="slackOutput">See how slack variables allow points inside the margin...</div>
+            </div>
+
+            <!-- Lab 5: Hinge Loss -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Hinge Loss Function</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="plotHingeLoss()">Plot Hinge Loss</button>
+                </div>
+                <canvas id="hingeCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="hingeOutput">Click to see the hinge loss â„“(t) = max{0, 1-t}...</div>
+            </div>
+
+            <!-- Lab 6: Support Vectors -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Identifying Support Vectors</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="findSupportVectors()">Find Support Vectors</button>
+                </div>
+                <canvas id="svCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="svOutput">Click to identify which points are support vectors...</div>
+            </div>
+
+            <!-- Lab 7: Distance to Hyperplane -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Distance from Point to Hyperplane</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Point xâ‚</label>
+                        <input type="number" id="pointX1" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Point xâ‚‚</label>
+                        <input type="number" id="pointX2" value="1" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="computeDistance()">Compute Distance</button>
+                </div>
+                <canvas id="distCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="distOutput">Click to compute signed distance from a point to hyperplane...</div>
+            </div>
+
+            <!-- Lab 8: Effect of C -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Effect of Regularization C</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>C value</label>
+                        <select id="cValue">
+                            <option value="0.1">C = 0.1 (large margin)</option>
+                            <option value="1" selected>C = 1 (balanced)</option>
+                            <option value="10">C = 10 (small margin)</option>
+                            <option value="100">C = 100 (very small)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="showCEffect()">Show Effect</button>
+                </div>
+                <canvas id="cEffectCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="cEffectOutput">See how C trades off margin size vs classification errors...</div>
+            </div>
+
+            <!-- Lab 9: Kernel: Linear vs RBF -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Linear vs RBF Kernel</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Kernel</label>
+                        <select id="kernelType">
+                            <option value="linear">Linear</option>
+                            <option value="rbf">RBF (Gaussian)</option>
+                            <option value="poly">Polynomial (deg 2)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="showKernel()">Apply Kernel</button>
+                </div>
+                <canvas id="kernelCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="kernelOutput">Compare different kernels for non-linear decision boundaries...</div>
+            </div>
+
+            <!-- Lab 10: XOR Problem -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>XOR Problem (Non-Linear)</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="showXOR()">Show XOR Solution</button>
+                </div>
+                <canvas id="xorCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="xorOutput">XOR is not linearly separable - kernels to the rescue!...</div>
+            </div>
+
+            <!-- Lab 11: Dual Problem -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Primal vs Dual Formulation</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="showDual()">Compare Primal/Dual</button>
+                </div>
+                <canvas id="dualCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="dualOutput">Click to compare primal and dual SVM formulations...</div>
+            </div>
+
+            <!-- Lab 12: Lagrange Multipliers Î± -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Lagrange Multipliers Î±â‚™</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="showAlphas()">Show Î±â‚™ Values</button>
+                </div>
+                <canvas id="alphaCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="alphaOutput">See which Î±â‚™ > 0 (support vectors) vs Î±â‚™ = 0...</div>
+            </div>
+
+            <!-- Lab 13: Convex Hull View -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Convex Hull Interpretation</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="showConvexHull()">Show Convex Hulls</button>
+                </div>
+                <canvas id="hullCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="hullOutput">SVM finds hyperplane bisecting closest points of two convex hulls...</div>
+            </div>
+
+            <!-- Lab 14: Gram Matrix -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Gram (Kernel) Matrix K</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Kernel</label>
+                        <select id="gramKernel">
+                            <option value="linear">Linear: xáµ€Â¢áµ€xâˆ‚Â¼</option>
+                            <option value="rbf">RBF: exp(-Î³â€—xáµ€Â¢-xâˆ‚Â¼â€–Â²)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="showGramMatrix()">Compute K</button>
+                </div>
+                <canvas id="gramCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="gramOutput">Click to see the Gram matrix K[i,j] = k(xáµ€Â¢, xâˆ‚Â¼)...</div>
+            </div>
+
+            <!-- Lab 15: Decision Boundary -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Decision Boundary Visualization</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="showDecisionBoundary()">Show Boundary</button>
+                </div>
+                <canvas id="boundaryCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="boundaryOutput">Click to see the full decision boundary with margin bands...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: ClassifyAI Vietnam</span>
+                <p>You're a ML engineer at <strong>ClassifyAI Vietnam</strong> in Ho Chi Minh City, building spam detection systems. Understanding SVMs helps you create robust classifiers that generalize well to unseen emails.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Binary classification outputs predictions from the set:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) {+1, -1} (two possible labels)</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) â„ (any real number)</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) {1, 2, 3, ..., K} (multiple classes)</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) [0, 1] (probabilities)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">{x âˆˆ â„á´° : âŸ¨w,xâŸ© + b = 0}</div>
+                <div class="quiz-question">A hyperplane in â„á´° is an affine subspace of dimension:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) D - 1 (one less than ambient space)</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) D (same as ambient space)</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) 1 (always a line)</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) 0 (always a point)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The SVM decision function f(x) = âŸ¨w,xâŸ© + b computes:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) A signed distance-like score from x to the hyperplane</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) The probability of class +1</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) The exact Euclidean distance</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) The number of support vectors</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The vector w in âŸ¨w,xâŸ© + b = 0 is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) Normal (perpendicular) to the hyperplane</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) Parallel to the hyperplane</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) A point on the hyperplane</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) The bias term</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">To classify a test point x, SVM predicts +1 if:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) f(x) = âŸ¨w,xâŸ© + b â‰¥ 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) f(x) = âŸ¨w,xâŸ© + b < 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) â€—wâ€— = 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) b = 0</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The margin of a separating hyperplane is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) Distance from hyperplane to the closest training points</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) The norm â€—wâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) The bias b</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) Number of training points</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The main goal of SVM is to find a hyperplane that:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) Maximizes the margin while correctly classifying training data</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) Minimizes the number of features</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) Passes through the origin</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) Has the smallest possible â€—wâ€—</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Data is linearly separable if:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) A hyperplane exists that perfectly separates the two classes</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) All points lie on a line</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) The data has only one feature</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) The margin is exactly 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: MarginML Labs</span>
+                <p>You're at <strong>MarginML Labs</strong> in Hanoi, optimizing SVM hyperparameters for fraud detection. Understanding the soft margin formulation and regularization trade-offs is crucial for real-world noisy data.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">min (1/2)â€—wâ€—Â² s.t. yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1</div>
+                <div class="quiz-question">The hard margin SVM requires:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) All points correctly classified with margin â‰¥ 1 (no violations)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) Some points can be misclassified</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) Margin can be negative</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) Only works with kernels</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">min (1/2)â€—wâ€—Â² + C Î£Î¾â‚™ s.t. yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 - Î¾â‚™, Î¾â‚™ â‰¥ 0</div>
+                <div class="quiz-question">The soft margin SVM allows:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) Points inside margin or misclassified via slack variables Î¾â‚™</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) Only correctly classified points</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) Negative slack variables</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) Non-convex optimization</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The slack variable Î¾â‚™ measures:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) How much point xâ‚™ violates the margin constraint</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) The distance to the origin</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) The kernel value</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) The number of support vectors</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">â„“(t) = max{0, 1 - t} where t = yÂ·f(x)</div>
+                <div class="quiz-question">The hinge loss equals 0 when:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) t â‰¥ 1 (correctly classified with margin â‰¥ 1)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) t = 0 (on the hyperplane)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) t < 0 (misclassified)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) Always (hinge loss is always 0)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The parameter C in soft margin SVM controls:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) Trade-off between large margin and small slack (errors)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) The number of features</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) The kernel width</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) The dimension of the hyperplane</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">If the margin is scaled so closest points satisfy |âŸ¨w,xâŸ© + b| = 1, then margin r equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) 1 / â€—wâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) â€—wâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) â€—wâ€—Â²</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) b / â€—wâ€—</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1</div>
+                <div class="quiz-question">This constraint combines positive and negative examples by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) Multiplying by yâ‚™ âˆˆ {+1,-1} flips the inequality direction</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) Adding a constant</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) Using absolute value</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) Ignoring negative examples</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Support vectors are training points that:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) Lie on or within the margin (Î±â‚™ > 0)</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) Are far from the hyperplane</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) Have Î±â‚™ = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) Are always misclassified</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Minimizing (1/2)â€—wâ€—Â² is equivalent to maximizing:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) The margin 1/â€—wâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) The number of features</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) The training error</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) The bias term b</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Concepts (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: KernelAI Research</span>
+                <p>You're at <strong>KernelAI Research</strong> in Da Nang, developing novel kernel methods for complex data. Deep understanding of the dual formulation, Lagrangian, and kernel trick enables you to design custom similarity functions.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>Decision Boundaries:</strong> Agents use SVM-like margins for safe/unsafe classification</li>
+                    <li><strong>Robustness:</strong> Maximum margin provides robustness to perturbations</li>
+                    <li><strong>Sparse Solutions:</strong> Support vectors give interpretable decision rules</li>
+                    <li><strong>Kernel Methods:</strong> Enable complex similarity in agent's state space</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">min_Î± (1/2) Î£áµ€Â¢âˆ‚Â¼ yáµ€Â¢yâˆ‚Â¼Î±áµ€Â¢Î±âˆ‚Â¼âŸ¨xáµ€Â¢,xâˆ‚Â¼âŸ© - Î£áµ€Â¢ Î±áµ€Â¢ s.t. Î£áµ€Â¢ yáµ€Â¢Î±áµ€Â¢ = 0, 0 â‰¤ Î±áµ€Â¢ â‰¤ C</div>
+                <div class="quiz-question">The dual SVM optimization is expressed in terms of:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) Lagrange multipliers Î±â‚™ (one per training point)</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) The weight vector w directly</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) The bias b only</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) The slack variables Î¾â‚™</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">w = Î£â‚™ Î±â‚™yâ‚™xâ‚™</div>
+                <div class="quiz-question">The representer theorem states that the optimal w is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) A linear combination of training examples</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) Independent of training data</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) Always the zero vector</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) Equal to the mean of positive examples</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The Lagrangian for the primal SVM includes terms for:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) Objective (1/2)â€—wâ€—Â² + CÎ£Î¾â‚™ minus constraint violations with multipliers Î±â‚™, Î³â‚™</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Only the objective function</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Only the constraints</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) The kernel function</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The KKT condition Î±â‚™(yâ‚™f(xâ‚™) - 1 + Î¾â‚™) = 0 implies:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) Either Î±â‚™ = 0 or point is on/inside margin (constraint active)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) All Î±â‚™ must equal 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) The margin is always 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) No constraints are active</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">k(xáµ€Â¢, xâˆ‚Â¼) = âŸ¨Ï•(xáµ€Â¢), Ï†(xâˆ‚Â¼)âŸ©</div>
+                <div class="quiz-question">The kernel trick allows us to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) Compute inner products in high-D feature space without explicit Ï†</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) Reduce the number of features</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) Eliminate the need for training data</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) Use only linear decision boundaries</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">K[i,j] = k(xáµ€Â¢, xâˆ‚Â¼)</div>
+                <div class="quiz-question">The Gram matrix K must be:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) Symmetric and positive semi-definite</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) Diagonal</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) Negative definite</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) Sparse</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The convex hull interpretation shows SVM finds the hyperplane that:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Bisects the line between closest points of positive/negative convex hulls</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) Passes through all data points</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Maximizes the area of convex hulls</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Contains all data points</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An agent uses SVM to classify states as safe or unsafe.
+                </div>
+                <div class="quiz-question">Maximum margin classification benefits the agent because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Large margin provides robustness to observation noise and perturbations</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) It requires no training data</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) It always produces probabilistic outputs</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) It eliminates the need for feature engineering</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <strong>Key Formulas to Remember:</strong><br><br>
+                â€¢ Decision function: f(x) = âŸ¨w,xâŸ© + b<br>
+                â€¢ Hyperplane: {x : âŸ¨w,xâŸ© + b = 0}<br>
+                â€¢ Margin: r = 1/â€—wâ€—<br>
+                â€¢ Soft margin: min (1/2)â€—wâ€—Â² + C Î£Î¾â‚™<br>
+                â€¢ Constraint: yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 - Î¾â‚™<br>
+                â€¢ Hinge loss: â„“(t) = max{0, 1-t}<br>
+                â€¢ Representer: w = Î£â‚™ Î±â‚™yâ‚™xâ‚™<br>
+                â€¢ Kernel: k(xáµ€Â¢,xâˆ‚Â¼) = âŸ¨Ï•(xáµ€Â¢), Ï†(xâˆ‚Â¼)âŸ©
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Congratulations!</span>
+                <p>You've completed the Mathematics for Machine Learning practice hub series!</p>
+                <ul>
+                    <li><strong>Chapter 2:</strong> Linear Algebra</li>
+                    <li><strong>Chapter 4:</strong> Matrix Decompositions</li>
+                    <li><strong>Chapter 5:</strong> Vector Calculus</li>
+                    <li><strong>Chapter 6:</strong> Probability and Distributions</li>
+                    <li><strong>Chapter 7:</strong> Continuous Optimization</li>
+                    <li><strong>Chapter 8:</strong> When Models Meet Data</li>
+                    <li><strong>Chapter 9:</strong> Linear Regression</li>
+                    <li><strong>Chapter 10:</strong> Dimensionality Reduction with PCA</li>
+                    <li><strong>Chapter 11:</strong> Density Estimation with GMM</li>
+                    <li><strong>Chapter 12:</strong> Classification with SVM âœ“</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp for advanced topics!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "Binary classification outputs one of two labels: {+1, -1} or equivalently {True, False}, {0, 1}.",
+            2: "A hyperplane in â„á´° is a (D-1)-dimensional affine subspace, e.g., a line in 2D, a plane in 3D.",
+            3: "f(x) = âŸ¨w,xâŸ© + b gives a signed score proportional to distance from the hyperplane.",
+            4: "Vector w is normal (perpendicular) to the hyperplane, defining its orientation.",
+            5: "SVM predicts +1 if f(x) â‰¥ 0 (positive side of hyperplane), -1 if f(x) < 0.",
+            6: "The margin is the distance from the separating hyperplane to the closest training points.",
+            7: "SVM finds the maximum margin hyperplane that correctly classifies training data.",
+            8: "Linearly separable data can be perfectly separated by a hyperplane with zero errors.",
+            9: "Hard margin SVM requires yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 for all n - no violations allowed.",
+            10: "Soft margin SVM introduces slack Î¾â‚™ â‰¥ 0 allowing points inside margin or misclassified.",
+            11: "Slack Î¾â‚™ measures how much point xâ‚™ violates the margin constraint yâ‚™f(xâ‚™) â‰¥ 1.",
+            12: "Hinge loss â„“(t) = max{0, 1-t} = 0 when t â‰¥ 1, i.e., correctly classified with margin.",
+            13: "C controls the trade-off: large C ←’ small slack (fit data), small C ←’ large margin.",
+            14: "With scaling yâ‚™f(xâ‚™) = 1 on closest points, the margin r = 1/â€—wâ€—.",
+            15: "Multiplying by yâ‚™ âˆˆ {+1,-1} converts separate positive/negative constraints into one.",
+            16: "Support vectors have Î±â‚™ > 0, lying on or inside the margin. They 'support' the hyperplane.",
+            17: "Minimizing â€—wâ€—Â² is equivalent to maximizing margin r = 1/â€—wâ€—.",
+            18: "The dual SVM is expressed in terms of Lagrange multipliers Î±â‚™, one per training point.",
+            19: "Representer theorem: optimal w = Î£â‚™ Î±â‚™yâ‚™xâ‚™ is a linear combination of training examples.",
+            20: "Lagrangian L = (1/2)â€—wâ€—Â² + CÎ£Î¾â‚™ - Î£Î±â‚™(yâ‚™f(xâ‚™)-1+Î¾â‚™) - Î£Î³â‚™Î¾â‚™ includes all terms.",
+            21: "KKT complementary slackness: either Î±â‚™ = 0 (inactive) or constraint is tight (active).",
+            22: "Kernel trick: compute k(xáµ€Â¢,xâˆ‚Â¼) = âŸ¨Ï•(xáµ€Â¢),Ï†(xâˆ‚Â¼)âŸ© without explicit high-D mapping Ï†.",
+            23: "Valid kernels produce symmetric positive semi-definite Gram matrices (Mercer's condition).",
+            24: "SVM hyperplane bisects the shortest line between convex hulls of positive/negative classes.",
+            25: "Maximum margin provides robustness: small perturbations don't change classification."
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Lab 1: Hyperplane
+        function drawHyperplane() {
+            const w1 = parseFloat(document.getElementById('w1').value);
+            const w2 = parseFloat(document.getElementById('w2').value);
+            const b = parseFloat(document.getElementById('bias').value);
+            
+            const canvas = document.getElementById('hyperplaneCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+
+            const cx = W / 2, cy = H / 2;
+            const scale = 40;
+
+            // Draw axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+
+            // Draw hyperplane: w1*x1 + w2*x2 + b = 0 => x2 = -(w1*x1 + b)/w2
+            if (Math.abs(w2) > 0.01) {
+                ctx.strokeStyle = '#0b2fa0';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for (let px = 0; px < W; px++) {
+                    const x1 = (px - cx) / scale;
+                    const x2 = -(w1 * x1 + b) / w2;
+                    const py = cy - x2 * scale;
+                    if (px === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+            }
+
+            // Draw normal vector w
+            const wNorm = Math.sqrt(w1*w1 + w2*w2);
+            if (wNorm > 0.01) {
+                const arrowLen = 60;
+                ctx.strokeStyle = '#ff9000';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + (w1/wNorm) * arrowLen, cy - (w2/wNorm) * arrowLen);
+                ctx.stroke();
+                
+                // Arrowhead
+                ctx.fillStyle = '#ff9000';
+                ctx.beginPath();
+                const ax = cx + (w1/wNorm) * arrowLen;
+                const ay = cy - (w2/wNorm) * arrowLen;
+                ctx.arc(ax, ay, 5, 0, 2*Math.PI);
+                ctx.fill();
+            }
+
+            // Sample data points
+            const posPoints = [[1.5, 2], [2, 1.5], [2.5, 2.5], [1, 1]];
+            const negPoints = [[-1.5, -1], [-2, -0.5], [-1, -2], [-2.5, -1.5]];
+
+            ctx.fillStyle = '#0b2fa0';
+            posPoints.forEach(p => {
+                const px = cx + p[0] * scale;
+                const py = cy - p[1] * scale;
+                ctx.beginPath();
+                ctx.arc(px, py, 8, 0, 2*Math.PI);
+                ctx.fill();
+            });
+
+            ctx.fillStyle = '#ff9000';
+            negPoints.forEach(p => {
+                const px = cx + p[0] * scale;
+                const py = cy - p[1] * scale;
+                ctx.beginPath();
+                ctx.moveTo(px - 6, py - 6);
+                ctx.lineTo(px + 6, py + 6);
+                ctx.moveTo(px + 6, py - 6);
+                ctx.lineTo(px - 6, py + 6);
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#ff9000';
+                ctx.stroke();
+            });
+
+            document.getElementById('hyperplaneOutput').innerHTML = 
+`Separating Hyperplane
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Equation: ${w1.toFixed(2)}xâ‚ + ${w2.toFixed(2)}xâ‚‚ + ${b.toFixed(2)} = 0
+
+Parameters:
+â€¢ w = [${w1.toFixed(2)}, ${w2.toFixed(2)}]áµ€ (normal vector, orange)
+â€¢ b = ${b.toFixed(2)} (bias/intercept)
+â€¢ â€—wâ€— = ${Math.sqrt(w1*w1 + w2*w2).toFixed(3)}
+
+Blue line: Hyperplane âŸ¨w,xâŸ© + b = 0
+Blue circles: Positive class (+1)
+Orange crosses: Negative class (-1)`;
+        }
+
+        // Lab 2: Margin
+        function showMargin() {
+            const wNorm = parseFloat(document.getElementById('wNorm').value);
+            const margin = 1 / wNorm;
+
+            document.getElementById('marginOutput').innerHTML = 
+`Margin Visualization
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+â€—wâ€— = ${wNorm.toFixed(2)}
+Margin r = 1/â€—wâ€— = ${margin.toFixed(3)}
+
+Key relationship:
+â€¢ Smaller â€—wâ€— ←’ Larger margin
+â€¢ Minimizing (1/2)â€—wâ€—Â² maximizes margin
+
+With scaling convention:
+â€¢ Points on margin satisfy |âŸ¨w,xâŸ© + b| = 1
+â€¢ Distance to hyperplane = 1/â€—wâ€—
+
+SVM objective: min (1/2)â€—wâ€—Â²
+              â‰¡ max margin`;
+        }
+
+        // Lab 3: Compare Margins
+        function compareMargins() {
+            const type = document.getElementById('marginType').value;
+            
+            document.getElementById('compareMarginOutput').innerHTML = type === 'hard' ?
+`Hard Margin SVM
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Constraint: yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 for ALL n
+
+Properties:
+â€¢ NO slack variables (Î¾â‚™ = 0)
+â€¢ ALL points outside margin
+â€¢ Only works for linearly separable data
+â€¢ Can overfit to outliers
+
+Optimization:
+min (1/2)â€—wâ€—Â²
+s.t. yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1
+
+If data not separable ←’ INFEASIBLE` :
+`Soft Margin SVM
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Constraint: yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 - Î¾â‚™, Î¾â‚™ â‰¥ 0
+
+Properties:
+â€¢ Slack variables allow violations
+â€¢ Points CAN be inside margin or misclassified
+â€¢ Works for non-separable data
+â€¢ More robust to outliers
+
+Optimization:
+min (1/2)â€—wâ€—Â² + C Î£Î¾â‚™
+s.t. yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 - Î¾â‚™
+     Î¾â‚™ â‰¥ 0
+
+C controls trade-off`;
+        }
+
+        // Lab 4: Slack Variables
+        function showSlack() {
+            const C = parseFloat(document.getElementById('regC').value);
+            
+            document.getElementById('slackOutput').innerHTML = 
+`Slack Variables Î¾â‚™
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+C = ${C.toFixed(1)}
+
+Meaning of Î¾â‚™:
+â€¢ Î¾â‚™ = 0: Point outside margin (correct)
+â€¢ 0 < Î¾â‚™ < 1: Inside margin but correct side
+â€¢ Î¾â‚™ = 1: On decision boundary
+â€¢ Î¾â‚™ > 1: Misclassified
+
+Effect of C:
+â€¢ C = ${C.toFixed(1)} ${C < 1 ? '(low)' : C > 5 ? '(high)' : '(medium)'}
+â€¢ ${C < 1 ? 'Large margin, tolerates more errors' : 
+   C > 5 ? 'Small margin, penalizes errors heavily' : 
+   'Balanced margin/error trade-off'}
+
+Total slack penalty: C × Î£Î¾â‚™ = ${C.toFixed(1)} × Î£Î¾â‚™`;
+        }
+
+        // Lab 5: Hinge Loss
+        function plotHingeLoss() {
+            const canvas = document.getElementById('hingeCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+
+            const cx = W * 0.4, cy = H * 0.8;
+            const scaleX = 80, scaleY = 100;
+
+            // Axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(50, cy); ctx.lineTo(W - 20, cy);
+            ctx.moveTo(cx, 20); ctx.lineTo(cx, H - 20);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Space Grotesk';
+            ctx.fillText('t = yÂ·f(x)', W - 60, cy + 20);
+            ctx.fillText('â„“(t)', cx + 10, 30);
+            ctx.fillText('0', cx - 15, cy + 15);
+            ctx.fillText('1', cx + scaleX - 5, cy + 15);
+
+            // Hinge loss
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let px = 50; px < W - 20; px++) {
+                const t = (px - cx) / scaleX;
+                const loss = Math.max(0, 1 - t);
+                const py = cy - loss * scaleY;
+                if (px === 50) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Zero-one loss (dashed)
+            ctx.strokeStyle = '#ff9000';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(50, cy - scaleY);
+            ctx.lineTo(cx, cy - scaleY);
+            ctx.lineTo(cx, cy);
+            ctx.lineTo(W - 20, cy);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Mark t=1
+            ctx.strokeStyle = '#10b981';
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(cx + scaleX, cy);
+            ctx.lineTo(cx + scaleX, cy - scaleY * 0.5);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            document.getElementById('hingeOutput').innerHTML = 
+`Hinge Loss
+â•â•â•â•â•â•â•â•â•â•
+â„“(t) = max{0, 1 - t}  where t = yÂ·f(x)
+
+Blue: Hinge loss (convex upper bound)
+Orange: 0-1 loss (step function)
+
+Regions:
+â€¢ t < 0: Misclassified (loss > 1)
+â€¢ 0 < t < 1: Inside margin (0 < loss < 1)
+â€¢ t â‰¥ 1: Outside margin (loss = 0)
+
+Advantages of hinge loss:
+âœ“ Convex (enables efficient optimization)
+âœ“ Sparse solutions (many Î±â‚™ = 0)
+âœ“ Margin-based (promotes generalization)`;
+        }
+
+        // Lab 6: Support Vectors
+        function findSupportVectors() {
+            document.getElementById('svOutput').innerHTML = 
+`Support Vectors
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Definition: Points with Î±â‚™ > 0
+
+Support vectors are points that:
+â€¢ Lie exactly ON the margin (Î±â‚™ âˆˆ (0, C))
+â€¢ Or violate the margin (Î±â‚™ = C in soft SVM)
+
+Key properties:
+â€¢ Only support vectors define w = Î£â‚™ Î±â‚™yâ‚™xâ‚™
+â€¢ Points with Î±â‚™ = 0 don't contribute to w
+â€¢ Removing non-SVs doesn't change the solution
+â€¢ Typically a small fraction of training data
+
+Why "support"?
+These points literally "support" the margin -
+if moved, the optimal hyperplane would change.
+
+Sparse solution ←’ efficient prediction!`;
+        }
+
+        // Lab 7: Distance
+        function computeDistance() {
+            const x1 = parseFloat(document.getElementById('pointX1').value);
+            const x2 = parseFloat(document.getElementById('pointX2').value);
+            
+            // Fixed hyperplane: x1 + x2 = 0 (w = [1,1], b = 0)
+            const w = [1, 1];
+            const b = 0;
+            const wNorm = Math.sqrt(w[0]*w[0] + w[1]*w[1]);
+            const fx = w[0]*x1 + w[1]*x2 + b;
+            const dist = fx / wNorm;
+
+            document.getElementById('distOutput').innerHTML = 
+`Distance from Point to Hyperplane
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Point: x = [${x1}, ${x2}]áµ€
+Hyperplane: xâ‚ + xâ‚‚ = 0 (w = [1,1], b = 0)
+
+Calculation:
+f(x) = âŸ¨w,xâŸ© + b = 1×${x1} + 1×${x2} + 0 = ${fx.toFixed(2)}
+â€—wâ€— = âˆš(1Â² + 1Â²) = ${wNorm.toFixed(3)}
+
+Signed distance = f(x)/â€—wâ€— = ${dist.toFixed(3)}
+
+Interpretation:
+â€¢ ${dist > 0 ? 'Positive side (+1 class region)' : dist < 0 ? 'Negative side (-1 class region)' : 'On the hyperplane'}
+â€¢ |distance| = ${Math.abs(dist).toFixed(3)}`;
+        }
+
+        // Lab 8: Effect of C
+        function showCEffect() {
+            const C = parseFloat(document.getElementById('cValue').value);
+            
+            document.getElementById('cEffectOutput').innerHTML = 
+`Effect of C = ${C}
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+${C <= 0.1 ? 
+`LOW C (C = ${C}):
+â€¢ Large margin (small â€—wâ€—)
+â€¢ Many slack violations allowed
+â€¢ Underfitting risk
+â€¢ Robust to outliers` :
+C >= 10 ?
+`HIGH C (C = ${C}):
+â€¢ Small margin (large â€—wâ€—)
+â€¢ Few/no slack violations
+â€¢ Overfitting risk
+â€¢ Sensitive to outliers` :
+`BALANCED C (C = ${C}):
+â€¢ Moderate margin
+â€¢ Some slack tolerance
+â€¢ Good bias-variance trade-off`}
+
+Trade-off in objective:
+(1/2)â€—wâ€—Â² + ${C} × Î£Î¾â‚™
+  â””â”€margin    â””â”€slack penalty
+
+Typical selection: Cross-validation over
+C âˆˆ {0.001, 0.01, 0.1, 1, 10, 100, 1000}`;
+        }
+
+        // Lab 9: Kernels
+        function showKernel() {
+            const kernel = document.getElementById('kernelType').value;
+            
+            const kernelInfo = {
+                linear: {
+                    name: 'Linear Kernel',
+                    formula: 'k(xáµ€Â¢, xâˆ‚Â¼) = xáµ€Â¢áµ€xâˆ‚Â¼ = âŸ¨xáµ€Â¢, xâˆ‚Â¼âŸ©',
+                    desc: 'Standard dot product. Linear decision boundary.',
+                    params: 'None'
+                },
+                rbf: {
+                    name: 'RBF (Gaussian) Kernel',
+                    formula: 'k(xáµ€Â¢, xâˆ‚Â¼) = exp(-Î³â€—xáµ€Â¢ - xâˆ‚Â¼â€–Â²)',
+                    desc: 'Infinite-dimensional feature space. Highly flexible.',
+                    params: 'Î³ (gamma) controls width'
+                },
+                poly: {
+                    name: 'Polynomial Kernel (degree 2)',
+                    formula: 'k(xáµ€Â¢, xâˆ‚Â¼) = (xáµ€Â¢áµ€xâˆ‚Â¼ + c)Â²',
+                    desc: 'Polynomial decision boundary. Captures interactions.',
+                    params: 'degree d, coefficient c'
+                }
+            };
+
+            const k = kernelInfo[kernel];
+            document.getElementById('kernelOutput').innerHTML = 
+`${k.name}
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Formula: ${k.formula}
+
+Description: ${k.desc}
+
+Parameters: ${k.params}
+
+Feature map interpretation:
+k(xáµ€Â¢, xâˆ‚Â¼) = âŸ¨Ï•(xáµ€Â¢), Ï†(xâˆ‚Â¼)âŸ©
+
+The kernel computes inner products in
+(possibly infinite-dimensional) feature space
+WITHOUT explicitly computing Ï†(x)!
+
+This is the "kernel trick".`;
+        }
+
+        // Lab 10: XOR
+        function showXOR() {
+            document.getElementById('xorOutput').innerHTML = 
+`XOR Problem
+â•â•â•â•â•â•â•â•â•â•â•
+Classic non-linearly separable dataset:
+
+(0,0) ←’ -1    (0,1) ←’ +1
+(1,0) ←’ +1    (1,1) ←’ -1
+
+Why not linearly separable:
+â€¢ No single line can separate +1 from -1
+â€¢ Linear SVM will fail (or have large slack)
+
+Solution: Use kernel!
+
+With RBF or polynomial kernel:
+â€¢ Implicitly maps to higher-D space
+â€¢ In higher-D, data becomes separable
+â€¢ Decision boundary in input space is curved
+
+Example with Ï•(x) = [xâ‚, xâ‚‚, xâ‚xâ‚‚]:
+Original space ←’ Feature space
+Now a LINEAR hyperplane in feature space
+gives a NONLINEAR boundary in input space!`;
+        }
+
+        // Lab 11: Dual
+        function showDual() {
+            document.getElementById('dualOutput').innerHTML = 
+`Primal vs Dual SVM
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+PRIMAL (variables: w, b, Î¾):
+min  (1/2)â€—wâ€—Â² + C Î£Î¾â‚™
+s.t. yâ‚™(âŸ¨w,xâ‚™âŸ© + b) â‰¥ 1 - Î¾â‚™
+     Î¾â‚™ â‰¥ 0
+
+# variables: D + 1 + N (depends on dimension D)
+
+"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"
+
+DUAL (variables: Î±):
+min  (1/2) Î£áµ€Â¢âˆ‚Â¼ yáµ€Â¢yâˆ‚Â¼Î±áµ€Â¢Î±âˆ‚Â¼âŸ¨xáµ€Â¢,xâˆ‚Â¼âŸ© - Î£áµ€Â¢ Î±áµ€Â¢
+s.t. Î£áµ€Â¢ yáµ€Â¢Î±áµ€Â¢ = 0
+     0 â‰¤ Î±áµ€Â¢ â‰¤ C
+
+# variables: N (depends on # samples)
+
+Advantages of dual:
+âœ“ Enables kernel trick (replace âŸ¨xáµ€Â¢,xâˆ‚Â¼âŸ© with k(xáµ€Â¢,xâˆ‚Â¼))
+âœ“ Better when D >> N
+âœ“ Solution is sparse (many Î±áµ€Â¢ = 0)`;
+        }
+
+        // Lab 12: Alphas
+        function showAlphas() {
+            document.getElementById('alphaOutput').innerHTML = 
+`Lagrange Multipliers Î±â‚™
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Each training point has multiplier Î±â‚™ â‰¥ 0
+
+Three cases:
+
+1. Î±â‚™ = 0 (most points)
+   â€¢ Point is outside margin
+   â€¢ Does NOT contribute to w
+   â€¢ Not a support vector
+
+2. 0 < Î±â‚™ < C
+   â€¢ Point is exactly ON margin
+   â€¢ Contributes to w
+   â€¢ IS a support vector
+   â€¢ No slack (Î¾â‚™ = 0)
+
+3. Î±â‚™ = C
+   â€¢ Point violates margin or misclassified
+   â€¢ IS a support vector
+   â€¢ Has slack Î¾â‚™ > 0
+
+Recovery of w:
+w = Î£â‚™ Î±â‚™yâ‚™xâ‚™ (only sum over Î±â‚™ > 0)
+
+Prediction:
+f(x) = Î£â‚™ Î±â‚™yâ‚™âŸ¨xâ‚™,xâŸ© + b`;
+        }
+
+        // Lab 13: Convex Hull
+        function showConvexHull() {
+            document.getElementById('hullOutput').innerHTML = 
+`Convex Hull Interpretation
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Convex hull = smallest convex set containing all points
+
+Positive class convex hull:
+conv(Xâ‚Š) = {Î£â‚™ Î±â‚™xâ‚™ : Î£Î±â‚™=1, Î±â‚™â‰¥0, yâ‚™=+1}
+
+Negative class convex hull:
+conv(Xâ‚â‚) = {Î£â‚™ Î±â‚™xâ‚™ : Î£Î±â‚™=1, Î±â‚™â‰¥0, yâ‚™=-1}
+
+SVM finds:
+â€¢ Closest points c âˆˆ conv(Xâ‚Š) and d âˆˆ conv(Xâ‚â‚)
+â€¢ Hyperplane perpendicular to (c - d)
+â€¢ Bisecting the line between c and d
+
+Geometric view:
+w = c - d (difference vector)
+Margin = â€—c - dâ€— / 2
+
+Soft margin: "reduced hull" with Î±â‚™ â‰¤ C
+(shrinks the convex hull)`;
+        }
+
+        // Lab 14: Gram Matrix
+        function showGramMatrix() {
+            const kernel = document.getElementById('gramKernel').value;
+            
+            document.getElementById('gramOutput').innerHTML = 
+`Gram (Kernel) Matrix K
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+K âˆˆ â„á´ºË£á´º where K[i,j] = k(xáµ€Â¢, xâˆ‚Â¼)
+
+${kernel === 'linear' ? 
+`Linear kernel: K[i,j] = xáµ€Â¢áµ€xâˆ‚Â¼
+
+Example (3 points in â„Ã‚Â²):
+xâ‚ = [1,0], xâ‚‚ = [0,1], xâ‚ƒ = [1,1]
+
+K = âŒˆ 1  0  1 âŒ‰
+    â”‚ 0  1  1 â”‚
+    âŒŠ 1  1  2 âŒ‹` :
+`RBF kernel: K[i,j] = exp(-Î³â€—xáµ€Â¢-xâˆ‚Â¼â€–Â²)
+
+Example (Î³ = 1):
+xâ‚ = [0,0], xâ‚‚ = [1,0], xâ‚ƒ = [0,1]
+
+K â‰ˆ âŒˆ 1.00  0.37  0.37 âŒ‰
+    â”‚ 0.37  1.00  0.14 â”‚
+    âŒŠ 0.37  0.14  1.00 âŒ‹`}
+
+Properties of valid K:
+â€¢ Symmetric: K = Káµ€
+â€¢ Positive semi-definite: záµ€Kz â‰¥ 0 for all z
+â€¢ Diagonal entries: K[i,i] = k(xáµ€Â¢,xáµ€Â¢)`;
+        }
+
+        // Lab 15: Decision Boundary
+        function showDecisionBoundary() {
+            document.getElementById('boundaryOutput').innerHTML = 
+`Decision Boundary & Margin Bands
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Three parallel hyperplanes:
+
+1. Decision boundary: âŸ¨w,xâŸ© + b = 0
+   â€¢ Points on this surface are uncertain
+   â€¢ f(x) = 0
+
+2. Positive margin: âŸ¨w,xâŸ© + b = +1
+   â€¢ Positive support vectors lie here
+   â€¢ Closest +1 points
+
+3. Negative margin: âŸ¨w,xâŸ© + b = -1
+   â€¢ Negative support vectors lie here
+   â€¢ Closest -1 points
+
+The "margin band" is the region between:
+-1 < âŸ¨w,xâŸ© + b < +1
+
+Width of margin band = 2/â€—wâ€—
+
+In soft margin: some points may be
+inside this band (slack Î¾ > 0)`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

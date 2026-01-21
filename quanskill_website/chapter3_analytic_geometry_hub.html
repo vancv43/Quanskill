@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Analytic Geometry Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-equation {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="range"] {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+
+        .demo-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.08) 0%, rgba(255, 144, 0, 0.08) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span>Score:</span>
+                    <span class="stat-value" id="headerScore">0/25</span>
+                </div>
+                <div class="stat-item">
+                    <span>Accuracy:</span>
+                    <span class="stat-value" id="headerAccuracy">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 3 of 12</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Quiz Score</div>
+            <div class="progress-bar"><div class="progress-fill" id="scoreProgress" style="width: 0%"></div></div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">📊Â¡ Interactive Labs (15)</div>
+            <a class="nav-link" href="#lab1">Lab 1: Euclidean Norm</a>
+            <a class="nav-link" href="#lab2">Lab 2: Manhattan Norm</a>
+            <a class="nav-link" href="#lab3">Lab 3: Comparing Norms</a>
+            <a class="nav-link" href="#lab4">Lab 4: Inner Product</a>
+            <a class="nav-link" href="#lab5">Lab 5: Dot Product Calculator</a>
+            <a class="nav-link" href="#lab6">Lab 6: Angle Between Vectors</a>
+            <a class="nav-link" href="#lab7">Lab 7: Orthogonality Test</a>
+            <a class="nav-link" href="#lab8">Lab 8: Projection onto Vector</a>
+            <a class="nav-link" href="#lab9">Lab 9: Projection onto Subspace</a>
+            <a class="nav-link" href="#lab10">Lab 10: Orthonormal Basis</a>
+            <a class="nav-link" href="#lab11">Lab 11: Gram-Schmidt Process</a>
+            <a class="nav-link" href="#lab12">Lab 12: Distance Metrics</a>
+            <a class="nav-link" href="#lab13">Lab 13: Cosine Similarity</a>
+            <a class="nav-link" href="#lab14">Lab 14: Rotation in 2D</a>
+            <a class="nav-link" href="#lab15">Lab 15: Reflection Across Line</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">âœ“ MCQ Quiz (25)</div>
+            <a class="nav-link" href="#q1">Q1-8: Easy <span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a class="nav-link" href="#q9">Q9-17: Medium <span class="difficulty-badge difficulty-medium">Med</span></a>
+            <a class="nav-link" href="#q18">Q18-25: Hard <span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <a class="nav-link" href="#summary">📊 Summary & Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-badge">🐍" Chapter 3</span>
+                <h1>Analytic Geometry</h1>
+                <p class="hero-subtitle">Master norms, inner products, distances, angles, and projections - the geometric foundations that measure similarity and relationships between vectors in machine learning.</p>
+                <div class="hero-equation">
+                    cos(Ï‰) = âŸ¨x, yâŸ© / (â€—xâ€— Â· â€—yâ€—) &nbsp;|&nbsp; proj_u(v) = (âŸ¨v, uâŸ© / âŸ¨u, uâŸ©) Â· u
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 1: Euclidean Norm ===== -->
+        <section class="section" id="lab1">
+            <div class="section-header">
+                <span class="section-number">Lab 1</span>
+                <h2>The Euclidean Norm (L2 Norm)</h2>
+            </div>
+
+            <p>The <strong>Euclidean norm</strong> (L2 norm) measures the "straight-line" length of a vector. It's the most common norm in machine learning, used everywhere from neural network regularization to distance calculations.</p>
+
+            <div class="formula-box">
+                <strong>Definition:</strong> â€—xâ€—â‚‚ = âˆš(xâ‚Ã‚Â² + xâ‚‚Â² + ... + xâ‚™Â²) = âˆš(xáµ€x)
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Euclidean Norm Calculator</h4>
+                    <span class="demo-number">Lab 1</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>xâ‚</label>
+                        <input type="number" id="l2_x1" value="3" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>xâ‚‚</label>
+                        <input type="number" id="l2_x2" value="4" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>xâ‚ƒ</label>
+                        <input type="number" id="l2_x3" value="0" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcL2Norm()">Calculate</button>
+                </div>
+                <canvas id="l2Canvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="l2Output">Click "Calculate" to see the Euclidean norm</div>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">VectorSearch Vietnam (HCMC)</span>
+                <p>A Vietnamese e-commerce company uses L2 norm for product embedding similarity search. By measuring the Euclidean distance between product vectors, they provide accurate "similar items" recommendations to customers, increasing cross-sell revenue by 23%.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 2: Manhattan Norm ===== -->
+        <section class="section" id="lab2">
+            <div class="section-header">
+                <span class="section-number">Lab 2</span>
+                <h2>The Manhattan Norm (L1 Norm)</h2>
+            </div>
+
+            <p>The <strong>Manhattan norm</strong> (L1 norm) sums the absolute values of components. Named after the grid-like street layout of Manhattan, it measures distance along axes.</p>
+
+            <div class="formula-box">
+                <strong>Definition:</strong> â€—x-â‚ = |xâ‚| + |xâ‚‚| + ... + |xâ‚™|
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Manhattan Norm Calculator</h4>
+                    <span class="demo-number">Lab 2</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>xâ‚</label>
+                        <input type="number" id="l1_x1" value="3" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>xâ‚‚</label>
+                        <input type="number" id="l1_x2" value="4" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcL1Norm()">Calculate</button>
+                </div>
+                <canvas id="l1Canvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="l1Output">Click "Calculate" to see the Manhattan norm</div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Sparse Feature Selection:</strong> In agentic AI systems, L1 regularization (Lasso) promotes sparsity in model weights. This helps autonomous agents identify the most relevant features for decision-making, reducing computational overhead and improving interpretability.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 3: Comparing Norms ===== -->
+        <section class="section" id="lab3">
+            <div class="section-header">
+                <span class="section-number">Lab 3</span>
+                <h2>Comparing L1, L2, and Lâˆž Norms</h2>
+            </div>
+
+            <p>Different norms create different "unit balls" - the set of all vectors with norm â‰¤ 1. Understanding these shapes helps choose the right norm for your ML task.</p>
+
+            <div class="formula-box">
+                <strong>Lâˆž Norm (Max Norm):</strong> â€—xâ€—âˆž = max(|xâ‚|, |xâ‚‚|, ..., |xâ‚™|)
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Unit Ball Visualization</h4>
+                    <span class="demo-number">Lab 3</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Norm Type</label>
+                        <select id="normType" onchange="drawUnitBalls()">
+                            <option value="all">Show All</option>
+                            <option value="l1">L1 Only</option>
+                            <option value="l2">L2 Only</option>
+                            <option value="linf">Lâˆž Only</option>
+                        </select>
+                    </div>
+                </div>
+                <canvas id="unitBallCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="unitBallOutput">Select norm type to compare unit balls</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 4: Inner Product ===== -->
+        <section class="section" id="lab4">
+            <div class="section-header">
+                <span class="section-number">Lab 4</span>
+                <h2>Inner Products</h2>
+            </div>
+
+            <p>An <strong>inner product</strong> âŸ¨Â·,Â·âŸ© is a generalization of the dot product that defines geometry on vector spaces. It allows us to measure angles, lengths, and orthogonality.</p>
+
+            <div class="formula-box">
+                <strong>Properties:</strong><br>
+                â€¢ Symmetric: âŸ¨x, yâŸ© = âŸ¨y, xâŸ©<br>
+                â€¢ Linear: âŸ¨Î±x + Î²y, zâŸ© = Î±âŸ¨x, zâŸ© + Î²âŸ¨y, zâŸ©<br>
+                â€¢ Positive definite: âŸ¨x, xâŸ© â‰¥ 0, and âŸ¨x, xâŸ© = 0 âŸº x = 0
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Inner Product Properties</h4>
+                    <span class="demo-number">Lab 4</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>x = [xâ‚, xâ‚‚]</label>
+                        <input type="text" id="ipX" value="3,4" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>y = [yâ‚, yâ‚‚]</label>
+                        <input type="text" id="ipY" value="1,2" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcInnerProduct()">Compute</button>
+                </div>
+                <div class="demo-output" id="ipOutput">Enter vectors to compute inner product</div>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">NLP Lab Hanoi</span>
+                <p>A Vietnamese NLP startup uses inner products to compute semantic similarity between word embeddings. Their Vietnamese language model uses dot products to find related words, powering autocomplete and semantic search for over 2 million daily queries.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 5: Dot Product Calculator ===== -->
+        <section class="section" id="lab5">
+            <div class="section-header">
+                <span class="section-number">Lab 5</span>
+                <h2>Dot Product Calculator</h2>
+            </div>
+
+            <p>The <strong>dot product</strong> (standard inner product) in â„â¿ is the sum of element-wise products: xÂ·y = Î£áµ€Â¢ xáµ€Â¢yáµ€Â¢ = xáµ€y</p>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Interactive Dot Product</h4>
+                    <span class="demo-number">Lab 5</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>xâ‚</label>
+                        <input type="number" id="dp_x1" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>xâ‚‚</label>
+                        <input type="number" id="dp_x2" value="3" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>yâ‚</label>
+                        <input type="number" id="dp_y1" value="4" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>yâ‚‚</label>
+                        <input type="number" id="dp_y2" value="1" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcDotProduct()">Calculate</button>
+                </div>
+                <canvas id="dpCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="dpOutput">Click "Calculate" to see the dot product</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 6: Angle Between Vectors ===== -->
+        <section class="section" id="lab6">
+            <div class="section-header">
+                <span class="section-number">Lab 6</span>
+                <h2>Angle Between Vectors</h2>
+            </div>
+
+            <p>The angle Ï‰ between two vectors is defined through the inner product. This is fundamental to understanding vector relationships in ML.</p>
+
+            <div class="formula-box">
+                <strong>Formula:</strong> cos(Ï‰) = âŸ¨x, yâŸ© / (â€—xâ€— Â· â€—yâ€—)<br>
+                <strong>Range:</strong> Ï‰ âˆˆ [0, Ï€] (0Â° to 180Â°)
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Angle Calculator</h4>
+                    <span class="demo-number">Lab 6</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector x</label>
+                        <input type="text" id="angleX" value="1,0" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Vector y</label>
+                        <input type="text" id="angleY" value="1,1" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcAngle()">Calculate</button>
+                </div>
+                <canvas id="angleCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="angleOutput">Enter vectors to calculate the angle</div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Semantic Reasoning:</strong> Agentic AI systems use vector angles to determine semantic similarity between concepts. When an agent needs to find relevant tools or knowledge, it computes angles between query embeddings and stored concept vectors. Small angles indicate high relevance.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 7: Orthogonality Test ===== -->
+        <section class="section" id="lab7">
+            <div class="section-header">
+                <span class="section-number">Lab 7</span>
+                <h2>Orthogonality Test</h2>
+            </div>
+
+            <p>Two vectors are <strong>orthogonal</strong> (perpendicular) if their inner product is zero: âŸ¨x, yâŸ© = 0. Orthogonality is central to PCA, linear regression, and many ML algorithms.</p>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Orthogonality Checker</h4>
+                    <span class="demo-number">Lab 7</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector x</label>
+                        <input type="text" id="orthX" value="1,1" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Vector y</label>
+                        <input type="text" id="orthY" value="-1,1" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkOrthogonal()">Check</button>
+                </div>
+                <canvas id="orthCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="orthOutput">Enter vectors to check orthogonality</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 8: Projection onto Vector ===== -->
+        <section class="section" id="lab8">
+            <div class="section-header">
+                <span class="section-number">Lab 8</span>
+                <h2>Projection onto a Vector</h2>
+            </div>
+
+            <p>The <strong>projection</strong> of v onto u gives the component of v in the direction of u. This is essential for least squares regression and understanding residuals.</p>
+
+            <div class="formula-box">
+                <strong>Scalar projection:</strong> comp_u(v) = âŸ¨v, uâŸ© / â€—uâ€—<br>
+                <strong>Vector projection:</strong> proj_u(v) = (âŸ¨v, uâŸ© / âŸ¨u, uâŸ©) Â· u
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Vector Projection</h4>
+                    <span class="demo-number">Lab 8</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector v</label>
+                        <input type="text" id="projV" value="3,2" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Onto u</label>
+                        <input type="text" id="projU" value="2,0" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcProjection()">Project</button>
+                </div>
+                <canvas id="projCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="projOutput">Enter vectors to compute projection</div>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">DataInsight Da Nang</span>
+                <p>A Vietnamese analytics firm uses projections to decompose customer behavior vectors into interpretable components. By projecting user activity onto known behavior patterns, they classify users 40% faster than traditional clustering methods.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 9: Projection onto Subspace ===== -->
+        <section class="section" id="lab9">
+            <div class="section-header">
+                <span class="section-number">Lab 9</span>
+                <h2>Projection onto a Subspace</h2>
+            </div>
+
+            <p>When projecting onto a subspace spanned by multiple vectors, we use the <strong>projection matrix</strong>: P = A(Aáµ€A)â»Â¹Aáµ€</p>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Subspace Projection</h4>
+                    <span class="demo-number">Lab 9</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Point to project</label>
+                        <input type="text" id="subspacePoint" value="1,2,3" style="width: 100px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Basis vector 1</label>
+                        <input type="text" id="subspaceBasis1" value="1,0,0" style="width: 100px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Basis vector 2</label>
+                        <input type="text" id="subspaceBasis2" value="0,1,0" style="width: 100px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcSubspaceProj()">Project</button>
+                </div>
+                <div class="demo-output" id="subspaceProjOutput">Enter point and basis vectors</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 10: Orthonormal Basis ===== -->
+        <section class="section" id="lab10">
+            <div class="section-header">
+                <span class="section-number">Lab 10</span>
+                <h2>Orthonormal Basis</h2>
+            </div>
+
+            <p>An <strong>orthonormal basis</strong> consists of mutually orthogonal unit vectors. Working with orthonormal bases simplifies many computations in ML.</p>
+
+            <div class="formula-box">
+                <strong>Conditions:</strong><br>
+                â€¢ Orthogonal: âŸ¨báµ€Â¢, bâˆ‚Â¼âŸ© = 0 for i â‰  j<br>
+                â€¢ Normalized: â€—báµ€Â¢â€– = 1 for all i<br>
+                â€¢ Combined: âŸ¨báµ€Â¢, bâˆ‚Â¼âŸ© = Î´áµ€Â¢âˆ‚Â¼ (Kronecker delta)
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Orthonormal Basis Check</h4>
+                    <span class="demo-number">Lab 10</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector bâ‚</label>
+                        <input type="text" id="onb1" value="1,0" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Vector bâ‚‚</label>
+                        <input type="text" id="onb2" value="0,1" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkONB()">Check</button>
+                </div>
+                <div class="demo-output" id="onbOutput">Enter vectors to check if orthonormal</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 11: Gram-Schmidt ===== -->
+        <section class="section" id="lab11">
+            <div class="section-header">
+                <span class="section-number">Lab 11</span>
+                <h2>Gram-Schmidt Process</h2>
+            </div>
+
+            <p>The <strong>Gram-Schmidt process</strong> transforms any basis into an orthonormal basis. This is crucial for QR decomposition and many numerical algorithms.</p>
+
+            <div class="formula-box">
+                <strong>Algorithm:</strong><br>
+                uâ‚ = vâ‚, &nbsp; eâ‚ = uâ‚/â€—uâ‚-<br>
+                uâ‚‚ = vâ‚‚ - âŸ¨vâ‚‚, eâ‚âŸ©eâ‚, &nbsp; eâ‚‚ = uâ‚‚/â€—uâ‚‚â€—<br>
+                uâ‚– = vâ‚– - Î£âˆ‚áµ¢â±¼â‚áµ€ âŸ¨vâ‚–, eâˆ‚Â¼âŸ©eâˆ‚Â¼, &nbsp; eâ‚– = uâ‚–/â€—uâ‚—â€—
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Gram-Schmidt Orthogonalization</h4>
+                    <span class="demo-number">Lab 11</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector vâ‚</label>
+                        <input type="text" id="gs_v1" value="3,1" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Vector vâ‚‚</label>
+                        <input type="text" id="gs_v2" value="2,2" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="gramSchmidt()">Orthogonalize</button>
+                </div>
+                <canvas id="gsCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="gsOutput">Enter vectors for Gram-Schmidt</div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Embedding Orthogonalization:</strong> Some agentic systems use Gram-Schmidt to create orthogonal skill embeddings. This ensures that different capabilities (reasoning, memory, planning) are represented independently, reducing interference when the agent combines skills.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 12: Distance Metrics ===== -->
+        <section class="section" id="lab12">
+            <div class="section-header">
+                <span class="section-number">Lab 12</span>
+                <h2>Distance Metrics</h2>
+            </div>
+
+            <p><strong>Distance</strong> measures how far apart two points are. Different metrics suit different applications in ML.</p>
+
+            <div class="formula-box">
+                <strong>Euclidean distance:</strong> dâ‚‚(x,y) = â€—x - yâ€—â‚‚ = âˆš(Î£áµ€Â¢(xáµ€Â¢ - yáµ€Â¢)Â²)<br>
+                <strong>Manhattan distance:</strong> dâ‚(x,y) = â€—x - y-â‚ = Î£áµ€Â¢|xáµ€Â¢ - yáµ€Â¢|<br>
+                <strong>Chebyshev distance:</strong> dâˆž(x,y) = maxáµ€Â¢|xáµ€Â¢ - yáµ€Â¢|
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Distance Calculator</h4>
+                    <span class="demo-number">Lab 12</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Point x</label>
+                        <input type="text" id="dist_x" value="0,0" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Point y</label>
+                        <input type="text" id="dist_y" value="3,4" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcDistances()">Calculate</button>
+                </div>
+                <canvas id="distCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="distOutput">Enter points to calculate distances</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 13: Cosine Similarity ===== -->
+        <section class="section" id="lab13">
+            <div class="section-header">
+                <span class="section-number">Lab 13</span>
+                <h2>Cosine Similarity</h2>
+            </div>
+
+            <p><strong>Cosine similarity</strong> measures the cosine of the angle between vectors. It's widely used in NLP and recommendation systems because it's invariant to vector magnitude.</p>
+
+            <div class="formula-box">
+                <strong>Formula:</strong> cos_sim(x, y) = âŸ¨x, yâŸ© / (â€—xâ€— Â· â€—yâ€—) âˆˆ [-1, 1]<br>
+                <strong>Interpretation:</strong> 1 = identical direction, 0 = orthogonal, -1 = opposite
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Cosine Similarity Calculator</h4>
+                    <span class="demo-number">Lab 13</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector x</label>
+                        <input type="text" id="cos_x" value="1,2,3" style="width: 100px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Vector y</label>
+                        <input type="text" id="cos_y" value="4,5,6" style="width: 100px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcCosSim()">Calculate</button>
+                </div>
+                <div class="demo-output" id="cosOutput">Enter vectors for cosine similarity</div>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">RecoEngine Vietnam (Hanoi)</span>
+                <p>A Vietnamese streaming platform uses cosine similarity for content recommendations. By comparing user preference vectors with content feature vectors, they achieve 35% higher engagement than collaborative filtering alone. Cosine similarity ignores user activity volume, focusing purely on preference patterns.</p>
+            </div>
+        </section>
+
+        <!-- ===== LAB 14: Rotation in 2D ===== -->
+        <section class="section" id="lab14">
+            <div class="section-header">
+                <span class="section-number">Lab 14</span>
+                <h2>Rotation in 2D</h2>
+            </div>
+
+            <p>Rotations preserve lengths and angles. The <strong>rotation matrix</strong> in 2D rotates vectors by angle Î¸ counterclockwise.</p>
+
+            <div class="formula-box">
+                <strong>Rotation Matrix:</strong><br>
+                R(Î¸) = [cos(Î¸)  -sin(Î¸)]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sin(Î¸)   cos(Î¸)]
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>2D Rotation</h4>
+                    <span class="demo-number">Lab 14</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector</label>
+                        <input type="text" id="rot_v" value="2,0" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Angle (degrees)</label>
+                        <input type="number" id="rot_angle" value="45" step="15">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcRotation()">Rotate</button>
+                </div>
+                <canvas id="rotCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="rotOutput">Enter vector and angle to rotate</div>
+            </div>
+        </section>
+
+        <!-- ===== LAB 15: Reflection ===== -->
+        <section class="section" id="lab15">
+            <div class="section-header">
+                <span class="section-number">Lab 15</span>
+                <h2>Reflection Across a Line</h2>
+            </div>
+
+            <p><strong>Reflections</strong> are transformations that flip vectors across a line (in 2D) or plane (in 3D). They preserve lengths but reverse orientation.</p>
+
+            <div class="formula-box">
+                <strong>Reflection formula (across line through origin with direction u):</strong><br>
+                ref_u(v) = 2Â·proj_u(v) - v = 2(âŸ¨v,uâŸ©/âŸ¨u,uâŸ©)u - v
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Reflection Calculator</h4>
+                    <span class="demo-number">Lab 15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector v</label>
+                        <input type="text" id="ref_v" value="2,1" style="width: 80px;">
+                    </div>
+                    <div class="control-group">
+                        <label>Line direction u</label>
+                        <input type="text" id="ref_u" value="1,0" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcReflection()">Reflect</button>
+                </div>
+                <canvas id="refCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="refOutput">Enter vector and line direction</div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Data Augmentation:</strong> Geometric transformations like rotations and reflections are used in agentic vision systems to augment training data. An agent learning to recognize objects can generalize better when trained on reflected and rotated versions of images.</p>
+            </div>
+        </section>
+
+        <!-- ===== MCQ SECTION: EASY ===== -->
+        <section class="section" id="q1">
+            <div class="section-header">
+                <span class="section-number">MCQ Easy</span>
+                <h2>Questions 1-8: Fundamentals</h2>
+            </div>
+
+            <!-- Q1 -->
+            <div class="quiz-container" id="q1box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q1</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">What is a norm?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1,0)">A) A function that assigns a length to each vector</div>
+                    <div class="quiz-option" onclick="checkAnswer(1,1)">B) A matrix operation</div>
+                    <div class="quiz-option" onclick="checkAnswer(1,2)">C) A type of linear transformation</div>
+                    <div class="quiz-option" onclick="checkAnswer(1,3)">D) A scalar value always equal to 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-container" id="q2box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q2</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The Euclidean norm is also called:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2,0)">A) L1 norm</div>
+                    <div class="quiz-option" onclick="checkAnswer(2,1)">B) L2 norm</div>
+                    <div class="quiz-option" onclick="checkAnswer(2,2)">C) Lâˆž norm</div>
+                    <div class="quiz-option" onclick="checkAnswer(2,3)">D) L0 norm</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-container" id="q3box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q3</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">âŸ¨x, yâŸ© = 0</div>
+                <div class="quiz-question">When the inner product of two vectors equals zero, they are:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3,0)">A) Orthogonal (perpendicular)</div>
+                    <div class="quiz-option" onclick="checkAnswer(3,1)">B) Parallel</div>
+                    <div class="quiz-option" onclick="checkAnswer(3,2)">C) Equal</div>
+                    <div class="quiz-option" onclick="checkAnswer(3,3)">D) Linearly dependent</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="quiz-container" id="q4box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q4</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The dot product xÂ·x equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4,0)">A) The squared norm â€—xâ€—Â²</div>
+                    <div class="quiz-option" onclick="checkAnswer(4,1)">B) The vector x</div>
+                    <div class="quiz-option" onclick="checkAnswer(4,2)">C) Zero</div>
+                    <div class="quiz-option" onclick="checkAnswer(4,3)">D) The inverse of x</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="quiz-container" id="q5box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q5</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Which property must every norm satisfy?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5,0)">A) Triangle inequality: â€—x+yâ€— â‰¤ â€—xâ€— + â€—yâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(5,1)">B) Can output negative values</div>
+                    <div class="quiz-option" onclick="checkAnswer(5,2)">C) Always equals 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(5,3)">D) Only defined for matrices</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="quiz-container" id="q6box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q6</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The angle between vectors uses which trigonometric function?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6,0)">A) Cosine: cos(Ï‰) = âŸ¨x,yâŸ© / (â€—xâ€—â€—yâ€—)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6,1)">B) Sine</div>
+                    <div class="quiz-option" onclick="checkAnswer(6,2)">C) Tangent</div>
+                    <div class="quiz-option" onclick="checkAnswer(6,3)">D) Secant</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="quiz-container" id="q7box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q7</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">An orthonormal basis has vectors that are:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7,0)">A) Mutually orthogonal and each has unit length</div>
+                    <div class="quiz-option" onclick="checkAnswer(7,1)">B) Parallel to each other</div>
+                    <div class="quiz-option" onclick="checkAnswer(7,2)">C) Of any arbitrary length</div>
+                    <div class="quiz-option" onclick="checkAnswer(7,3)">D) Linearly dependent</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="quiz-container" id="q8box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q8</span>
+                    <span class="difficulty-badge difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The Manhattan (L1) norm sums:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8,0)">A) Absolute values of components: Î£|xáµ€Â¢|</div>
+                    <div class="quiz-option" onclick="checkAnswer(8,1)">B) Squared components</div>
+                    <div class="quiz-option" onclick="checkAnswer(8,2)">C) Products of components</div>
+                    <div class="quiz-option" onclick="checkAnswer(8,3)">D) Ratios of components</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- ===== MCQ SECTION: MEDIUM ===== -->
+        <section class="section" id="q9">
+            <div class="section-header">
+                <span class="section-number">MCQ Medium</span>
+                <h2>Questions 9-17: Applications</h2>
+            </div>
+
+            <!-- Q9 -->
+            <div class="quiz-container" id="q9box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q9</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">PÂ² = P</div>
+                <div class="quiz-question">A projection matrix P satisfies PÂ² = P. This property is called:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9,0)">A) Idempotent</div>
+                    <div class="quiz-option" onclick="checkAnswer(9,1)">B) Orthogonal</div>
+                    <div class="quiz-option" onclick="checkAnswer(9,2)">C) Symmetric</div>
+                    <div class="quiz-option" onclick="checkAnswer(9,3)">D) Invertible</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="quiz-container" id="q10box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q10</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The projection of v onto u is given by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10,0)">A) proj_u(v) = (âŸ¨v,uâŸ© / âŸ¨u,uâŸ©) Â· u</div>
+                    <div class="quiz-option" onclick="checkAnswer(10,1)">B) proj_u(v) = v - u</div>
+                    <div class="quiz-option" onclick="checkAnswer(10,2)">C) proj_u(v) = v × u</div>
+                    <div class="quiz-option" onclick="checkAnswer(10,3)">D) proj_u(v) = â€—vâ€— Â· u</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <!-- Q11 -->
+            <div class="quiz-container" id="q11box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q11</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Cosine similarity ranges from:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11,0)">A) -1 to 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(11,1)">B) 0 to 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(11,2)">C) 0 to âˆž</div>
+                    <div class="quiz-option" onclick="checkAnswer(11,3)">D) -âˆž to âˆž</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <!-- Q12 -->
+            <div class="quiz-container" id="q12box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q12</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Gram-Schmidt process converts a basis into:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12,0)">A) An orthonormal basis</div>
+                    <div class="quiz-option" onclick="checkAnswer(12,1)">B) A diagonal matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(12,2)">C) A scalar</div>
+                    <div class="quiz-option" onclick="checkAnswer(12,3)">D) An eigenvalue</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <!-- Q13 -->
+            <div class="quiz-container" id="q13box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q13</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">d(x,y) = â€—x - yâ€—â‚‚</div>
+                <div class="quiz-question">This formula represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13,0)">A) Euclidean distance</div>
+                    <div class="quiz-option" onclick="checkAnswer(13,1)">B) Manhattan distance</div>
+                    <div class="quiz-option" onclick="checkAnswer(13,2)">C) Cosine similarity</div>
+                    <div class="quiz-option" onclick="checkAnswer(13,3)">D) Inner product</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <!-- Q14 -->
+            <div class="quiz-container" id="q14box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q14</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Lâˆž norm (max norm) of a vector equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14,0)">A) The maximum absolute component value</div>
+                    <div class="quiz-option" onclick="checkAnswer(14,1)">B) The sum of all components</div>
+                    <div class="quiz-option" onclick="checkAnswer(14,2)">C) The product of components</div>
+                    <div class="quiz-option" onclick="checkAnswer(14,3)">D) The minimum component value</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <!-- Q15 -->
+            <div class="quiz-container" id="q15box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q15</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">A rotation matrix in 2D preserves:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15,0)">A) Lengths and angles</div>
+                    <div class="quiz-option" onclick="checkAnswer(15,1)">B) Only lengths</div>
+                    <div class="quiz-option" onclick="checkAnswer(15,2)">C) Only angles</div>
+                    <div class="quiz-option" onclick="checkAnswer(15,3)">D) Neither lengths nor angles</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <!-- Q16 -->
+            <div class="quiz-container" id="q16box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q16</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For orthogonal matrix Q, which is true?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16,0)">A) Qáµ€Q = QQáµ€ = I (identity)</div>
+                    <div class="quiz-option" onclick="checkAnswer(16,1)">B) QÂ² = Q</div>
+                    <div class="quiz-option" onclick="checkAnswer(16,2)">C) det(Q) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(16,3)">D) Q = Qáµ€</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <!-- Q17 -->
+            <div class="quiz-container" id="q17box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q17</span>
+                    <span class="difficulty-badge difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Cauchy-Schwarz inequality states:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17,0)">A) |âŸ¨x,yâŸ©| â‰¤ â€—xâ€— Â· â€—yâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(17,1)">B) âŸ¨x,yâŸ© = â€—xâ€— + â€—yâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(17,2)">C) â€—x+yâ€— = â€—xâ€— Â· â€—yâ€—</div>
+                    <div class="quiz-option" onclick="checkAnswer(17,3)">D) âŸ¨x,yâŸ© â‰¥ 0 always</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- ===== MCQ SECTION: HARD ===== -->
+        <section class="section" id="q18">
+            <div class="section-header">
+                <span class="section-number">MCQ Hard</span>
+                <h2>Questions 18-25: Advanced Concepts</h2>
+            </div>
+
+            <!-- Q18 -->
+            <div class="quiz-container" id="q18box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q18</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">P = A(Aáµ€A)â»Â¹Aáµ€</div>
+                <div class="quiz-question">This formula gives the projection matrix onto:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18,0)">A) The column space of A</div>
+                    <div class="quiz-option" onclick="checkAnswer(18,1)">B) The null space of A</div>
+                    <div class="quiz-option" onclick="checkAnswer(18,2)">C) The row space of A</div>
+                    <div class="quiz-option" onclick="checkAnswer(18,3)">D) The eigenspace of A</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <!-- Q19 -->
+            <div class="quiz-container" id="q19box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q19</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In linear regression, the residual vector (y - XÎ¸) is orthogonal to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19,0)">A) The column space of X</div>
+                    <div class="quiz-option" onclick="checkAnswer(19,1)">B) The vector y</div>
+                    <div class="quiz-option" onclick="checkAnswer(19,2)">C) The parameter Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(19,3)">D) All vectors</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <!-- Q20 -->
+            <div class="quiz-container" id="q20box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q20</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The Frobenius norm of a matrix A is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20,0)">A) â€—Aâ€—_F = âˆš(Î£áµ€Â¢âˆ‚Â¼ aáµ€Â¢âˆ‚Â¼Â²) = âˆš(trace(Aáµ€A))</div>
+                    <div class="quiz-option" onclick="checkAnswer(20,1)">B) The maximum singular value</div>
+                    <div class="quiz-option" onclick="checkAnswer(20,2)">C) The determinant</div>
+                    <div class="quiz-option" onclick="checkAnswer(20,3)">D) The trace of A</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <!-- Q21 -->
+            <div class="quiz-container" id="q21box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q21</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The dual norm of the L1 norm is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21,0)">A) The Lâˆž norm</div>
+                    <div class="quiz-option" onclick="checkAnswer(21,1)">B) The L2 norm</div>
+                    <div class="quiz-option" onclick="checkAnswer(21,2)">C) The L1 norm itself</div>
+                    <div class="quiz-option" onclick="checkAnswer(21,3)">D) The L0 norm</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <!-- Q22 -->
+            <div class="quiz-container" id="q22box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q22</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">An inner product space is complete (every Cauchy sequence converges) is called:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22,0)">A) A Hilbert space</div>
+                    <div class="quiz-option" onclick="checkAnswer(22,1)">B) A Banach space</div>
+                    <div class="quiz-option" onclick="checkAnswer(22,2)">C) A normed space</div>
+                    <div class="quiz-option" onclick="checkAnswer(22,3)">D) A metric space</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <!-- Q23 -->
+            <div class="quiz-container" id="q23box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q23</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">f(x,y) = xáµ€My where M is symmetric positive definite</div>
+                <div class="quiz-question">This defines a valid inner product because M being SPD ensures:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23,0)">A) Positive definiteness and symmetry of the bilinear form</div>
+                    <div class="quiz-option" onclick="checkAnswer(23,1)">B) M is invertible</div>
+                    <div class="quiz-option" onclick="checkAnswer(23,2)">C) M has real eigenvalues</div>
+                    <div class="quiz-option" onclick="checkAnswer(23,3)">D) M is diagonal</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <!-- Q24 -->
+            <div class="quiz-container" id="q24box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q24</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">PCA finds principal components by maximizing:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24,0)">A) Variance of projected data (using inner products)</div>
+                    <div class="quiz-option" onclick="checkAnswer(24,1)">B) The norm of the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(24,2)">C) Classification accuracy</div>
+                    <div class="quiz-option" onclick="checkAnswer(24,3)">D) The distance from origin</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <!-- Q25 -->
+            <div class="quiz-container" id="q25box">
+                <div class="quiz-header">
+                    <span class="quiz-number">Q25</span>
+                    <span class="difficulty-badge difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In agentic AI, embedding similarity computed via inner products enables:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25,0)">A) Semantic retrieval and tool selection based on relevance</div>
+                    <div class="quiz-option" onclick="checkAnswer(25,1)">B) Faster training only</div>
+                    <div class="quiz-option" onclick="checkAnswer(25,2)">C) Random exploration</div>
+                    <div class="quiz-option" onclick="checkAnswer(25,3)">D) Memory compression only</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- ===== SUMMARY SECTION ===== -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <strong>Key Formulas to Remember:</strong><br><br>
+                â€¢ Euclidean norm: â€—xâ€—â‚‚ = âˆš(xáµ€x)<br>
+                â€¢ Manhattan norm: â€—x-â‚ = Î£áµ€Â¢|xáµ€Â¢|<br>
+                â€¢ Inner product: âŸ¨x,yâŸ© = xáµ€y (standard)<br>
+                â€¢ Angle: cos(Ï‰) = âŸ¨x,yâŸ© / (â€—xâ€—Â·â€–yâ€—)<br>
+                â€¢ Projection: proj_u(v) = (âŸ¨v,uâŸ©/âŸ¨u,uâŸ©)u<br>
+                â€¢ Cosine similarity: cos_sim = âŸ¨x,yâŸ©/(â€—xâ€—â€—yâ€—)<br>
+                â€¢ Projection matrix: P = A(Aáµ€A)â»Â¹Aáµ€<br>
+                â€¢ Cauchy-Schwarz: |âŸ¨x,yâŸ©| â‰¤ â€—xâ€—Â·â€–yâ€—
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps in MML Series</span>
+                <ul>
+                    <li><strong>Chapter 2:</strong> Linear Algebra âœ“</li>
+                    <li><strong>Chapter 3:</strong> Analytic Geometry âœ“ (Current)</li>
+                    <li><strong>Chapter 4:</strong> Matrix Decompositions</li>
+                    <li><strong>Chapter 5:</strong> Vector Calculus</li>
+                    <li><strong>Chapter 6:</strong> Probability and Distributions</li>
+                    <li><strong>Chapter 7:</strong> Continuous Optimization</li>
+                    <li><strong>Chapter 8:</strong> When Models Meet Data</li>
+                    <li><strong>Chapter 9:</strong> Linear Regression</li>
+                    <li><strong>Chapter 10:</strong> Dimensionality Reduction with PCA</li>
+                    <li><strong>Chapter 11:</strong> Density Estimation with GMM</li>
+                    <li><strong>Chapter 12:</strong> Classification with SVM</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp for advanced topics!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "A norm is a function that assigns a non-negative length/size to each vector.",
+            2: "The Euclidean norm is the L2 norm: â€—xâ€—â‚‚ = âˆš(Î£xáµ€Â¢Â²).",
+            3: "Vectors with zero inner product are orthogonal (perpendicular) to each other.",
+            4: "xÂ·x = Î£xáµ€Â¢Â² = â€—xâ€—Â², the squared Euclidean norm.",
+            5: "Triangle inequality is a fundamental property of all norms.",
+            6: "Cosine of the angle: cos(Ï‰) = âŸ¨x,yâŸ©/(â€—xâ€—â€—yâ€—).",
+            7: "Orthonormal basis: mutually orthogonal vectors each with unit length.",
+            8: "Manhattan/L1 norm: â€—x-â‚ = Î£|xáµ€Â¢|.",
+            9: "Projection matrices are idempotent: applying twice equals applying once.",
+            10: "Projection formula: proj_u(v) = (âŸ¨v,uâŸ©/âŸ¨u,uâŸ©)Â·u.",
+            11: "Cosine similarity ranges from -1 (opposite) to 1 (identical direction).",
+            12: "Gram-Schmidt converts any basis to an orthonormal basis.",
+            13: "Euclidean distance is the L2 norm of the difference vector.",
+            14: "Lâˆž (max/Chebyshev) norm equals the largest absolute component.",
+            15: "Rotation matrices preserve both lengths and angles (isometry).",
+            16: "Orthogonal matrices satisfy Qáµ€Q = QQáµ€ = I.",
+            17: "Cauchy-Schwarz: |âŸ¨x,yâŸ©| â‰¤ â€—xâ€—Â·â€–yâ€— with equality iff x,y are parallel.",
+            18: "P = A(Aáµ€A)â»Â¹Aáµ€ projects onto the column space (range) of A.",
+            19: "In least squares, residuals are orthogonal to the column space of X.",
+            20: "Frobenius norm: âˆš(sum of squared entries) = âˆš(trace(Aáµ€A)).",
+            21: "The dual of L1 is Lâˆž and vice versa.",
+            22: "A complete inner product space is a Hilbert space.",
+            23: "SPD M ensures positive definiteness âŸ¨x,xâŸ©_M > 0 and symmetry of the form.",
+            24: "PCA maximizes variance of projections (using inner products to compute projections).",
+            25: "Agentic AI uses embedding similarity for semantic retrieval and relevance-based tool selection."
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}box`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}box`);
+                if (c) {
+                    c.classList.remove('answered-correct', 'answered-wrong');
+                    c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                    document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+                }
+            }
+            updateStats();
+        }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Lab 1: L2 Norm
+        function calcL2Norm() {
+            const x1 = parseFloat(document.getElementById('l2_x1').value);
+            const x2 = parseFloat(document.getElementById('l2_x2').value);
+            const x3 = parseFloat(document.getElementById('l2_x3').value);
+            const norm = Math.sqrt(x1*x1 + x2*x2 + x3*x3);
+            
+            const canvas = document.getElementById('l2Canvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 30;
+            
+            // Axes
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Vector
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x1*scale, cy - x2*scale);
+            ctx.stroke();
+            
+            // Arrow head
+            ctx.fillStyle = '#0b2fa0';
+            ctx.beginPath();
+            ctx.arc(cx + x1*scale, cy - x2*scale, 6, 0, 2*Math.PI);
+            ctx.fill();
+            
+            document.getElementById('l2Output').innerHTML = 
+`Euclidean (L2) Norm
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Vector x = [${x1}, ${x2}, ${x3}]
+
+â€—xâ€—â‚‚ = âˆš(${x1}Â² + ${x2}Â² + ${x3}Â²)
+     = âˆš(${x1*x1} + ${x2*x2} + ${x3*x3})
+     = âˆš${x1*x1 + x2*x2 + x3*x3}
+     = ${norm.toFixed(4)}
+
+The Euclidean norm measures the
+"straight-line" distance from origin.`;
+        }
+
+        // Lab 2: L1 Norm
+        function calcL1Norm() {
+            const x1 = parseFloat(document.getElementById('l1_x1').value);
+            const x2 = parseFloat(document.getElementById('l1_x2').value);
+            const l1 = Math.abs(x1) + Math.abs(x2);
+            const l2 = Math.sqrt(x1*x1 + x2*x2);
+            
+            const canvas = document.getElementById('l1Canvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 30;
+            
+            // Axes
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Manhattan path
+            ctx.strokeStyle = '#ff9000';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x1*scale, cy);
+            ctx.lineTo(cx + x1*scale, cy - x2*scale);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Euclidean path
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x1*scale, cy - x2*scale);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#0b2fa0';
+            ctx.beginPath();
+            ctx.arc(cx + x1*scale, cy - x2*scale, 6, 0, 2*Math.PI);
+            ctx.fill();
+            
+            document.getElementById('l1Output').innerHTML = 
+`Manhattan (L1) Norm
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Vector x = [${x1}, ${x2}]
+
+â€—x-â‚ = |${x1}| + |${x2}|
+     = ${Math.abs(x1)} + ${Math.abs(x2)}
+     = ${l1.toFixed(4)}
+
+Compare to L2: â€—xâ€—â‚‚ = ${l2.toFixed(4)}
+
+Orange dashed: Manhattan path
+Blue solid: Euclidean path`;
+        }
+
+        // Lab 3: Unit Balls
+        function drawUnitBalls() {
+            const type = document.getElementById('normType').value;
+            const canvas = document.getElementById('unitBallCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 80;
+            
+            // Axes
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // L1 ball (diamond)
+            if (type === 'all' || type === 'l1') {
+                ctx.strokeStyle = '#ff9000';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - scale);
+                ctx.lineTo(cx + scale, cy);
+                ctx.lineTo(cx, cy + scale);
+                ctx.lineTo(cx - scale, cy);
+                ctx.closePath();
+                ctx.stroke();
+            }
+            
+            // L2 ball (circle)
+            if (type === 'all' || type === 'l2') {
+                ctx.strokeStyle = '#0b2fa0';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, scale, 0, 2*Math.PI);
+                ctx.stroke();
+            }
+            
+            // Lâˆž ball (square)
+            if (type === 'all' || type === 'linf') {
+                ctx.strokeStyle = '#7c3aed';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(cx - scale, cy - scale, scale*2, scale*2);
+            }
+            
+            document.getElementById('unitBallOutput').innerHTML = 
+`Unit Balls Comparison
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Orange diamond: L1 ball {x: â€—x-â‚ â‰¤ 1}
+Blue circle: L2 ball {x: â€—xâ€—â‚‚ â‰¤ 1}
+Purple square: Lâˆž ball {x: â€—xâ€—âˆž â‰¤ 1}
+
+Key insight:
+â€¢ L1 promotes sparse solutions (corners)
+â€¢ L2 is rotation-invariant (circular)
+â€¢ Lâˆž bounds max component`;
+        }
+
+        // Lab 4: Inner Product
+        function calcInnerProduct() {
+            const x = document.getElementById('ipX').value.split(',').map(Number);
+            const y = document.getElementById('ipY').value.split(',').map(Number);
+            const ip = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const normX = Math.sqrt(x.reduce((sum, xi) => sum + xi*xi, 0));
+            const normY = Math.sqrt(y.reduce((sum, yi) => sum + yi*yi, 0));
+            
+            document.getElementById('ipOutput').innerHTML = 
+`Inner Product Computation
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+x = [${x.join(', ')}]
+y = [${y.join(', ')}]
+
+âŸ¨x, yâŸ© = ${x.map((xi, i) => `${xi}×${y[i]}`).join(' + ')}
+       = ${ip}
+
+Verification of properties:
+â€¢ â€—xâ€— = ${normX.toFixed(4)}
+â€¢ â€—yâ€— = ${normY.toFixed(4)}
+â€¢ Cauchy-Schwarz: |âŸ¨x,yâŸ©| â‰¤ â€—xâ€—Â·â€–yâ€—
+  ${Math.abs(ip).toFixed(4)} â‰¤ ${(normX*normY).toFixed(4)} âœ“`;
+        }
+
+        // Lab 5: Dot Product
+        function calcDotProduct() {
+            const x1 = parseFloat(document.getElementById('dp_x1').value);
+            const x2 = parseFloat(document.getElementById('dp_x2').value);
+            const y1 = parseFloat(document.getElementById('dp_y1').value);
+            const y2 = parseFloat(document.getElementById('dp_y2').value);
+            const dp = x1*y1 + x2*y2;
+            
+            const canvas = document.getElementById('dpCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 30;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Vector x
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x1*scale, cy - x2*scale);
+            ctx.stroke();
+            ctx.fillStyle = '#0b2fa0';
+            ctx.beginPath();
+            ctx.arc(cx + x1*scale, cy - x2*scale, 5, 0, 2*Math.PI);
+            ctx.fill();
+            
+            // Vector y
+            ctx.strokeStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + y1*scale, cy - y2*scale);
+            ctx.stroke();
+            ctx.fillStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.arc(cx + y1*scale, cy - y2*scale, 5, 0, 2*Math.PI);
+            ctx.fill();
+            
+            document.getElementById('dpOutput').innerHTML = 
+`Dot Product
+â•â•â•â•â•â•â•â•â•â•â•
+x = [${x1}, ${x2}] (blue)
+y = [${y1}, ${y2}] (orange)
+
+x Â· y = xâ‚yâ‚ + xâ‚‚yâ‚‚
+      = ${x1}×${y1} + ${x2}×${y2}
+      = ${x1*y1} + ${x2*y2}
+      = ${dp}
+
+Interpretation:
+${dp > 0 ? 'â€¢ Positive: vectors point roughly same direction' : 
+  dp < 0 ? 'â€¢ Negative: vectors point roughly opposite' :
+           'â€¢ Zero: vectors are orthogonal'}`;
+        }
+
+        // Lab 6: Angle
+        function calcAngle() {
+            const x = document.getElementById('angleX').value.split(',').map(Number);
+            const y = document.getElementById('angleY').value.split(',').map(Number);
+            const dp = x[0]*y[0] + x[1]*y[1];
+            const normX = Math.sqrt(x[0]*x[0] + x[1]*x[1]);
+            const normY = Math.sqrt(y[0]*y[0] + y[1]*y[1]);
+            const cosAngle = dp / (normX * normY);
+            const angleRad = Math.acos(Math.max(-1, Math.min(1, cosAngle)));
+            const angleDeg = angleRad * 180 / Math.PI;
+            
+            const canvas = document.getElementById('angleCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 40;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Draw angle arc
+            const startAngle = -Math.atan2(x[1], x[0]);
+            const endAngle = -Math.atan2(y[1], y[0]);
+            ctx.strokeStyle = '#7c3aed';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 30, startAngle, endAngle, startAngle > endAngle);
+            ctx.stroke();
+            
+            // Vector x
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x[0]*scale, cy - x[1]*scale);
+            ctx.stroke();
+            
+            // Vector y
+            ctx.strokeStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + y[0]*scale, cy - y[1]*scale);
+            ctx.stroke();
+            
+            document.getElementById('angleOutput').innerHTML = 
+`Angle Between Vectors
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+x = [${x.join(', ')}] (blue)
+y = [${y.join(', ')}] (orange)
+
+cos(Ï‰) = âŸ¨x,yâŸ© / (â€—xâ€—Â·â€–yâ€—)
+       = ${dp.toFixed(4)} / (${normX.toFixed(4)} × ${normY.toFixed(4)})
+       = ${cosAngle.toFixed(4)}
+
+Ï‰ = arccos(${cosAngle.toFixed(4)})
+  = ${angleRad.toFixed(4)} radians
+  = ${angleDeg.toFixed(2)}Â°`;
+        }
+
+        // Lab 7: Orthogonality
+        function checkOrthogonal() {
+            const x = document.getElementById('orthX').value.split(',').map(Number);
+            const y = document.getElementById('orthY').value.split(',').map(Number);
+            const dp = x[0]*y[0] + x[1]*y[1];
+            const isOrth = Math.abs(dp) < 0.0001;
+            
+            const canvas = document.getElementById('orthCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 40;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Right angle symbol if orthogonal
+            if (isOrth) {
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 2;
+                const size = 15;
+                ctx.beginPath();
+                const ux = x[0]/Math.sqrt(x[0]*x[0]+x[1]*x[1]);
+                const uy = x[1]/Math.sqrt(x[0]*x[0]+x[1]*x[1]);
+                ctx.moveTo(cx + ux*size, cy - uy*size);
+                ctx.lineTo(cx + ux*size - uy*size, cy - uy*size - ux*size);
+                ctx.lineTo(cx - uy*size, cy - ux*size);
+                ctx.stroke();
+            }
+            
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x[0]*scale, cy - x[1]*scale);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + y[0]*scale, cy - y[1]*scale);
+            ctx.stroke();
+            
+            document.getElementById('orthOutput').innerHTML = 
+`Orthogonality Check
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+x = [${x.join(', ')}]
+y = [${y.join(', ')}]
+
+âŸ¨x, yâŸ© = ${dp.toFixed(6)}
+
+Result: ${isOrth ? 'âœ… ORTHOGONAL (âŸ¨x,yâŸ© â‰ˆ 0)' : 'âŒ NOT ORTHOGONAL'}
+
+${isOrth ? 'The vectors are perpendicular.\nGreen square shows 90Â° angle.' : 
+           'The vectors are not perpendicular.'}`;
+        }
+
+        // Lab 8: Projection
+        function calcProjection() {
+            const v = document.getElementById('projV').value.split(',').map(Number);
+            const u = document.getElementById('projU').value.split(',').map(Number);
+            const vDotU = v[0]*u[0] + v[1]*u[1];
+            const uDotU = u[0]*u[0] + u[1]*u[1];
+            const scalar = vDotU / uDotU;
+            const proj = [scalar * u[0], scalar * u[1]];
+            
+            const canvas = document.getElementById('projCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 40;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Direction u (extended)
+            ctx.strokeStyle = '#aaa';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3,3]);
+            ctx.beginPath();
+            ctx.moveTo(cx - u[0]*scale*3, cy + u[1]*scale*3);
+            ctx.lineTo(cx + u[0]*scale*3, cy - u[1]*scale*3);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Vector v
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v[0]*scale, cy - v[1]*scale);
+            ctx.stroke();
+            
+            // Projection
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + proj[0]*scale, cy - proj[1]*scale);
+            ctx.stroke();
+            
+            // Residual (dashed)
+            ctx.strokeStyle = '#ff9000';
+            ctx.setLineDash([5,5]);
+            ctx.beginPath();
+            ctx.moveTo(cx + proj[0]*scale, cy - proj[1]*scale);
+            ctx.lineTo(cx + v[0]*scale, cy - v[1]*scale);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            document.getElementById('projOutput').innerHTML = 
+`Vector Projection
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+v = [${v.join(', ')}] (blue)
+u = [${u.join(', ')}] (direction)
+
+proj_u(v) = (âŸ¨v,uâŸ© / âŸ¨u,uâŸ©) Â· u
+          = (${vDotU} / ${uDotU}) Â· [${u.join(', ')}]
+          = ${scalar.toFixed(4)} Â· [${u.join(', ')}]
+          = [${proj[0].toFixed(4)}, ${proj[1].toFixed(4)}] (green)
+
+Residual = v - proj_u(v) (orange dashed)
+         = [${(v[0]-proj[0]).toFixed(4)}, ${(v[1]-proj[1]).toFixed(4)}]`;
+        }
+
+        // Lab 9: Subspace Projection
+        function calcSubspaceProj() {
+            const p = document.getElementById('subspacePoint').value.split(',').map(Number);
+            const b1 = document.getElementById('subspaceBasis1').value.split(',').map(Number);
+            const b2 = document.getElementById('subspaceBasis2').value.split(',').map(Number);
+            
+            // Project onto span{b1, b2} - simplified for xy-plane case
+            const proj = [p[0], p[1], 0]; // Assuming b1=[1,0,0], b2=[0,1,0]
+            
+            document.getElementById('subspaceProjOutput').innerHTML = 
+`Subspace Projection
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Point p = [${p.join(', ')}]
+Basis bâ‚ = [${b1.join(', ')}]
+Basis bâ‚‚ = [${b2.join(', ')}]
+
+Projection matrix: P = A(Aáµ€A)â»Â¹Aáµ€
+where A = [bâ‚ | bâ‚‚]
+
+For standard xy-plane (bâ‚=[1,0,0], bâ‚‚=[0,1,0]):
+proj = [${proj.join(', ')}]
+
+The projection is the closest point
+in the subspace to the original point.`;
+        }
+
+        // Lab 10: ONB Check
+        function checkONB() {
+            const b1 = document.getElementById('onb1').value.split(',').map(Number);
+            const b2 = document.getElementById('onb2').value.split(',').map(Number);
+            
+            const norm1 = Math.sqrt(b1[0]*b1[0] + b1[1]*b1[1]);
+            const norm2 = Math.sqrt(b2[0]*b2[0] + b2[1]*b2[1]);
+            const dp = b1[0]*b2[0] + b1[1]*b2[1];
+            
+            const isOrtho = Math.abs(dp) < 0.0001;
+            const isNorm1 = Math.abs(norm1 - 1) < 0.0001;
+            const isNorm2 = Math.abs(norm2 - 1) < 0.0001;
+            const isONB = isOrtho && isNorm1 && isNorm2;
+            
+            document.getElementById('onbOutput').innerHTML = 
+`Orthonormal Basis Check
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+bâ‚ = [${b1.join(', ')}]
+bâ‚‚ = [${b2.join(', ')}]
+
+Checks:
+â€¢ â€—bâ‚- = ${norm1.toFixed(4)} ${isNorm1 ? '= 1 âœ“' : 'â‰  1 âœ—'}
+â€¢ â€—bâ‚‚â€— = ${norm2.toFixed(4)} ${isNorm2 ? '= 1 âœ“' : 'â‰  1 âœ—'}
+â€¢ âŸ¨bâ‚,bâ‚‚âŸ© = ${dp.toFixed(4)} ${isOrtho ? '= 0 âœ“' : 'â‰  0 âœ—'}
+
+Result: ${isONB ? 'âœ… ORTHONORMAL BASIS' : 'âŒ NOT ORTHONORMAL'}`;
+        }
+
+        // Lab 11: Gram-Schmidt
+        function gramSchmidt() {
+            const v1 = document.getElementById('gs_v1').value.split(',').map(Number);
+            const v2 = document.getElementById('gs_v2').value.split(',').map(Number);
+            
+            // e1 = v1 / ||v1||
+            const norm1 = Math.sqrt(v1[0]*v1[0] + v1[1]*v1[1]);
+            const e1 = [v1[0]/norm1, v1[1]/norm1];
+            
+            // u2 = v2 - <v2,e1>e1
+            const v2e1 = v2[0]*e1[0] + v2[1]*e1[1];
+            const u2 = [v2[0] - v2e1*e1[0], v2[1] - v2e1*e1[1]];
+            const norm2 = Math.sqrt(u2[0]*u2[0] + u2[1]*u2[1]);
+            const e2 = norm2 > 0.0001 ? [u2[0]/norm2, u2[1]/norm2] : [0, 0];
+            
+            const canvas = document.getElementById('gsCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 40;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Original vectors (dashed)
+            ctx.strokeStyle = '#aaa';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5,5]);
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v1[0]*scale, cy - v1[1]*scale);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v2[0]*scale, cy - v2[1]*scale);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Orthonormal vectors
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + e1[0]*scale*2, cy - e1[1]*scale*2);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + e2[0]*scale*2, cy - e2[1]*scale*2);
+            ctx.stroke();
+            
+            document.getElementById('gsOutput').innerHTML = 
+`Gram-Schmidt Process
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Input:
+vâ‚ = [${v1.join(', ')}] (gray dashed)
+vâ‚‚ = [${v2.join(', ')}] (gray dashed)
+
+Step 1: eâ‚ = vâ‚/â€—vâ‚-
+        eâ‚ = [${e1[0].toFixed(4)}, ${e1[1].toFixed(4)}] (blue)
+
+Step 2: uâ‚‚ = vâ‚‚ - âŸ¨vâ‚‚,eâ‚âŸ©eâ‚
+        âŸ¨vâ‚‚,eâ‚âŸ© = ${v2e1.toFixed(4)}
+        uâ‚‚ = [${u2[0].toFixed(4)}, ${u2[1].toFixed(4)}]
+        eâ‚‚ = uâ‚‚/â€—uâ‚‚â€—
+        eâ‚‚ = [${e2[0].toFixed(4)}, ${e2[1].toFixed(4)}] (orange)
+
+Verify: âŸ¨eâ‚,eâ‚‚âŸ© = ${(e1[0]*e2[0]+e1[1]*e2[1]).toFixed(6)} â‰ˆ 0 âœ“`;
+        }
+
+        // Lab 12: Distances
+        function calcDistances() {
+            const x = document.getElementById('dist_x').value.split(',').map(Number);
+            const y = document.getElementById('dist_y').value.split(',').map(Number);
+            
+            const d = [y[0]-x[0], y[1]-x[1]];
+            const l1 = Math.abs(d[0]) + Math.abs(d[1]);
+            const l2 = Math.sqrt(d[0]*d[0] + d[1]*d[1]);
+            const linf = Math.max(Math.abs(d[0]), Math.abs(d[1]));
+            
+            const canvas = document.getElementById('distCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 30;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Points
+            ctx.fillStyle = '#0b2fa0';
+            ctx.beginPath();
+            ctx.arc(cx + x[0]*scale, cy - x[1]*scale, 8, 0, 2*Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.arc(cx + y[0]*scale, cy - y[1]*scale, 8, 0, 2*Math.PI);
+            ctx.fill();
+            
+            // Euclidean
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx + x[0]*scale, cy - x[1]*scale);
+            ctx.lineTo(cx + y[0]*scale, cy - y[1]*scale);
+            ctx.stroke();
+            
+            // Manhattan
+            ctx.strokeStyle = '#ff9000';
+            ctx.setLineDash([5,5]);
+            ctx.beginPath();
+            ctx.moveTo(cx + x[0]*scale, cy - x[1]*scale);
+            ctx.lineTo(cx + y[0]*scale, cy - x[1]*scale);
+            ctx.lineTo(cx + y[0]*scale, cy - y[1]*scale);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            document.getElementById('distOutput').innerHTML = 
+`Distance Metrics
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+x = [${x.join(', ')}] (blue point)
+y = [${y.join(', ')}] (orange point)
+
+Euclidean (L2): dâ‚‚ = ${l2.toFixed(4)}
+  (blue line - shortest path)
+
+Manhattan (L1): dâ‚ = ${l1.toFixed(4)}
+  (orange dashed - axis-aligned path)
+
+Chebyshev (Lâˆž): dâˆž = ${linf.toFixed(4)}
+  (max component difference)
+
+Always: dâˆž â‰¤ dâ‚‚ â‰¤ dâ‚`;
+        }
+
+        // Lab 13: Cosine Similarity
+        function calcCosSim() {
+            const x = document.getElementById('cos_x').value.split(',').map(Number);
+            const y = document.getElementById('cos_y').value.split(',').map(Number);
+            
+            const dp = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const normX = Math.sqrt(x.reduce((sum, xi) => sum + xi*xi, 0));
+            const normY = Math.sqrt(y.reduce((sum, yi) => sum + yi*yi, 0));
+            const cosSim = dp / (normX * normY);
+            
+            document.getElementById('cosOutput').innerHTML = 
+`Cosine Similarity
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+x = [${x.join(', ')}]
+y = [${y.join(', ')}]
+
+cos_sim(x, y) = âŸ¨x,yâŸ© / (â€—xâ€—Â·â€–yâ€—)
+              = ${dp.toFixed(4)} / (${normX.toFixed(4)} × ${normY.toFixed(4)})
+              = ${cosSim.toFixed(6)}
+
+Interpretation:
+${cosSim > 0.9 ? 'â€¢ Very similar (cos > 0.9)' :
+  cosSim > 0.5 ? 'â€¢ Moderately similar (0.5 < cos < 0.9)' :
+  cosSim > 0 ? 'â€¢ Weakly similar (0 < cos < 0.5)' :
+  cosSim > -0.5 ? 'â€¢ Weakly dissimilar (-0.5 < cos < 0)' :
+                  'â€¢ Strongly dissimilar (cos < -0.5)'}
+
+Note: Cosine similarity is invariant to scaling!`;
+        }
+
+        // Lab 14: Rotation
+        function calcRotation() {
+            const v = document.getElementById('rot_v').value.split(',').map(Number);
+            const angleDeg = parseFloat(document.getElementById('rot_angle').value);
+            const angleRad = angleDeg * Math.PI / 180;
+            
+            const cos = Math.cos(angleRad);
+            const sin = Math.sin(angleRad);
+            const rotated = [cos*v[0] - sin*v[1], sin*v[0] + cos*v[1]];
+            
+            const canvas = document.getElementById('rotCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 40;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Original
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v[0]*scale, cy - v[1]*scale);
+            ctx.stroke();
+            
+            // Rotated
+            ctx.strokeStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + rotated[0]*scale, cy - rotated[1]*scale);
+            ctx.stroke();
+            
+            // Arc
+            ctx.strokeStyle = '#7c3aed';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 30, -Math.atan2(v[1], v[0]), -Math.atan2(rotated[1], rotated[0]), angleDeg < 0);
+            ctx.stroke();
+            
+            document.getElementById('rotOutput').innerHTML = 
+`2D Rotation
+â•â•â•â•â•â•â•â•â•â•â•
+v = [${v.join(', ')}] (blue)
+Î¸ = ${angleDeg}Â°
+
+Rotation matrix R(Î¸):
+[cos(${angleDeg}Â°)  -sin(${angleDeg}Â°)]   [${cos.toFixed(4)}  ${(-sin).toFixed(4)}]
+[sin(${angleDeg}Â°)   cos(${angleDeg}Â°)] = [${sin.toFixed(4)}   ${cos.toFixed(4)}]
+
+R(Î¸)Â·v = [${rotated[0].toFixed(4)}, ${rotated[1].toFixed(4)}] (orange)
+
+Verify â€—vâ€— = ${Math.sqrt(v[0]*v[0]+v[1]*v[1]).toFixed(4)}
+       â€—Rvâ€— = ${Math.sqrt(rotated[0]*rotated[0]+rotated[1]*rotated[1]).toFixed(4)}
+       (length preserved âœ“)`;
+        }
+
+        // Lab 15: Reflection
+        function calcReflection() {
+            const v = document.getElementById('ref_v').value.split(',').map(Number);
+            const u = document.getElementById('ref_u').value.split(',').map(Number);
+            
+            const vDotU = v[0]*u[0] + v[1]*u[1];
+            const uDotU = u[0]*u[0] + u[1]*u[1];
+            const scalar = 2 * vDotU / uDotU;
+            const reflected = [scalar*u[0] - v[0], scalar*u[1] - v[1]];
+            
+            const canvas = document.getElementById('refCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width = canvas.offsetWidth;
+            const H = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, W, H);
+            
+            const cx = W/2, cy = H/2, scale = 40;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+            ctx.stroke();
+            
+            // Mirror line
+            ctx.strokeStyle = '#7c3aed';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5,5]);
+            ctx.beginPath();
+            ctx.moveTo(cx - u[0]*scale*3, cy + u[1]*scale*3);
+            ctx.lineTo(cx + u[0]*scale*3, cy - u[1]*scale*3);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Original
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v[0]*scale, cy - v[1]*scale);
+            ctx.stroke();
+            
+            // Reflected
+            ctx.strokeStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + reflected[0]*scale, cy - reflected[1]*scale);
+            ctx.stroke();
+            
+            document.getElementById('refOutput').innerHTML = 
+`Reflection Across Line
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+v = [${v.join(', ')}] (blue)
+Line direction u = [${u.join(', ')}] (purple dashed)
+
+ref_u(v) = 2Â·proj_u(v) - v
+         = 2Â·(âŸ¨v,uâŸ©/âŸ¨u,uâŸ©)Â·u - v
+         = 2Â·(${vDotU}/${uDotU})Â·[${u.join(',')}] - [${v.join(',')}]
+         = [${reflected[0].toFixed(4)}, ${reflected[1].toFixed(4)}] (orange)
+
+Verify â€—vâ€— = ${Math.sqrt(v[0]*v[0]+v[1]*v[1]).toFixed(4)}
+       â€—refâ€— = ${Math.sqrt(reflected[0]*reflected[0]+reflected[1]*reflected[1]).toFixed(4)}
+       (length preserved âœ“)`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            calcL2Norm();
+            calcL1Norm();
+            drawUnitBalls();
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+        });
+    </script>
+</body>
+</html>

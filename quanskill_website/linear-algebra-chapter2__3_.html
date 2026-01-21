@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Algebra | Mathematics for Machine Learning | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📝’»';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Definition Boxes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .definition-box .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Theorem/Remark Boxes */
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        /* ML Connection Boxes */
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before {
+            content: '📝¤“';
+        }
+
+        /* Quanskill Training Box */
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before {
+            content: '🎓';
+        }
+
+        /* Real World Example Boxes */
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before {
+            content: '🎯';
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before {
+            content: 'â–¸';
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Quiz Box */
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before {
+            content: '🧠';
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Math Display */
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+        }
+
+        .katex-display {
+            margin: 1rem 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .interactive-demo h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interactive-demo h4::before {
+            content: 'âš¡';
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .demo-input label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .demo-input input, .demo-input select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            width: 80px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .demo-input input:focus, .demo-input select:focus {
+            outline: none;
+            border-color: var(--quanskill-blue);
+        }
+
+        .demo-btn {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(11, 47, 160, 0.3);
+        }
+
+        .demo-btn.secondary {
+            background: var(--gradient-orange);
+        }
+
+        .demo-result {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Key Concepts Summary */
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        /* Drag and Drop Styles */
+        .drag-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .drag-item {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 8px;
+            cursor: grab;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .drag-item:hover {
+            background: var(--code-bg);
+            transform: scale(1.05);
+        }
+
+        .drag-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zone {
+            min-height: 50px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.over {
+            border-color: var(--quanskill-orange);
+            background: rgba(255, 144, 0, 0.1);
+        }
+
+        /* Slider Styles */
+        .slider-container {
+            margin: 1rem 0;
+        }
+
+        .slider-container input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--quanskill-blue);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--quanskill-blue);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .progress-bar {
+                left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+            }
+
+            body {
+                font-size: 16px;
+            }
+        }
+
+        /* Scroll animations */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Visualization canvas */
+        .viz-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* Achievement badge */
+        .achievement {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--gradient-orange);
+            color: white;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .achievement::before {
+            content: '🐍â€ ';
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 50px; border-radius: 8px;"></a>
+                <span>Quanskill</span>
+            </div>
+            <button class="nav-toggle" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Chapter 2</div>
+            <div class="chapter-title">Linear Algebra</div>
+        </div>
+        <nav class="nav-section">
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#section-2-1" class="nav-link">Systems of Linear Equations</a>
+            <a href="#section-2-2" class="nav-link">Matrices</a>
+            <a href="#section-2-3" class="nav-link">Solving Linear Systems</a>
+            <a href="#section-2-4" class="nav-link">Vector Spaces</a>
+            <a href="#section-2-5" class="nav-link">Linear Independence</a>
+            <a href="#section-2-6" class="nav-link">Basis and Rank</a>
+            <a href="#section-2-7" class="nav-link">Linear Mappings</a>
+            <a href="#section-2-8" class="nav-link">Affine Spaces</a>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero" id="intro">
+                <div class="hero-content">
+                    <span class="hero-badge">Quanskill ML Foundations</span>
+                    <h1>Linear Algebra</h1>
+                    <p>Master the mathematical foundations that power modern machine learning. At Quanskill, we believe understanding these concepts deeply is what separates good ML practitioners from great ones.</p>
+                </div>
+            </section>
+
+            <!-- Key Concepts Overview -->
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">🐍"</div>
+                    <h5>Vectors & Matrices</h5>
+                    <p>How we represent images, text, and all data in ML systems</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🔍¢</div>
+                    <h5>Linear Systems</h5>
+                    <p>Finding optimal solutions - the heart of model training</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🎯</div>
+                    <h5>Vector Spaces</h5>
+                    <p>The mathematical "playground" where ML algorithms operate</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🔍„</div>
+                    <h5>Linear Mappings</h5>
+                    <p>How neural network layers transform data</p>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Your Quanskill Learning Path</div>
+                <p>This chapter is your gateway to understanding how ML really works. At Quanskill, you'll apply these concepts in hands-on projects - from building recommendation systems to training neural networks. Every concept here connects directly to real ML applications you'll build in our bootcamps.</p>
+            </div>
+
+            <!-- Section 2.1: Systems of Linear Equations -->
+            <section class="section" id="section-2-1">
+                <div class="section-header">
+                    <span class="section-number">2.1</span>
+                    <h2>Systems of Linear Equations</h2>
+                </div>
+
+                <p>At its core, machine learning often boils down to solving systems of equations. Whether you're training a neural network, fitting a regression model, or optimizing a recommendation system, you're essentially asking: "What values make these equations work?"</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>When you train a linear regression model, you're solving a system of linear equations to find the best-fit line. When a neural network learns, it's adjusting millions of parameters by solving (approximately) massive systems of equations. Understanding this foundation helps you grasp what's really happening under the hood of every ML algorithm.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Core Concept</div>
+                    <div class="title">System of Linear Equations</div>
+                    <p>A system of linear equations is a collection of equations where each equation is a linear combination of variables. In general form:</p>
+                    <div class="math-display">
+                        $$\begin{align}
+                        a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1 \\
+                        a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &= b_2 \\
+                        &\vdots \\
+                        a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &= b_m
+                        \end{align}$$
+                    </div>
+                    <p>Here, the \(a_{ij}\) values are known coefficients, the \(b_i\) values are known constants, and we're trying to find the unknown \(x_j\) values.</p>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Project Preview</div>
+                    <p><strong>In Quanskill's ML Bootcamp</strong>, you'll use this exact concept to build a price prediction model. Imagine predicting house prices based on size, bedrooms, and location - that's a system of linear equations! You'll implement this from scratch before using scikit-learn's optimized solvers.</p>
+                </div>
+
+                <!-- Interactive Demo: Solution Types -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Visualize Solution Types</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Adjust the lines to see how systems can have 0, 1, or infinite solutions:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Line 1 Slope</label>
+                            <input type="range" id="slope1" min="-3" max="3" step="0.1" value="1" oninput="updateLines()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Line 2 Slope</label>
+                            <input type="range" id="slope2" min="-3" max="3" step="0.1" value="-0.5" oninput="updateLines()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Line 2 Y-Intercept</label>
+                            <input type="range" id="intercept2" min="-3" max="3" step="0.1" value="2" oninput="updateLines()">
+                        </div>
+                    </div>
+                    <canvas id="linesCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-result" id="lineResult">
+                        <p><strong>Solution Type:</strong> <span id="solutionType">One unique solution</span></p>
+                    </div>
+                </div>
+
+                <h3>Three Possible Outcomes</h3>
+                <p>When solving any system of linear equations, you'll encounter one of three scenarios:</p>
+                <ul>
+                    <li><strong>No solution</strong> - the equations contradict each other (like asking for a number that's both 5 and 7)</li>
+                    <li><strong>Exactly one solution</strong> - there's a unique answer</li>
+                    <li><strong>Infinitely many solutions</strong> - multiple valid answers exist (common in underdetermined systems)</li>
+                </ul>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Test Your Understanding</div>
+                    <p class="quiz-question">A company wants to find optimal prices for 3 products using 2 constraints. How many solutions might exist?</p>
+                    <div class="quiz-options" id="quiz1">
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">A) Exactly one solution</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">B) No solutions</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, true)">C) Infinitely many solutions (underdetermined)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">D) Cannot determine</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+
+                <div class="example-box">
+                    <div class="label">Example: No Solution Exists</div>
+                    <p>Consider this system:</p>
+                    <div class="math-display">
+                        $$x_1 + x_2 + x_3 = 3$$
+                        $$x_1 - x_2 + 2x_3 = 2$$
+                        $$2x_1 + 3x_3 = 1$$
+                    </div>
+                    <p>If we add the first two equations, we get \(2x_1 + 3x_3 = 5\). But the third equation says \(2x_1 + 3x_3 = 1\). Since 5 â‰  1, no solution can satisfy all three equations simultaneously.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Geometric Intuition</div>
+                    <p>Think of each equation as a line (in 2D) or a plane (in 3D). The solution is where all these lines or planes intersect:</p>
+                    <ul>
+                        <li><strong>Single point</strong>: Lines cross at exactly one place ←’ unique solution</li>
+                        <li><strong>A line</strong>: Two identical equations ←’ infinitely many solutions</li>
+                        <li><strong>Empty</strong>: Parallel lines that never meet ←’ no solution</li>
+                    </ul>
+                </div>
+
+                <h3>Compact Matrix Notation</h3>
+                <p>Writing out every equation gets tedious. Fortunately, we can express the entire system using matrices and vectors:</p>
+                <div class="math-display">
+                    $$\begin{bmatrix} a_{11} & \cdots & a_{1n} \\ \vdots & & \vdots \\ a_{m1} & \cdots & a_{mn} \end{bmatrix} \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix} = \begin{bmatrix} b_1 \\ \vdots \\ b_m \end{bmatrix}$$
+                </div>
+                <p>Or simply: \(\mathbf{Ax} = \mathbf{b}\)</p>
+                <p>This compact notation is why linear algebra is so powerful - complex problems become manageable matrix operations.</p>
+
+                <div class="realworld-box">
+                    <div class="label">Quanskill Real-World Application</div>
+                    <p><strong>Portfolio Optimization</strong>: In Quanskill's Finance ML module, you'll optimize investment portfolios where each equation represents a constraint (total budget, risk limits, sector exposure). Finding the optimal allocation is exactly solving \(\mathbf{Ax} = \mathbf{b}\)!</p>
+                </div>
+            </section>
+
+            <!-- Section 2.2: Matrices -->
+            <section class="section" id="section-2-2">
+                <div class="section-header">
+                    <span class="section-number">2.2</span>
+                    <h2>Matrices</h2>
+                </div>
+
+                <p>Matrices are rectangular arrays of numbers that serve as the workhorses of machine learning. Every image you process, every dataset you analyze, and every neural network layer you build is represented and manipulated using matrices.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p><strong>Images</strong> are matrices (or tensors) of pixel values. A 28×28 grayscale image is just a 28×28 matrix! <strong>Neural network weights</strong> are stored in matrices, and the forward pass is essentially a series of matrix multiplications. <strong>Datasets</strong> with m samples and n features form an m×n matrix. Understanding matrix operations is understanding how ML models process data.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Matrix</div>
+                    <p>A matrix \(\mathbf{A}\) with \(m\) rows and \(n\) columns (called an \(m \times n\) matrix) is a rectangular arrangement of numbers:</p>
+                    <div class="math-display">
+                        $$\mathbf{A} = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & & & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix}$$
+                    </div>
+                    <p>We write this as \(\mathbf{A} \in \mathbb{R}^{m \times n}\). Single-row matrices are called <strong>row vectors</strong>, and single-column matrices are <strong>column vectors</strong>.</p>
+                </div>
+
+                <!-- Interactive: Build a Matrix -->
+                <div class="interactive-demo">
+                    <h4>Interactive: See Data as a Matrix</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">This is how Quanskill students visualize customer data in our projects:</p>
+                    <table style="margin: 0 auto;">
+                        <tr>
+                            <th>Customer</th>
+                            <th>Age</th>
+                            <th>Income ($K)</th>
+                            <th>Spending Score</th>
+                        </tr>
+                        <tr><td>Alice</td><td>25</td><td>45</td><td>72</td></tr>
+                        <tr><td>Bob</td><td>34</td><td>78</td><td>45</td></tr>
+                        <tr><td>Carol</td><td>28</td><td>52</td><td>89</td></tr>
+                    </table>
+                    <p style="margin-top: 1rem; text-align: center;">←“ Becomes this matrix in ML ←“</p>
+                    <div class="math-display">
+                        $$\mathbf{X} = \begin{bmatrix} 25 & 45 & 72 \\ 34 & 78 & 45 \\ 28 & 52 & 89 \end{bmatrix}$$
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center;">3 samples × 3 features = 3×3 matrix</p>
+                </div>
+
+                <h3>Adding Matrices</h3>
+                <p>Matrix addition is straightforward - just add corresponding elements. Both matrices must have the same dimensions:</p>
+                <div class="math-display">
+                    $$(\mathbf{A} + \mathbf{B})_{ij} = a_{ij} + b_{ij}$$
+                </div>
+
+                <h3>Multiplying Matrices</h3>
+                <p>Matrix multiplication is more interesting. For matrices \(\mathbf{A} \in \mathbb{R}^{m \times n}\) and \(\mathbf{B} \in \mathbb{R}^{n \times k}\), the product \(\mathbf{C} = \mathbf{AB} \in \mathbb{R}^{m \times k}\) is calculated as:</p>
+                <div class="math-display">
+                    $$c_{ij} = \sum_{l=1}^{n} a_{il}b_{lj}$$
+                </div>
+                <p>In words: each element \(c_{ij}\) is the dot product of row \(i\) from \(\mathbf{A}\) and column \(j\) from \(\mathbf{B}\).</p>
+
+                <div class="theorem-box">
+                    <div class="label">Critical Warning</div>
+                    <p>Matrix multiplication is <strong>NOT commutative</strong>! In general, \(\mathbf{AB} \neq \mathbf{BA}\). In fact, if \(\mathbf{AB}\) exists, \(\mathbf{BA}\) might not even be defined (the dimensions might not work out). This is a common source of bugs in ML code!</p>
+                </div>
+
+                <!-- Interactive Matrix Calculator -->
+                <div class="interactive-demo">
+                    <h4>Interactive: 2×2 Matrix Multiplication</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Enter values and see how matrix multiplication works step-by-step:</p>
+                    <div class="demo-controls">
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                            <div>
+                                <p style="font-weight: 600; margin-bottom: 0.5rem;">Matrix A:</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <div class="demo-input"><input type="number" id="a11" value="1"></div>
+                                    <div class="demo-input"><input type="number" id="a12" value="2"></div>
+                                    <div class="demo-input"><input type="number" id="a21" value="3"></div>
+                                    <div class="demo-input"><input type="number" id="a22" value="4"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin-bottom: 0.5rem;">Matrix B:</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <div class="demo-input"><input type="number" id="b11" value="5"></div>
+                                    <div class="demo-input"><input type="number" id="b12" value="6"></div>
+                                    <div class="demo-input"><input type="number" id="b21" value="7"></div>
+                                    <div class="demo-input"><input type="number" id="b22" value="8"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="demo-btn" onclick="multiplyMatrices()">Calculate AB</button>
+                    </div>
+                    <div class="demo-result" id="matrixResult">
+                        <p style="color: var(--text-secondary);">Click "Calculate AB" to see the result</p>
+                    </div>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Matrix Dimensions</div>
+                    <p class="quiz-question">If matrix A is 3×4 and matrix B is 4×2, what are the dimensions of AB?</p>
+                    <div class="quiz-options" id="quiz2">
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">A) 4×4</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, true)">B) 3×2</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">C) 3×4</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">D) Not possible to multiply</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+
+                <h3>The Identity Matrix</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Identity Matrix</div>
+                    <p>The identity matrix \(\mathbf{I}_n\) is the matrix equivalent of the number 1. It has 1s along the main diagonal and 0s everywhere else:</p>
+                    <div class="math-display">
+                        $$\mathbf{I}_n = \begin{bmatrix} 1 & 0 & \cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots & & \ddots & \vdots \\ 0 & 0 & \cdots & 1 \end{bmatrix}$$
+                    </div>
+                    <p>For any compatible matrix \(\mathbf{A}\): \(\mathbf{I}\mathbf{A} = \mathbf{A}\mathbf{I} = \mathbf{A}\)</p>
+                </div>
+
+                <h3>Inverse and Transpose</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Matrix Inverse</div>
+                    <p>For a square matrix \(\mathbf{A}\), if there exists a matrix \(\mathbf{B}\) such that \(\mathbf{AB} = \mathbf{I} = \mathbf{BA}\), then \(\mathbf{B}\) is called the <strong>inverse</strong> of \(\mathbf{A}\), written as \(\mathbf{A}^{-1}\).</p>
+                    <p>Not every matrix has an inverse! A matrix with an inverse is called <strong>invertible</strong> or <strong>nonsingular</strong>.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Transpose</div>
+                    <p>The transpose \(\mathbf{A}^\top\) flips a matrix over its diagonal - rows become columns and vice versa: \((\mathbf{A}^\top)_{ij} = a_{ji}\)</p>
+                </div>
+
+                <h4>Essential Properties to Remember</h4>
+                <ul>
+                    <li>\((\mathbf{AB})^{-1} = \mathbf{B}^{-1}\mathbf{A}^{-1}\) - notice the reversed order!</li>
+                    <li>\((\mathbf{A}^\top)^\top = \mathbf{A}\) - transpose twice returns the original</li>
+                    <li>\((\mathbf{AB})^\top = \mathbf{B}^\top\mathbf{A}^\top\) - again, reversed order</li>
+                    <li>\((\mathbf{A} + \mathbf{B})^\top = \mathbf{A}^\top + \mathbf{B}^\top\)</li>
+                </ul>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Deep Dive</div>
+                    <p>In our <strong>Neural Networks from Scratch</strong> module, you'll implement matrix multiplication in NumPy and see how GPUs accelerate it 100x. You'll literally watch your neural network's forward pass as a chain of matrix multiplications: \(\mathbf{h} = \mathbf{W}_2(\mathbf{W}_1\mathbf{x} + \mathbf{b}_1) + \mathbf{b}_2\)</p>
+                </div>
+            </section>
+
+            <!-- Section 2.3: Solving Systems -->
+            <section class="section" id="section-2-3">
+                <div class="section-header">
+                    <span class="section-number">2.3</span>
+                    <h2>Solving Systems of Linear Equations</h2>
+                </div>
+
+                <p>Now that we can represent systems of equations as matrices, we need systematic methods to solve them. The go-to technique is <strong>Gaussian elimination</strong>, a methodical approach that transforms any system into an easily solvable form.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Every time you fit a linear regression model, compute the pseudoinverse, or solve for optimal parameters, you're essentially running some form of Gaussian elimination (or its more numerically stable cousins). Libraries like NumPy and TensorFlow have highly optimized versions of these algorithms running under the hood.</p>
+                </div>
+
+                <h3>The Solution Strategy</h3>
+                <p>Finding all solutions involves three key steps:</p>
+                <ol>
+                    <li><strong>Find a particular solution</strong> - any specific answer to \(\mathbf{Ax} = \mathbf{b}\)</li>
+                    <li><strong>Find all solutions to \(\mathbf{Ax} = \mathbf{0}\)</strong> - the "homogeneous" version</li>
+                    <li><strong>Combine them</strong> - general solution = particular + homogeneous solutions</li>
+                </ol>
+
+                <!-- Interactive: Row Operations -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Practice Row Operations</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Apply elementary row operations to transform this matrix:</p>
+                    <div id="rowOpsMatrix" style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; text-align: center; margin: 1rem 0;">
+                        <div id="matrixDisplay"></div>
+                    </div>
+                    <div class="demo-controls" style="justify-content: center;">
+                        <select id="rowOp" style="padding: 0.5rem; border-radius: 8px; border: 2px solid var(--border-color);">
+                            <option value="swap">Swap R1 ←” R2</option>
+                            <option value="scale">Multiply R1 by 2</option>
+                            <option value="add">Add R1 to R2</option>
+                            <option value="subtract">Subtract R1 from R2</option>
+                        </select>
+                        <button class="demo-btn" onclick="applyRowOp()">Apply</button>
+                        <button class="demo-btn secondary" onclick="resetMatrix()">Reset</button>
+                    </div>
+                    <div class="demo-result" id="rowOpsResult">
+                        <p style="color: var(--text-secondary);">Try different operations to get row-echelon form!</p>
+                    </div>
+                </div>
+
+                <h3>Elementary Row Operations</h3>
+                <p>These three operations transform a system without changing its solutions:</p>
+                <ul>
+                    <li><strong>Swap</strong> two rows</li>
+                    <li><strong>Multiply</strong> a row by a non-zero constant</li>
+                    <li><strong>Add</strong> a multiple of one row to another</li>
+                </ul>
+
+                <div class="definition-box">
+                    <div class="label">Key Concept</div>
+                    <div class="title">Row-Echelon Form (REF)</div>
+                    <p>A matrix is in <strong>row-echelon form</strong> when:</p>
+                    <ul>
+                        <li>All zero rows are at the bottom</li>
+                        <li>The first non-zero entry in each row (called the <strong>pivot</strong>) is to the right of the pivot in the row above</li>
+                    </ul>
+                    <p>This creates a "staircase" pattern that makes the system trivial to solve by back-substitution.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Row Operations</div>
+                    <p class="quiz-question">Which row operation would NOT change the solution set of a system?</p>
+                    <div class="quiz-options" id="quiz3">
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">A) Add 5 to every element in row 1</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, true)">B) Multiply row 2 by -3</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">C) Multiply row 1 by 0</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">D) Replace row 1 with row 2</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Important Terminology</div>
+                    <ul>
+                        <li><strong>Pivot columns</strong>: Columns containing the leading 1s</li>
+                        <li><strong>Basic variables</strong>: Variables in pivot columns (determined by the system)</li>
+                        <li><strong>Free variables</strong>: Variables in non-pivot columns (can be chosen freely)</li>
+                    </ul>
+                </div>
+
+                <h3>Computing Matrix Inverses</h3>
+                <p>To find \(\mathbf{A}^{-1}\), set up an augmented matrix with the identity:</p>
+                <div class="math-display">
+                    $$[\mathbf{A} | \mathbf{I}_n] \rightsquigarrow \cdots \rightsquigarrow [\mathbf{I}_n | \mathbf{A}^{-1}]$$
+                </div>
+                <p>Apply row operations until the left side becomes the identity matrix - the right side is now your inverse!</p>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Hands-On Lab</div>
+                    <p>In Quanskill's <strong>Linear Algebra for ML</strong> workshop, you'll implement Gaussian elimination from scratch in Python, then compare its speed and numerical stability against NumPy's optimized <code>np.linalg.solve()</code>. You'll see why real ML libraries use LU decomposition instead!</p>
+                </div>
+            </section>
+
+            <!-- Section 2.4: Vector Spaces -->
+            <section class="section" id="section-2-4">
+                <div class="section-header">
+                    <span class="section-number">2.4</span>
+                    <h2>Vector Spaces</h2>
+                </div>
+
+                <p>Vector spaces provide the mathematical framework for understanding vectors in their full generality. Rather than thinking of vectors as just arrows or lists of numbers, we define them by what operations they support.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>In ML, data lives in vector spaces. Word embeddings like Word2Vec map words to a 300-dimensional vector space where semantic relationships become geometric ones ("king" - "man" + "woman" â‰ˆ "queen"). The latent spaces in autoencoders and GANs are vector spaces where similar data points cluster together. Understanding vector spaces helps you understand what your models are actually learning.</p>
+                </div>
+
+                <!-- Interactive: Word Vectors -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Word Vector Arithmetic</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See how Word2Vec captures meaning in vector space (simplified 2D example):</p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: center;">
+                        <select id="wordOp1" style="padding: 0.5rem; border-radius: 8px; border: 2px solid var(--border-color);">
+                            <option value="king">King</option>
+                            <option value="queen">Queen</option>
+                            <option value="man">Man</option>
+                            <option value="woman">Woman</option>
+                            <option value="paris">Paris</option>
+                            <option value="france">France</option>
+                        </select>
+                        <span style="font-size: 1.5rem;">âˆ‘</span>
+                        <select id="wordOp2" style="padding: 0.5rem; border-radius: 8px; border: 2px solid var(--border-color);">
+                            <option value="man">Man</option>
+                            <option value="woman">Woman</option>
+                            <option value="king">King</option>
+                            <option value="queen">Queen</option>
+                            <option value="france">France</option>
+                        </select>
+                        <span style="font-size: 1.5rem;">+</span>
+                        <select id="wordOp3" style="padding: 0.5rem; border-radius: 8px; border: 2px solid var(--border-color);">
+                            <option value="woman">Woman</option>
+                            <option value="man">Man</option>
+                            <option value="italy">Italy</option>
+                        </select>
+                        <button class="demo-btn" onclick="calculateWordVector()">= ?</button>
+                    </div>
+                    <div class="demo-result" id="wordVectorResult" style="text-align: center; margin-top: 1rem;">
+                        <p style="font-size: 1.5rem;">🐍Â¤"Ã‚</p>
+                    </div>
+                </div>
+
+                <h3>Building Blocks: Groups</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Group</div>
+                    <p>A <strong>group</strong> \((G, \otimes)\) is a set with an operation satisfying four properties:</p>
+                    <ol>
+                        <li><strong>Closure</strong>: Combining any two elements gives an element in the set</li>
+                        <li><strong>Associativity</strong>: \((a \otimes b) \otimes c = a \otimes (b \otimes c)\)</li>
+                        <li><strong>Identity</strong>: There's a "do nothing" element \(e\) where \(a \otimes e = a\)</li>
+                        <li><strong>Inverse</strong>: Every element has an "undo" element</li>
+                    </ol>
+                    <p>When the operation is also commutative (\(a \otimes b = b \otimes a\)), it's called an <strong>Abelian group</strong>.</p>
+                </div>
+
+                <h3>Vector Spaces Defined</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Vector Space</div>
+                    <p>A <strong>vector space</strong> \(V\) is a set equipped with two operations:</p>
+                    <ul>
+                        <li><strong>Vector addition</strong>: \(+ : V \times V \to V\)</li>
+                        <li><strong>Scalar multiplication</strong>: \(\cdot : \mathbb{R} \times V \to V\)</li>
+                    </ul>
+                    <p>These must satisfy:</p>
+                    <ol>
+                        <li>\((V, +)\) forms an Abelian group</li>
+                        <li>Distributivity: \(\lambda(x + y) = \lambda x + \lambda y\) and \((\lambda + \mu)x = \lambda x + \mu x\)</li>
+                        <li>Associativity: \(\lambda(\mu x) = (\lambda\mu)x\)</li>
+                        <li>Identity: \(1 \cdot x = x\)</li>
+                    </ol>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Vector Spaces</div>
+                    <p class="quiz-question">Which of the following is NOT a vector space?</p>
+                    <div class="quiz-options" id="quiz4">
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">A) All 3×3 matrices</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">B) All polynomials of degree â‰¤ 5</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, true)">C) All positive real numbers with standard addition</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">D) All continuous functions on [0,1]</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+
+                <h3>Vector Subspaces</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Vector Subspace</div>
+                    <p>A subset \(U\) of vector space \(V\) is a <strong>subspace</strong> if it's also a vector space under the same operations. Quick test:</p>
+                    <ol>
+                        <li>\(U\) contains the zero vector</li>
+                        <li>\(U\) is closed under scalar multiplication (scaling stays in \(U\))</li>
+                        <li>\(U\) is closed under addition (adding stays in \(U\))</li>
+                    </ol>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill NLP Project</div>
+                    <p>In our <strong>NLP Bootcamp</strong>, you'll build a semantic search engine using word embeddings. You'll visualize how similar words cluster in vector space and implement the famous "king - man + woman = queen" analogy arithmetic!</p>
+                </div>
+            </section>
+
+            <!-- Section 2.5: Linear Independence -->
+            <section class="section" id="section-2-5">
+                <div class="section-header">
+                    <span class="section-number">2.5</span>
+                    <h2>Linear Independence</h2>
+                </div>
+
+                <p>Linear independence captures the idea of "no redundancy" in a set of vectors. Independent vectors each contribute unique information that can't be derived from the others.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p><strong>Feature selection</strong>: If your features are linearly dependent, some are redundant - you're wasting computation and risking numerical instability. <strong>Dimensionality reduction</strong> (PCA) finds linearly independent directions that capture the most variance. <strong>Neural network expressiveness</strong> depends on having linearly independent hidden units - otherwise, some neurons are just copies of others!</p>
+                </div>
+
+                <!-- Interactive: Independence Checker -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Are These Vectors Independent?</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Enter two 2D vectors and check if they're linearly independent:</p>
+                    <div class="demo-controls">
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Vector 1:</p>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <div class="demo-input"><input type="number" id="v1x" value="1" style="width: 60px;"></div>
+                                <div class="demo-input"><input type="number" id="v1y" value="2" style="width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Vector 2:</p>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <div class="demo-input"><input type="number" id="v2x" value="3" style="width: 60px;"></div>
+                                <div class="demo-input"><input type="number" id="v2y" value="4" style="width: 60px;"></div>
+                            </div>
+                        </div>
+                        <button class="demo-btn" onclick="checkIndependence()">Check Independence</button>
+                    </div>
+                    <canvas id="vectorCanvas" class="viz-canvas" width="300" height="300"></canvas>
+                    <div class="demo-result" id="independenceResult">
+                        <p style="color: var(--text-secondary);">Enter vectors and click "Check Independence"</p>
+                    </div>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Linear Combination</div>
+                    <p>A <strong>linear combination</strong> of vectors \(\mathbf{x}_1, \ldots, \mathbf{x}_k\) is any expression:</p>
+                    <div class="math-display">
+                        $$\mathbf{v} = \lambda_1\mathbf{x}_1 + \lambda_2\mathbf{x}_2 + \cdots + \lambda_k\mathbf{x}_k$$
+                    </div>
+                    <p>where \(\lambda_1, \ldots, \lambda_k\) are scalars.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Linear Independence</div>
+                    <p>Vectors \(\mathbf{x}_1, \ldots, \mathbf{x}_k\) are <strong>linearly independent</strong> if the only way to combine them to get zero is with all coefficients zero:</p>
+                    <div class="math-display">
+                        $$\lambda_1\mathbf{x}_1 + \lambda_2\mathbf{x}_2 + \cdots + \lambda_k\mathbf{x}_k = \mathbf{0} \implies \lambda_1 = \lambda_2 = \cdots = \lambda_k = 0$$
+                    </div>
+                    <p>Otherwise, they're <strong>linearly dependent</strong> - at least one vector can be written as a combination of the others.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Linear Independence</div>
+                    <p class="quiz-question">You have 5 vectors in â„Ã‚Â³. What can you say about their linear independence?</p>
+                    <div class="quiz-options" id="quiz5">
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">A) They are definitely independent</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, true)">B) They are definitely dependent</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">C) Could be either</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">D) Need more information</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">How to Test Independence</div>
+                    <p>Practical algorithm:</p>
+                    <ol>
+                        <li>Write vectors as columns of a matrix</li>
+                        <li>Apply Gaussian elimination to get row-echelon form</li>
+                        <li><strong>All columns are pivot columns</strong> âŸº vectors are independent</li>
+                        <li>Non-pivot columns can be expressed as combinations of pivot columns to their left</li>
+                    </ol>
+                </div>
+
+                <h4>Quick Independence Checks</h4>
+                <ul>
+                    <li>If any vector is \(\mathbf{0}\) ←’ dependent (zero = 0 times anything)</li>
+                    <li>If two vectors are identical ←’ dependent (one = 1 times the other)</li>
+                    <li>If one is a scalar multiple of another ←’ dependent</li>
+                    <li>More vectors than dimensions ←’ always dependent (e.g., 4 vectors in \(\mathbb{R}^3\))</li>
+                </ul>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Feature Engineering Lab</div>
+                    <p>In our <strong>Feature Engineering</strong> module, you'll identify and remove redundant features using correlation matrices and VIF (Variance Inflation Factor). You'll see how linearly dependent features cause multicollinearity, leading to unstable model coefficients!</p>
+                </div>
+            </section>
+
+            <!-- Section 2.6: Basis and Rank -->
+            <section class="section" id="section-2-6">
+                <div class="section-header">
+                    <span class="section-number">2.6</span>
+                    <h2>Basis and Rank</h2>
+                </div>
+
+                <p>A basis is the "coordinate system" for a vector space - a minimal set of vectors that can represent everything. The rank tells us the "true dimensionality" of a matrix, ignoring redundancy.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p><strong>PCA</strong> (Principal Component Analysis) finds a new basis for your data that maximizes variance - the principal components ARE basis vectors. <strong>Matrix rank</strong> determines if your linear system has a unique solution and reveals the intrinsic dimensionality of your data. A 1000×1000 matrix with rank 10 really only contains 10 dimensions of information! <strong>Low-rank approximations</strong> power recommendation systems (Netflix's matrix factorization) and efficient neural network compression.</p>
+                </div>
+
+                <!-- Interactive: Rank Calculator -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Explore Matrix Rank</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Modify this 3×3 matrix and see how rank changes:</p>
+                    <div style="display: grid; grid-template-columns: repeat(3, 60px); gap: 0.5rem; justify-content: center; margin: 1rem 0;">
+                        <input type="number" id="r11" value="1" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r12" value="2" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r13" value="3" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r21" value="4" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r22" value="5" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r23" value="6" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r31" value="7" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r32" value="8" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                        <input type="number" id="r33" value="9" class="demo-input" style="width: 60px; text-align: center;" oninput="calculateRank()">
+                    </div>
+                    <div class="demo-result" id="rankResult" style="text-align: center;">
+                        <p style="font-size: 1.5rem;"><strong>Rank:</strong> <span id="rankValue">2</span></p>
+                        <p id="rankExplanation" style="color: var(--text-secondary);"></p>
+                    </div>
+                </div>
+
+                <h3>Spanning Sets and Span</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Span</div>
+                    <p>The <strong>span</strong> of vectors is the set of ALL their possible linear combinations:</p>
+                    <div class="math-display">
+                        $$\text{span}[\mathbf{x}_1, \ldots, \mathbf{x}_k] = \left\{ \sum_{i=1}^k \lambda_i\mathbf{x}_i : \lambda_1, \ldots, \lambda_k \in \mathbb{R} \right\}$$
+                    </div>
+                    <p>If the span equals the entire vector space \(V\), we call these vectors a <strong>generating set</strong> or <strong>spanning set</strong> for \(V\).</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Basis</div>
+                    <p>A <strong>basis</strong> is a <strong>linearly independent spanning set</strong> - it spans the whole space with no redundant vectors. Equivalently, it's the smallest possible spanning set.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Basis and Rank</div>
+                    <p class="quiz-question">A 100×50 matrix has rank 30. What does this tell you about the data?</p>
+                    <div class="quiz-options" id="quiz6">
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">A) The data is corrupted</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, true)">B) Only 30 dimensions contain unique information; 20 columns are redundant</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">C) The matrix is invertible</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">D) There are 30 samples in the dataset</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Fundamental Properties</div>
+                    <ul>
+                        <li>Every vector space has a basis (not unique!)</li>
+                        <li>All bases of a space have the <strong>same number</strong> of vectors</li>
+                        <li>This number is the <strong>dimension</strong> of the space: \(\dim(V)\)</li>
+                        <li>Every vector has a <strong>unique representation</strong> as a combination of basis vectors</li>
+                    </ul>
+                </div>
+
+                <h3>Matrix Rank</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Rank</div>
+                    <p>The <strong>rank</strong> of a matrix is the number of linearly independent columns (equivalently, rows):</p>
+                    <div class="math-display">
+                        $$\text{rk}(\mathbf{A}) = \dim(\text{column space of } \mathbf{A})$$
+                    </div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Recommender Systems Project</div>
+                    <p>In our <strong>Recommender Systems</strong> course, you'll build a movie recommendation engine using matrix factorization (like Netflix!). A user-movie rating matrix with millions of entries has low rank - maybe only 20-50 latent factors. You'll learn to exploit this structure for efficient predictions!</p>
+                </div>
+            </section>
+
+            <!-- Section 2.7: Linear Mappings -->
+            <section class="section" id="section-2-7">
+                <div class="section-header">
+                    <span class="section-number">2.7</span>
+                    <h2>Linear Mappings</h2>
+                </div>
+
+                <p>Linear mappings (also called linear transformations) are functions between vector spaces that preserve the vector space structure. They're the mathematical foundation of neural network layers!</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Each layer in a neural network (before the activation function) is a linear mapping! When you write <code>y = Wx + b</code>, the \(\mathbf{Wx}\) part is a linear transformation, and adding \(\mathbf{b}\) makes it affine (we'll cover that next). Understanding linear mappings helps you understand what neural networks can and cannot learn. Fun fact: without non-linear activations, stacking multiple linear layers would just give another linear mapping - the network couldn't learn anything a single layer couldn't!</p>
+                </div>
+
+                <!-- Interactive: 2D Transformations -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Visualize 2D Transformations</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See how different matrices transform a square:</p>
+                    <div class="demo-controls" style="justify-content: center;">
+                        <select id="transformType" style="padding: 0.5rem; border-radius: 8px; border: 2px solid var(--border-color);" onchange="updateTransform()">
+                            <option value="identity">Identity (no change)</option>
+                            <option value="scale">Scale (2x horizontal)</option>
+                            <option value="rotate">Rotate (45Â°)</option>
+                            <option value="shear">Shear</option>
+                            <option value="reflect">Reflect (y-axis)</option>
+                            <option value="project">Project onto x-axis</option>
+                        </select>
+                    </div>
+                    <canvas id="transformCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-result" id="transformResult" style="text-align: center;">
+                        <p>Matrix: <span id="transformMatrix" style="font-family: 'JetBrains Mono', monospace;"></span></p>
+                    </div>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Linear Mapping</div>
+                    <p>A function \(\Phi : V \to W\) between vector spaces is <strong>linear</strong> if it preserves addition and scaling:</p>
+                    <div class="math-display">
+                        $$\Phi(\lambda\mathbf{x} + \mu\mathbf{y}) = \lambda\Phi(\mathbf{x}) + \mu\Phi(\mathbf{y})$$
+                    </div>
+                    <p>for all vectors \(\mathbf{x}, \mathbf{y}\) and scalars \(\lambda, \mu\).</p>
+                </div>
+
+                <h3>Types of Linear Mappings</h3>
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>ML Example</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Injective</strong></td>
+                        <td>Different inputs ←’ different outputs</td>
+                        <td>Encoding without information loss</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Surjective</strong></td>
+                        <td>Every output is reachable</td>
+                        <td>Decoder that can generate any output</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bijective</strong></td>
+                        <td>Both (one-to-one and onto)</td>
+                        <td>Invertible transformations (flow models)</td>
+                    </tr>
+                </table>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Linear Mappings</div>
+                    <p class="quiz-question">Why can't stacking multiple linear layers (without activations) learn XOR?</p>
+                    <div class="quiz-options" id="quiz7">
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, true)">A) Composition of linear mappings is still linear; XOR is non-linear</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">B) XOR requires too many parameters</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">C) Linear layers can't handle binary inputs</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">D) The gradient vanishes</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz7-feedback"></div>
+                </div>
+
+                <h3>Image and Kernel</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Kernel and Image</div>
+                    <ul>
+                        <li><strong>Kernel</strong> (null space): \(\ker(\Phi) = \{\mathbf{v} \in V : \Phi(\mathbf{v}) = \mathbf{0}\}\) - vectors that map to zero</li>
+                        <li><strong>Image</strong> (range): \(\text{Im}(\Phi) = \{\Phi(\mathbf{v}) : \mathbf{v} \in V\}\) - all possible outputs</li>
+                    </ul>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Rank-Nullity Theorem</div>
+                    <p>For any linear map \(\Phi : V \to W\):</p>
+                    <div class="math-display">
+                        $$\dim(\ker(\Phi)) + \dim(\text{Im}(\Phi)) = \dim(V)$$
+                    </div>
+                    <p>Input dimension = "lost" dimensions (kernel) + "preserved" dimensions (image)</p>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Deep Learning Project</div>
+                    <p>In <strong>Neural Networks from Scratch</strong>, you'll implement a multi-layer perceptron and visualize how each layer transforms your data. You'll see the decision boundary evolve as data passes through linear transformations followed by non-linear activations!</p>
+                </div>
+            </section>
+
+            <!-- Section 2.8: Affine Spaces -->
+            <section class="section" id="section-2-8">
+                <div class="section-header">
+                    <span class="section-number">2.8</span>
+                    <h2>Affine Spaces</h2>
+                </div>
+
+                <p>Affine spaces are "shifted" vector spaces - they look like vector spaces but don't necessarily pass through the origin. In many practical applications, we work with affine rather than purely linear structures.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>The formula \(\mathbf{y} = \mathbf{Wx} + \mathbf{b}\) that you see in every neural network layer is an <strong>affine transformation</strong>, not a linear one! The weight matrix \(\mathbf{W}\) provides the linear part, and the bias vector \(\mathbf{b}\) provides the translation. Without biases, every layer would have to pass through the origin, severely limiting what the network could learn. Decision boundaries in linear classifiers are affine subspaces (hyperplanes that don't necessarily pass through the origin).</p>
+                </div>
+
+                <!-- Interactive: Affine vs Linear -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Linear vs Affine Transformation</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Toggle the bias to see the difference:</p>
+                    <div class="demo-controls" style="justify-content: center;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-family: 'Space Grotesk', sans-serif;">
+                            <input type="checkbox" id="biasToggle" onchange="updateAffineDemo()" checked>
+                            Include bias (b = [1, 0.5])
+                        </label>
+                    </div>
+                    <canvas id="affineCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-result" id="affineResult" style="text-align: center;">
+                        <p id="affineEquation" style="font-family: 'JetBrains Mono', monospace;"></p>
+                    </div>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Affine Subspace</div>
+                    <p>An <strong>affine subspace</strong> is a translated vector subspace:</p>
+                    <div class="math-display">
+                        $$L = \mathbf{x}_0 + U = \{\mathbf{x}_0 + \mathbf{u} : \mathbf{u} \in U\}$$
+                    </div>
+                    <p>where \(U\) is a vector subspace (the <strong>direction space</strong>) and \(\mathbf{x}_0\) is the <strong>support point</strong> (offset from origin).</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Key Distinction</div>
+                    <p>An affine subspace is <strong>NOT</strong> a vector subspace unless the support point is in the direction space (i.e., unless it passes through the origin). Affine subspaces don't contain the zero vector!</p>
+                </div>
+
+                <h3>Affine Mappings</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Affine Mapping</div>
+                    <p>An <strong>affine mapping</strong> combines a linear mapping with a translation:</p>
+                    <div class="math-display">
+                        $$\phi(\mathbf{x}) = \mathbf{a} + \Phi(\mathbf{x}) = \mathbf{Ax} + \mathbf{b}$$
+                    </div>
+                    <p>where \(\Phi\) (or matrix \(\mathbf{A}\)) is the linear part and \(\mathbf{a}\) (or \(\mathbf{b}\)) is the translation vector.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Affine Transformations</div>
+                    <p class="quiz-question">In a neural network layer y = Wx + b, what happens if we remove all biases (b = 0)?</p>
+                    <div class="quiz-options" id="quiz8">
+                        <div class="quiz-option" onclick="checkQuiz('quiz8', this, false)">A) Nothing changes, biases are optional</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz8', this, true)">B) All transformations must pass through origin, limiting expressiveness</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz8', this, false)">C) The network becomes faster</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz8', this, false)">D) Gradients become unstable</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz8-feedback"></div>
+                </div>
+
+                <div class="example-box">
+                    <div class="label">Neural Network Layer = Affine Mapping</div>
+                    <p>A dense layer in a neural network: \(\mathbf{y} = \mathbf{Wx} + \mathbf{b}\)</p>
+                    <ul>
+                        <li>\(\mathbf{W}\) = weight matrix (linear transformation)</li>
+                        <li>\(\mathbf{b}\) = bias vector (translation)</li>
+                        <li>Together: affine mapping from input space to output space</li>
+                    </ul>
+                    <p>The activation function (ReLU, sigmoid, etc.) then applies a non-linear transformation, which is why neural networks can learn non-linear relationships!</p>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Classification Project</div>
+                    <p>In our <strong>ML Fundamentals</strong> course, you'll visualize how logistic regression finds an affine hyperplane (decision boundary) that separates classes. You'll see why the bias term determines where this boundary crosses - without it, your classifier would be forced to pass through the origin!</p>
+                </div>
+            </section>
+
+            <!-- Summary Section -->
+            <section class="section" id="summary">
+                <div class="section-header">
+                    <span class="section-number">🐍"</span>
+                    <h2>Chapter Summary</h2>
+                </div>
+
+                <div class="key-concepts">
+                    <div class="concept-card">
+                        <div class="icon">📊</div>
+                        <h5>Linear Systems</h5>
+                        <p>0, 1, or âˆž solutions. Gaussian elimination transforms to row-echelon form.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🔍§Â²</div>
+                        <h5>Matrices</h5>
+                        <p>Data containers & transformations. Multiplication isn't commutative!</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🐍"</div>
+                        <h5>Vector Spaces</h5>
+                        <p>Sets closed under addition & scaling. The "playground" of linear algebra.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">âš¡</div>
+                        <h5>Independence</h5>
+                        <p>No redundancy. Test via Gaussian elimination and pivot columns.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🎯</div>
+                        <h5>Basis & Rank</h5>
+                        <p>Minimal spanning set. Rank = independent columns = "true dimensionality".</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🔍„</div>
+                        <h5>Linear Mappings</h5>
+                        <p>Preserve structure. Representable by matrices. Have kernel & image.</p>
+                    </div>
+                </div>
+
+                <div class="ml-box">
+                    <div class="label">Key ML Takeaways</div>
+                    <ul>
+                        <li><strong>Data as matrices</strong>: Every dataset is an m×n matrix (samples × features)</li>
+                        <li><strong>Model training</strong> = solving linear systems (often approximately)</li>
+                        <li><strong>Neural network layers</strong> = affine mappings + non-linear activations</li>
+                        <li><strong>Matrix rank</strong> reveals true data dimensionality (crucial for PCA, compression)</li>
+                        <li><strong>Linear independence</strong> matters for feature selection and avoiding redundancy</li>
+                    </ul>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Your Next Steps with Quanskill</div>
+                    <p>🎯Â° <strong>Congratulations!</strong> You've completed the Linear Algebra foundation. Here's your Quanskill learning path:</p>
+                    <ul>
+                        <li><strong>Chapter 3</strong>: Analytic Geometry - add lengths, angles, and projections (essential for PCA!)</li>
+                        <li><strong>Chapter 4</strong>: Matrix Decompositions - SVD, eigenvalues, and the math behind recommendation systems</li>
+                        <li><strong>Quanskill Project</strong>: Build a complete image compression system using SVD</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Ready to apply these concepts?</strong> Join Quanskill's hands-on bootcamps where you'll implement everything from scratch!</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer style="text-align: center; padding: 3rem 0; color: var(--text-secondary); font-size: 0.9rem;">
+                <p><strong>Quanskill</strong> - Making ML Education Accessible</p>
+                <p style="margin-top: 1rem; font-size: 0.8rem;">© 2024 Quanskill. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Global variables
+        let currentMatrix = [[2, 1, 1], [4, -6, 0]];
+        
+        // Render LaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+
+            // Initialize demos
+            updateLines();
+            resetMatrix();
+            drawVectorCanvas();
+            calculateRank();
+            updateTransform();
+            updateAffineDemo();
+
+            // Initialize section visibility
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => observer.observe(section));
+
+            updateProgress();
+        });
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Update active navigation link and progress
+        window.addEventListener('scroll', function() {
+            updateActiveNav();
+            updateProgress();
+        });
+
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function updateProgress() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        }
+
+        // Quiz functionality
+        function checkQuiz(quizId, element, isCorrect) {
+            const options = document.querySelectorAll(`#${quizId} .quiz-option`);
+            const feedback = document.getElementById(`${quizId}-feedback`);
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.innerHTML = 'âœ… Correct! Great understanding!';
+                feedback.className = 'quiz-feedback show correct';
+            } else {
+                element.classList.add('incorrect');
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.innerHTML = 'âŒ Not quite. The correct answer is highlighted above.';
+                feedback.className = 'quiz-feedback show incorrect';
+            }
+        }
+
+        // Lines visualization
+        function updateLines() {
+            const canvas = document.getElementById('linesCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            const slope1 = parseFloat(document.getElementById('slope1').value);
+            const slope2 = parseFloat(document.getElementById('slope2').value);
+            const intercept2 = parseFloat(document.getElementById('intercept2').value);
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(width/2, 0);
+            ctx.lineTo(width/2, height);
+            ctx.moveTo(0, height/2);
+            ctx.lineTo(width, height/2);
+            ctx.stroke();
+            
+            // Scale factor
+            const scale = 40;
+            const cx = width/2;
+            const cy = height/2;
+            
+            // Draw line 1 (y = slope1 * x)
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, cy - slope1 * (-cx/scale) * scale);
+            ctx.lineTo(width, cy - slope1 * (cx/scale) * scale);
+            ctx.stroke();
+            
+            // Draw line 2 (y = slope2 * x + intercept2)
+            ctx.strokeStyle = '#ff9000';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, cy - (slope2 * (-cx/scale) + intercept2) * scale);
+            ctx.lineTo(width, cy - (slope2 * (cx/scale) + intercept2) * scale);
+            ctx.stroke();
+            
+            // Determine solution type
+            let solutionText = '';
+            if (Math.abs(slope1 - slope2) < 0.01) {
+                if (Math.abs(intercept2) < 0.01) {
+                    solutionText = 'âˆž Infinitely many solutions (same line)';
+                } else {
+                    solutionText = '0 No solution (parallel lines)';
+                }
+            } else {
+                const x = intercept2 / (slope1 - slope2);
+                const y = slope1 * x;
+                solutionText = `1 Unique solution at (${x.toFixed(2)}, ${y.toFixed(2)})`;
+                
+                // Draw intersection point
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.arc(cx + x * scale, cy - y * scale, 8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            document.getElementById('solutionType').textContent = solutionText;
+        }
+
+        // Matrix multiplication calculator
+        function multiplyMatrices() {
+            const a11 = parseFloat(document.getElementById('a11').value) || 0;
+            const a12 = parseFloat(document.getElementById('a12').value) || 0;
+            const a21 = parseFloat(document.getElementById('a21').value) || 0;
+            const a22 = parseFloat(document.getElementById('a22').value) || 0;
+
+            const b11 = parseFloat(document.getElementById('b11').value) || 0;
+            const b12 = parseFloat(document.getElementById('b12').value) || 0;
+            const b21 = parseFloat(document.getElementById('b21').value) || 0;
+            const b22 = parseFloat(document.getElementById('b22').value) || 0;
+
+            const c11 = a11 * b11 + a12 * b21;
+            const c12 = a11 * b12 + a12 * b22;
+            const c21 = a21 * b11 + a22 * b21;
+            const c22 = a21 * b12 + a22 * b22;
+
+            const resultDiv = document.getElementById('matrixResult');
+            resultDiv.innerHTML = `
+                <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 1rem;">Result: AB =</p>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; text-align: center;">
+                    [ ${c11}, ${c12} ]<br>[ ${c21}, ${c22} ]
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    <strong>Step-by-step:</strong><br>
+                    câ‚â‚ = (${a11}×${b11}) + (${a12}×${b21}) = ${c11}<br>
+                    câ‚â‚â€š = (${a11}×${b12}) + (${a12}×${b22}) = ${c12}<br>
+                    câ‚â€šâ‚ = (${a21}×${b11}) + (${a22}×${b21}) = ${c21}<br>
+                    câ‚‚â‚‚ = (${a21}×${b12}) + (${a22}×${b22}) = ${c22}
+                </p>
+            `;
+        }
+
+        // Row operations
+        function resetMatrix() {
+            currentMatrix = [[2, 1, 1], [4, -6, 0]];
+            displayMatrix();
+        }
+
+        function displayMatrix() {
+            const display = document.getElementById('matrixDisplay');
+            if (!display) return;
+            display.innerHTML = `
+                <div style="margin: 1rem 0;">
+                    [ ${currentMatrix[0].join('  ')} ]<br>
+                    [ ${currentMatrix[1].join('  ')} ]
+                </div>
+            `;
+        }
+
+        function applyRowOp() {
+            const op = document.getElementById('rowOp').value;
+            switch(op) {
+                case 'swap':
+                    [currentMatrix[0], currentMatrix[1]] = [currentMatrix[1], currentMatrix[0]];
+                    break;
+                case 'scale':
+                    currentMatrix[0] = currentMatrix[0].map(x => x * 2);
+                    break;
+                case 'add':
+                    currentMatrix[1] = currentMatrix[1].map((x, i) => x + currentMatrix[0][i]);
+                    break;
+                case 'subtract':
+                    currentMatrix[1] = currentMatrix[1].map((x, i) => x - currentMatrix[0][i]);
+                    break;
+            }
+            displayMatrix();
+        }
+
+        // Word vector demo
+        function calculateWordVector() {
+            const word1 = document.getElementById('wordOp1').value;
+            const word2 = document.getElementById('wordOp2').value;
+            const word3 = document.getElementById('wordOp3').value;
+            
+            const results = {
+                'king-man+woman': 'queen 👍€Ëœ',
+                'king-man+man': 'king 👍€Ëœ',
+                'queen-woman+man': 'king 👍€Ëœ',
+                'paris-france+italy': 'rome 🐍â€ Ã‚Âº',
+                'king-woman+man': 'king 👍€Ëœ',
+                'queen-man+woman': 'queen 👍€Ëœ'
+            };
+            
+            const key = `${word1}-${word2}+${word3}`;
+            const result = results[key] || 'â”€ Try: king - man + woman';
+            
+            document.getElementById('wordVectorResult').innerHTML = `
+                <p style="font-size: 2rem;">${result}</p>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">This is how embeddings capture semantic relationships!</p>
+            `;
+        }
+
+        // Vector independence check
+        function checkIndependence() {
+            const v1x = parseFloat(document.getElementById('v1x').value) || 0;
+            const v1y = parseFloat(document.getElementById('v1y').value) || 0;
+            const v2x = parseFloat(document.getElementById('v2x').value) || 0;
+            const v2y = parseFloat(document.getElementById('v2y').value) || 0;
+            
+            drawVectorCanvas(v1x, v1y, v2x, v2y);
+            
+            // Check determinant
+            const det = v1x * v2y - v1y * v2x;
+            const isIndependent = Math.abs(det) > 0.001;
+            
+            document.getElementById('independenceResult').innerHTML = `
+                <p><strong>Determinant:</strong> ${det.toFixed(3)}</p>
+                <p style="color: ${isIndependent ? 'var(--success)' : 'var(--error)'}; font-size: 1.2rem; font-weight: 600;">
+                    ${isIndependent ? 'âœ… Linearly Independent!' : 'âŒ Linearly Dependent (one is a scalar multiple of the other)'}
+                </p>
+            `;
+        }
+
+        function drawVectorCanvas(v1x = 1, v1y = 2, v2x = 3, v2y = 4) {
+            const canvas = document.getElementById('vectorCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 25;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.stroke();
+            
+            // Draw vector 1
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v1x * scale, cy - v1y * scale);
+            ctx.stroke();
+            drawArrowHead(ctx, cx, cy, cx + v1x * scale, cy - v1y * scale, '#0b2fa0');
+            
+            // Draw vector 2
+            ctx.strokeStyle = '#ff9000';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + v2x * scale, cy - v2y * scale);
+            ctx.stroke();
+            drawArrowHead(ctx, cx, cy, cx + v2x * scale, cy - v2y * scale, '#ff9000');
+        }
+
+        function drawArrowHead(ctx, fromX, fromY, toX, toY, color) {
+            const angle = Math.atan2(fromY - toY, fromX - toX);
+            const headLength = 10;
+            
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX + headLength * Math.cos(angle - Math.PI / 6), toY + headLength * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(toX + headLength * Math.cos(angle + Math.PI / 6), toY + headLength * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Rank calculator
+        function calculateRank() {
+            const vals = [
+                [parseFloat(document.getElementById('r11').value) || 0, parseFloat(document.getElementById('r12').value) || 0, parseFloat(document.getElementById('r13').value) || 0],
+                [parseFloat(document.getElementById('r21').value) || 0, parseFloat(document.getElementById('r22').value) || 0, parseFloat(document.getElementById('r23').value) || 0],
+                [parseFloat(document.getElementById('r31').value) || 0, parseFloat(document.getElementById('r32').value) || 0, parseFloat(document.getElementById('r33').value) || 0]
+            ];
+            
+            // Simple rank calculation using determinant approach
+            const det = vals[0][0] * (vals[1][1] * vals[2][2] - vals[1][2] * vals[2][1]) -
+                        vals[0][1] * (vals[1][0] * vals[2][2] - vals[1][2] * vals[2][0]) +
+                        vals[0][2] * (vals[1][0] * vals[2][1] - vals[1][1] * vals[2][0]);
+            
+            let rank = 3;
+            if (Math.abs(det) < 0.0001) {
+                rank = 2;
+                // Check if rank is 1 (all rows multiples of each other)
+                const allZero = vals.every(row => row.every(v => Math.abs(v) < 0.0001));
+                if (allZero) rank = 0;
+            }
+            
+            document.getElementById('rankValue').textContent = rank;
+            
+            const explanations = {
+                0: 'Zero matrix - no information content',
+                1: 'All columns are multiples of one vector',
+                2: 'One column is a linear combination of the others (not full rank)',
+                3: 'Full rank - all columns are linearly independent!'
+            };
+            document.getElementById('rankExplanation').textContent = explanations[rank];
+        }
+
+        // Transform visualization
+        function updateTransform() {
+            const canvas = document.getElementById('transformCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            const type = document.getElementById('transformType').value;
+            
+            const transforms = {
+                'identity': [[1, 0], [0, 1]],
+                'scale': [[2, 0], [0, 1]],
+                'rotate': [[Math.cos(Math.PI/4), -Math.sin(Math.PI/4)], [Math.sin(Math.PI/4), Math.cos(Math.PI/4)]],
+                'shear': [[1, 0.5], [0, 1]],
+                'reflect': [[-1, 0], [0, 1]],
+                'project': [[1, 0], [0, 0]]
+            };
+            
+            const matrix = transforms[type];
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 30;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Original square (light)
+            const square = [[1, 1], [1, -1], [-1, -1], [-1, 1]];
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            square.forEach((p, i) => {
+                const x = cx + p[0] * scale * 2;
+                const y = cy - p[1] * scale * 2;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+            ctx.stroke();
+            
+            // Transformed square
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.fillStyle = 'rgba(11, 47, 160, 0.2)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            square.forEach((p, i) => {
+                const tx = matrix[0][0] * p[0] + matrix[0][1] * p[1];
+                const ty = matrix[1][0] * p[0] + matrix[1][1] * p[1];
+                const x = cx + tx * scale * 2;
+                const y = cy - ty * scale * 2;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            document.getElementById('transformMatrix').textContent = 
+                `[[${matrix[0][0].toFixed(2)}, ${matrix[0][1].toFixed(2)}], [${matrix[1][0].toFixed(2)}, ${matrix[1][1].toFixed(2)}]]`;
+        }
+
+        // Affine demo
+        function updateAffineDemo() {
+            const canvas = document.getElementById('affineCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            const includeBias = document.getElementById('biasToggle').checked;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 30;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.stroke();
+            
+            // Mark origin
+            ctx.fillStyle = '#ff9000';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Space Grotesk';
+            ctx.fillText('Origin', cx + 10, cy - 10);
+            
+            // Original points
+            const points = [[0, 0], [2, 0], [2, 1], [0, 1]];
+            
+            // Draw original
+            ctx.strokeStyle = '#ccc';
+            ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            points.forEach((p, i) => {
+                const x = cx + p[0] * scale;
+                const y = cy - p[1] * scale;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Transform: W = [[1, 0.3], [0, 1]], b = [1, 0.5] if bias included
+            const W = [[1, 0.3], [0, 1]];
+            const b = includeBias ? [1, 0.5] : [0, 0];
+            
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.fillStyle = 'rgba(11, 47, 160, 0.3)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            points.forEach((p, i) => {
+                const tx = W[0][0] * p[0] + W[0][1] * p[1] + b[0];
+                const ty = W[1][0] * p[0] + W[1][1] * p[1] + b[1];
+                const x = cx + tx * scale;
+                const y = cy - ty * scale;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            document.getElementById('affineEquation').textContent = includeBias 
+                ? 'y = Wx + b (Affine - shifted from origin)'
+                : 'y = Wx (Linear - passes through origin)';
+        }
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

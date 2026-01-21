@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: Getting Started with Python | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --python-accent: #3776ab;
+            --data-science-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 850px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '🐍';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 80px;
+            opacity: 0.15;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .python-box {
+            background: linear-gradient(135deg, rgba(55, 118, 171, 0.08) 0%, rgba(55, 118, 171, 0.03) 100%);
+            border-left: 4px solid var(--python-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .python-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--python-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .python-box .label::before { content: '🐍'; }
+
+        .datascience-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--data-science-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .datascience-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--data-science-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .datascience-box .label::before { content: '📊'; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before { content: 'â–¸'; color: var(--quanskill-orange); }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🌍'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .code-output { color: #86efac; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .interactive-console {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .console-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .console-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .console-dot.red { background: #ef4444; }
+        .console-dot.yellow { background: #fbbf24; }
+        .console-dot.green { background: #10b981; }
+
+        .console-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .console-prompt {
+            color: var(--quanskill-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .company-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .company-logo {
+            background: var(--code-bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-orange);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-orange);
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.3rem;
+            width: 12px;
+            height: 12px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--quanskill-orange);
+        }
+
+        .timeline-year {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .summary-box {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            margin-top: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item::before {
+            content: '🐍';
+            background: var(--quanskill-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 1 Â· Python Foundations</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#why-data-science" class="nav-link">Why Data Science?</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Core Concepts</div>
+            <a href="#section-1-1" class="nav-link">What is Python?</a>
+            <a href="#section-1-2" class="nav-link">Setting Up Python</a>
+            <a href="#section-1-3" class="nav-link">Variables & Data Types</a>
+            <a href="#section-1-4" class="nav-link">Operators</a>
+            <a href="#section-1-5" class="nav-link">Your First Program</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 1</span>
+                <h1>Getting Started with Python for Data Science</h1>
+                <p class="hero-subtitle">
+                    Begin your journey into the world of data science with Python - the most powerful and versatile programming language for transforming raw data into actionable insights.
+                </p>
+                <div class="hero-quote">
+                    "Data Science is a combination of statistics, mathematics, programming, and problem-solving. Python provides the perfect toolkit to master all four."
+                    <br><br>- <strong>Quanskill Learning Philosophy</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts Overview -->
+        <div class="key-concepts">
+            <div class="concept-card">
+                <div class="icon">🐍</div>
+                <h5>Python Basics</h5>
+                <p>High-level, interpreted programming language</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">âš™</div>
+                <h5>Environment Setup</h5>
+                <p>Install and configure your development tools</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">📦</div>
+                <h5>Variables</h5>
+                <p>Store and manipulate data in memory</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🔍¢</div>
+                <h5>Data Types</h5>
+                <p>Numbers, strings, and more</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">âž•</div>
+                <h5>Operators</h5>
+                <p>Perform calculations and comparisons</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🚀</div>
+                <h5>First Program</h5>
+                <p>Write and execute your first Python code</p>
+            </div>
+        </div>
+
+        <!-- Why Data Science Section -->
+        <section class="section" id="why-data-science">
+            <div class="section-header">
+                <span class="section-number">Foundation</span>
+                <h2>Why Data Science Matters</h2>
+            </div>
+
+            <p>
+                In today's data-driven world, organizations generate approximately <strong>2.5 quintillion bytes</strong> of data every single day. This massive data explosion has created an unprecedented demand for professionals who can extract meaningful insights from raw information.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="value">2.5QB</div>
+                    <div class="label">Data Generated Daily</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">$106K</div>
+                    <div class="label">Avg. Data Scientist Salary</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">#1</div>
+                    <div class="label">Most In-Demand Job</div>
+                </div>
+            </div>
+
+            <div class="datascience-box">
+                <span class="label">What is Data Science?</span>
+                <p>Data Science is a deep study of massive quantities of data involving the collection, analysis, and interpretation of relevant insights, patterns, and trends. It combines:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Mathematics & Statistics:</strong> The foundation for understanding patterns</li>
+                    <li><strong>Computer Science:</strong> Tools and algorithms for processing data</li>
+                    <li><strong>Domain Knowledge:</strong> Context for making insights actionable</li>
+                    <li><strong>Communication:</strong> Presenting findings effectively</li>
+                </ul>
+            </div>
+
+            <h3>Benefits of Data Science</h3>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-content">
+                        <h5>Improved Decision Making</h5>
+                        <p>Data-driven insights help firms make better strategic decisions</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                        <h5>Predictive Analytics</h5>
+                        <p>Forecast future trends and behaviors with machine learning</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-content">
+                        <h5>Fraud Detection</h5>
+                        <p>Identify and prevent fraudulent activities using pattern recognition</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📝’¡</div>
+                    <div class="feature-content">
+                        <h5>Innovation</h5>
+                        <p>Discover new opportunities and develop innovative solutions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p>At Quanskill, we believe that mastering Python is the first critical step in your data science journey. This chapter establishes the programming foundation you'll need for data manipulation, visualization, machine learning, and beyond. Our curriculum is designed to take you from complete beginner to job-ready data scientist.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.1: What is Python -->
+        <section class="section" id="section-1-1">
+            <div class="section-header">
+                <span class="section-number">1.1</span>
+                <h2>What is Python?</h2>
+            </div>
+
+            <p>
+                Python is a <strong>high-level, interpreted, object-oriented programming language</strong> with dynamic semantics. Its clear syntax and emphasis on readability make it an ideal first language for beginners while remaining powerful enough for experts.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Python</span>
+                <p>Python is a versatile programming language created by <strong>Guido van Rossum</strong> in the late 1980s. Named after the British comedy group "Monty Python," it emphasizes code readability and allows programmers to express concepts in fewer lines of code than languages like C++ or Java.</p>
+            </div>
+
+            <h3>Why Python for Data Science?</h3>
+
+            <p>Python has become the <strong>#1 language for data science</strong> for several compelling reasons:</p>
+
+            <ul>
+                <li><strong>Easy to Learn:</strong> Simple, English-like syntax reduces the learning curve</li>
+                <li><strong>Rich Ecosystem:</strong> Powerful libraries like NumPy, Pandas, and Scikit-learn</li>
+                <li><strong>Community Support:</strong> Massive global community with extensive documentation</li>
+                <li><strong>Versatility:</strong> Works for web development, automation, AI, and more</li>
+                <li><strong>Industry Adoption:</strong> Used by Google, Netflix, NASA, and countless startups</li>
+            </ul>
+
+            <h3>Companies Using Python</h3>
+
+            <div class="company-logos">
+                <span class="company-logo">Google</span>
+                <span class="company-logo">Netflix</span>
+                <span class="company-logo">Instagram</span>
+                <span class="company-logo">Spotify</span>
+                <span class="company-logo">Uber</span>
+                <span class="company-logo">Dropbox</span>
+                <span class="company-logo">Reddit</span>
+                <span class="company-logo">Facebook</span>
+            </div>
+
+            <h3>Python's Evolution</h3>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-year">1991</span>
+                    <p>Python 0.9.0 released with core features like functions and exception handling</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">1994</span>
+                    <p>Python 1.0 introduced lambda, map, filter, and reduce functions</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2000</span>
+                    <p>Python 2.0 added list comprehensions and Unicode support</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2008</span>
+                    <p>Python 3.0 released with improved print function and error handling</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">Today</span>
+                    <p>Python 3.11+ continues to evolve with enhanced performance and features</p>
+                </div>
+            </div>
+
+            <div class="python-box">
+                <span class="label">Python Features at a Glance</span>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Benefit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interpreted</td>
+                            <td>Execute code line-by-line for easy debugging</td>
+                        </tr>
+                        <tr>
+                            <td>Object-Oriented</td>
+                            <td>Organize code into reusable classes and objects</td>
+                        </tr>
+                        <tr>
+                            <td>Portable</td>
+                            <td>Run on Windows, macOS, Linux without modification</td>
+                        </tr>
+                        <tr>
+                            <td>Open Source</td>
+                            <td>Free to use, distribute, and modify</td>
+                        </tr>
+                        <tr>
+                            <td>Extensive Libraries</td>
+                            <td>Thousands of pre-built modules for any task</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 1.2: Setting Up Python -->
+        <section class="section" id="section-1-2">
+            <div class="section-header">
+                <span class="section-number">1.2</span>
+                <h2>Setting Up Your Python Environment</h2>
+            </div>
+
+            <p>
+                Before writing your first line of code, you need to set up a proper Python development environment. There are several ways to write and execute Python programs:
+            </p>
+
+            <h3>Installation Methods</h3>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📝’»</div>
+                    <div class="feature-content">
+                        <h5>Command Line / Terminal</h5>
+                        <p>Run Python scripts directly from your operating system</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🐍Å¡</div>
+                    <div class="feature-content">
+                        <h5>Interactive Shell</h5>
+                        <p>Test code snippets in real-time with immediate feedback</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🐍"</div>
+                    <div class="feature-content">
+                        <h5>IDLE</h5>
+                        <p>Python's built-in Integrated Development Environment</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📝“</div>
+                    <div class="feature-content">
+                        <h5>Jupyter Notebook</h5>
+                        <p>Interactive documents perfect for data science workflows</p>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Step-by-Step: Installing Python</h4>
+
+            <ol>
+                <li><strong>Download Python:</strong> Visit <code>python.org</code> and download the latest version</li>
+                <li><strong>Run Installer:</strong> Execute the installer and check "Add Python to PATH"</li>
+                <li><strong>Verify Installation:</strong> Open terminal/command prompt and type <code>python --version</code></li>
+                <li><strong>Launch IDLE:</strong> Search for "IDLE" in your applications to open the Python shell</li>
+            </ol>
+
+            <div class="example-box">
+                <span class="label">Running Python from Command Line</span>
+                <pre><code><span class="code-comment"># Check Python version</span>
+C:\> python --version
+<span class="code-output">Python 3.11.0</span>
+
+<span class="code-comment"># Run a Python script</span>
+C:\> python myscript.py
+
+<span class="code-comment"># Enter interactive mode</span>
+C:\> python
+>>> <span class="code-function">print</span>(<span class="code-string">"Hello, Quanskill!"</span>)
+<span class="code-output">Hello, Quanskill!</span></code></pre>
+            </div>
+
+            <div class="note-box">
+                <span class="label">Recommended for Data Science</span>
+                <p>For data science work, we recommend installing <strong>Anaconda</strong> or <strong>Miniconda</strong> which come pre-loaded with essential libraries like NumPy, Pandas, and Jupyter Notebook. This saves hours of setup time and ensures compatibility between packages.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.3: Variables & Data Types -->
+        <section class="section" id="section-1-3">
+            <div class="section-header">
+                <span class="section-number">1.3</span>
+                <h2>Variables and Data Types</h2>
+            </div>
+
+            <p>
+                Variables are fundamental building blocks in programming. In Python, a variable is a <strong>named memory location</strong> that stores a value. Unlike some languages, Python determines the variable type automatically based on the assigned value.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Variable</span>
+                <p>A variable is a container for storing data values. In Python, you don't need to declare a variable's type explicitly - Python infers it from the value you assign. The equal sign (<code>=</code>) is the assignment operator.</p>
+            </div>
+
+            <h3>Creating Variables</h3>
+
+            <pre><code><span class="code-comment"># Variable assignment in Python</span>
+name = <span class="code-string">"Quanskill"</span>        <span class="code-comment"># String variable</span>
+age = <span class="code-number">25</span>                   <span class="code-comment"># Integer variable</span>
+price = <span class="code-number">19.99</span>              <span class="code-comment"># Float variable</span>
+is_enrolled = <span class="code-keyword">True</span>        <span class="code-comment"># Boolean variable</span>
+
+<span class="code-comment"># Print variables</span>
+<span class="code-function">print</span>(name)                <span class="code-comment"># Output: Quanskill</span>
+<span class="code-function">print</span>(age)                 <span class="code-comment"># Output: 25</span>
+<span class="code-function">print</span>(price)               <span class="code-comment"># Output: 19.99</span></code></pre>
+
+            <h3>Python Data Types</h3>
+
+            <p>Python has several built-in data types to handle different kinds of data:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Numeric</strong></td>
+                        <td>int, float, complex</td>
+                        <td>Numbers for calculations</td>
+                        <td><code>42</code>, <code>3.14</code>, <code>2+3j</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Text</strong></td>
+                        <td>str</td>
+                        <td>Sequence of characters</td>
+                        <td><code>"Hello"</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Boolean</strong></td>
+                        <td>bool</td>
+                        <td>True or False values</td>
+                        <td><code>True</code>, <code>False</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sequence</strong></td>
+                        <td>list, tuple</td>
+                        <td>Ordered collections</td>
+                        <td><code>[1,2,3]</code>, <code>(1,2,3)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mapping</strong></td>
+                        <td>dict</td>
+                        <td>Key-value pairs</td>
+                        <td><code>{"name": "John"}</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Set</strong></td>
+                        <td>set</td>
+                        <td>Unordered unique items</td>
+                        <td><code>{1, 2, 3}</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Working with Numbers</h4>
+
+            <pre><code><span class="code-comment"># Integer operations</span>
+x = <span class="code-number">20</span>
+y = <span class="code-number">5</span>
+
+<span class="code-function">print</span>(x + y)    <span class="code-comment"># Addition: 25</span>
+<span class="code-function">print</span>(x - y)    <span class="code-comment"># Subtraction: 15</span>
+<span class="code-function">print</span>(x * y)    <span class="code-comment"># Multiplication: 100</span>
+<span class="code-function">print</span>(x / y)    <span class="code-comment"># Division: 4.0</span>
+
+<span class="code-comment"># Float operations</span>
+price = <span class="code-number">4.67</span>
+<span class="code-function">print</span>(price * <span class="code-number">3</span>)  <span class="code-comment"># Output: 14.01</span></code></pre>
+
+            <h4>Working with Strings</h4>
+
+            <pre><code><span class="code-comment"># String creation and operations</span>
+greeting = <span class="code-string">"Happy"</span>
+<span class="code-function">print</span>(greeting)           <span class="code-comment"># Output: Happy</span>
+<span class="code-function">print</span>(greeting[<span class="code-number">0</span>])        <span class="code-comment"># First character: H</span>
+<span class="code-function">print</span>(greeting + <span class="code-string">" Morning"</span>)  <span class="code-comment"># Concatenation: Happy Morning</span>
+<span class="code-function">print</span>(<span class="code-function">len</span>(greeting))      <span class="code-comment"># Length: 5</span></code></pre>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What will be the output of: <code>type(3.14)</code></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">int</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">&lt;class 'float'&gt;</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">string</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">number</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Python identifies 3.14 as a floating-point number, so type() returns &lt;class 'float'&gt;.</div>
+                <div class="quiz-feedback incorrect">Not quite. Since 3.14 has a decimal point, Python treats it as a float, not an integer.</div>
+            </div>
+        </section>
+
+        <!-- Section 1.4: Operators -->
+        <section class="section" id="section-1-4">
+            <div class="section-header">
+                <span class="section-number">1.4</span>
+                <h2>Python Operators</h2>
+            </div>
+
+            <p>
+                Operators are special symbols that perform operations on values and variables. They form the foundation of expressions used to work with data and perform calculations.
+            </p>
+
+            <h3>Arithmetic Operators</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>+</code></td>
+                        <td>Addition</td>
+                        <td><code>10 + 5</code></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td><code>-</code></td>
+                        <td>Subtraction</td>
+                        <td><code>10 - 5</code></td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td><code>*</code></td>
+                        <td>Multiplication</td>
+                        <td><code>10 * 5</code></td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td>Division</td>
+                        <td><code>10 / 5</code></td>
+                        <td>2.0</td>
+                    </tr>
+                    <tr>
+                        <td><code>%</code></td>
+                        <td>Modulus (remainder)</td>
+                        <td><code>10 % 3</code></td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td><code>**</code></td>
+                        <td>Exponent</td>
+                        <td><code>2 ** 3</code></td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td><code>//</code></td>
+                        <td>Floor Division</td>
+                        <td><code>10 // 3</code></td>
+                        <td>3</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Comparison Operators</h3>
+
+            <p>Comparison operators compare values and return <code>True</code> or <code>False</code>:</p>
+
+            <pre><code>x = <span class="code-number">10</span>
+y = <span class="code-number">5</span>
+
+<span class="code-function">print</span>(x == y)   <span class="code-comment"># Equal: False</span>
+<span class="code-function">print</span>(x != y)   <span class="code-comment"># Not Equal: True</span>
+<span class="code-function">print</span>(x > y)    <span class="code-comment"># Greater Than: True</span>
+<span class="code-function">print</span>(x < y)    <span class="code-comment"># Less Than: False</span>
+<span class="code-function">print</span>(x >= y)   <span class="code-comment"># Greater or Equal: True</span>
+<span class="code-function">print</span>(x <= y)   <span class="code-comment"># Less or Equal: False</span></code></pre>
+
+            <h3>Assignment Operators</h3>
+
+            <pre><code><span class="code-comment"># Basic assignment</span>
+x = <span class="code-number">20</span>
+
+<span class="code-comment"># Compound assignment operators</span>
+x += <span class="code-number">5</span>     <span class="code-comment"># Same as: x = x + 5  ←’ x is now 25</span>
+x -= <span class="code-number">3</span>     <span class="code-comment"># Same as: x = x - 3  ←’ x is now 22</span>
+x *= <span class="code-number">2</span>     <span class="code-comment"># Same as: x = x * 2  ←’ x is now 44</span>
+x /= <span class="code-number">4</span>     <span class="code-comment"># Same as: x = x / 4  ←’ x is now 11.0</span></code></pre>
+
+            <div class="realworld-box">
+                <span class="label">Real-World Application</span>
+                <p>In data science, operators are essential for:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Data Cleaning:</strong> Comparing values to identify outliers</li>
+                    <li><strong>Feature Engineering:</strong> Creating new variables from existing data</li>
+                    <li><strong>Statistical Calculations:</strong> Computing means, sums, and percentages</li>
+                    <li><strong>Model Evaluation:</strong> Comparing predictions to actual values</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 1.5: First Program -->
+        <section class="section" id="section-1-5">
+            <div class="section-header">
+                <span class="section-number">1.5</span>
+                <h2>Your First Python Program</h2>
+            </div>
+
+            <p>
+                Let's put everything together and write a complete Python program. This program will demonstrate variables, data types, operators, and output.
+            </p>
+
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Interactive Demo: Data Science Calculator</h4>
+                </div>
+
+                <pre><code><span class="code-comment"># ================================================</span>
+<span class="code-comment"># Quanskill - Data Science Calculator</span>
+<span class="code-comment"># Your First Python Program!</span>
+<span class="code-comment"># ================================================</span>
+
+<span class="code-comment"># Define student information</span>
+student_name = <span class="code-string">"Alex"</span>
+course = <span class="code-string">"Python for Data Science"</span>
+is_enrolled = <span class="code-keyword">True</span>
+
+<span class="code-comment"># Define exam scores</span>
+exam1 = <span class="code-number">85</span>
+exam2 = <span class="code-number">92</span>
+exam3 = <span class="code-number">78</span>
+
+<span class="code-comment"># Calculate statistics</span>
+total = exam1 + exam2 + exam3
+average = total / <span class="code-number">3</span>
+highest = <span class="code-function">max</span>(exam1, exam2, exam3)
+lowest = <span class="code-function">min</span>(exam1, exam2, exam3)
+
+<span class="code-comment"># Display results</span>
+<span class="code-function">print</span>(<span class="code-string">"="</span> * <span class="code-number">40</span>)
+<span class="code-function">print</span>(<span class="code-string">"📊 QUANSKILL STUDENT REPORT"</span>)
+<span class="code-function">print</span>(<span class="code-string">"="</span> * <span class="code-number">40</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Student: {student_name}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Course: {course}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Enrolled: {is_enrolled}"</span>)
+<span class="code-function">print</span>(<span class="code-string">"-"</span> * <span class="code-number">40</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Exam Scores: {exam1}, {exam2}, {exam3}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Total: {total}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Average: {average:.2f}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Highest: {highest}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Lowest: {lowest}"</span>)
+<span class="code-function">print</span>(<span class="code-string">"="</span> * <span class="code-number">40</span>)
+
+<span class="code-comment"># Check if passed</span>
+<span class="code-keyword">if</span> average >= <span class="code-number">70</span>:
+    <span class="code-function">print</span>(<span class="code-string">"âœ… Status: PASSED!"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"âŒ Status: Needs Improvement"</span>)</code></pre>
+
+                <h4>Output:</h4>
+                <pre><code><span class="code-output">========================================
+📊 QUANSKILL STUDENT REPORT
+========================================
+Student: Alex
+Course: Python for Data Science
+Enrolled: True
+----------------------------------------
+Exam Scores: 85, 92, 78
+Total: 255
+Average: 85.00
+Highest: 92
+Lowest: 78
+========================================
+âœ… Status: PASSED!</span></code></pre>
+            </div>
+
+            <div class="note-box">
+                <span class="label">Key Concepts Demonstrated</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Variables:</strong> Storing student info and scores</li>
+                    <li><strong>Data Types:</strong> Strings, integers, booleans</li>
+                    <li><strong>Operators:</strong> Arithmetic calculations</li>
+                    <li><strong>Built-in Functions:</strong> <code>print()</code>, <code>max()</code>, <code>min()</code></li>
+                    <li><strong>F-strings:</strong> Formatted string output</li>
+                    <li><strong>Conditional Logic:</strong> if/else statement preview</li>
+                </ul>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">In the program above, what is the data type of the variable <code>is_enrolled</code>?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">String</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Integer</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Boolean</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Float</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! <code>True</code> is a Boolean value in Python. Booleans can only be True or False.</div>
+                <div class="quiz-feedback incorrect">Not quite. Look at the value assigned to is_enrolled. <code>True</code> is a Boolean, not a string or number.</div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter 1 Review</h2>
+            </div>
+
+            <p>
+                Congratulations! You've completed Chapter 1 of your Python for Data Science journey with Quanskill. Let's recap what you've learned:
+            </p>
+
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Data Science transforms raw data into insights</div>
+                    <div class="summary-item">Python is the #1 language for data science</div>
+                    <div class="summary-item">Variables store data in named memory locations</div>
+                    <div class="summary-item">Python has 6 core data types</div>
+                    <div class="summary-item">Operators perform calculations and comparisons</div>
+                    <div class="summary-item">Indentation is crucial in Python</div>
+                </div>
+            </div>
+
+            <h3>What's Next?</h3>
+
+            <p>In <strong>Chapter 2</strong>, you'll dive deeper into Python's powerful collection types:</p>
+
+            <ul>
+                <li><strong>Lists:</strong> Ordered, mutable sequences for storing multiple items</li>
+                <li><strong>Tuples:</strong> Immutable sequences for fixed data</li>
+                <li><strong>Sets:</strong> Unique item collections for mathematical operations</li>
+                <li><strong>Dictionaries:</strong> Key-value pairs for structured data storage</li>
+            </ul>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Try This:</strong> Create a program that:</p>
+                <ol>
+                    <li>Asks for three numbers (you'll learn <code>input()</code> in Chapter 3)</li>
+                    <li>Calculates their sum, average, and product</li>
+                    <li>Displays the results with formatted output</li>
+                </ol>
+                <p>This exercise reinforces variables, operators, and the <code>print()</code> function - all essential skills for your data science toolkit!</p>
+            </div>
+
+            <div class="realworld-box">
+                <span class="label">Your Data Science Journey</span>
+                <p>Remember: Every data scientist started exactly where you are now. The foundations you're building in this chapter - understanding variables, data types, and operators - will be used in <strong>every single project</strong> you work on, from simple data cleaning to complex machine learning models.</p>
+                <p style="margin-bottom: 0;"><strong>Keep practicing, stay curious, and welcome to the world of data science with Quanskill!</strong></p>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close sidebar on mobile
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

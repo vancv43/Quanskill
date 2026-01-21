@@ -1,0 +1,2465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: When Models Meet Data Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="text"] {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 150px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 60px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 8 Â· When Models Meet Data</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Predictor Function</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Training vs Test</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Loss Function</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Overfitting</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Underfitting</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Features</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Hyperparameter</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Empirical Risk</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: MLE Definition</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: MAP vs MLE</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Regularization</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Cross-Validation</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Likelihood</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Posterior</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: i.i.d. Assumption</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Graphical Model</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Hypothesis Class</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Bayes' Theorem</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Marginal Likelihood</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Model Selection</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Bayes Factor</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Latent Variables</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: d-Separation</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Occam's Razor</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>When Models Meet Data</h1>
+                <p class="hero-subtitle">
+                    Master the foundations of machine learning with 25 questions and 15 interactive labs covering empirical risk minimization, parameter estimation, Bayesian inference, and model selection.
+                </p>
+                <div class="hero-quote">
+                    "All models are wrong, but some are useful." - George Box
+                    <br><small>- Quanskill Learning Path</small>
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Empirical Risk</span>
+                    <span class="topic-tag">MLE</span>
+                    <span class="topic-tag">MAP Estimation</span>
+                    <span class="topic-tag">Regularization</span>
+                    <span class="topic-tag">Cross-Validation</span>
+                    <span class="topic-tag">Bayesian Inference</span>
+                    <span class="topic-tag">Graphical Models</span>
+                    <span class="topic-tag">Model Selection</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover the fundamental concepts that connect mathematical models to real-world data.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Why this matters:</strong> Chapter 8 is the bridge between mathematical foundations and practical machine learning. Understanding how models meet data is essential for building AI systems that generalize well to unseen situations.</p>
+            </div>
+
+            <!-- Lab 1: Data Representation -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Data Representation & Features</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Feature Type</label>
+                        <select id="featType">
+                            <option value="raw">Raw Features</option>
+                            <option value="normalized">Normalized (0-1)</option>
+                            <option value="standardized">Standardized (Î¼=0, Ïƒ=1)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <input type="number" id="featN" value="20" min="5" max="100">
+                    </div>
+                    <button class="btn btn-primary" onclick="showFeatures()">Generate Data</button>
+                </div>
+                <canvas id="featCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="featOutput">Click "Generate Data" to visualize feature representations...</div>
+            </div>
+
+            <!-- Lab 2: Loss Function Comparison -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Loss Function Comparison</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Loss Type</label>
+                        <select id="lossType">
+                            <option value="squared">Squared Loss (y-Ã…Â·)Â²</option>
+                            <option value="absolute">Absolute Loss |y-Ã…Â·|</option>
+                            <option value="huber">Huber Loss</option>
+                            <option value="hinge">Hinge Loss</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="showLoss()">Visualize Loss</button>
+                </div>
+                <canvas id="lossCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="lossOutput">Click to compare different loss functions...</div>
+            </div>
+
+            <!-- Lab 3: Overfitting vs Underfitting -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Overfitting vs Underfitting</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Model Complexity</label>
+                        <select id="polyDeg">
+                            <option value="1">Linear (M=1)</option>
+                            <option value="3">Cubic (M=3)</option>
+                            <option value="5" selected>M=5</option>
+                            <option value="9">M=9 (High)</option>
+                            <option value="15">M=15 (Very High)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <input type="number" id="polyN" value="15" min="5" max="50">
+                    </div>
+                    <button class="btn btn-primary" onclick="showOverfit()">Fit Model</button>
+                </div>
+                <canvas id="overfitCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="overfitOutput">Click to see overfitting/underfitting in action...</div>
+            </div>
+
+            <!-- Lab 4: Train/Test Split -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Train/Test Split Visualizer</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Test Split %</label>
+                        <input type="number" id="testSplit" value="20" min="10" max="50" step="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Total Points</label>
+                        <input type="number" id="totalPts" value="50" min="20" max="100">
+                    </div>
+                    <button class="btn btn-orange" onclick="showSplit()">Split Data</button>
+                </div>
+                <canvas id="splitCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="splitOutput">Click to visualize train/test split...</div>
+            </div>
+
+            <!-- Lab 5: MLE Visualizer -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Maximum Likelihood Estimation</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Distribution</label>
+                        <select id="mleDist">
+                            <option value="gaussian">Gaussian (Î¼, ÏƒÂ²)</option>
+                            <option value="bernoulli">Bernoulli (p)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Sample Size</label>
+                        <input type="number" id="mleN" value="20" min="5" max="100">
+                    </div>
+                    <button class="btn btn-primary" onclick="runMLE()">Find MLE</button>
+                </div>
+                <canvas id="mleCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mleOutput">Click to see MLE in action...</div>
+            </div>
+
+            <!-- Lab 6: MAP Estimation -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>MAP vs MLE Comparison</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Prior Strength</label>
+                        <select id="priorStrength">
+                            <option value="weak">Weak Prior (ÏƒÂ²=100)</option>
+                            <option value="medium" selected>Medium (ÏƒÂ²=1)</option>
+                            <option value="strong">Strong (ÏƒÂ²=0.1)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <input type="number" id="mapN" value="5" min="1" max="50">
+                    </div>
+                    <button class="btn btn-orange" onclick="runMAP()">Compare MLE vs MAP</button>
+                </div>
+                <canvas id="mapCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mapOutput">Click to compare MLE and MAP estimation...</div>
+            </div>
+
+            <!-- Lab 7: Regularization Effect -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Regularization Effect (L2)</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Î» (Regularization)</label>
+                        <input type="number" id="regLambda" value="0.1" min="0" max="10" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>Polynomial Degree</label>
+                        <input type="number" id="regDeg" value="9" min="1" max="15">
+                    </div>
+                    <button class="btn btn-primary" onclick="showRegularization()">Apply Regularization</button>
+                </div>
+                <canvas id="regCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="regOutput">Click to see regularization effect...</div>
+            </div>
+
+            <!-- Lab 8: K-Fold Cross-Validation -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>K-Fold Cross-Validation</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>K (Folds)</label>
+                        <select id="kFolds">
+                            <option value="3">K=3</option>
+                            <option value="5" selected>K=5</option>
+                            <option value="10">K=10</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Size</label>
+                        <input type="number" id="cvN" value="50" min="20" max="100">
+                    </div>
+                    <button class="btn btn-orange" onclick="runCV()">Run Cross-Validation</button>
+                </div>
+                <canvas id="cvCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="cvOutput">Click to visualize K-fold cross-validation...</div>
+            </div>
+
+            <!-- Lab 9: Likelihood Function -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Likelihood Function Visualizer</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>True Î¼</label>
+                        <input type="number" id="likeMu" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Observations</label>
+                        <input type="number" id="likeN" value="10" min="1" max="50">
+                    </div>
+                    <button class="btn btn-primary" onclick="showLikelihood()">Plot Likelihood</button>
+                </div>
+                <canvas id="likeCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="likeOutput">Click to visualize the likelihood function...</div>
+            </div>
+
+            <!-- Lab 10: Bayesian Posterior Update -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Bayesian Posterior Update</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Prior Mean</label>
+                        <input type="number" id="priorMu" value="0" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Add Data Point</label>
+                        <input type="number" id="newObs" value="3" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="updatePosterior()">Update Posterior</button>
+                    <button class="btn btn-primary" onclick="resetPosterior()">Reset</button>
+                </div>
+                <canvas id="posteriorCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="posteriorOutput">Click to see Bayesian updating in action...</div>
+            </div>
+
+            <!-- Lab 11: Training Curve -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Training & Validation Curves</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Model Type</label>
+                        <select id="curveModel">
+                            <option value="underfit">Underfit (High Bias)</option>
+                            <option value="goodfit" selected>Good Fit</option>
+                            <option value="overfit">Overfit (High Variance)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="showCurves()">Show Curves</button>
+                </div>
+                <canvas id="curveCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="curveOutput">Click to see training/validation curves...</div>
+            </div>
+
+            <!-- Lab 12: Graphical Model Builder -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Graphical Model Visualizer</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Model Type</label>
+                        <select id="gmType">
+                            <option value="regression">Linear Regression</option>
+                            <option value="bayesian">Bayesian Regression</option>
+                            <option value="mixture">Mixture Model</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="showGraphicalModel()">Show Model</button>
+                </div>
+                <canvas id="gmCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="gmOutput">Click to visualize probabilistic graphical models...</div>
+            </div>
+
+            <!-- Lab 13: Model Complexity -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Model Complexity vs Error</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Max Complexity</label>
+                        <input type="number" id="maxComplex" value="15" min="5" max="20">
+                    </div>
+                    <button class="btn btn-primary" onclick="showComplexity()">Plot Error vs Complexity</button>
+                </div>
+                <canvas id="complexCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="complexOutput">Click to see the bias-variance tradeoff...</div>
+            </div>
+
+            <!-- Lab 14: Model Evidence -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Bayesian Model Evidence</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Compare Models</label>
+                        <select id="evidenceModels">
+                            <option value="simple_complex">Simple vs Complex</option>
+                            <option value="linear_poly">Linear vs Polynomial</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="showEvidence()">Compare Evidence</button>
+                </div>
+                <canvas id="evidenceCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="evidenceOutput">Click to compare model evidence (Occam's razor)...</div>
+            </div>
+
+            <!-- Lab 15: Predictive Distribution -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Predictive Distribution</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Prediction Type</label>
+                        <select id="predType">
+                            <option value="point">Point Estimate (MLE)</option>
+                            <option value="bayesian">Bayesian (with uncertainty)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Test Point x*</label>
+                        <input type="number" id="testX" value="5" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="showPredictive()">Make Prediction</button>
+                </div>
+                <canvas id="predCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="predOutput">Click to see predictive distributions...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: DataBridge Analytics</span>
+                <p>You're a junior ML engineer at <strong>DataBridge Analytics</strong>, a startup building prediction models for Vietnamese e-commerce companies. Understanding how models learn from data is your first step to becoming a proficient ML practitioner.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A predictor in machine learning is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) A function f: â„á´° ←’ â„ that maps inputs to outputs</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) The dataset itself</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) The loss function</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) The optimization algorithm</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The training set is used for:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) Learning the model parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) Evaluating final performance</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) Choosing hyperparameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) Testing generalization</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The loss function â„“(y, Ã…Â·) measures:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) The error between true label y and prediction Ã…Â·</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) The size of the dataset</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) The number of parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) The learning rate</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Overfitting occurs when:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) Model fits training data well but generalizes poorly to test data</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) Model performs poorly on both training and test data</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) Model is too simple to capture patterns</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) Training data is too small</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Underfitting is characterized by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) High error on both training and test sets</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) Low training error, high test error</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) Perfect fit on training data</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) Too many parameters</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Features (attributes, covariates) are:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) The D-dimensional input representation xâ‚™ âˆˆ â„á´°</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) The output labels yâ‚™</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) The model parameters Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) The loss function values</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A hyperparameter is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) A high-level setting not learned from data (e.g., polynomial degree)</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) The learned weights of a model</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) The training data itself</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) The predictions made by the model</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Empirical risk is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) The average loss over the training set: (1/N)âˆ‘â„“(yâ‚™, f(xâ‚™))</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) The expected loss over all possible data</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) The loss on a single data point</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) The number of training errors</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: ModelForge AI</span>
+                <p>You're at <strong>ModelForge AI</strong>, building production ML systems. Understanding parameter estimation and model selection is crucial for deploying models that work reliably in the real world.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Maximum Likelihood Estimation (MLE) finds parameters Î¸ that:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) Maximize p(Y|X,Î¸), the probability of data given parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) Minimize the number of parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) Maximize the prior p(Î¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) Minimize the model complexity</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">MAP estimation differs from MLE by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) Including a prior p(Î¸): maximize p(Î¸|X,Y) âˆ p(Y|X,Î¸)p(Î¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) Not using the likelihood at all</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) Using a different dataset</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) Always giving the same result as MLE</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Regularized loss:</strong> L(Î¸) = ||y - XÎ¸||Â² + Î»||Î¸||Â²
+                </div>
+                <div class="quiz-question">The regularization term Î»||Î¸||Â² helps by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) Penalizing large parameter values to prevent overfitting</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) Making the model more complex</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) Increasing the training error</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) Removing the need for training data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">K-fold cross-validation:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) Splits data into K parts, trains on K-1, validates on 1, rotates K times</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) Uses K different models</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) Requires K times more data</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) Only uses 1/K of the data for training</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The likelihood p(Y|X,Î¸) is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) A function of Î¸ (not a proper probability distribution in Î¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) Always integrates to 1 over Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) Independent of the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) The same as the posterior</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The posterior p(Î¸|X,Y) represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) Updated belief about Î¸ after observing data</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) Prior belief before seeing data</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) The likelihood function</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) The training error</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The i.i.d. assumption means:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) Data points are independent and identically distributed</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) Data points are dependent on each other</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) Each point has a different distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) The model has independent parameters</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">In a directed graphical model, arrows indicate:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) Conditional probability dependencies</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) Time ordering only</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) Equal probability</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) Independence between variables</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The hypothesis class in ERM defines:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) The set of functions the predictor can take</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) The training data distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) The loss function</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) The test set</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Applications (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: BayesianML Research Lab</span>
+                <p>You're at <strong>BayesianML Research Lab</strong> in Ho Chi Minh City, developing next-generation probabilistic ML systems. Deep understanding of Bayesian inference and model selection is essential for your research.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>Uncertainty Quantification:</strong> Bayesian models provide confidence estimates for agent decisions</li>
+                    <li><strong>Model Selection:</strong> Agents must choose appropriate models for different tasks</li>
+                    <li><strong>Online Learning:</strong> Posterior updates enable continuous learning from experience</li>
+                    <li><strong>Meta-Learning:</strong> Learning to learn = learning the prior from related tasks</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Bayes' theorem for parameter estimation: p(Î¸|X,Y) = ?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) p(Y|X,Î¸)p(Î¸) / p(Y|X)</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) p(Î¸)p(Y|X) / p(X)</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) p(X|Î¸)p(Y) / p(Î¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) p(Î¸|Y)p(X) / p(Y|X)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The marginal likelihood p(Y|X) = âˆ«p(Y|X,Î¸)p(Î¸)dÎ¸ is also called:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Model evidence (used for model comparison)</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) The posterior distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) The training error</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) The regularization term</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Nested cross-validation is used for:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) Simultaneously selecting hyperparameters and estimating generalization error</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Training with nested data structures</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Only computing training error</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Reducing the dataset size</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Bayes Factor:</strong> BF = p(D|Mâ‚) / p(D|Mâ‚‚)
+                </div>
+                <div class="quiz-question">The Bayes factor compares:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) How well two models predict the observed data (model evidence ratio)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) The number of parameters in each model</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) The training errors only</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) The prior distributions only</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Latent variables z in a probabilistic model are:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) Unobserved random variables that help explain the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) The observed features</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) The model parameters Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) The loss function values</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">d-Separation in graphical models determines:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) Conditional independence between sets of variables</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) The distance between nodes</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) The dimensionality of the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) The number of edges</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Occam's razor in Bayesian model selection means:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Simpler models are automatically favored through the marginal likelihood</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) Always choose the model with most parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Complex models always have higher evidence</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Prior doesn't affect model selection</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An agent learns a world model from experience and must decide when to explore vs exploit.
+                </div>
+                <div class="quiz-question">Bayesian inference helps agents by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Quantifying uncertainty in predictions to guide exploration</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Eliminating all uncertainty</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Only providing point estimates</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) Avoiding the need for data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Chapter 9:</strong> Linear Regression - Apply these concepts to curve fitting</li>
+                    <li><strong>Chapter 10:</strong> Dimensionality Reduction - Learn PCA and representation learning</li>
+                    <li><strong>Chapter 11:</strong> Density Estimation - GMMs and probabilistic modeling</li>
+                    <li><strong>Chapter 12:</strong> Classification - SVMs and decision boundaries</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "A predictor is a function f: â„á´° ←’ â„ mapping D-dimensional inputs to outputs",
+            2: "Training set is used to learn model parameters through optimization",
+            3: "Loss function measures error between true label y and prediction Ã…Â·",
+            4: "Overfitting: low training error but high test error (poor generalization)",
+            5: "Underfitting: high error on both training and test sets (model too simple)",
+            6: "Features are the D-dimensional input representation, also called attributes or covariates",
+            7: "Hyperparameters are high-level settings not learned from data (e.g., polynomial degree, regularization Î»)",
+            8: "Empirical risk is average loss over training set: R_emp = (1/N)âˆ‘â„“(yâ‚™, f(xâ‚™))",
+            9: "MLE finds Î¸ that maximizes likelihood p(Y|X,Î¸) - probability of data given parameters",
+            10: "MAP includes prior: Î¸_MAP = argmax p(Î¸|X,Y) âˆ p(Y|X,Î¸)p(Î¸)",
+            11: "L2 regularization Î»||Î¸||Â² penalizes large parameters, equivalent to Gaussian prior",
+            12: "K-fold CV: split into K parts, train on K-1, validate on 1, rotate K times",
+            13: "Likelihood is a function of Î¸, not a probability distribution in Î¸ (doesn't integrate to 1)",
+            14: "Posterior p(Î¸|X,Y) is updated belief about Î¸ after observing data",
+            15: "i.i.d. = independent and identically distributed data points",
+            16: "Arrows in directed graphical models indicate conditional probability dependencies",
+            17: "Hypothesis class defines the set of functions the predictor can take (e.g., polynomials of degree M)",
+            18: "Bayes' theorem: p(Î¸|X,Y) = p(Y|X,Î¸)p(Î¸) / p(Y|X) = likelihood × prior / evidence",
+            19: "Marginal likelihood p(Y|X) is model evidence, used for Bayesian model comparison",
+            20: "Nested CV: outer loop estimates generalization error, inner loop selects hyperparameters",
+            21: "Bayes factor compares model evidence: BF = p(D|Mâ‚)/p(D|Mâ‚‚)",
+            22: "Latent variables are unobserved random variables that help explain the data structure",
+            23: "d-separation determines conditional independence from graph structure",
+            24: "Bayesian Occam's razor: simpler models automatically favored through marginal likelihood normalization",
+            25: "Bayesian inference quantifies uncertainty, enabling agents to balance exploration (high uncertainty) vs exploitation"
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Lab 1: Data Features
+        function showFeatures() {
+            const featType = document.getElementById('featType').value;
+            const N = parseInt(document.getElementById('featN').value);
+            
+            // Generate random data
+            let data = [];
+            for (let i = 0; i < N; i++) {
+                data.push({
+                    age: 20 + Math.random() * 50,
+                    salary: 30000 + Math.random() * 100000
+                });
+            }
+            
+            let processed = data.map(d => ({...d}));
+            let stats = {};
+            
+            if (featType === 'normalized') {
+                const minAge = Math.min(...data.map(d => d.age));
+                const maxAge = Math.max(...data.map(d => d.age));
+                const minSal = Math.min(...data.map(d => d.salary));
+                const maxSal = Math.max(...data.map(d => d.salary));
+                processed = data.map(d => ({
+                    age: (d.age - minAge) / (maxAge - minAge),
+                    salary: (d.salary - minSal) / (maxSal - minSal)
+                }));
+                stats = {type: 'Min-Max Normalization', range: '[0, 1]'};
+            } else if (featType === 'standardized') {
+                const meanAge = data.reduce((s, d) => s + d.age, 0) / N;
+                const meanSal = data.reduce((s, d) => s + d.salary, 0) / N;
+                const stdAge = Math.sqrt(data.reduce((s, d) => s + (d.age - meanAge)**2, 0) / N);
+                const stdSal = Math.sqrt(data.reduce((s, d) => s + (d.salary - meanSal)**2, 0) / N);
+                processed = data.map(d => ({
+                    age: (d.age - meanAge) / stdAge,
+                    salary: (d.salary - meanSal) / stdSal
+                }));
+                stats = {type: 'Z-Score Standardization', mean: '0', std: '1'};
+            } else {
+                stats = {type: 'Raw Features', note: 'Different scales!'};
+            }
+            
+            // Draw
+            const canvas = document.getElementById('featCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            // Find bounds
+            const xs = processed.map(d => d.age);
+            const ys = processed.map(d => d.salary);
+            const xMin = Math.min(...xs) - 0.1 * (Math.max(...xs) - Math.min(...xs));
+            const xMax = Math.max(...xs) + 0.1 * (Math.max(...xs) - Math.min(...xs));
+            const yMin = Math.min(...ys) - 0.1 * (Math.max(...ys) - Math.min(...ys));
+            const yMax = Math.max(...ys) + 0.1 * (Math.max(...ys) - Math.min(...ys));
+            
+            // Draw points
+            processed.forEach(d => {
+                const px = 50 + (d.age - xMin) / (xMax - xMin) * (w - 80);
+                const py = h - 50 - (d.salary - yMin) / (yMax - yMin) * (h - 80);
+                ctx.fillStyle = '#0b2fa0';
+                ctx.beginPath();
+                ctx.arc(px, py, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(50, 30);
+            ctx.lineTo(50, h - 40);
+            ctx.lineTo(w - 20, h - 40);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Space Grotesk';
+            ctx.fillText('Feature 1 (Age)', w/2 - 40, h - 15);
+            ctx.save();
+            ctx.translate(15, h/2);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText('Feature 2 (Salary)', -30, 0);
+            ctx.restore();
+            
+            document.getElementById('featOutput').innerHTML = 
+`Feature Representation: ${stats.type}
+
+Data points: ${N}
+${featType === 'normalized' ? 'Range: [0, 1] for both features' : ''}
+${featType === 'standardized' ? 'Mean: 0, Std: 1 for both features' : ''}
+${featType === 'raw' ? 'Warning: Different scales can affect learning!' : ''}
+
+Preprocessing matters:
+â€¢ Normalized/standardized features help gradient descent converge faster
+â€¢ Many algorithms assume features are on similar scales`;
+        }
+
+        // Lab 2: Loss Functions
+        function showLoss() {
+            const lossType = document.getElementById('lossType').value;
+            
+            const canvas = document.getElementById('lossCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            const losses = {
+                squared: {fn: r => r*r, name: 'Squared Loss', formula: '(y-Ã…Â·)Â²'},
+                absolute: {fn: r => Math.abs(r), name: 'Absolute Loss', formula: '|y-Ã…Â·|'},
+                huber: {fn: r => Math.abs(r) <= 1 ? 0.5*r*r : Math.abs(r) - 0.5, name: 'Huber Loss', formula: 'Î´=1'},
+                hinge: {fn: r => Math.max(0, 1 - r), name: 'Hinge Loss', formula: 'max(0, 1-yÃ…Â·)'}
+            };
+            
+            const loss = losses[lossType];
+            
+            // Draw loss curve
+            const xMin = -3, xMax = 3;
+            let yMax = 0;
+            for (let px = 0; px < w; px++) {
+                const r = xMin + (px / w) * (xMax - xMin);
+                const l = loss.fn(r);
+                if (l < 10 && l > yMax) yMax = l;
+            }
+            yMax *= 1.1;
+            
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let px = 0; px < w; px++) {
+                const r = xMin + (px / w) * (xMax - xMin);
+                const l = Math.min(loss.fn(r), yMax);
+                const py = h - 50 - (l / yMax) * (h - 80);
+                if (px === 0) ctx.moveTo(px + 50, py);
+                else ctx.lineTo(px + 50, py);
+            }
+            ctx.stroke();
+            
+            // Axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(50, 30);
+            ctx.lineTo(50, h - 40);
+            ctx.lineTo(w - 20, h - 40);
+            ctx.stroke();
+            
+            // Zero line
+            const zeroPx = 50 + (0 - xMin) / (xMax - xMin) * (w - 80);
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(zeroPx, 30);
+            ctx.lineTo(zeroPx, h - 40);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Space Grotesk';
+            ctx.fillText(`${loss.name}: ${loss.formula}`, w/2 - 60, 25);
+            ctx.font = '12px Space Grotesk';
+            ctx.fillText('Residual (y - Ã…Â·)', w/2 - 40, h - 15);
+            
+            document.getElementById('lossOutput').innerHTML = 
+`${loss.name}: ${loss.formula}
+
+Properties:
+${lossType === 'squared' ? 'â€¢ Differentiable everywhere\nâ€¢ Heavily penalizes large errors\nâ€¢ Sensitive to outliers' : ''}
+${lossType === 'absolute' ? 'â€¢ Not differentiable at 0\nâ€¢ Linear penalty\nâ€¢ More robust to outliers' : ''}
+${lossType === 'huber' ? 'â€¢ Quadratic near 0, linear far from 0\nâ€¢ Combines benefits of squared and absolute\nâ€¢ Robust to outliers' : ''}
+${lossType === 'hinge' ? 'â€¢ Used in SVMs for classification\nâ€¢ Zero loss when correctly classified with margin\nâ€¢ Encourages large margins' : ''}`;
+        }
+
+        // Lab 3: Overfitting
+        function showOverfit() {
+            const M = parseInt(document.getElementById('polyDeg').value);
+            const N = parseInt(document.getElementById('polyN').value);
+            
+            // Generate noisy sine data
+            const data = [];
+            for (let i = 0; i < N; i++) {
+                const x = -4 + Math.random() * 8;
+                const y = Math.sin(x) + (Math.random() - 0.5) * 0.5;
+                data.push({x, y});
+            }
+            data.sort((a, b) => a.x - b.x);
+            
+            // Fit polynomial (simplified - just for visualization)
+            const canvas = document.getElementById('overfitCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            const xMin = -5, xMax = 5, yMin = -2, yMax = 2;
+            const toScreen = (x, y) => ({
+                px: 50 + (x - xMin) / (xMax - xMin) * (w - 80),
+                py: h - 50 - (y - yMin) / (yMax - yMin) * (h - 80)
+            });
+            
+            // Draw true function (sine)
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            for (let px = 50; px < w - 30; px++) {
+                const x = xMin + (px - 50) / (w - 80) * (xMax - xMin);
+                const pt = toScreen(x, Math.sin(x));
+                if (px === 50) ctx.moveTo(pt.px, pt.py);
+                else ctx.lineTo(pt.px, pt.py);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw fitted polynomial (simulated)
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let px = 50; px < w - 30; px++) {
+                const x = xMin + (px - 50) / (w - 80) * (xMax - xMin);
+                let y;
+                if (M <= 3) {
+                    y = Math.sin(x) * 0.5; // Underfit
+                } else if (M <= 6) {
+                    y = Math.sin(x) + (Math.random() - 0.5) * 0.1; // Good fit
+                } else {
+                    // Overfit - interpolate through points with wiggles
+                    y = Math.sin(x) + Math.sin(x * M / 3) * 0.3;
+                }
+                y = Math.max(yMin, Math.min(yMax, y));
+                const pt = toScreen(x, y);
+                if (px === 50) ctx.moveTo(pt.px, pt.py);
+                else ctx.lineTo(pt.px, pt.py);
+            }
+            ctx.stroke();
+            
+            // Draw data points
+            data.forEach(d => {
+                const pt = toScreen(d.x, d.y);
+                ctx.fillStyle = '#ff9000';
+                ctx.beginPath();
+                ctx.arc(pt.px, pt.py, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Legend
+            ctx.font = '11px Space Grotesk';
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('True function', w - 100, 25);
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillText(`Fitted (M=${M})`, w - 100, 40);
+            
+            const status = M <= 2 ? 'UNDERFIT' : (M <= 6 ? 'GOOD FIT' : 'OVERFIT');
+            document.getElementById('overfitOutput').innerHTML = 
+`Polynomial Degree M = ${M} ←’ ${status}
+
+${M <= 2 ? 'Ã…Â¡Ã‚Â  UNDERFITTING:\nâ€¢ Model too simple to capture pattern\nâ€¢ High bias, low variance\nâ€¢ High error on both train and test' : ''}
+${M > 2 && M <= 6 ? 'âœ“ GOOD FIT:\nâ€¢ Model captures true pattern\nâ€¢ Balanced bias-variance\nâ€¢ Good generalization' : ''}
+${M > 6 ? 'Ã…Â¡Ã‚Â  OVERFITTING:\nâ€¢ Model fits noise, not signal\nâ€¢ Low bias, high variance\nâ€¢ Low train error, high test error' : ''}`;
+        }
+
+        // Lab 4: Train/Test Split
+        function showSplit() {
+            const testPct = parseInt(document.getElementById('testSplit').value);
+            const total = parseInt(document.getElementById('totalPts').value);
+            const testN = Math.round(total * testPct / 100);
+            const trainN = total - testN;
+            
+            const canvas = document.getElementById('splitCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            // Generate data
+            const data = [];
+            for (let i = 0; i < total; i++) {
+                data.push({
+                    x: Math.random() * (w - 100) + 50,
+                    y: Math.random() * (h - 100) + 50,
+                    isTest: i >= trainN
+                });
+            }
+            
+            // Draw points
+            data.forEach(d => {
+                ctx.fillStyle = d.isTest ? '#ef4444' : '#0b2fa0';
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, 6, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Legend
+            ctx.font = '12px Space Grotesk';
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillRect(w - 120, 20, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText(`Train (${trainN})`, w - 100, 32);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(w - 120, 40, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText(`Test (${testN})`, w - 100, 52);
+            
+            document.getElementById('splitOutput').innerHTML = 
+`Train/Test Split: ${100 - testPct}% / ${testPct}%
+
+Training set: ${trainN} points (blue)
+Test set: ${testN} points (red)
+
+Key principles:
+â€¢ Train set: Used to learn parameters
+â€¢ Test set: Used to evaluate generalization
+â€¢ Never use test data during training!
+â€¢ Common splits: 80/20, 70/30, 90/10`;
+        }
+
+        // Lab 5: MLE
+        function runMLE() {
+            const dist = document.getElementById('mleDist').value;
+            const N = parseInt(document.getElementById('mleN').value);
+            
+            const canvas = document.getElementById('mleCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            let data, mle, likelihood;
+            
+            if (dist === 'gaussian') {
+                const trueMu = 3, trueSigma = 1;
+                data = [];
+                for (let i = 0; i < N; i++) {
+                    // Box-Muller
+                    const u1 = Math.random(), u2 = Math.random();
+                    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+                    data.push(trueMu + trueSigma * z);
+                }
+                
+                mle = {
+                    mu: data.reduce((s, x) => s + x, 0) / N,
+                    sigma2: data.reduce((s, x) => s + (x - data.reduce((a, b) => a + b, 0) / N)**2, 0) / N
+                };
+                
+                // Plot likelihood as function of Î¼
+                const muRange = [-1, 7];
+                ctx.strokeStyle = '#0b2fa0';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let px = 50; px < w - 30; px++) {
+                    const mu = muRange[0] + (px - 50) / (w - 80) * (muRange[1] - muRange[0]);
+                    let logL = 0;
+                    data.forEach(x => {
+                        logL -= 0.5 * (x - mu)**2;
+                    });
+                    const py = h - 50 - (logL + N * 10) / 20 * (h - 80);
+                    if (px === 50) ctx.moveTo(px, Math.max(30, Math.min(h - 50, py)));
+                    else ctx.lineTo(px, Math.max(30, Math.min(h - 50, py)));
+                }
+                ctx.stroke();
+                
+                // Mark MLE
+                const mlePx = 50 + (mle.mu - muRange[0]) / (muRange[1] - muRange[0]) * (w - 80);
+                ctx.fillStyle = '#ff9000';
+                ctx.beginPath();
+                ctx.arc(mlePx, h - 80, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.font = '12px Space Grotesk';
+                ctx.fillStyle = '#333';
+                ctx.fillText('Î¼', w/2, h - 15);
+                ctx.fillText('Log-Likelihood', 60, 25);
+                
+                document.getElementById('mleOutput').innerHTML = 
+`MLE for Gaussian N(Î¼, ÏƒÂ²)
+
+Sample size: ${N}
+Sample mean: ${mle.mu.toFixed(3)}
+Sample variance: ${mle.sigma2.toFixed(3)}
+
+MLE estimates:
+  Î¼_MLE = (1/N)âˆ‘xâ‚™ = ${mle.mu.toFixed(3)}
+  ÏƒÂ²_MLE = (1/N)âˆ‘(xâ‚™ - Î¼_MLE)Â² = ${mle.sigma2.toFixed(3)}
+
+Orange dot marks maximum likelihood estimate.`;
+            } else {
+                // Bernoulli
+                const trueP = 0.7;
+                data = [];
+                let successes = 0;
+                for (let i = 0; i < N; i++) {
+                    const x = Math.random() < trueP ? 1 : 0;
+                    data.push(x);
+                    successes += x;
+                }
+                mle = {p: successes / N};
+                
+                document.getElementById('mleOutput').innerHTML = 
+`MLE for Bernoulli(p)
+
+Sample size: ${N}
+Successes: ${successes}
+
+MLE estimate:
+  p_MLE = (# successes) / N = ${mle.p.toFixed(3)}
+
+This is simply the sample proportion!`;
+            }
+        }
+
+        // Lab 6: MAP vs MLE
+        function runMAP() {
+            const strength = document.getElementById('priorStrength').value;
+            const N = parseInt(document.getElementById('mapN').value);
+            
+            const priorVar = strength === 'weak' ? 100 : (strength === 'medium' ? 1 : 0.1);
+            const priorMean = 0;
+            const likelihoodVar = 1;
+            
+            // Generate data around true mean of 3
+            const trueMu = 3;
+            const data = [];
+            for (let i = 0; i < N; i++) {
+                const u1 = Math.random(), u2 = Math.random();
+                const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+                data.push(trueMu + z);
+            }
+            
+            const sampleMean = data.reduce((s, x) => s + x, 0) / N;
+            const mle = sampleMean;
+            
+            // MAP with Gaussian prior
+            const posteriorVar = 1 / (N / likelihoodVar + 1 / priorVar);
+            const map = posteriorVar * (N * sampleMean / likelihoodVar + priorMean / priorVar);
+            
+            document.getElementById('mapOutput').innerHTML = 
+`MAP vs MLE Comparison
+
+Data: ${N} points, sample mean = ${sampleMean.toFixed(3)}
+Prior: N(${priorMean}, ${priorVar}) - ${strength} prior
+
+MLE estimate: Î¼_MLE = ${mle.toFixed(3)}
+MAP estimate: Î¼_MAP = ${map.toFixed(3)}
+
+Prior strength effect:
+â€¢ Weak prior ←’ MAP â‰ˆ MLE
+â€¢ Strong prior ←’ MAP pulled toward prior mean
+â€¢ MAP = weighted average of prior mean and MLE
+
+Formula: Î¼_MAP = (NÂ·xÃŒ"/ÏƒÂ² + Î¼â‚/ÏÆ’â‚Ã‚Â²) / (N/ÏƒÂ² + 1/ÏÆ’â‚Ã‚Â²)`;
+        }
+
+        // Lab 7: Regularization
+        function showRegularization() {
+            const lambda = parseFloat(document.getElementById('regLambda').value);
+            const M = parseInt(document.getElementById('regDeg').value);
+            
+            document.getElementById('regOutput').innerHTML = 
+`L2 Regularization (Ridge Regression)
+
+Loss: L(Î¸) = ||y - XÎ¸||Â² + Î»||Î¸||Â²
+
+Î» = ${lambda}
+Polynomial degree: M = ${M}
+
+Effect of Î»:
+â€¢ Î» = 0: No regularization ←’ prone to overfitting
+â€¢ Î» small: Weak regularization
+â€¢ Î» large: Strong regularization ←’ simpler model
+
+Equivalence:
+â€¢ L2 regularization â‰¡ Gaussian prior on Î¸
+â€¢ Î» = ÏƒÂ²/bÂ² where bÂ² is prior variance
+
+${lambda > 1 ? 'Ã…Â¡Ã‚Â  Strong regularization may cause underfitting' : ''}
+${lambda < 0.01 && M > 7 ? 'Ã…Â¡Ã‚Â  Weak regularization with high-degree polynomial may overfit' : ''}`;
+        }
+
+        // Lab 8: Cross-Validation
+        function runCV() {
+            const K = parseInt(document.getElementById('kFolds').value);
+            const N = parseInt(document.getElementById('cvN').value);
+            const foldSize = Math.floor(N / K);
+            
+            const canvas = document.getElementById('cvCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            // Draw K-fold visualization
+            const barH = 30;
+            const gap = 10;
+            const startY = 50;
+            
+            for (let fold = 0; fold < K; fold++) {
+                const y = startY + fold * (barH + gap);
+                
+                for (let i = 0; i < K; i++) {
+                    const x = 80 + i * (w - 120) / K;
+                    const bw = (w - 120) / K - 5;
+                    
+                    ctx.fillStyle = i === fold ? '#ef4444' : '#0b2fa0';
+                    ctx.fillRect(x, y, bw, barH);
+                }
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '11px Space Grotesk';
+                ctx.fillText(`Fold ${fold + 1}`, 20, y + 20);
+            }
+            
+            // Legend
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillRect(w - 120, h - 60, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Training', w - 100, h - 48);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(w - 120, h - 40, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Validation', w - 100, h - 28);
+            
+            document.getElementById('cvOutput').innerHTML = 
+`${K}-Fold Cross-Validation
+
+Total data: ${N} points
+Fold size: ~${foldSize} points
+
+Process:
+1. Split data into ${K} equal parts
+2. For each fold k = 1...${K}:
+   - Train on ${K-1} folds (${(K-1) * foldSize} points)
+   - Validate on fold k (${foldSize} points)
+3. Average ${K} validation scores
+
+CV error â‰ˆ E[R(f, V)] â‰ˆ (1/${K})âˆ‘R(f(áµ€), V(áµ€))
+
+Benefits:
+â€¢ Uses all data for both training and validation
+â€¢ Reduces variance in error estimate`;
+        }
+
+        // Remaining labs - simplified implementations
+        function showLikelihood() {
+            document.getElementById('likeOutput').innerHTML = 
+`Likelihood Function p(Y|X,Î¸)
+
+For i.i.d. data: p(Y|X,Î¸) = âˆâ‚â„¢ p(yâ‚™|xâ‚™,Î¸)
+
+Log-likelihood: log p(Y|X,Î¸) = âˆ‘â‚™ log p(yâ‚™|xâ‚™,Î¸)
+
+Key insight:
+â€¢ Likelihood is a function of Î¸ (parameters vary)
+â€¢ NOT a probability distribution over Î¸
+â€¢ Does not integrate to 1 over Î¸
+â€¢ Used to compare how well different Î¸ explain data`;
+        }
+
+        let posteriorData = [];
+        function updatePosterior() {
+            const newObs = parseFloat(document.getElementById('newObs').value);
+            posteriorData.push(newObs);
+            
+            const priorMean = parseFloat(document.getElementById('priorMu').value);
+            const priorVar = 1;
+            const likeVar = 1;
+            
+            const N = posteriorData.length;
+            const sampleMean = posteriorData.reduce((s, x) => s + x, 0) / N;
+            
+            const postVar = 1 / (N / likeVar + 1 / priorVar);
+            const postMean = postVar * (N * sampleMean / likeVar + priorMean / priorVar);
+            
+            document.getElementById('posteriorOutput').innerHTML = 
+`Bayesian Posterior Update
+
+Observations: [${posteriorData.map(x => x.toFixed(1)).join(', ')}]
+N = ${N}
+
+Prior: N(${priorMean}, ${priorVar})
+Posterior: N(${postMean.toFixed(3)}, ${postVar.toFixed(3)})
+
+As N increases:
+â€¢ Posterior mean ←’ sample mean
+â€¢ Posterior variance ←’ 0
+â€¢ Prior influence decreases`;
+        }
+
+        function resetPosterior() {
+            posteriorData = [];
+            document.getElementById('posteriorOutput').innerHTML = 'Posterior reset. Add observations to see updates.';
+        }
+
+        function showCurves() {
+            const model = document.getElementById('curveModel').value;
+            document.getElementById('curveOutput').innerHTML = 
+`Training vs Validation Curves - ${model.toUpperCase()}
+
+${model === 'underfit' ? `HIGH BIAS (Underfitting):
+â€¢ Both train and val error are high
+â€¢ Gap between curves is small
+â€¢ Model cannot capture patterns
+â€¢ Solution: Increase model complexity` : ''}
+${model === 'goodfit' ? `GOOD FIT:
+â€¢ Low training error
+â€¢ Low validation error
+â€¢ Small gap between curves
+â€¢ Model generalizes well` : ''}
+${model === 'overfit' ? `HIGH VARIANCE (Overfitting):
+â€¢ Very low training error
+â€¢ High validation error
+â€¢ Large gap between curves
+â€¢ Solution: Regularization, more data` : ''}`;
+        }
+
+        function showGraphicalModel() {
+            const gmType = document.getElementById('gmType').value;
+            document.getElementById('gmOutput').innerHTML = 
+`Graphical Model: ${gmType}
+
+${gmType === 'regression' ? `Linear Regression:
+    Î¸ ←’ y ← x
+    
+â€¢ x: observed input
+â€¢ y: observed output  
+â€¢ Î¸: parameters (learned)
+â€¢ p(y|x,Î¸) = N(y|Î¸áµ€x, ÏƒÂ²)` : ''}
+${gmType === 'bayesian' ? `Bayesian Regression:
+    mâ‚, Sâ‚ ←’ Î¸ ←’ y ← x
+    
+â€¢ Î¸ has a prior: p(Î¸) = N(mâ‚, Sâ‚)
+â€¢ Posterior: p(Î¸|X,Y) âˆ p(Y|X,Î¸)p(Î¸)` : ''}
+${gmType === 'mixture' ? `Mixture Model:
+    Ï€ ←’ z ←’ x ← Î¼,Î£
+    
+â€¢ z: latent cluster assignment
+â€¢ Ï€: mixture weights
+â€¢ Î¼,Î£: component parameters` : ''}`;
+        }
+
+        function showComplexity() {
+            document.getElementById('complexOutput').innerHTML = 
+`Model Complexity vs Error (Bias-Variance Tradeoff)
+
+                Error
+                  â”‚
+        Train     â”‚  â•²___________
+        Error     â”‚    â•²
+                  â”‚     â•²
+        "Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Â¼"Û‰"Û‰"Û‰"Û‰"Û‰"â•²"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"
+                  â”‚       â•²   /
+        Test      â”‚        â•²_/
+        Error     â”‚         
+                  â„“"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰-Âº
+                      Model Complexity
+
+â€¢ Left (simple): High bias, underfitting
+â€¢ Right (complex): High variance, overfitting
+â€¢ Optimal: Sweet spot in the middle
+
+Key insight: Can't minimize both bias and variance
+simultaneously - must find the right tradeoff!`;
+        }
+
+        function showEvidence() {
+            document.getElementById('evidenceOutput').innerHTML = 
+`Bayesian Model Evidence (Occam's Razor)
+
+Model evidence: p(D|M) = âˆ«p(D|Î¸,M)p(Î¸|M)dÎ¸
+
+         p(D|M)
+           â”‚
+    Mâ‚     â”‚   Mâ‚‚ (complex)
+  (simple) â”‚  â•±â•²
+      â•±â•²   â”‚ â•±  â•²
+     â•±  â•²  â”‚â•±    â•²
+    â•±    â•²"Û‰"Â¼"Û‰"Û‰"Û‰"Û‰"Û‰"â•²"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰-Âº
+           â”‚       D (data)
+           
+â€¢ Simple model Mâ‚: concentrated over few datasets
+â€¢ Complex model Mâ‚‚: spread over many datasets
+â€¢ Evidence must integrate to 1!
+â€¢ Automatic Occam's razor: simpler models favored
+  when they explain data adequately`;
+        }
+
+        function showPredictive() {
+            const predType = document.getElementById('predType').value;
+            const xStar = parseFloat(document.getElementById('testX').value);
+            
+            document.getElementById('predOutput').innerHTML = 
+`Predictive Distribution at x* = ${xStar}
+
+${predType === 'point' ? `Point Estimate (MLE):
+â€¢ Single prediction: Ã…Â· = f(x*, Î¸_MLE)
+â€¢ No uncertainty quantification
+â€¢ May be overconfident` : ''}
+${predType === 'bayesian' ? `Bayesian Prediction:
+â€¢ Distribution: p(y*|x*, D) = âˆ«p(y*|x*,Î¸)p(Î¸|D)dÎ¸
+â€¢ Accounts for parameter uncertainty
+â€¢ Wider intervals where less certain
+
+Predictive mean: E[y*|x*, D]
+Predictive variance: Var[y*|x*, D]
+  = noise variance + parameter uncertainty` : ''}`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

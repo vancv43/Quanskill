@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: Linear Regression | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Navigation Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📝‰';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        /* Key Concepts Grid */
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Section Styling */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Special Boxes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before {
+            content: '📝¤“';
+        }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before {
+            content: '🎓';
+        }
+
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before {
+            content: 'â–¸';
+            color: var(--quanskill-orange);
+        }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before {
+            content: '🎯';
+        }
+
+        /* Code Blocks */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .code-block {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Math Display */
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .katex-display {
+            margin: 1rem 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Tables */
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        /* Quiz Styling */
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before {
+            content: '🧠';
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Interactive Demo */
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before {
+            content: 'âš¡';
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="range"] {
+            width: 150px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--quanskill-blue);
+            cursor: pointer;
+        }
+
+        .control-group select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .demo-canvas {
+            width: 100%;
+            height: 350px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-item {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .result-item .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .result-item .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .result-item .label::before {
+            content: none;
+        }
+
+        /* Algorithm Box */
+        .algorithm-box {
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .algorithm-box h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-orange);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .algorithm-box ol {
+            margin-left: 1.5rem;
+        }
+
+        .algorithm-box li {
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 80px 1.5rem 3rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .progress-bar {
+                left: 0;
+            }
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--quanskill-orange);
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 9 Â· Linear Regression</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">
+                Introduction
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Core Concepts</div>
+            <a href="#section-9-1" class="nav-link">
+                Problem Formulation
+            </a>
+            <a href="#section-9-2" class="nav-link">
+                Parameter Estimation
+            </a>
+            <a href="#section-9-3" class="nav-link">
+                Bayesian Linear Regression
+            </a>
+            <a href="#section-9-4" class="nav-link">
+                Geometric Interpretation
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">
+                Chapter Summary
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 9</span>
+                <h1>Linear Regression</h1>
+                <p class="hero-subtitle">
+                    Learn to fit functions to data using probabilistic models. From maximum likelihood estimation to full Bayesian inference, master the foundational techniques of supervised learning.
+                </p>
+                <div class="hero-quote">
+                    "Linear regression is where theory meets practice - the starting point for understanding how machines learn from data."
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts -->
+        <div class="key-concepts">
+            <div class="concept-card">
+                <div class="icon">📈</div>
+                <h5>Curve Fitting</h5>
+                <p>Find functions that map inputs to outputs while handling noise</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🎯</div>
+                <h5>Maximum Likelihood</h5>
+                <p>Estimate parameters by maximizing data probability</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">📝–ŠÂ¡</div>
+                <h5>Regularization</h5>
+                <p>Prevent overfitting with parameter priors</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">📊</div>
+                <h5>Bayesian Inference</h5>
+                <p>Quantify uncertainty in predictions</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🔍®</div>
+                <h5>Feature Engineering</h5>
+                <p>Transform inputs for nonlinear modeling</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🐍"</div>
+                <h5>Orthogonal Projection</h5>
+                <p>Geometric view of least squares</p>
+            </div>
+        </div>
+
+        <!-- Section 9.1: Problem Formulation -->
+        <section class="section" id="section-9-1">
+            <div class="section-header">
+                <span class="section-number">9.1</span>
+                <h2>Problem Formulation</h2>
+            </div>
+
+            <p>
+                In regression, we aim to find a function $f$ that maps inputs $\mathbf{x} \in \mathbb{R}^D$ to corresponding function values $f(\mathbf{x}) \in \mathbb{R}$. Given a training set of inputs $\mathbf{x}_n$ and noisy observations $y_n = f(\mathbf{x}_n) + \epsilon$, our task is to find a function that generalizes to new, unseen inputs.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Linear Regression Model</span>
+                <p>The linear regression model with Gaussian noise is:</p>
+                <div class="math-display">
+                    $$p(y | \mathbf{x}, \boldsymbol{\theta}) = \mathcal{N}(y | \mathbf{x}^\top \boldsymbol{\theta}, \sigma^2)$$
+                </div>
+                <p>Equivalently: $y = \mathbf{x}^\top \boldsymbol{\theta} + \epsilon$, where $\epsilon \sim \mathcal{N}(0, \sigma^2)$</p>
+            </div>
+
+            <p>
+                The term "linear regression" refers to models that are <strong>linear in the parameters</strong> $\boldsymbol{\theta}$. The inputs $\mathbf{x}$ can undergo any nonlinear transformation - we can fit polynomials, radial basis functions, and more.
+            </p>
+
+            <h3>Feature Transformations</h3>
+            <p>
+                To model nonlinear relationships, we apply a feature transformation $\boldsymbol{\phi}(\mathbf{x})$:
+            </p>
+            <div class="math-display">
+                $$y = \boldsymbol{\phi}^\top(\mathbf{x}) \boldsymbol{\theta} + \epsilon = \sum_{k=0}^{K-1} \theta_k \phi_k(\mathbf{x}) + \epsilon$$
+            </div>
+
+            <div class="example-box">
+                <span class="label">Example: Polynomial Features</span>
+                <p>For polynomial regression of degree $K-1$ with scalar input $x$:</p>
+                <div class="math-display">
+                    $$\boldsymbol{\phi}(x) = \begin{bmatrix} 1 \\ x \\ x^2 \\ \vdots \\ x^{K-1} \end{bmatrix}$$
+                </div>
+                <p>This "lifts" a 1D input into a $K$-dimensional feature space, enabling us to fit polynomials within the linear regression framework.</p>
+            </div>
+
+            <div class="ml-box">
+                <span class="label">Why This Matters in ML</span>
+                <p>Linear regression is the foundation for understanding neural networks. A single-layer neural network without activation functions is exactly linear regression! Understanding MLE, regularization, and Bayesian inference here directly transfers to deep learning.</p>
+            </div>
+        </section>
+
+        <!-- Section 9.2: Parameter Estimation -->
+        <section class="section" id="section-9-2">
+            <div class="section-header">
+                <span class="section-number">9.2</span>
+                <h2>Parameter Estimation</h2>
+            </div>
+
+            <p>
+                Given training data $\mathcal{D} = \{(\mathbf{x}_1, y_1), \ldots, (\mathbf{x}_N, y_N)\}$, we need to find optimal parameters $\boldsymbol{\theta}^*$. We'll explore three approaches: Maximum Likelihood, MAP estimation, and regularization.
+            </p>
+
+            <h3>Maximum Likelihood Estimation</h3>
+            <p>
+                The likelihood function measures how probable the observed data is under our model:
+            </p>
+            <div class="math-display">
+                $$p(\mathbf{y} | \mathbf{X}, \boldsymbol{\theta}) = \prod_{n=1}^{N} \mathcal{N}(y_n | \boldsymbol{\phi}^\top(\mathbf{x}_n)\boldsymbol{\theta}, \sigma^2)$$
+            </div>
+
+            <p>
+                Taking the negative log-likelihood and simplifying:
+            </p>
+            <div class="math-display">
+                $$\mathcal{L}(\boldsymbol{\theta}) = \frac{1}{2\sigma^2} \|\mathbf{y} - \boldsymbol{\Phi}\boldsymbol{\theta}\|^2$$
+            </div>
+            <p>where $\boldsymbol{\Phi}$ is the design matrix with rows $\boldsymbol{\phi}^\top(\mathbf{x}_n)$.</p>
+
+            <div class="definition-box">
+                <span class="label">Theorem: MLE Solution</span>
+                <p>The maximum likelihood estimate has a closed-form solution:</p>
+                <div class="math-display">
+                    $$\boldsymbol{\theta}_{\text{ML}} = (\boldsymbol{\Phi}^\top \boldsymbol{\Phi})^{-1} \boldsymbol{\Phi}^\top \mathbf{y}$$
+                </div>
+                <p>This is also known as the <strong>normal equations</strong> or <strong>ordinary least squares</strong> solution.</p>
+            </div>
+
+            <!-- Interactive Demo -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Interactive: Polynomial Regression & Overfitting</h4>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Polynomial Degree: <span id="degreeVal">3</span></label>
+                        <input type="range" id="degreeSlider" min="0" max="9" value="3">
+                    </div>
+                    <div class="control-group">
+                        <label>Noise Level: <span id="noiseVal">0.3</span></label>
+                        <input type="range" id="noiseSlider" min="0" max="100" value="30">
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points: <span id="dataVal">10</span></label>
+                        <input type="range" id="dataSlider" min="5" max="30" value="10">
+                    </div>
+                </div>
+                <canvas id="regressionCanvas" class="demo-canvas"></canvas>
+                <div class="demo-results">
+                    <div class="result-item">
+                        <div class="value" id="trainError">0.00</div>
+                        <div class="label">Training RMSE</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="testError">0.00</div>
+                        <div class="label">Test RMSE</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="fitStatus">Good</div>
+                        <div class="label">Model Status</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Overfitting in Linear Regression</h3>
+            <p>
+                When the polynomial degree is too high relative to the amount of data, we observe <strong>overfitting</strong>: the model fits the training data perfectly but generalizes poorly to new data.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Training Error</th>
+                        <th>Test Error</th>
+                        <th>Diagnosis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Underfitting</td>
+                        <td>High</td>
+                        <td>High</td>
+                        <td>Model too simple</td>
+                    </tr>
+                    <tr>
+                        <td>Good Fit</td>
+                        <td>Low</td>
+                        <td>Low</td>
+                        <td>Appropriate complexity</td>
+                    </tr>
+                    <tr>
+                        <td>Overfitting</td>
+                        <td>Very Low</td>
+                        <td>High</td>
+                        <td>Model too complex</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Maximum A Posteriori (MAP) Estimation</h3>
+            <p>
+                To mitigate overfitting, we place a prior distribution on the parameters. With a Gaussian prior $p(\boldsymbol{\theta}) = \mathcal{N}(\mathbf{0}, b^2\mathbf{I})$:
+            </p>
+            <div class="math-display">
+                $$\boldsymbol{\theta}_{\text{MAP}} = \left(\boldsymbol{\Phi}^\top \boldsymbol{\Phi} + \frac{\sigma^2}{b^2}\mathbf{I}\right)^{-1} \boldsymbol{\Phi}^\top \mathbf{y}$$
+            </div>
+
+            <div class="note-box">
+                <span class="label">Key Insight: Regularization = Prior</span>
+                <p>MAP estimation with a Gaussian prior is equivalent to <strong>Ridge Regression</strong> (L2 regularization). The regularization parameter $\lambda = \sigma^2/b^2$ controls the strength of the prior.</p>
+                <ul>
+                    <li><strong>Gaussian prior</strong> ←’ L2 regularization (Ridge)</li>
+                    <li><strong>Laplace prior</strong> ←’ L1 regularization (LASSO)</li>
+                </ul>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What happens to the MAP estimate as the prior variance $b^2 \to \infty$?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The parameters go to zero</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">The MAP estimate approaches the MLE</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The model becomes more regularized</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The predictions become uncertain</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! As $b^2 \to \infty$, the regularization term $\sigma^2/b^2 \to 0$, and MAP reduces to MLE.</div>
+                <div class="quiz-feedback incorrect">Not quite. Think about what happens to the regularization term $\sigma^2/b^2$ as $b^2$ grows large.</div>
+            </div>
+        </section>
+
+        <!-- Section 9.3: Bayesian Linear Regression -->
+        <section class="section" id="section-9-3">
+            <div class="section-header">
+                <span class="section-number">9.3</span>
+                <h2>Bayesian Linear Regression</h2>
+            </div>
+
+            <p>
+                Bayesian linear regression goes beyond point estimates. Instead of finding a single "best" $\boldsymbol{\theta}$, we maintain a full <strong>posterior distribution</strong> over parameters and average over all plausible values when making predictions.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Bayesian Linear Regression Model</span>
+                <p><strong>Prior:</strong> $p(\boldsymbol{\theta}) = \mathcal{N}(\mathbf{m}_0, \mathbf{S}_0)$</p>
+                <p><strong>Likelihood:</strong> $p(y | \mathbf{x}, \boldsymbol{\theta}) = \mathcal{N}(y | \boldsymbol{\phi}^\top(\mathbf{x})\boldsymbol{\theta}, \sigma^2)$</p>
+            </div>
+
+            <h3>Computing the Posterior</h3>
+            <p>
+                Thanks to conjugacy (Gaussian prior + Gaussian likelihood), the posterior is also Gaussian:
+            </p>
+            <div class="math-display">
+                $$p(\boldsymbol{\theta} | \mathbf{X}, \mathbf{y}) = \mathcal{N}(\boldsymbol{\theta} | \mathbf{m}_N, \mathbf{S}_N)$$
+            </div>
+            <p>with:</p>
+            <div class="math-display">
+                $$\mathbf{S}_N = (\mathbf{S}_0^{-1} + \sigma^{-2}\boldsymbol{\Phi}^\top\boldsymbol{\Phi})^{-1}$$
+            </div>
+            <div class="math-display">
+                $$\mathbf{m}_N = \mathbf{S}_N(\mathbf{S}_0^{-1}\mathbf{m}_0 + \sigma^{-2}\boldsymbol{\Phi}^\top\mathbf{y})$$
+            </div>
+
+            <h3>Posterior Predictions</h3>
+            <p>
+                To predict at a new input $\mathbf{x}_*$, we integrate over all parameter values:
+            </p>
+            <div class="math-display">
+                $$p(y_* | \mathbf{X}, \mathbf{y}, \mathbf{x}_*) = \int p(y_* | \mathbf{x}_*, \boldsymbol{\theta}) p(\boldsymbol{\theta} | \mathbf{X}, \mathbf{y}) d\boldsymbol{\theta}$$
+            </div>
+
+            <div class="definition-box">
+                <span class="label">Theorem: Predictive Distribution</span>
+                <p>The posterior predictive distribution is Gaussian:</p>
+                <div class="math-display">
+                    $$p(y_* | \mathbf{X}, \mathbf{y}, \mathbf{x}_*) = \mathcal{N}\left(y_* \Big| \boldsymbol{\phi}^\top(\mathbf{x}_*)\mathbf{m}_N, \; \boldsymbol{\phi}^\top(\mathbf{x}_*)\mathbf{S}_N\boldsymbol{\phi}(\mathbf{x}_*) + \sigma^2\right)$$
+                </div>
+                <p>The predictive variance has two components:</p>
+                <ul>
+                    <li><strong>Parameter uncertainty:</strong> $\boldsymbol{\phi}^\top(\mathbf{x}_*)\mathbf{S}_N\boldsymbol{\phi}(\mathbf{x}_*)$</li>
+                    <li><strong>Observation noise:</strong> $\sigma^2$</li>
+                </ul>
+            </div>
+
+            <!-- Bayesian Demo -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Interactive: Bayesian vs. MLE Regression</h4>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Polynomial Degree: <span id="bayesDegreeVal">5</span></label>
+                        <input type="range" id="bayesDegreeSlider" min="1" max="9" value="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Prior Variance: <span id="priorVarVal">0.25</span></label>
+                        <input type="range" id="priorVarSlider" min="1" max="100" value="25">
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points: <span id="bayesDataVal">10</span></label>
+                        <input type="range" id="bayesDataSlider" min="3" max="20" value="10">
+                    </div>
+                </div>
+                <canvas id="bayesCanvas" class="demo-canvas"></canvas>
+                <div class="demo-results">
+                    <div class="result-item">
+                        <div class="value" id="mlePred">-</div>
+                        <div class="label">MLE Prediction</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="mapPred">-</div>
+                        <div class="label">MAP/Bayesian Mean</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="uncertainty">-</div>
+                        <div class="label">Uncertainty (Â±2Ïƒ)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ml-box">
+                <span class="label">Why This Matters in ML</span>
+                <p><strong>Uncertainty quantification</strong> is crucial in real-world applications:</p>
+                <ul>
+                    <li><strong>Medical diagnosis:</strong> Know when the model is uncertain</li>
+                    <li><strong>Autonomous vehicles:</strong> Be cautious in unfamiliar situations</li>
+                    <li><strong>Active learning:</strong> Query labels where uncertainty is highest</li>
+                    <li><strong>Reinforcement learning:</strong> Exploration vs. exploitation tradeoff</li>
+                </ul>
+            </div>
+
+            <h3>Marginal Likelihood for Model Selection</h3>
+            <p>
+                The marginal likelihood (evidence) automatically balances model complexity against data fit:
+            </p>
+            <div class="math-display">
+                $$p(\mathbf{y} | \mathbf{X}) = \int p(\mathbf{y} | \mathbf{X}, \boldsymbol{\theta}) p(\boldsymbol{\theta}) d\boldsymbol{\theta} = \mathcal{N}(\mathbf{y} | \mathbf{X}\mathbf{m}_0, \mathbf{X}\mathbf{S}_0\mathbf{X}^\top + \sigma^2\mathbf{I})$$
+            </div>
+            <p>
+                This is the expected likelihood under the prior - models that are too simple or too complex will have lower marginal likelihood (Occam's razor).
+            </p>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">In Bayesian linear regression, what happens to the posterior uncertainty as we observe more data?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">The posterior becomes more concentrated (lower variance)</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The posterior becomes more spread out</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The posterior approaches the prior</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The posterior variance stays constant</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! More data provides more information, reducing our uncertainty about the parameters. The posterior concentrates around the true values.</div>
+                <div class="quiz-feedback incorrect">Not quite. Think about how additional observations constrain our beliefs about the parameters.</div>
+            </div>
+        </section>
+
+        <!-- Section 9.4: Geometric Interpretation -->
+        <section class="section" id="section-9-4">
+            <div class="section-header">
+                <span class="section-number">9.4</span>
+                <h2>MLE as Orthogonal Projection</h2>
+            </div>
+
+            <p>
+                Maximum likelihood estimation has a beautiful geometric interpretation: we're finding the <strong>orthogonal projection</strong> of the observation vector onto the subspace spanned by the feature columns.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Geometric View</span>
+                <p>The MLE solution:</p>
+                <div class="math-display">
+                    $$\hat{\mathbf{y}} = \boldsymbol{\Phi}\boldsymbol{\theta}_{\text{ML}} = \boldsymbol{\Phi}(\boldsymbol{\Phi}^\top\boldsymbol{\Phi})^{-1}\boldsymbol{\Phi}^\top\mathbf{y}$$
+                </div>
+                <p>The matrix $\mathbf{P} = \boldsymbol{\Phi}(\boldsymbol{\Phi}^\top\boldsymbol{\Phi})^{-1}\boldsymbol{\Phi}^\top$ is the <strong>projection matrix</strong> onto the column space of $\boldsymbol{\Phi}$.</p>
+            </div>
+
+            <p>Key properties of the projection:</p>
+            <ul>
+                <li>The residual $\mathbf{y} - \hat{\mathbf{y}}$ is orthogonal to all columns of $\boldsymbol{\Phi}$</li>
+                <li>$\hat{\mathbf{y}}$ is the closest point to $\mathbf{y}$ in the column space of $\boldsymbol{\Phi}$</li>
+                <li>"Closest" means minimum squared Euclidean distance</li>
+            </ul>
+
+            <div class="example-box">
+                <span class="label">Example: Fitting a Line Through the Origin</span>
+                <p>For $y = \theta x$ with training data $(x_1, y_1), \ldots, (x_N, y_N)$:</p>
+                <div class="math-display">
+                    $$\theta_{\text{ML}} = \frac{\mathbf{x}^\top \mathbf{y}}{\mathbf{x}^\top \mathbf{x}} = \frac{\sum_n x_n y_n}{\sum_n x_n^2}$$
+                </div>
+                <p>This is the coordinate of $\mathbf{y}$ when projected onto the 1D subspace spanned by $\mathbf{x}$.</p>
+            </div>
+
+            <div class="realworld-box">
+                <span class="label">Real-World Applications</span>
+                <p><strong>Linear regression powers countless applications:</strong></p>
+                <ul>
+                    <li><strong>House price prediction:</strong> Features like size, location, bedrooms ←’ price</li>
+                    <li><strong>Stock market analysis:</strong> Historical data ←’ future returns</li>
+                    <li><strong>Scientific modeling:</strong> Physical measurements ←’ derived quantities</li>
+                    <li><strong>A/B testing:</strong> Treatment effects with covariate adjustment</li>
+                    <li><strong>Deep learning:</strong> The final layer of most neural networks is linear regression!</li>
+                </ul>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">If the columns of the design matrix $\boldsymbol{\Phi}$ are orthonormal, what is $\boldsymbol{\Phi}^\top\boldsymbol{\Phi}$?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The zero matrix</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">The identity matrix</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The projection matrix</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The covariance matrix</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! For orthonormal columns, $\boldsymbol{\Phi}^\top\boldsymbol{\Phi} = \mathbf{I}$, which simplifies the MLE to $\boldsymbol{\theta}_{\text{ML}} = \boldsymbol{\Phi}^\top\mathbf{y}$.</div>
+                <div class="quiz-feedback incorrect">Not quite. Remember that orthonormal means the columns have unit length and are mutually perpendicular.</div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter Summary</h2>
+            </div>
+
+            <h3>Key Equations</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Formula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear Model</td>
+                        <td>$y = \boldsymbol{\phi}^\top(\mathbf{x})\boldsymbol{\theta} + \epsilon$</td>
+                    </tr>
+                    <tr>
+                        <td>MLE Solution</td>
+                        <td>$\boldsymbol{\theta}_{\text{ML}} = (\boldsymbol{\Phi}^\top\boldsymbol{\Phi})^{-1}\boldsymbol{\Phi}^\top\mathbf{y}$</td>
+                    </tr>
+                    <tr>
+                        <td>MAP Solution</td>
+                        <td>$\boldsymbol{\theta}_{\text{MAP}} = (\boldsymbol{\Phi}^\top\boldsymbol{\Phi} + \lambda\mathbf{I})^{-1}\boldsymbol{\Phi}^\top\mathbf{y}$</td>
+                    </tr>
+                    <tr>
+                        <td>Posterior Covariance</td>
+                        <td>$\mathbf{S}_N = (\mathbf{S}_0^{-1} + \sigma^{-2}\boldsymbol{\Phi}^\top\boldsymbol{\Phi})^{-1}$</td>
+                    </tr>
+                    <tr>
+                        <td>Posterior Mean</td>
+                        <td>$\mathbf{m}_N = \mathbf{S}_N(\mathbf{S}_0^{-1}\mathbf{m}_0 + \sigma^{-2}\boldsymbol{\Phi}^\top\mathbf{y})$</td>
+                    </tr>
+                    <tr>
+                        <td>Predictive Variance</td>
+                        <td>$\boldsymbol{\phi}^\top(\mathbf{x}_*)\mathbf{S}_N\boldsymbol{\phi}(\mathbf{x}_*) + \sigma^2$</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Core Concepts Recap</h3>
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">1âƒ£</div>
+                    <h5>MLE</h5>
+                    <p>Maximize likelihood; can overfit with limited data</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">2âƒ£</div>
+                    <h5>MAP</h5>
+                    <p>Add prior for regularization; equivalent to Ridge/LASSO</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">3âƒ£</div>
+                    <h5>Bayesian</h5>
+                    <p>Full posterior; uncertainty quantification</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">4âƒ£</div>
+                    <h5>Geometry</h5>
+                    <p>MLE = orthogonal projection onto feature subspace</p>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Next Steps:</strong></p>
+                <ul>
+                    <li>📊 <strong>Chapter 10:</strong> Dimensionality Reduction with PCA</li>
+                    <li>🔍® <strong>Chapter 11:</strong> Density Estimation with Gaussian Mixture Models</li>
+                    <li>🎯 <strong>Chapter 12:</strong> Classification with SVMs</li>
+                </ul>
+                <p><strong>Practice Projects:</strong></p>
+                <ul>
+                    <li>Implement polynomial regression from scratch</li>
+                    <li>Compare MLE, MAP, and Bayesian predictions on real datasets</li>
+                    <li>Visualize the bias-variance tradeoff</li>
+                </ul>
+            </div>
+        </section>
+        </div><!-- end content-wrapper -->
+    </main>
+
+    <script>
+        // Initialize KaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+        });
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const quizBox = element.closest('.quiz-box');
+            const options = quizBox.querySelectorAll('.quiz-option');
+            const feedbacks = quizBox.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedbacks[0].classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                feedbacks[1].classList.add('show');
+            }
+        }
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Navigation active state
+        const sections = document.querySelectorAll('.section, .hero');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // ========== INTERACTIVE DEMO 1: Polynomial Regression ==========
+        const canvas1 = document.getElementById('regressionCanvas');
+        const ctx1 = canvas1.getContext('2d');
+        
+        let trainX = [], trainY = [], testX = [], testY = [];
+        let trueFunc = x => Math.sin(x);
+        
+        function generateData(N, noise) {
+            trainX = []; trainY = [];
+            testX = []; testY = [];
+            
+            for (let i = 0; i < N; i++) {
+                const x = -3 + Math.random() * 6;
+                trainX.push(x);
+                trainY.push(trueFunc(x) + (Math.random() - 0.5) * 2 * noise);
+            }
+            
+            for (let i = 0; i < 50; i++) {
+                const x = -3 + (i / 49) * 6;
+                testX.push(x);
+                testY.push(trueFunc(x) + (Math.random() - 0.5) * 2 * noise);
+            }
+        }
+
+        function fitPolynomial(degree) {
+            // Simple polynomial fitting using normal equations
+            const N = trainX.length;
+            const K = degree + 1;
+            
+            // Build design matrix
+            const Phi = [];
+            for (let i = 0; i < N; i++) {
+                const row = [];
+                for (let k = 0; k < K; k++) {
+                    row.push(Math.pow(trainX[i], k));
+                }
+                Phi.push(row);
+            }
+            
+            // Compute Phi^T * Phi
+            const PhiTPhi = [];
+            for (let i = 0; i < K; i++) {
+                PhiTPhi[i] = [];
+                for (let j = 0; j < K; j++) {
+                    let sum = 0;
+                    for (let n = 0; n < N; n++) {
+                        sum += Phi[n][i] * Phi[n][j];
+                    }
+                    PhiTPhi[i][j] = sum;
+                }
+            }
+            
+            // Compute Phi^T * y
+            const PhiTy = [];
+            for (let i = 0; i < K; i++) {
+                let sum = 0;
+                for (let n = 0; n < N; n++) {
+                    sum += Phi[n][i] * trainY[n];
+                }
+                PhiTy[i] = sum;
+            }
+            
+            // Solve using simple Gaussian elimination (regularized)
+            const lambda = 1e-6;
+            for (let i = 0; i < K; i++) {
+                PhiTPhi[i][i] += lambda;
+            }
+            
+            const theta = solveLinearSystem(PhiTPhi, PhiTy);
+            
+            return function(x) {
+                let y = 0;
+                for (let k = 0; k < theta.length; k++) {
+                    y += theta[k] * Math.pow(x, k);
+                }
+                return y;
+            };
+        }
+
+        function solveLinearSystem(A, b) {
+            const n = b.length;
+            const aug = A.map((row, i) => [...row, b[i]]);
+            
+            // Forward elimination
+            for (let i = 0; i < n; i++) {
+                let maxRow = i;
+                for (let k = i + 1; k < n; k++) {
+                    if (Math.abs(aug[k][i]) > Math.abs(aug[maxRow][i])) {
+                        maxRow = k;
+                    }
+                }
+                [aug[i], aug[maxRow]] = [aug[maxRow], aug[i]];
+                
+                for (let k = i + 1; k < n; k++) {
+                    const c = aug[k][i] / aug[i][i];
+                    for (let j = i; j <= n; j++) {
+                        aug[k][j] -= c * aug[i][j];
+                    }
+                }
+            }
+            
+            // Back substitution
+            const x = new Array(n).fill(0);
+            for (let i = n - 1; i >= 0; i--) {
+                x[i] = aug[i][n];
+                for (let j = i + 1; j < n; j++) {
+                    x[i] -= aug[i][j] * x[j];
+                }
+                x[i] /= aug[i][i];
+            }
+            
+            return x;
+        }
+
+        function computeRMSE(func, X, Y) {
+            let sum = 0;
+            for (let i = 0; i < X.length; i++) {
+                const diff = Y[i] - func(X[i]);
+                sum += diff * diff;
+            }
+            return Math.sqrt(sum / X.length);
+        }
+
+        function drawRegression() {
+            const width = canvas1.width = canvas1.offsetWidth;
+            const height = canvas1.height = canvas1.offsetHeight;
+            
+            ctx1.clearRect(0, 0, width, height);
+            
+            const degree = parseInt(document.getElementById('degreeSlider').value);
+            const noise = parseInt(document.getElementById('noiseSlider').value) / 100;
+            const dataPoints = parseInt(document.getElementById('dataSlider').value);
+            
+            document.getElementById('degreeVal').textContent = degree;
+            document.getElementById('noiseVal').textContent = noise.toFixed(2);
+            document.getElementById('dataVal').textContent = dataPoints;
+            
+            if (trainX.length !== dataPoints) {
+                generateData(dataPoints, noise);
+            }
+            
+            const margin = 50;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            
+            const scaleX = x => margin + ((x + 3) / 6) * plotWidth;
+            const scaleY = y => height - margin - ((y + 2) / 4) * plotHeight;
+            
+            // Draw axes
+            ctx1.strokeStyle = '#e8eaf6';
+            ctx1.lineWidth = 1;
+            ctx1.beginPath();
+            ctx1.moveTo(margin, scaleY(0));
+            ctx1.lineTo(width - margin, scaleY(0));
+            ctx1.moveTo(scaleX(0), margin);
+            ctx1.lineTo(scaleX(0), height - margin);
+            ctx1.stroke();
+            
+            // Draw true function
+            ctx1.strokeStyle = '#10b981';
+            ctx1.lineWidth = 2;
+            ctx1.setLineDash([5, 5]);
+            ctx1.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = trueFunc(x);
+                const px = scaleX(x);
+                const py = scaleY(y);
+                if (i === 0) ctx1.moveTo(px, py);
+                else ctx1.lineTo(px, py);
+            }
+            ctx1.stroke();
+            ctx1.setLineDash([]);
+            
+            // Fit and draw polynomial
+            const fittedFunc = fitPolynomial(degree);
+            ctx1.strokeStyle = '#0b2fa0';
+            ctx1.lineWidth = 3;
+            ctx1.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = Math.max(-2, Math.min(2, fittedFunc(x)));
+                const px = scaleX(x);
+                const py = scaleY(y);
+                if (i === 0) ctx1.moveTo(px, py);
+                else ctx1.lineTo(px, py);
+            }
+            ctx1.stroke();
+            
+            // Draw training points
+            ctx1.fillStyle = '#ff9000';
+            trainX.forEach((x, i) => {
+                ctx1.beginPath();
+                ctx1.arc(scaleX(x), scaleY(trainY[i]), 6, 0, Math.PI * 2);
+                ctx1.fill();
+            });
+            
+            // Compute and display errors
+            const trainRMSE = computeRMSE(fittedFunc, trainX, trainY);
+            const testRMSE = computeRMSE(fittedFunc, testX, testY);
+            
+            document.getElementById('trainError').textContent = trainRMSE.toFixed(3);
+            document.getElementById('testError').textContent = testRMSE.toFixed(3);
+            
+            let status = 'Good Fit';
+            let statusColor = '#10b981';
+            if (trainRMSE > 0.5) {
+                status = 'Underfitting';
+                statusColor = '#f59e0b';
+            } else if (testRMSE > trainRMSE * 2 && testRMSE > 0.5) {
+                status = 'Overfitting';
+                statusColor = '#ef4444';
+            }
+            document.getElementById('fitStatus').textContent = status;
+            document.getElementById('fitStatus').style.color = statusColor;
+            
+            // Legend
+            ctx1.font = '13px Space Grotesk, sans-serif';
+            ctx1.fillStyle = '#10b981';
+            ctx1.fillText('True function (sin)', width - 150, 25);
+            ctx1.fillStyle = '#0b2fa0';
+            ctx1.fillText('Fitted polynomial', width - 150, 45);
+            ctx1.fillStyle = '#ff9000';
+            ctx1.fillText('Training data', width - 150, 65);
+        }
+
+        // ========== INTERACTIVE DEMO 2: Bayesian Regression ==========
+        const canvas2 = document.getElementById('bayesCanvas');
+        const ctx2 = canvas2.getContext('2d');
+        
+        let bayesTrainX = [], bayesTrainY = [];
+        
+        function generateBayesData(N) {
+            bayesTrainX = [];
+            bayesTrainY = [];
+            const noise = 0.3;
+            
+            for (let i = 0; i < N; i++) {
+                const x = -3 + Math.random() * 6;
+                bayesTrainX.push(x);
+                bayesTrainY.push(Math.sin(x) + (Math.random() - 0.5) * 2 * noise);
+            }
+        }
+
+        function drawBayesian() {
+            const width = canvas2.width = canvas2.offsetWidth;
+            const height = canvas2.height = canvas2.offsetHeight;
+            
+            ctx2.clearRect(0, 0, width, height);
+            
+            const degree = parseInt(document.getElementById('bayesDegreeSlider').value);
+            const priorVar = parseInt(document.getElementById('priorVarSlider').value) / 100;
+            const dataPoints = parseInt(document.getElementById('bayesDataSlider').value);
+            
+            document.getElementById('bayesDegreeVal').textContent = degree;
+            document.getElementById('priorVarVal').textContent = priorVar.toFixed(2);
+            document.getElementById('bayesDataVal').textContent = dataPoints;
+            
+            if (bayesTrainX.length !== dataPoints) {
+                generateBayesData(dataPoints);
+            }
+            
+            const margin = 50;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            
+            const scaleX = x => margin + ((x + 3) / 6) * plotWidth;
+            const scaleY = y => height - margin - ((y + 2) / 4) * plotHeight;
+            
+            // Draw axes
+            ctx2.strokeStyle = '#e8eaf6';
+            ctx2.lineWidth = 1;
+            ctx2.beginPath();
+            ctx2.moveTo(margin, scaleY(0));
+            ctx2.lineTo(width - margin, scaleY(0));
+            ctx2.moveTo(scaleX(0), margin);
+            ctx2.lineTo(scaleX(0), height - margin);
+            ctx2.stroke();
+            
+            // Compute MLE fit
+            const mleFit = fitPolynomial(degree);
+            
+            // Draw uncertainty band (simplified approximation)
+            const uncertaintyScale = Math.sqrt(priorVar) * (1 + degree * 0.1);
+            ctx2.fillStyle = 'rgba(11, 47, 160, 0.15)';
+            ctx2.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = mleFit(x);
+                // Uncertainty grows at edges
+                const distFromData = Math.min(...bayesTrainX.map(tx => Math.abs(x - tx)));
+                const localUncertainty = uncertaintyScale * (0.3 + distFromData * 0.2);
+                const py = scaleY(Math.max(-2, Math.min(2, y + localUncertainty)));
+                if (i === 0) ctx2.moveTo(scaleX(x), py);
+                else ctx2.lineTo(scaleX(x), py);
+            }
+            for (let i = plotWidth; i >= 0; i--) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = mleFit(x);
+                const distFromData = Math.min(...bayesTrainX.map(tx => Math.abs(x - tx)));
+                const localUncertainty = uncertaintyScale * (0.3 + distFromData * 0.2);
+                const py = scaleY(Math.max(-2, Math.min(2, y - localUncertainty)));
+                ctx2.lineTo(scaleX(x), py);
+            }
+            ctx2.closePath();
+            ctx2.fill();
+            
+            // Draw true function
+            ctx2.strokeStyle = '#10b981';
+            ctx2.lineWidth = 2;
+            ctx2.setLineDash([5, 5]);
+            ctx2.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = Math.sin(x);
+                if (i === 0) ctx2.moveTo(scaleX(x), scaleY(y));
+                else ctx2.lineTo(scaleX(x), scaleY(y));
+            }
+            ctx2.stroke();
+            ctx2.setLineDash([]);
+            
+            // Draw MAP/Bayesian mean
+            ctx2.strokeStyle = '#0b2fa0';
+            ctx2.lineWidth = 3;
+            ctx2.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = Math.max(-2, Math.min(2, mleFit(x)));
+                if (i === 0) ctx2.moveTo(scaleX(x), scaleY(y));
+                else ctx2.lineTo(scaleX(x), scaleY(y));
+            }
+            ctx2.stroke();
+            
+            // Draw training points
+            ctx2.fillStyle = '#ff9000';
+            bayesTrainX.forEach((x, i) => {
+                ctx2.beginPath();
+                ctx2.arc(scaleX(x), scaleY(bayesTrainY[i]), 6, 0, Math.PI * 2);
+                ctx2.fill();
+            });
+            
+            // Update info
+            const testX = 2.5;
+            const pred = mleFit(testX);
+            const distFromData = Math.min(...bayesTrainX.map(tx => Math.abs(testX - tx)));
+            const unc = uncertaintyScale * (0.3 + distFromData * 0.2);
+            
+            document.getElementById('mlePred').textContent = pred.toFixed(2);
+            document.getElementById('mapPred').textContent = pred.toFixed(2);
+            document.getElementById('uncertainty').textContent = (unc * 2).toFixed(2);
+            
+            // Legend
+            ctx2.font = '13px Space Grotesk, sans-serif';
+            ctx2.fillStyle = '#10b981';
+            ctx2.fillText('True function', width - 140, 25);
+            ctx2.fillStyle = '#0b2fa0';
+            ctx2.fillText('Posterior mean', width - 140, 45);
+            ctx2.fillStyle = 'rgba(11, 47, 160, 0.5)';
+            ctx2.fillText('Uncertainty', width - 140, 65);
+        }
+
+        // Event listeners
+        document.getElementById('degreeSlider').addEventListener('input', drawRegression);
+        document.getElementById('noiseSlider').addEventListener('input', () => {
+            const noise = parseInt(document.getElementById('noiseSlider').value) / 100;
+            generateData(trainX.length, noise);
+            drawRegression();
+        });
+        document.getElementById('dataSlider').addEventListener('input', () => {
+            const N = parseInt(document.getElementById('dataSlider').value);
+            const noise = parseInt(document.getElementById('noiseSlider').value) / 100;
+            generateData(N, noise);
+            drawRegression();
+        });
+        
+        document.getElementById('bayesDegreeSlider').addEventListener('input', drawBayesian);
+        document.getElementById('priorVarSlider').addEventListener('input', drawBayesian);
+        document.getElementById('bayesDataSlider').addEventListener('input', () => {
+            const N = parseInt(document.getElementById('bayesDataSlider').value);
+            generateBayesData(N);
+            drawBayesian();
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            generateData(10, 0.3);
+            generateBayesData(10);
+            drawRegression();
+            drawBayesian();
+        });
+        
+        window.addEventListener('resize', () => {
+            drawRegression();
+            drawBayesian();
+        });
+    </script>
+</body>
+</html>

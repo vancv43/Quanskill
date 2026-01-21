@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuanSkill - Python for Data Science Learning Modules</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #FF9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --quanskill-dark: #1a1a2e;
+            --quanskill-light-blue: #e6f0ff;
+            --quanskill-light-orange: #fff4e6;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef7 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--quanskill-blue) 0%, var(--quanskill-orange) 100%);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--quanskill-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header h1 span {
+            color: var(--quanskill-orange);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.15em;
+            margin-bottom: 25px;
+            max-width: 800px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--quanskill-light-blue);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 12px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.8em;
+        }
+
+        .stat-card .stat-info {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .progress-section {
+            background: var(--quanskill-light-blue);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--quanskill-blue);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .progress-header span {
+            color: var(--quanskill-blue);
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 14px;
+            background: #d1e5ff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--quanskill-blue) 0%, var(--quanskill-orange) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.8em;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--quanskill-orange);
+            display: inline-block;
+        }
+
+        .section-title .emoji {
+            margin-right: 10px;
+        }
+
+        .modules-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(11, 47, 160, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(11, 47, 160, 0.15);
+            border-color: var(--quanskill-blue);
+        }
+
+        .module-card.completed {
+            border: 3px solid var(--quanskill-orange);
+        }
+
+        .module-card.completed .module-header {
+            background: linear-gradient(135deg, var(--quanskill-light-orange) 0%, #fff 100%);
+        }
+
+        .module-header {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transition: background 0.3s ease;
+        }
+
+        .module-header:hover {
+            background: var(--quanskill-light-blue);
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            margin-top: 4px;
+            cursor: pointer;
+            accent-color: var(--quanskill-orange);
+        }
+
+        .module-info {
+            flex: 1;
+        }
+
+        .module-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--quanskill-blue) 0%, var(--quanskill-blue-light) 100%);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .module-title {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.35em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .module-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-item.xp {
+            color: var(--quanskill-orange);
+            font-weight: 600;
+        }
+
+        .difficulty-badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .difficulty-beginner { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-intermediate { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-advanced { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .expand-btn {
+            color: var(--quanskill-blue);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-top: 4px;
+        }
+
+        .expand-btn.expanded {
+            transform: rotate(180deg);
+        }
+
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .module-content.show {
+            max-height: 1500px;
+        }
+
+        .module-content-inner {
+            padding: 25px;
+        }
+
+        .content-section {
+            margin-bottom: 25px;
+        }
+
+        .content-section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .objectives-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 8px 0 8px 28px;
+            position: relative;
+            color: #555;
+        }
+
+        .objectives-list li:before {
+            content: "âœ“";
+            position: absolute;
+            left: 0;
+            color: var(--quanskill-orange);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .topics-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .topic-tag {
+            background: var(--quanskill-light-blue);
+            color: var(--quanskill-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid var(--quanskill-blue);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--quanskill-blue) 0%, var(--quanskill-blue-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .lab-btn {
+            background: linear-gradient(135deg, var(--quanskill-orange) 0%, var(--quanskill-orange-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lab-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(255, 144, 0, 0.3);
+        }
+
+        .learning-path {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(11, 47, 160, 0.08);
+            padding: 35px;
+            margin-top: 40px;
+        }
+
+        .learning-path h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .path-tracks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .path-track {
+            background: linear-gradient(135deg, var(--quanskill-light-blue) 0%, #fff 100%);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .path-track:hover {
+            transform: translateY(-3px);
+        }
+
+        .path-track h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .path-track p {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        .path-track .chapters {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-orange);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--quanskill-blue) 0%, var(--quanskill-blue-dark) 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .footer p {
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        .footer-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-stat {
+            text-align: center;
+        }
+
+        .footer-stat .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .footer-stat .label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stat-card {
+                width: 100%;
+            }
+
+            .path-tracks {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .start-btn, .lab-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <a href="index.html"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 50px; border-radius: 8px;"></a>
+                <div>
+                    <h1>Python for <span>Data Science</span></h1>
+                    <p>A comprehensive 12-chapter journey from Python fundamentals to advanced data science techniques. Master programming, data structures, and visualization with hands-on labs and real-world projects.</p>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <span class="stat-icon">📚</span>
+                    <div class="stat-info">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Chapters</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📝§ª</span>
+                    <div class="stat-info">
+                        <div class="stat-value">120+</div>
+                        <div class="stat-label">Interactive Labs</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">â­</span>
+                    <div class="stat-info">
+                        <div class="stat-value">12,000+</div>
+                        <div class="stat-label">Total XP</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">âˆ‚</span>
+                    <div class="stat-info">
+                        <div class="stat-value">14-16</div>
+                        <div class="stat-label">Weeks</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span>Overall Progress</span>
+                    <span id="progressText">0/12 chapters completed</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Python Foundations Section -->
+        <h2 class="section-title"><span class="emoji">🐍</span> Python Foundations</h2>
+        <div class="modules-grid" id="foundationsGrid">
+            <!-- Foundation modules will be inserted here -->
+        </div>
+
+        <!-- Data Structures & Algorithms Section -->
+        <h2 class="section-title"><span class="emoji">🔍§</span> Data Structures & Algorithms</h2>
+        <div class="modules-grid" id="dsaGrid">
+            <!-- DSA modules will be inserted here -->
+        </div>
+
+        <!-- Data Science Section -->
+        <h2 class="section-title"><span class="emoji">📊</span> Data Science & Analysis</h2>
+        <div class="modules-grid" id="dataScienceGrid">
+            <!-- Data Science modules will be inserted here -->
+        </div>
+
+        <div class="learning-path">
+            <h3>📝—º Learning Path Structure</h3>
+            <div class="path-tracks">
+                <div class="path-track">
+                    <h4>🐍 Python Foundations</h4>
+                    <p>Master Python syntax, collections, control flow, functions, and OOP fundamentals</p>
+                    <div class="chapters">Chapters 1-5</div>
+                </div>
+                <div class="path-track">
+                    <h4>🔍§ DSA & Algorithms</h4>
+                    <p>Learn essential data structures, Big O notation, searching and sorting algorithms</p>
+                    <div class="chapters">Chapters 6-8</div>
+                </div>
+                <div class="path-track">
+                    <h4>📊 Data Science Track</h4>
+                    <p>NumPy arrays, Pandas DataFrames, data wrangling, visualization, and EDA</p>
+                    <div class="chapters">Chapters 9-12</div>
+                </div>
+                <div class="path-track" style="background: linear-gradient(135deg, var(--quanskill-light-orange) 0%, #fff 100%); border-color: var(--quanskill-orange);">
+                    <h4>🚀 What's Next?</h4>
+                    <p>After completion: Machine Learning, Deep Learning, and AI applications</p>
+                    <div class="chapters" style="color: var(--quanskill-blue);">Coming Soon!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>🎯 Ready to Start Your Journey?</h3>
+            <p>Join thousands of learners mastering Python for Data Science with Quanskill's interactive, hands-on approach.</p>
+            <div class="footer-stats">
+                <div class="footer-stat">
+                    <div class="value">100+</div>
+                    <div class="label">Coding Exercises</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="value">50+</div>
+                    <div class="label">Quizzes</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="value">12</div>
+                    <div class="label">Mini Projects</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modules = [
+            // Python Foundations (Chapters 1-5)
+            { 
+                id: 1, 
+                section: 'foundations',
+                title: "Getting Started with Python", 
+                duration: "2-3 hours", 
+                xp: 1000,
+                difficulty: "beginner",
+                objectives: [
+                    "Set up a complete Python development environment",
+                    "Understand variable assignment and naming conventions",
+                    "Master arithmetic, comparison, and logical operators",
+                    "Work with primitive data types and type conversion"
+                ], 
+                prerequisites: [], 
+                keyTopics: ["Environment Setup", "Variables", "Data Types", "Operators", "Type Conversion", "print() & input()"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "chapter1_python.html",
+                labFile: "chapter1_python_lab.html"
+            },
+            { 
+                id: 2, 
+                section: 'foundations',
+                title: "Python Collections & Data Structures", 
+                duration: "3-4 hours", 
+                xp: 1000,
+                difficulty: "beginner",
+                objectives: [
+                    "Create and manipulate lists with indexing and slicing",
+                    "Use tuples for immutable sequences",
+                    "Leverage sets for unique collections",
+                    "Build dictionaries for key-value mappings"
+                ], 
+                prerequisites: [1], 
+                keyTopics: ["Lists", "Tuples", "Sets", "Dictionaries", "List Comprehensions", "Indexing & Slicing"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter2_python.html"
+            },
+            { 
+                id: 3, 
+                section: 'foundations',
+                title: "Control Flow & Functions", 
+                duration: "3-4 hours", 
+                xp: 1000,
+                difficulty: "beginner",
+                objectives: [
+                    "Control program execution with conditionals",
+                    "Master for and while loops",
+                    "Define and call functions with parameters",
+                    "Understand scope and return values"
+                ], 
+                prerequisites: [2], 
+                keyTopics: ["if/elif/else", "for loops", "while loops", "Functions", "Parameters", "Return Values", "Scope"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter3_python.html"
+            },
+            { 
+                id: 4, 
+                section: 'foundations',
+                title: "Modules, Files & Exceptions", 
+                duration: "3-4 hours", 
+                xp: 1000,
+                difficulty: "intermediate",
+                objectives: [
+                    "Import and use Python modules and packages",
+                    "Read from and write to files",
+                    "Handle exceptions gracefully",
+                    "Work with datetime module"
+                ], 
+                prerequisites: [3], 
+                keyTopics: ["import statements", "File I/O", "try/except", "Exception Handling", "datetime", "Packages"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter4_python.html"
+            },
+            { 
+                id: 5, 
+                section: 'foundations',
+                title: "Object-Oriented Programming", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Define classes with attributes and methods",
+                    "Implement inheritance and polymorphism",
+                    "Use encapsulation and operator overloading",
+                    "Apply OOP principles to real problems"
+                ], 
+                prerequisites: [4], 
+                keyTopics: ["Classes", "Objects", "Inheritance", "Polymorphism", "Encapsulation", "__init__", "self"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter5_python.html"
+            },
+            // Data Structures & Algorithms (Chapters 6-8)
+            { 
+                id: 6, 
+                section: 'dsa',
+                title: "Data Structures Fundamentals", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Understand Big O notation and complexity analysis",
+                    "Implement arrays and linked lists",
+                    "Build hash tables from scratch",
+                    "Analyze time and space complexity"
+                ], 
+                prerequisites: [5], 
+                keyTopics: ["Big O Notation", "Arrays", "Linked Lists", "Hash Tables", "Time Complexity", "Space Complexity"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter6_python.html"
+            },
+            { 
+                id: 7, 
+                section: 'dsa',
+                title: "Advanced Data Structures", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Implement stacks and queues",
+                    "Build and traverse binary trees",
+                    "Work with graphs and adjacency lists",
+                    "Choose appropriate data structures"
+                ], 
+                prerequisites: [6], 
+                keyTopics: ["Stacks", "Queues", "Binary Trees", "Graphs", "Tree Traversal", "BFS/DFS"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter7_python.html"
+            },
+            { 
+                id: 8, 
+                section: 'dsa',
+                title: "Searching & Sorting Algorithms", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "advanced",
+                objectives: [
+                    "Implement binary search",
+                    "Master quicksort and merge sort",
+                    "Understand sorting algorithm trade-offs",
+                    "Apply algorithms to real problems"
+                ], 
+                prerequisites: [7], 
+                keyTopics: ["Binary Search", "Bubble Sort", "Quick Sort", "Merge Sort", "Selection Sort", "Algorithm Analysis"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter8_python.html"
+            },
+            // Data Science (Chapters 9-12)
+            { 
+                id: 9, 
+                section: 'datascience',
+                title: "Concurrency & NumPy Foundations", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Understand multithreading and multiprocessing",
+                    "Create and manipulate NumPy arrays",
+                    "Apply vectorized operations",
+                    "Use broadcasting and indexing"
+                ], 
+                prerequisites: [5], 
+                keyTopics: ["Threading", "Multiprocessing", "NumPy Arrays", "Vectorization", "Broadcasting", "Array Operations"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter9_python.html"
+            },
+            { 
+                id: 10, 
+                section: 'datascience',
+                title: "Data Aggregation & GroupBy", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Master the split-apply-combine pattern",
+                    "Use groupby for data aggregation",
+                    "Apply multiple aggregation functions",
+                    "Create pivot tables and cross-tabulations"
+                ], 
+                prerequisites: [9], 
+                keyTopics: ["GroupBy", "Aggregation", "Pivot Tables", "Cross-Tabulation", "Transform", "agg()"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "chapter10_python.html",
+                labFile: "chapter10_python_lab.html"
+            },
+            { 
+                id: 11, 
+                section: 'datascience',
+                title: "Time Series Analysis", 
+                duration: "4-5 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Work with datetime and DatetimeIndex",
+                    "Resample time series data",
+                    "Apply rolling window functions",
+                    "Analyze temporal patterns"
+                ], 
+                prerequisites: [10], 
+                keyTopics: ["DatetimeIndex", "Resampling", "Rolling Windows", "Shifting", "Frequency Conversion", "OHLC"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "chapter11_python.html",
+                labFile: "chapter11_python_lab.html"
+            },
+            { 
+                id: 12, 
+                section: 'datascience',
+                title: "Data Visualization & EDA", 
+                duration: "5-6 hours", 
+                xp: 1400,
+                difficulty: "advanced",
+                objectives: [
+                    "Create visualizations with Matplotlib",
+                    "Build statistical plots with Seaborn",
+                    "Conduct exploratory data analysis",
+                    "Build end-to-end data science projects"
+                ], 
+                prerequisites: [11], 
+                keyTopics: ["Matplotlib", "Seaborn", "EDA", "Statistical Plots", "Data Storytelling", "Real Projects"],
+                hasTheory: true,
+                hasLab: false,
+                theoryFile: "chapter12_python.html"
+            }
+        ];
+
+        let completedModules = new Set();
+
+        function renderModules() {
+            const foundationsGrid = document.getElementById('foundationsGrid');
+            const dsaGrid = document.getElementById('dsaGrid');
+            const dataScienceGrid = document.getElementById('dataScienceGrid');
+
+            const foundationModules = modules.filter(m => m.section === 'foundations');
+            const dsaModules = modules.filter(m => m.section === 'dsa');
+            const dataScienceModules = modules.filter(m => m.section === 'datascience');
+
+            foundationsGrid.innerHTML = foundationModules.map(renderModuleCard).join('');
+            dsaGrid.innerHTML = dsaModules.map(renderModuleCard).join('');
+            dataScienceGrid.innerHTML = dataScienceModules.map(renderModuleCard).join('');
+
+            updateProgress();
+        }
+
+        function renderModuleCard(module) {
+            const difficultyClass = `difficulty-${module.difficulty}`;
+            const difficultyLabel = module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1);
+            
+            return `
+                <div class="module-card ${completedModules.has(module.id) ? 'completed' : ''}" id="module-${module.id}">
+                    <div class="module-header" onclick="toggleModule(${module.id})">
+                        <input type="checkbox" class="checkbox" 
+                            ${completedModules.has(module.id) ? 'checked' : ''} 
+                            onclick="event.stopPropagation(); toggleComplete(${module.id})">
+                        <div class="module-info">
+                            <span class="module-number">Chapter ${module.id}</span>
+                            <div class="module-title">${module.title}</div>
+                            <div class="module-meta">
+                                <span class="meta-item">âˆ‚ ${module.duration}</span>
+                                <span class="meta-item xp">â­ ${module.xp} XP</span>
+                                <span class="difficulty-badge ${difficultyClass}">${difficultyLabel}</span>
+                                ${module.prerequisites.length > 0 ? `<span class="meta-item">📝‹ Prereq: Ch. ${module.prerequisites.join(', ')}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="expand-btn" id="expand-${module.id}">â–¼</span>
+                    </div>
+                    <div class="module-content" id="content-${module.id}">
+                        <div class="module-content-inner">
+                            <div class="content-section">
+                                <h4>🎯 Learning Objectives</h4>
+                                <ul class="objectives-list">
+                                    ${module.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="content-section">
+                                <h4>📚 Key Topics</h4>
+                                <div class="topics-container">
+                                    ${module.keyTopics.map(topic => `<span class="topic-tag">${topic}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                ${module.hasTheory ? `<button class="start-btn" onclick="openModule('${module.theoryFile}')">📝– Start Chapter ${module.id}</button>` : ''}
+                                ${module.hasLab ? `<button class="lab-btn" onclick="openModule('${module.labFile}')">📝§ª Open Lab</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleModule(id) {
+            const content = document.getElementById(`content-${id}`);
+            const expandBtn = document.getElementById(`expand-${id}`);
+            content.classList.toggle('show');
+            expandBtn.classList.toggle('expanded');
+        }
+
+        function toggleComplete(id) {
+            if (completedModules.has(id)) {
+                completedModules.delete(id);
+            } else {
+                completedModules.add(id);
+            }
+            updateProgress();
+            const card = document.getElementById(`module-${id}`);
+            card.classList.toggle('completed');
+        }
+
+        function updateProgress() {
+            const total = modules.length;
+            const completed = completedModules.size;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${completed}/${total} chapters completed`;
+        }
+
+        function openModule(filename) {
+            // Open the module file - in production this would navigate to the file
+            window.open(filename, '_blank');
+        }
+
+        // Initialize
+        renderModules();
+    </script>
+</body>
+</html>

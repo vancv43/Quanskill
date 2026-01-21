@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Vector Calculus Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="text"] {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 140px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 280px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 60px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 5 Â· Vector Calculus</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Derivative Basics</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Power Rule</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Partial Derivative</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Gradient Definition</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Chain Rule</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Sum Rule</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Product Rule</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Gradient Shape</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Jacobian</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Hessian</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Taylor Series</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Multivariate Chain</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Gradient Descent</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Vector Gradient</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Jacobian Dims</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Second Derivative</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Linearization</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Backpropagation</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Auto-Diff</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Neural Network</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Loss Gradient</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Matrix Calculus</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Hessian Property</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Computation Graph</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Vector Calculus Mastery</h1>
+                <p class="hero-subtitle">
+                    Master the mathematical foundation of machine learning optimization with 25 questions and 15 interactive labs covering derivatives, gradients, Jacobians, and backpropagation.
+                </p>
+                <div class="hero-quote">
+                    "Gradients are the compass of machine learning - they point us toward better models with every step."
+                    <br><small>- Quanskill Learning Path</small>
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Derivatives</span>
+                    <span class="topic-tag">Gradients</span>
+                    <span class="topic-tag">Jacobian</span>
+                    <span class="topic-tag">Hessian</span>
+                    <span class="topic-tag">Chain Rule</span>
+                    <span class="topic-tag">Backpropagation</span>
+                    <span class="topic-tag">Taylor Series</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover the core calculus concepts powering modern deep learning and optimization.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Why Vector Calculus matters:</strong> Every neural network learns through gradients. Backpropagation, the algorithm that powers deep learning, is fundamentally the chain rule applied to computation graphs.</p>
+            </div>
+
+            <!-- Lab 1: Derivative Visualizer -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Derivative Visualizer</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Function f(x)</label>
+                        <select id="func1">
+                            <option value="x2">xÂ²</option>
+                            <option value="x3">xÂ³</option>
+                            <option value="sin">sin(x)</option>
+                            <option value="exp">eË£</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Point xâ‚</label>
+                        <input type="number" id="x0_1" value="1" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="vizDerivative()">Visualize</button>
+                </div>
+                <canvas id="derivCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="derivOutput">Click "Visualize" to see derivative as tangent slope...</div>
+            </div>
+
+            <!-- Lab 2: Gradient Calculator -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>2D Gradient Calculator</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x,y) =</label>
+                        <select id="func2d">
+                            <option value="quad">xÂ² + yÂ²</option>
+                            <option value="mixed">xÂ²y + xyÂ²</option>
+                            <option value="saddle">xÂ² - yÂ²</option>
+                            <option value="rosenbrock">(1-x)Â² + (y-xÂ²)Â²</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="grad_x" value="1" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>y</label>
+                        <input type="number" id="grad_y" value="2" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcGradient2D()">Compute</button>
+                </div>
+                <div class="demo-output" id="gradOutput">Click "Compute" for gradient...</div>
+            </div>
+
+            <!-- Lab 3: Chain Rule Calculator -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Chain Rule Calculator</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Outer g(u)</label>
+                        <select id="outer_func">
+                            <option value="u2">uÂ²</option>
+                            <option value="sin">sin(u)</option>
+                            <option value="exp">eáµ€Ëœ</option>
+                            <option value="log">ln(u)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Inner f(x)</label>
+                        <select id="inner_func">
+                            <option value="2x1">2x + 1</option>
+                            <option value="x2">xÂ²</option>
+                            <option value="3x">3x</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="chain_x" value="2" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcChainRule()">Compute</button>
+                </div>
+                <div class="demo-output" id="chainOutput">Click "Compute" for chain rule derivative...</div>
+            </div>
+
+            <!-- Lab 4: Partial Derivatives -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Partial Derivative Explorer</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x,y) = xÂ²y + xyÂ³</label>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="partial_x" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>y</label>
+                        <input type="number" id="partial_y" value="3" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcPartials()">Compute</button>
+                </div>
+                <div class="demo-output" id="partialOutput">Click "Compute" for partial derivatives...</div>
+            </div>
+
+            <!-- Lab 5: Jacobian Matrix -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Jacobian Matrix Calculator</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f: â„Ã‚Â² ←’ â„Ã‚Â²</label>
+                        <select id="jac_func">
+                            <option value="linear">f = [2x+y, x-y]</option>
+                            <option value="quad">f = [xÂ², xy]</option>
+                            <option value="trig">f = [sin(x), cos(y)]</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="jac_x" value="1" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>y</label>
+                        <input type="number" id="jac_y" value="2" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcJacobian()">Compute</button>
+                </div>
+                <div class="demo-output" id="jacOutput">Click "Compute" for Jacobian matrix...</div>
+            </div>
+
+            <!-- Lab 6: Hessian Matrix -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Hessian Matrix Calculator</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x,y)</label>
+                        <select id="hess_func">
+                            <option value="quad">xÂ² + 2xy + 3yÂ²</option>
+                            <option value="cubic">xÂ³ + yÂ³</option>
+                            <option value="mixed">xÂ²yÂ²</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="hess_x" value="1" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>y</label>
+                        <input type="number" id="hess_y" value="1" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcHessian()">Compute</button>
+                </div>
+                <div class="demo-output" id="hessOutput">Click "Compute" for Hessian matrix...</div>
+            </div>
+
+            <!-- Lab 7: Taylor Series Approximation -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Taylor Series Approximation</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Function</label>
+                        <select id="taylor_func">
+                            <option value="exp">eË£</option>
+                            <option value="sin">sin(x)</option>
+                            <option value="cos">cos(x)</option>
+                            <option value="log">ln(1+x)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Degree n</label>
+                        <select id="taylor_n">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="taylor_x" value="0.5" step="0.1">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcTaylor()">Approximate</button>
+                </div>
+                <canvas id="taylorCanvas" class="demo-canvas" style="height:200px"></canvas>
+                <div class="demo-output" id="taylorOutput">Click "Approximate" for Taylor expansion...</div>
+            </div>
+
+            <!-- Lab 8: Gradient Descent Visualizer -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Gradient Descent Visualizer</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x) = xÂ²</label>
+                    </div>
+                    <div class="control-group">
+                        <label>Start xâ‚</label>
+                        <input type="number" id="gd_x0" value="4" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Learning Rate Î±</label>
+                        <input type="number" id="gd_lr" value="0.2" step="0.05" min="0.01" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>Steps</label>
+                        <input type="number" id="gd_steps" value="10" min="1" max="50">
+                    </div>
+                    <button class="btn btn-orange" onclick="runGradientDescent()">Run</button>
+                </div>
+                <canvas id="gdCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="gdOutput">Click "Run" for gradient descent...</div>
+            </div>
+
+            <!-- Lab 9: Numerical vs Analytical Gradient -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Numerical vs Analytical Gradient</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x) = xÂ³</label>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="num_x" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>h (step size)</label>
+                        <select id="num_h">
+                            <option value="0.1">0.1</option>
+                            <option value="0.01">0.01</option>
+                            <option value="0.001" selected>0.001</option>
+                            <option value="0.0001">0.0001</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="compareGradients()">Compare</button>
+                </div>
+                <div class="demo-output" id="numOutput">Click "Compare" to verify gradient...</div>
+            </div>
+
+            <!-- Lab 10: Backpropagation Step-by-Step -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Backpropagation Simulator</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x) = (2x+1)Â²</label>
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="bp_x" value="3" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="runBackprop()">Compute</button>
+                </div>
+                <div class="demo-output" id="bpOutput">Click "Compute" for backprop trace...</div>
+            </div>
+
+            <!-- Lab 11: Gradient Direction Visualizer -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Gradient Direction Visualizer</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>f(x,y) = xÂ² + yÂ²</label>
+                    </div>
+                    <button class="btn btn-primary" onclick="vizGradientField()">Show Field</button>
+                </div>
+                <canvas id="fieldCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="fieldOutput">Click "Show Field" to see gradient vectors...</div>
+            </div>
+
+            <!-- Lab 12: Loss Function Landscape -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Loss Landscape Explorer</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Loss Type</label>
+                        <select id="loss_type">
+                            <option value="mse">MSE (Quadratic)</option>
+                            <option value="abs">MAE (Absolute)</option>
+                            <option value="huber">Huber</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>True value</label>
+                        <input type="number" id="loss_true" value="2" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="vizLossLandscape()">Visualize</button>
+                </div>
+                <canvas id="lossCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="lossOutput">Click "Visualize" for loss landscape...</div>
+            </div>
+
+            <!-- Lab 13: Multivariate Chain Rule -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Multivariate Chain Rule</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>z = f(x,y) = xÂ²+yÂ², x=tÂ², y=tÂ³</label>
+                    </div>
+                    <div class="control-group">
+                        <label>t</label>
+                        <input type="number" id="mv_t" value="2" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcMultiChain()">Compute dz/dt</button>
+                </div>
+                <div class="demo-output" id="mvOutput">Click "Compute" for multivariate chain rule...</div>
+            </div>
+
+            <!-- Lab 14: Softmax Gradient -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Softmax & Cross-Entropy Gradient</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Logits [zâ‚, zâ‚‚, zâ‚ƒ]</label>
+                        <div style="display:flex;gap:0.25rem;">
+                            <input type="number" id="sm_z1" value="2" step="0.5" style="width:60px">
+                            <input type="number" id="sm_z2" value="1" step="0.5" style="width:60px">
+                            <input type="number" id="sm_z3" value="0.5" step="0.5" style="width:60px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>True class</label>
+                        <select id="sm_true">
+                            <option value="0">Class 0</option>
+                            <option value="1">Class 1</option>
+                            <option value="2">Class 2</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="calcSoftmaxGrad()">Compute</button>
+                </div>
+                <div class="demo-output" id="smOutput">Click "Compute" for softmax gradient...</div>
+            </div>
+
+            <!-- Lab 15: Neural Layer Gradient -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Neural Layer Gradient</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>y = Ïƒ(wx + b), Ïƒ = ReLU</label>
+                    </div>
+                    <div class="control-group">
+                        <label>w</label>
+                        <input type="number" id="nl_w" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>x</label>
+                        <input type="number" id="nl_x" value="3" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>b</label>
+                        <input type="number" id="nl_b" value="-1" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcNeuralGrad()">Compute âˆ‚y/âˆ‚w</button>
+                </div>
+                <div class="demo-output" id="nlOutput">Click "Compute" for neural layer gradients...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: DeltaAI Model Optimization</span>
+                <p>You're training machine learning models at <strong>DeltaAI Labs</strong>. Understanding derivatives and gradients is essential for optimizing model parameters using gradient descent.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The derivative of $f(x) = x^3$ is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) 3xÂ²</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) xÂ²</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) 3x</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) xÂ³</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Using the power rule, $\frac{d}{dx}(x^5) = $</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) 5xâ´</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) xâ´</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) 5xâµ</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) 4xâµ</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> $f(x,y) = x^2y + 3y$
+                </div>
+                <div class="quiz-question">What is $\frac{\partial f}{\partial x}$?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) 2xy</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) xÂ² + 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) 2xy + 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) y</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The gradient $\nabla f$ of $f: \mathbb{R}^n \to \mathbb{R}$ is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) A vector of all partial derivatives</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) A single number</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) A matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) The second derivative</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Using chain rule: if $h(x) = g(f(x))$, then $h'(x) = $</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) g'(f(x)) Â· f'(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) g'(x) Â· f'(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) g(f'(x))</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) f'(g(x))</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The derivative of $f(x) + g(x)$ is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) f'(x) + g'(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) f'(x) Â· g'(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) f(x) + g'(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) f'(x) Â· g(x)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The product rule states: $(fg)' = $</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) f'g + fg'</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) f'g'</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) f'g - fg'</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) (f' + g')</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">For $f: \mathbb{R}^3 \to \mathbb{R}$, the gradient $\nabla f$ has shape:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) (3,) or (1,3)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) (3,3)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) (1,)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) (3,3,3)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: PhuongNam Deep Learning Platform</span>
+                <p>You're building neural networks at <strong>PhuongNam AI</strong>. Jacobians and Hessians help you understand how model outputs change with inputs and optimize training stability.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m$, the Jacobian matrix has shape:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) m × n</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) n × m</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) n × n</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) m × m</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Hessian matrix contains:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) All second-order partial derivatives</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) First-order partial derivatives</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) The gradient</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) Eigenvalues</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The first-order Taylor approximation of $f(x)$ around $x_0$ is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) f(xâ‚) + f'(xâ‚)(x - xâ‚)</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) f(xâ‚) + f(x - xâ‚)</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) f'(xâ‚)(x - xâ‚)</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) f(xâ‚) Â· f'(xâ‚)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> $z = f(x,y)$, where $x = x(t)$ and $y = y(t)$
+                </div>
+                <div class="quiz-question">The chain rule gives $\frac{dz}{dt} = $</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) $\frac{\partial f}{\partial x}\frac{dx}{dt} + \frac{\partial f}{\partial y}\frac{dy}{dt}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) $\frac{\partial f}{\partial x} + \frac{\partial f}{\partial y}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) $\frac{\partial f}{\partial t}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) $\frac{dx}{dt} \cdot \frac{dy}{dt}$</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">In gradient descent, we update parameters as: $\theta_{t+1} = $</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) Î¸â‚œ - Î±âˆ‡L(Î¸â‚œ)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) Î¸â‚œ + Î±âˆ‡L(Î¸â‚œ)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) Î¸â‚œ Â· âˆ‡L(Î¸â‚œ)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) âˆ‡L(Î¸â‚œ)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> $f(\mathbf{x}) = \mathbf{A}\mathbf{x}$ where $\mathbf{A} \in \mathbb{R}^{m \times n}$
+                </div>
+                <div class="quiz-question">The gradient $\frac{df}{d\mathbf{x}}$ equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) A</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) Aáµ€</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) x</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) Ax</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Neural Network:</strong> Layer output $\mathbf{y} = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b})$ where $\mathbf{W} \in \mathbb{R}^{100 \times 50}$
+                </div>
+                <div class="quiz-question">The Jacobian $\frac{\partial \mathbf{y}}{\partial \mathbf{x}}$ has shape:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) 100 × 50</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) 50 × 100</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) 100 × 100</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) 50 × 50</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For a twice differentiable function, the Hessian is symmetric because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) $\frac{\partial^2 f}{\partial x \partial y} = \frac{\partial^2 f}{\partial y \partial x}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) All matrices are symmetric</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) The gradient is a vector</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) The function is convex</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Local linearization $f(\mathbf{x}) \approx f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T(\mathbf{x} - \mathbf{x}_0)$ is accurate when:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) x is close to xâ‚</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) f is a polynomial</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) The Hessian is zero</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) Always</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Applications (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: TrueNorth AI Research</span>
+                <p>You're at <strong>TrueNorth AI Research</strong> developing cutting-edge neural architectures. Backpropagation and automatic differentiation power every training loop.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>Backpropagation:</strong> How agents learn from reward signals</li>
+                    <li><strong>Policy Gradients:</strong> Gradients through stochastic decisions</li>
+                    <li><strong>Jacobians:</strong> Sensitivity of agent outputs to inputs</li>
+                    <li><strong>Second-order methods:</strong> Faster convergence for complex policies</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Backpropagation is fundamentally:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) Repeated application of the chain rule</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) Matrix multiplication</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) Numerical differentiation</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) Symbolic computation</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Automatic differentiation (reverse mode) computes gradients:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Exactly (to machine precision), efficiently</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) Approximately using finite differences</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) Only for linear functions</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) Using symbolic differentiation</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Neural Network:</strong> $L = \|y - \hat{y}\|^2$, $\hat{y} = \sigma(Wx + b)$
+                </div>
+                <div class="quiz-question">The gradient $\frac{\partial L}{\partial W}$ is computed via:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) $\frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial W}$ (chain rule)</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Direct differentiation of L w.r.t. W</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Numerical approximation only</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Matrix inversion</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Least Squares:</strong> $L(\theta) = \|y - X\theta\|^2$
+                </div>
+                <div class="quiz-question">The gradient $\nabla_\theta L$ equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) -2Xáµ€(y - XÎ¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) 2(y - XÎ¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) Xáµ€X</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) -Xáµ€y</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">For $f(\mathbf{x}) = \mathbf{x}^T\mathbf{A}\mathbf{x}$ (A symmetric), the gradient is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) 2Ax</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) Ax</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) xáµ€A</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) A + Aáµ€</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">A positive definite Hessian at point xâ‚ indicates:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) xâ‚ is a local minimum</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) xâ‚ is a local maximum</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) xâ‚ is a saddle point</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) The function is linear</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Computation Graph:</strong> $f = (a + b) \cdot c$ where $a=x^2$, $b=y$, $c=z$
+                </div>
+                <div class="quiz-question">In reverse-mode autodiff, we first compute:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Forward pass (function value), then backward pass (gradients)</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) All gradients simultaneously</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Gradients first, then function value</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Only the final gradient</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> Policy gradient methods optimize $J(\theta) = \mathbb{E}[R]$
+                </div>
+                <div class="quiz-question">The policy gradient theorem enables computing $\nabla_\theta J$ by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Sampling trajectories and computing log-probability gradients</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Direct differentiation through the environment</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Finite differences only</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) Ignoring stochasticity</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Deep Learning Track:</strong> Apply gradients in PyTorch/TensorFlow</li>
+                    <li><strong>Agentic AI Bootcamp:</strong> Master policy gradients for RL</li>
+                    <li><strong>Optimization:</strong> Second-order methods (Newton, L-BFGS)</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "Power rule: d/dx(xâ¿) = nxâ¿â»Â¹, so d/dx(xÂ³) = 3xÂ²",
+            2: "Power rule: d/dx(xâµ) = 5xâ´",
+            3: "âˆ‚f/âˆ‚x treats y as constant: âˆ‚/âˆ‚x(xÂ²y + 3y) = 2xy",
+            4: "The gradient is a vector collecting all partial derivatives: âˆ‡f = [âˆ‚f/âˆ‚xâ‚, ..., âˆ‚f/âˆ‚xâ‚™]",
+            5: "Chain rule: (gâˆ˜f)'(x) = g'(f(x)) Â· f'(x)",
+            6: "Sum rule: (f+g)' = f' + g'",
+            7: "Product rule: (fg)' = f'g + fg'",
+            8: "For f: â„Ã‚Â³ ←’ â„, gradient has same dimension as input: shape (3,) or (1,3)",
+            9: "Jacobian of f: â„â¿ ←’ â„áµ€ has shape m × n (outputs × inputs)",
+            10: "Hessian H[i,j] = âˆ‚Â²f/âˆ‚xáµ€Â¢âˆ‘'xâˆ‚Â¼ contains all second-order partials",
+            11: "First-order Taylor: f(x) â‰ˆ f(xâ‚€) + f'(xâ‚€)(x - xâ‚€)",
+            12: "Multivariate chain rule: dz/dt = âˆ‚f/âˆ‚x Â· dx/dt + âˆ‚f/âˆ‚y Â· dy/dt",
+            13: "Gradient descent: Î¸_{t+1} = Î¸â‚œ - Î±âˆ‡L(Î¸â‚œ) (subtract gradient to minimize)",
+            14: "For f(x) = Ax, the Jacobian/gradient is A itself",
+            15: "y âˆˆ â„Ã‚Â¹Ã‚Â°Ã‚Â°, x âˆˆ â„âµâ°, so Jacobian âˆ‚y/âˆ‚x âˆˆ â„Ã‚Â¹Ã‚Â°Ã‚Â°Ã‚ÂµÃ‚Â°",
+            16: "Schwarz's theorem: mixed partials are equal for smooth functions",
+            17: "Linear approximation is accurate locally, near xâ‚",
+            18: "Backpropagation = chain rule applied through computation graph",
+            19: "Autodiff computes exact gradients efficiently via computation graphs",
+            20: "Chain rule through the network: âˆ‚L/âˆ‚W = âˆ‚L/âˆ‚Å· Â· âˆ‚Å·/âˆ‚W",
+            21: "âˆ‡L = -2Xáµ€(y - XÎ¸) = -2Xáµ€e where e is residual",
+            22: "For quadratic form xáµ€Ax (A symmetric): âˆ‡f = 2Ax",
+            23: "Positive definite Hessian means local minimum (bowl-shaped)",
+            24: "Reverse-mode: forward pass computes values, backward pass computes gradients",
+            25: "Policy gradient uses log-probability trick to handle stochastic policies"
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Lab 1: Derivative Visualizer
+        const derivCanvas = document.getElementById('derivCanvas');
+        const derivCtx = derivCanvas.getContext('2d');
+
+        function vizDerivative() {
+            const func = document.getElementById('func1').value;
+            const x0 = parseFloat(document.getElementById('x0_1').value);
+            
+            const w = derivCanvas.width = derivCanvas.offsetWidth;
+            const h = derivCanvas.height = derivCanvas.offsetHeight;
+            derivCtx.clearRect(0,0,w,h);
+            
+            const cx = w/2, cy = h/2, scaleX = 40, scaleY = 40;
+            
+            // Functions and derivatives
+            const funcs = {
+                'x2': { f: x => x*x, df: x => 2*x, name: 'xÂ²', dname: '2x' },
+                'x3': { f: x => x*x*x, df: x => 3*x*x, name: 'xÂ³', dname: '3xÂ²' },
+                'sin': { f: x => Math.sin(x), df: x => Math.cos(x), name: 'sin(x)', dname: 'cos(x)' },
+                'exp': { f: x => Math.exp(x), df: x => Math.exp(x), name: 'eË£', dname: 'eË£' }
+            };
+            
+            const {f, df, name, dname} = funcs[func];
+            
+            // Draw axes
+            derivCtx.strokeStyle = '#94a3b8';
+            derivCtx.lineWidth = 1;
+            derivCtx.beginPath();
+            derivCtx.moveTo(0, cy);
+            derivCtx.lineTo(w, cy);
+            derivCtx.moveTo(cx, 0);
+            derivCtx.lineTo(cx, h);
+            derivCtx.stroke();
+            
+            // Draw function
+            derivCtx.strokeStyle = '#0b2fa0';
+            derivCtx.lineWidth = 2;
+            derivCtx.beginPath();
+            for (let px = 0; px < w; px++) {
+                const x = (px - cx) / scaleX;
+                const y = f(x);
+                const py = cy - y * scaleY;
+                if (px === 0) derivCtx.moveTo(px, py);
+                else derivCtx.lineTo(px, py);
+            }
+            derivCtx.stroke();
+            
+            // Draw tangent line at x0
+            const y0 = f(x0);
+            const slope = df(x0);
+            derivCtx.strokeStyle = '#ff9000';
+            derivCtx.lineWidth = 2;
+            derivCtx.beginPath();
+            const px0 = cx + x0 * scaleX;
+            const py0 = cy - y0 * scaleY;
+            derivCtx.moveTo(px0 - 80, py0 + slope * 80);
+            derivCtx.lineTo(px0 + 80, py0 - slope * 80);
+            derivCtx.stroke();
+            
+            // Draw point
+            derivCtx.fillStyle = '#ff9000';
+            derivCtx.beginPath();
+            derivCtx.arc(px0, py0, 6, 0, Math.PI*2);
+            derivCtx.fill();
+            
+            document.getElementById('derivOutput').innerHTML = 
+`Function: f(x) = ${name}
+Derivative: f'(x) = ${dname}
+
+At xâ‚ = ${x0}:
+  f(${x0}) = ${f(x0).toFixed(4)}
+  f'(${x0}) = ${slope.toFixed(4)} ← tangent slope (orange line)`;
+        }
+
+        // Lab 2: Gradient Calculator
+        function calcGradient2D() {
+            const func = document.getElementById('func2d').value;
+            const x = parseFloat(document.getElementById('grad_x').value);
+            const y = parseFloat(document.getElementById('grad_y').value);
+            
+            const funcs = {
+                'quad': { 
+                    f: (x,y) => x*x + y*y, 
+                    gx: (x,y) => 2*x, 
+                    gy: (x,y) => 2*y,
+                    name: 'xÂ² + yÂ²',
+                    gname: '[2x, 2y]'
+                },
+                'mixed': { 
+                    f: (x,y) => x*x*y + x*y*y, 
+                    gx: (x,y) => 2*x*y + y*y, 
+                    gy: (x,y) => x*x + 2*x*y,
+                    name: 'xÂ²y + xyÂ²',
+                    gname: '[2xy + yÂ², xÂ² + 2xy]'
+                },
+                'saddle': { 
+                    f: (x,y) => x*x - y*y, 
+                    gx: (x,y) => 2*x, 
+                    gy: (x,y) => -2*y,
+                    name: 'xÂ² - yÂ²',
+                    gname: '[2x, -2y]'
+                },
+                'rosenbrock': { 
+                    f: (x,y) => Math.pow(1-x,2) + Math.pow(y-x*x,2), 
+                    gx: (x,y) => -2*(1-x) - 4*x*(y-x*x), 
+                    gy: (x,y) => 2*(y-x*x),
+                    name: '(1-x)Â² + (y-xÂ²)Â²',
+                    gname: '[-2(1-x) - 4x(y-xÂ²), 2(y-xÂ²)]'
+                }
+            };
+            
+            const {f, gx, gy, name, gname} = funcs[func];
+            const gradX = gx(x,y), gradY = gy(x,y);
+            const gradMag = Math.sqrt(gradX*gradX + gradY*gradY);
+            
+            document.getElementById('gradOutput').innerHTML = 
+`Function: f(x,y) = ${name}
+Gradient: âˆ‡f = ${gname}
+
+At (${x}, ${y}):
+  f(${x}, ${y}) = ${f(x,y).toFixed(4)}
+  âˆ‚f/âˆ‚x = ${gradX.toFixed(4)}
+  âˆ‚f/âˆ‚y = ${gradY.toFixed(4)}
+  
+  âˆ‡f = [${gradX.toFixed(4)}, ${gradY.toFixed(4)}]
+  |âˆ‡f| = ${gradMag.toFixed(4)}
+
+The gradient points in the direction of steepest ascent.`;
+        }
+
+        // Lab 3: Chain Rule
+        function calcChainRule() {
+            const outer = document.getElementById('outer_func').value;
+            const inner = document.getElementById('inner_func').value;
+            const x = parseFloat(document.getElementById('chain_x').value);
+            
+            const inners = {
+                '2x1': { f: x => 2*x + 1, df: x => 2, name: '2x+1', dname: '2' },
+                'x2': { f: x => x*x, df: x => 2*x, name: 'xÂ²', dname: '2x' },
+                '3x': { f: x => 3*x, df: x => 3, name: '3x', dname: '3' }
+            };
+            
+            const outers = {
+                'u2': { f: u => u*u, df: u => 2*u, name: 'uÂ²', dname: '2u' },
+                'sin': { f: u => Math.sin(u), df: u => Math.cos(u), name: 'sin(u)', dname: 'cos(u)' },
+                'exp': { f: u => Math.exp(u), df: u => Math.exp(u), name: 'eáµ€Ëœ', dname: 'eáµ€Ëœ' },
+                'log': { f: u => Math.log(u), df: u => 1/u, name: 'ln(u)', dname: '1/u' }
+            };
+            
+            const fi = inners[inner], fo = outers[outer];
+            const u = fi.f(x);
+            const h = fo.f(u);
+            const dh = fo.df(u) * fi.df(x);
+            
+            document.getElementById('chainOutput').innerHTML = 
+`Composite: h(x) = g(f(x))
+  Inner: f(x) = ${fi.name}
+  Outer: g(u) = ${fo.name}
+
+Chain Rule: h'(x) = g'(f(x)) Â· f'(x)
+
+At x = ${x}:
+  f(${x}) = ${u.toFixed(4)} = u
+  g(u) = ${h.toFixed(4)}
+  
+  f'(${x}) = ${fi.df(x).toFixed(4)}
+  g'(u) = ${fo.df(u).toFixed(4)}
+  
+  h'(${x}) = ${fo.df(u).toFixed(4)} × ${fi.df(x).toFixed(4)} = ${dh.toFixed(4)}`;
+        }
+
+        // Lab 4: Partial Derivatives
+        function calcPartials() {
+            const x = parseFloat(document.getElementById('partial_x').value);
+            const y = parseFloat(document.getElementById('partial_y').value);
+            
+            // f(x,y) = xÂ²y + xyÂ³
+            const f = x*x*y + x*y*y*y;
+            const dfx = 2*x*y + y*y*y;
+            const dfy = x*x + 3*x*y*y;
+            
+            document.getElementById('partialOutput').innerHTML = 
+`f(x,y) = xÂ²y + xyÂ³
+
+Partial Derivatives:
+  âˆ‚f/âˆ‚x = 2xy + yÂ³  (treat y as constant)
+  âˆ‚f/âˆ‚y = xÂ² + 3xyÂ² (treat x as constant)
+
+At (${x}, ${y}):
+  f(${x}, ${y}) = ${f.toFixed(4)}
+  âˆ‚f/âˆ‚x = ${dfx.toFixed(4)}
+  âˆ‚f/âˆ‚y = ${dfy.toFixed(4)}
+  
+Gradient: âˆ‡f = [${dfx.toFixed(4)}, ${dfy.toFixed(4)}]`;
+        }
+
+        // Lab 5: Jacobian
+        function calcJacobian() {
+            const func = document.getElementById('jac_func').value;
+            const x = parseFloat(document.getElementById('jac_x').value);
+            const y = parseFloat(document.getElementById('jac_y').value);
+            
+            let J, output;
+            if (func === 'linear') {
+                J = [[2, 1], [1, -1]];
+                output = `f(x,y) = [2x+y, x-y]
+
+Jacobian J = [[âˆ‚fâ‚/âˆ‚x, âˆ‚fâ‚/âˆ‚y],
+              [âˆ‚fâ‚‚/âˆ‚x, âˆ‚fâ‚‚/âˆ‚y]]
+           = [[2, 1],
+              [1, -1]]
+
+The Jacobian is constant (linear function).
+det(J) = -3 (area scaling factor)`;
+            } else if (func === 'quad') {
+                J = [[2*x, 0], [y, x]];
+                output = `f(x,y) = [xÂ², xy]
+
+Jacobian J = [[2x, 0],
+              [y, x]]
+
+At (${x}, ${y}):
+J = [[${2*x}, 0],
+     [${y}, ${x}]]
+det(J) = ${2*x*x}`;
+            } else {
+                J = [[Math.cos(x), 0], [0, -Math.sin(y)]];
+                output = `f(x,y) = [sin(x), cos(y)]
+
+Jacobian J = [[cos(x), 0],
+              [0, -sin(y)]]
+
+At (${x}, ${y}):
+J = [[${Math.cos(x).toFixed(4)}, 0],
+     [0, ${(-Math.sin(y)).toFixed(4)}]]`;
+            }
+            
+            document.getElementById('jacOutput').innerHTML = output;
+        }
+
+        // Lab 6: Hessian
+        function calcHessian() {
+            const func = document.getElementById('hess_func').value;
+            const x = parseFloat(document.getElementById('hess_x').value);
+            const y = parseFloat(document.getElementById('hess_y').value);
+            
+            let H, output;
+            if (func === 'quad') {
+                H = [[2, 2], [2, 6]];
+                output = `f(x,y) = xÂ² + 2xy + 3yÂ²
+
+Gradient: âˆ‡f = [2x + 2y, 2x + 6y]
+
+Hessian H = [[âˆ‚Â²f/âˆ‚xÂ², âˆ‚Â²f/âˆ‚xâˆ‚y],
+             [âˆ‚Â²f/âˆ‚yâˆ‚x, âˆ‚Â²f/âˆ‚yÂ²]]
+          = [[2, 2],
+             [2, 6]]
+
+The Hessian is constant and symmetric.
+Eigenvalues > 0 ←’ Convex function`;
+            } else if (func === 'cubic') {
+                H = [[6*x, 0], [0, 6*y]];
+                output = `f(x,y) = xÂ³ + yÂ³
+
+Gradient: âˆ‡f = [3xÂ², 3yÂ²]
+
+Hessian H = [[6x, 0],
+             [0, 6y]]
+
+At (${x}, ${y}):
+H = [[${6*x}, 0],
+     [0, ${6*y}]]`;
+            } else {
+                H = [[2*y*y, 4*x*y], [4*x*y, 2*x*x]];
+                output = `f(x,y) = xÂ²yÂ²
+
+Gradient: âˆ‡f = [2xyÂ², 2xÂ²y]
+
+Hessian H = [[2yÂ², 4xy],
+             [4xy, 2xÂ²]]
+
+At (${x}, ${y}):
+H = [[${2*y*y}, ${4*x*y}],
+     [${4*x*y}, ${2*x*x}]]`;
+            }
+            
+            document.getElementById('hessOutput').innerHTML = output;
+        }
+
+        // Lab 7: Taylor Series
+        const taylorCanvas = document.getElementById('taylorCanvas');
+        const taylorCtx = taylorCanvas.getContext('2d');
+
+        function calcTaylor() {
+            const func = document.getElementById('taylor_func').value;
+            const n = parseInt(document.getElementById('taylor_n').value);
+            const x = parseFloat(document.getElementById('taylor_x').value);
+            
+            const funcs = {
+                'exp': { 
+                    f: x => Math.exp(x), 
+                    taylor: (x, n) => {
+                        let sum = 0, term = 1;
+                        for (let k = 0; k <= n; k++) {
+                            sum += term;
+                            term *= x / (k + 1);
+                        }
+                        return sum;
+                    },
+                    name: 'eË£'
+                },
+                'sin': { 
+                    f: x => Math.sin(x), 
+                    taylor: (x, n) => {
+                        let sum = 0;
+                        for (let k = 0; k <= n; k++) {
+                            const term = Math.pow(-1, k) * Math.pow(x, 2*k+1) / factorial(2*k+1);
+                            sum += term;
+                        }
+                        return sum;
+                    },
+                    name: 'sin(x)'
+                },
+                'cos': { 
+                    f: x => Math.cos(x), 
+                    taylor: (x, n) => {
+                        let sum = 0;
+                        for (let k = 0; k <= n; k++) {
+                            const term = Math.pow(-1, k) * Math.pow(x, 2*k) / factorial(2*k);
+                            sum += term;
+                        }
+                        return sum;
+                    },
+                    name: 'cos(x)'
+                },
+                'log': { 
+                    f: x => Math.log(1+x), 
+                    taylor: (x, n) => {
+                        let sum = 0;
+                        for (let k = 1; k <= n; k++) {
+                            sum += Math.pow(-1, k+1) * Math.pow(x, k) / k;
+                        }
+                        return sum;
+                    },
+                    name: 'ln(1+x)'
+                }
+            };
+            
+            function factorial(n) {
+                if (n <= 1) return 1;
+                let f = 1;
+                for (let i = 2; i <= n; i++) f *= i;
+                return f;
+            }
+            
+            const {f, taylor, name} = funcs[func];
+            const exact = f(x);
+            const approx = taylor(x, n);
+            const error = Math.abs(exact - approx);
+            
+            document.getElementById('taylorOutput').innerHTML = 
+`Function: f(x) = ${name}
+Taylor polynomial of degree ${n} around xâ‚ = 0
+
+At x = ${x}:
+  Exact: f(${x}) = ${exact.toFixed(6)}
+  Taylor T${n}(${x}) = ${approx.toFixed(6)}
+  
+  Error: |f(x) - T${n}(x)| = ${error.toExponential(4)}
+  
+Higher degree ←’ better approximation!`;
+        }
+
+        // Lab 8: Gradient Descent
+        const gdCanvas = document.getElementById('gdCanvas');
+        const gdCtx = gdCanvas.getContext('2d');
+
+        function runGradientDescent() {
+            const x0 = parseFloat(document.getElementById('gd_x0').value);
+            const lr = parseFloat(document.getElementById('gd_lr').value);
+            const steps = parseInt(document.getElementById('gd_steps').value);
+            
+            const w = gdCanvas.width = gdCanvas.offsetWidth;
+            const h = gdCanvas.height = gdCanvas.offsetHeight;
+            gdCtx.clearRect(0,0,w,h);
+            
+            const cx = w/2, cy = h - 40, scaleX = 40, scaleY = 10;
+            
+            // Draw f(x) = xÂ²
+            gdCtx.strokeStyle = '#0b2fa0';
+            gdCtx.lineWidth = 2;
+            gdCtx.beginPath();
+            for (let px = 0; px < w; px++) {
+                const x = (px - cx) / scaleX;
+                const y = x * x;
+                const py = cy - y * scaleY;
+                if (px === 0) gdCtx.moveTo(px, py);
+                else gdCtx.lineTo(px, py);
+            }
+            gdCtx.stroke();
+            
+            // Gradient descent
+            let x = x0;
+            let history = [`xâ‚ = ${x.toFixed(4)}, f(xâ‚) = ${(x*x).toFixed(4)}`];
+            
+            gdCtx.fillStyle = '#ff9000';
+            for (let i = 0; i < steps; i++) {
+                const px = cx + x * scaleX;
+                const py = cy - x * x * scaleY;
+                gdCtx.beginPath();
+                gdCtx.arc(px, py, 4, 0, Math.PI*2);
+                gdCtx.fill();
+                
+                const grad = 2 * x;
+                x = x - lr * grad;
+                
+                if (i < 5 || i === steps - 1) {
+                    history.push(`x${i+1} = ${x.toFixed(4)}, f = ${(x*x).toFixed(4)}, âˆ‡f = ${(2*x).toFixed(4)}`);
+                } else if (i === 5) {
+                    history.push('...');
+                }
+            }
+            
+            // Final point
+            gdCtx.fillStyle = '#10b981';
+            gdCtx.beginPath();
+            gdCtx.arc(cx + x * scaleX, cy - x * x * scaleY, 6, 0, Math.PI*2);
+            gdCtx.fill();
+            
+            document.getElementById('gdOutput').innerHTML = 
+`f(x) = xÂ², âˆ‡f = 2x
+Learning rate Î± = ${lr}, Steps = ${steps}
+
+${history.join('\n')}
+
+Final: x = ${x.toFixed(6)} (optimal is 0)`;
+        }
+
+        // Lab 9: Numerical vs Analytical
+        function compareGradients() {
+            const x = parseFloat(document.getElementById('num_x').value);
+            const h = parseFloat(document.getElementById('num_h').value);
+            
+            // f(x) = xÂ³, f'(x) = 3xÂ²
+            const f = x => x * x * x;
+            const analytical = 3 * x * x;
+            const numerical = (f(x + h) - f(x - h)) / (2 * h);
+            const error = Math.abs(analytical - numerical);
+            
+            document.getElementById('numOutput').innerHTML = 
+`f(x) = xÂ³
+f'(x) = 3xÂ² (analytical)
+
+At x = ${x}, h = ${h}:
+
+Analytical gradient: f'(${x}) = 3×${x}Â² = ${analytical.toFixed(6)}
+
+Numerical gradient (central difference):
+  [f(x+h) - f(x-h)] / 2h
+= [f(${x+h}) - f(${x-h})] / ${2*h}
+= [${f(x+h).toFixed(6)} - ${f(x-h).toFixed(6)}] / ${2*h}
+= ${numerical.toFixed(6)}
+
+Error: ${error.toExponential(4)}
+
+Smaller h ←’ more accurate (until numerical precision limits)`;
+        }
+
+        // Lab 10: Backpropagation
+        function runBackprop() {
+            const x = parseFloat(document.getElementById('bp_x').value);
+            
+            // f(x) = (2x+1)Â², let u = 2x+1, f = uÂ²
+            const u = 2*x + 1;
+            const f = u * u;
+            
+            // Forward pass
+            const fwd = `Forward Pass:
+  a = 2x = 2×${x} = ${2*x}
+  b = a + 1 = ${2*x} + 1 = ${u}
+  f = bÂ² = ${u}Â² = ${f}`;
+            
+            // Backward pass
+            const df_db = 2 * u;
+            const db_da = 1;
+            const da_dx = 2;
+            const df_dx = df_db * db_da * da_dx;
+            
+            const bwd = `Backward Pass (chain rule):
+  âˆ‚f/âˆ‚b = 2b = 2×${u} = ${df_db}
+  âˆ‚b/âˆ‚a = 1
+  âˆ‚a/âˆ‚x = 2
+  
+  âˆ‚f/âˆ‚x = âˆ‚f/âˆ‚b × Ã‹â€ âˆ‚b/âˆ‚a × Ã‹â€ âˆ‚a/âˆ‚x
+        = ${df_db} × ${db_da} × ${da_dx}
+        = ${df_dx}`;
+            
+            const verify = `Verification:
+  f(x) = (2x+1)Â² = 4xÂ² + 4x + 1
+  f'(x) = 8x + 4 = 8×${x} + 4 = ${8*x + 4} âœ“`;
+            
+            document.getElementById('bpOutput').innerHTML = `${fwd}\n\n${bwd}\n\n${verify}`;
+        }
+
+        // Lab 11: Gradient Field
+        const fieldCanvas = document.getElementById('fieldCanvas');
+        const fieldCtx = fieldCanvas.getContext('2d');
+
+        function vizGradientField() {
+            const w = fieldCanvas.width = fieldCanvas.offsetWidth;
+            const h = fieldCanvas.height = fieldCanvas.offsetHeight;
+            fieldCtx.clearRect(0,0,w,h);
+            
+            const cx = w/2, cy = h/2, scale = 30;
+            
+            // Draw axes
+            fieldCtx.strokeStyle = '#94a3b8';
+            fieldCtx.lineWidth = 1;
+            fieldCtx.beginPath();
+            fieldCtx.moveTo(0, cy);
+            fieldCtx.lineTo(w, cy);
+            fieldCtx.moveTo(cx, 0);
+            fieldCtx.lineTo(cx, h);
+            fieldCtx.stroke();
+            
+            // Draw gradient vectors for f(x,y) = xÂ² + yÂ²
+            fieldCtx.strokeStyle = '#ff9000';
+            fieldCtx.lineWidth = 1.5;
+            
+            for (let gx = -4; gx <= 4; gx += 1) {
+                for (let gy = -3; gy <= 3; gy += 1) {
+                    if (gx === 0 && gy === 0) continue;
+                    
+                    const px = cx + gx * scale;
+                    const py = cy - gy * scale;
+                    
+                    // Gradient = [2x, 2y]
+                    const gradX = 2 * gx;
+                    const gradY = 2 * gy;
+                    const mag = Math.sqrt(gradX*gradX + gradY*gradY);
+                    
+                    // Normalize and scale
+                    const arrowLen = 15;
+                    const dx = gradX / mag * arrowLen;
+                    const dy = -gradY / mag * arrowLen;
+                    
+                    fieldCtx.beginPath();
+                    fieldCtx.moveTo(px, py);
+                    fieldCtx.lineTo(px + dx, py + dy);
+                    fieldCtx.stroke();
+                    
+                    // Arrow head
+                    const angle = Math.atan2(dy, dx);
+                    fieldCtx.beginPath();
+                    fieldCtx.moveTo(px + dx, py + dy);
+                    fieldCtx.lineTo(px + dx - 5*Math.cos(angle - 0.4), py + dy - 5*Math.sin(angle - 0.4));
+                    fieldCtx.moveTo(px + dx, py + dy);
+                    fieldCtx.lineTo(px + dx - 5*Math.cos(angle + 0.4), py + dy - 5*Math.sin(angle + 0.4));
+                    fieldCtx.stroke();
+                }
+            }
+            
+            document.getElementById('fieldOutput').innerHTML = 
+`f(x,y) = xÂ² + yÂ²
+âˆ‡f = [2x, 2y]
+
+Orange arrows show gradient direction at each point.
+Gradients point AWAY from the minimum (origin).
+Gradient descent moves OPPOSITE to gradient direction.`;
+        }
+
+        // Lab 12: Loss Landscape
+        const lossCanvas = document.getElementById('lossCanvas');
+        const lossCtx = lossCanvas.getContext('2d');
+
+        function vizLossLandscape() {
+            const type = document.getElementById('loss_type').value;
+            const trueVal = parseFloat(document.getElementById('loss_true').value);
+            
+            const w = lossCanvas.width = lossCanvas.offsetWidth;
+            const h = lossCanvas.height = lossCanvas.offsetHeight;
+            lossCtx.clearRect(0,0,w,h);
+            
+            const scaleX = 50, scaleY = 30;
+            const cx = w/2, cy = h - 40;
+            
+            // Draw axes
+            lossCtx.strokeStyle = '#94a3b8';
+            lossCtx.lineWidth = 1;
+            lossCtx.beginPath();
+            lossCtx.moveTo(0, cy);
+            lossCtx.lineTo(w, cy);
+            lossCtx.stroke();
+            
+            // Loss functions
+            const losses = {
+                'mse': { f: (y, t) => Math.pow(y - t, 2), name: 'MSE: (y-t)Â²' },
+                'abs': { f: (y, t) => Math.abs(y - t), name: 'MAE: |y-t|' },
+                'huber': { f: (y, t) => { const d = Math.abs(y-t); return d < 1 ? 0.5*d*d : d - 0.5; }, name: 'Huber' }
+            };
+            
+            const {f, name} = losses[type];
+            
+            // Draw loss curve
+            lossCtx.strokeStyle = '#0b2fa0';
+            lossCtx.lineWidth = 2;
+            lossCtx.beginPath();
+            for (let px = 0; px < w; px++) {
+                const y = (px - cx) / scaleX + trueVal;
+                const loss = f(y, trueVal);
+                const py = cy - loss * scaleY;
+                if (px === 0) lossCtx.moveTo(px, py);
+                else lossCtx.lineTo(px, py);
+            }
+            lossCtx.stroke();
+            
+            // Mark minimum
+            lossCtx.fillStyle = '#10b981';
+            lossCtx.beginPath();
+            lossCtx.arc(cx, cy, 6, 0, Math.PI*2);
+            lossCtx.fill();
+            
+            document.getElementById('lossOutput').innerHTML = 
+`Loss function: ${name}
+True value: t = ${trueVal}
+
+The loss is minimized when prediction y = t.
+MSE: smooth, differentiable everywhere
+MAE: not differentiable at y = t
+Huber: combines benefits of both`;
+        }
+
+        // Lab 13: Multivariate Chain Rule
+        function calcMultiChain() {
+            const t = parseFloat(document.getElementById('mv_t').value);
+            
+            // z = xÂ² + yÂ², x = tÂ², y = tÂ³
+            const x = t * t;
+            const y = t * t * t;
+            const z = x * x + y * y;
+            
+            // Chain rule: dz/dt = âˆ‚z/âˆ‚x Â· dx/dt + âˆ‚z/âˆ‚y Â· dy/dt
+            const dz_dx = 2 * x;
+            const dz_dy = 2 * y;
+            const dx_dt = 2 * t;
+            const dy_dt = 3 * t * t;
+            const dz_dt = dz_dx * dx_dt + dz_dy * dy_dt;
+            
+            document.getElementById('mvOutput').innerHTML = 
+`z = f(x,y) = xÂ² + yÂ²
+x = g(t) = tÂ²
+y = h(t) = tÂ³
+
+Multivariate Chain Rule:
+dz/dt = âˆ‚z/âˆ‚x Â· dx/dt + âˆ‚z/âˆ‚y Â· dy/dt
+
+At t = ${t}:
+  x = ${x}, y = ${y}, z = ${z}
+  
+  âˆ‚z/âˆ‚x = 2x = ${dz_dx}
+  âˆ‚z/âˆ‚y = 2y = ${dz_dy}
+  dx/dt = 2t = ${dx_dt}
+  dy/dt = 3tÂ² = ${dy_dt}
+  
+  dz/dt = ${dz_dx}×${dx_dt} + ${dz_dy}×${dy_dt}
+        = ${dz_dx * dx_dt} + ${dz_dy * dy_dt}
+        = ${dz_dt}`;
+        }
+
+        // Lab 14: Softmax Gradient
+        function calcSoftmaxGrad() {
+            const z = [
+                parseFloat(document.getElementById('sm_z1').value),
+                parseFloat(document.getElementById('sm_z2').value),
+                parseFloat(document.getElementById('sm_z3').value)
+            ];
+            const trueClass = parseInt(document.getElementById('sm_true').value);
+            
+            // Softmax
+            const maxZ = Math.max(...z);
+            const expZ = z.map(zi => Math.exp(zi - maxZ));
+            const sumExp = expZ.reduce((a, b) => a + b, 0);
+            const softmax = expZ.map(e => e / sumExp);
+            
+            // Cross-entropy loss
+            const loss = -Math.log(softmax[trueClass]);
+            
+            // Gradient: p - y (where y is one-hot)
+            const grad = softmax.map((p, i) => p - (i === trueClass ? 1 : 0));
+            
+            document.getElementById('smOutput').innerHTML = 
+`Logits: z = [${z.join(', ')}]
+True class: ${trueClass}
+
+Softmax probabilities:
+  p = [${softmax.map(p => p.toFixed(4)).join(', ')}]
+
+Cross-entropy loss:
+  L = -log(p[${trueClass}]) = -log(${softmax[trueClass].toFixed(4)}) = ${loss.toFixed(4)}
+
+Gradient âˆ‚L/âˆ‚z (softmax + cross-entropy):
+  = p - one_hot(true_class)
+  = [${grad.map(g => g.toFixed(4)).join(', ')}]
+
+This elegant gradient is why softmax + cross-entropy is so popular!`;
+        }
+
+        // Lab 15: Neural Layer Gradient
+        function calcNeuralGrad() {
+            const w = parseFloat(document.getElementById('nl_w').value);
+            const x = parseFloat(document.getElementById('nl_x').value);
+            const b = parseFloat(document.getElementById('nl_b').value);
+            
+            // y = ReLU(wx + b)
+            const z = w * x + b;
+            const y = Math.max(0, z);
+            const relu_grad = z > 0 ? 1 : 0;
+            
+            // Gradients
+            const dy_dz = relu_grad;
+            const dz_dw = x;
+            const dz_dx = w;
+            const dz_db = 1;
+            
+            const dy_dw = dy_dz * dz_dw;
+            const dy_dx = dy_dz * dz_dx;
+            const dy_db = dy_dz * dz_db;
+            
+            document.getElementById('nlOutput').innerHTML = 
+`y = ReLU(wx + b)
+w = ${w}, x = ${x}, b = ${b}
+
+Forward pass:
+  z = wx + b = ${w}×${x} + ${b} = ${z}
+  y = ReLU(${z}) = ${y}
+
+ReLU gradient: Ïƒ'(z) = ${relu_grad} (${z > 0 ? 'z > 0' : 'z â‰¤ 0'})
+
+Gradients via chain rule:
+  âˆ‚y/âˆ‚w = Ïƒ'(z) Â· x = ${relu_grad} × ${x} = ${dy_dw}
+  âˆ‚y/âˆ‚x = Ïƒ'(z) Â· w = ${relu_grad} × ${w} = ${dy_dx}
+  âˆ‚y/âˆ‚b = Ïƒ'(z) Â· 1 = ${relu_grad} × 1 = ${dy_db}
+
+These gradients flow backward during training!`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

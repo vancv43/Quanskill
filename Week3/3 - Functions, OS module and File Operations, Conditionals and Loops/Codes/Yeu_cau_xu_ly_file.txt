@@ -1,0 +1,37 @@
+1/ Giới thiệu bài thực hành
+    Mục tiêu học tập
+    Quy trình xử lý file trong Python
+
+2️/ Mount Google Drive (Nếu sử du5ng google colab) 
+    from google.colab import drive
+    drive.mount('/content/drive')
+
+3️Tạo file students.txt mẫu
+
+Ghi đúng format từng dòng là dict
+
+Encoding UTF-8 (an toàn tiếng Việt)
+
+4️⃣ Đọc file
+
+Dùng with open()
+
+Parse từng dòng bằng ast.literal_eval
+
+In dữ liệu sinh viên ra màn hình
+
+5️⃣ Ghi file students_pass.txt
+
+Lọc sinh viên avg ≥ 7.0
+
+Ghi thêm tổng số sinh viên đạt
+
+6️⃣ Cập nhật dữ liệu
+
+Nhập từ bàn phím
+
+Cập nhật nếu tồn tại
+
+Thêm mới nếu chưa có
+
+Ghi đè lại students.txt

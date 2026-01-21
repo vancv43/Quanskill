@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Appraisal: Mathematics for Machine Learning | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.75rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 28px; height: 28px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .timer-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .timer {
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timer.warning { background: rgba(245, 158, 11, 0.3); animation: pulse 1s infinite; }
+        .timer.danger { background: rgba(239, 68, 68, 0.4); animation: pulse 0.5s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .progress-info {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 80px 2rem 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .start-screen h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+        }
+
+        .start-screen p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .exam-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .info-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .info-card .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .chapter-coverage {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .chapter-coverage h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+        }
+
+        .chapter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chapter-tag {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-orange);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 144, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 144, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gradient-blue);
+            color: white;
+        }
+
+        /* Quiz Container */
+        .quiz-screen { display: none; }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .question-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+        }
+
+        .chapter-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--quanskill-orange);
+            background: rgba(255, 144, 0, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .question-card.answered { border-color: var(--quanskill-blue); }
+        .question-card.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .question-card.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .question-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--quanskill-orange);
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option {
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.03);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.08);
+        }
+
+        .option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .option-letter {
+            width: 28px; height: 28px;
+            background: var(--code-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--quanskill-blue);
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter { background: var(--quanskill-blue); color: white; }
+        .option.correct .option-letter { background: var(--success); color: white; }
+        .option.incorrect .option-letter { background: var(--error); color: white; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-nav {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-prev { background: var(--code-bg); color: var(--text-primary); }
+        .btn-next { background: var(--gradient-blue); color: white; }
+        .btn-submit { background: var(--gradient-orange); color: white; }
+
+        .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .question-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 12px;
+        }
+
+        .q-dot {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .q-dot:hover { border-color: var(--quanskill-blue); }
+        .q-dot.current { background: var(--quanskill-blue); color: white; border-color: var(--quanskill-blue); }
+        .q-dot.answered { background: var(--quanskill-orange); color: white; border-color: var(--quanskill-orange); }
+        .q-dot.correct { background: var(--success); color: white; border-color: var(--success); }
+        .q-dot.incorrect { background: var(--error); color: white; border-color: var(--error); }
+
+        /* Results Screen */
+        .results-screen { display: none; }
+
+        .results-hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 300px; height: 300px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .results-hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .results-hero .subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .score-circle {
+            width: 180px; height: 180px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .score-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-circle .bg { stroke: rgba(255,255,255,0.2); }
+        .score-circle .progress { stroke: var(--quanskill-orange); transition: stroke-dashoffset 1.5s ease; }
+
+        .score-value {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-value .number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .score-value .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .grade-badge.excellent { background: var(--success); }
+        .grade-badge.good { background: var(--quanskill-orange); }
+        .grade-badge.average { background: var(--warning); }
+        .grade-badge.needs-work { background: var(--error); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.25rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .stat-card .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-card.correct .value { color: var(--success); }
+        .stat-card.incorrect .value { color: var(--error); }
+
+        /* Chapter Breakdown */
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chapter-result {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+        }
+
+        .chapter-result:last-child { margin-bottom: 0; }
+
+        .chapter-result .chapter-name {
+            flex: 1;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .chapter-result .chapter-score {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .chapter-result .progress-bar {
+            width: 120px;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .chapter-result .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        .chapter-result .progress-fill.excellent { background: var(--success); }
+        .chapter-result .progress-fill.good { background: var(--quanskill-orange); }
+        .chapter-result .progress-fill.average { background: var(--warning); }
+        .chapter-result .progress-fill.poor { background: var(--error); }
+
+        .chapter-result .status-icon {
+            width: 24px;
+            text-align: center;
+            margin-left: 0.5rem;
+        }
+
+        /* Recommendations */
+        .recommendation {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--quanskill-orange);
+        }
+
+        .recommendation:last-child { margin-bottom: 0; }
+
+        .recommendation .icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .recommendation .content h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .recommendation .content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .recommendation.priority-high { border-left-color: var(--error); }
+        .recommendation.priority-medium { border-left-color: var(--warning); }
+        .recommendation.priority-low { border-left-color: var(--success); }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .action-buttons { display: none; }
+            .results-screen { display: block !important; }
+            .section-card { break-inside: avoid; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .exam-info { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .timer { font-size: 1.1rem; padding: 0.4rem 1rem; }
+            .question-nav { gap: 0.35rem; }
+            .q-dot { width: 28px; height: 28px; font-size: 0.7rem; }
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="timer-display">
+                <span class="progress-info" id="progressInfo">Question 0/30</span>
+                <div class="timer" id="timer">
+                    <span>Â±</span>
+                    <span id="timerValue">30:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <h1>🎓 Final Appraisal</h1>
+            <p>Mathematics for Machine Learning Comprehensive Assessment</p>
+            
+            <div class="exam-info">
+                <div class="info-card">
+                    <div class="value">30</div>
+                    <div class="label">Questions</div>
+                </div>
+                <div class="info-card">
+                    <div class="value">30</div>
+                    <div class="label">Minutes</div>
+                </div>
+                <div class="info-card">
+                    <div class="value">10</div>
+                    <div class="label">Chapters</div>
+                </div>
+            </div>
+
+            <div class="chapter-coverage">
+                <h3>📊Â¡ Chapters Covered</h3>
+                <div class="chapter-tags">
+                    <span class="chapter-tag">Ch 2: Linear Algebra</span>
+                    <span class="chapter-tag">Ch 4: Matrix Decompositions</span>
+                    <span class="chapter-tag">Ch 5: Vector Calculus</span>
+                    <span class="chapter-tag">Ch 6: Probability</span>
+                    <span class="chapter-tag">Ch 7: Optimization</span>
+                    <span class="chapter-tag">Ch 8: Model Evaluation</span>
+                    <span class="chapter-tag">Ch 9: Linear Regression</span>
+                    <span class="chapter-tag">Ch 10: PCA</span>
+                    <span class="chapter-tag">Ch 11: GMM</span>
+                    <span class="chapter-tag">Ch 12: SVM</span>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 144, 0, 0.1); border-left: 4px solid var(--quanskill-orange); padding: 1rem 1.5rem; border-radius: 0 10px 10px 0; margin: 2rem 0; text-align: left;">
+                <strong style="color: var(--quanskill-orange);">Ã…Â¡Ã‚Â  Instructions:</strong>
+                <ul style="margin-top: 0.5rem; margin-left: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    <li>Timer starts immediately when you begin</li>
+                    <li>You can navigate between questions freely</li>
+                    <li>Unanswered questions count as incorrect</li>
+                    <li>Submit before time runs out for best results</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary" onclick="startExam()">🚀 Start Assessment</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="quiz-screen" id="quizScreen">
+            <div class="question-nav" id="questionNav"></div>
+            
+            <div class="question-card" id="questionCard">
+                <div class="question-header">
+                    <span class="question-number" id="questionNumber">Q1</span>
+                    <span class="chapter-badge" id="chapterBadge">Chapter 2</span>
+                </div>
+                <div class="question-context" id="questionContext" style="display: none;"></div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-nav btn-prev" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+                <button class="btn-nav btn-next" id="nextBtn" onclick="nextQuestion()">Next ←’</button>
+                <button class="btn-nav btn-submit" id="submitBtn" onclick="submitExam()" style="display: none;">Submit Exam</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <div class="results-hero">
+                <h1>📊 Assessment Complete!</h1>
+                <p class="subtitle">Mathematics for Machine Learning Final Appraisal</p>
+                
+                <div class="score-circle">
+                    <svg width="180" height="180">
+                        <circle class="bg" cx="90" cy="90" r="80" fill="none" stroke-width="12"/>
+                        <circle class="progress" id="scoreCircle" cx="90" cy="90" r="80" fill="none" stroke-width="12" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65"/>
+                    </svg>
+                    <div class="score-value">
+                        <div class="number" id="finalScore">0%</div>
+                        <div class="label">Score</div>
+                    </div>
+                </div>
+
+                <div class="grade-badge" id="gradeBadge">Loading...</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card correct">
+                    <div class="value" id="correctCount">0</div>
+                    <div class="label">Correct</div>
+                </div>
+                <div class="stat-card incorrect">
+                    <div class="value" id="incorrectCount">0</div>
+                    <div class="label">Incorrect</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="timeTaken">0:00</div>
+                    <div class="label">Time Taken</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="avgTime">0s</div>
+                    <div class="label">Avg/Question</div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>📈 Chapter-wise Performance</h3>
+                <div id="chapterBreakdown"></div>
+            </div>
+
+            <div class="section-card">
+                <h3>📝’¡ Areas for Improvement</h3>
+                <div id="recommendations"></div>
+            </div>
+
+            <div class="section-card">
+                <h3>🎯 Detailed Results</h3>
+                <div id="detailedResults"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary btn-icon" onclick="window.print()">
+                    📝“Â¨ Print Report
+                </button>
+                <button class="btn btn-primary btn-icon" onclick="retakeExam()">
+                    🔍„ Retake Assessment
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Questions Database - 30 Questions (3 per chapter)
+        const questions = [
+            // Chapter 2: Linear Algebra (Q1-3)
+            {
+                id: 1, chapter: 2, chapterName: "Linear Algebra",
+                text: "What is the result of multiplying a matrix A âˆˆ â„áµ€Ã‚Â¿ with a vector x âˆˆ â„â¿?",
+                options: ["A vector in â„áµ€", "A vector in â„â¿", "A scalar", "A matrix in â„áµ€Ã‚Â¿"],
+                correct: 0,
+                explanation: "Matrix-vector multiplication Ax produces a vector with m components (number of rows of A)."
+            },
+            {
+                id: 2, chapter: 2, chapterName: "Linear Algebra",
+                context: "det(A) = 0",
+                text: "If the determinant of matrix A is zero, then A is:",
+                options: ["Singular (non-invertible)", "Orthogonal", "Symmetric", "Positive definite"],
+                correct: 0,
+                explanation: "A zero determinant means the matrix is singular and has no inverse."
+            },
+            {
+                id: 3, chapter: 2, chapterName: "Linear Algebra",
+                text: "The span of a set of vectors is:",
+                options: ["Set of all linear combinations of those vectors", "The largest vector", "The determinant", "The trace"],
+                correct: 0,
+                explanation: "Span is the set of all possible linear combinations of the given vectors."
+            },
+
+            // Chapter 4: Matrix Decompositions (Q4-6)
+            {
+                id: 4, chapter: 4, chapterName: "Matrix Decompositions",
+                context: "A = UÎ£Váµ€",
+                text: "In the Singular Value Decomposition (SVD), the matrix Î£ contains:",
+                options: ["Singular values (non-negative) on diagonal", "Eigenvalues", "Random values", "The original matrix"],
+                correct: 0,
+                explanation: "Î£ is a diagonal matrix containing singular values ÏÆ’â‚ â‰¥ Ïƒâ‚‚ â‰¥ ... â‰¥ 0."
+            },
+            {
+                id: 5, chapter: 4, chapterName: "Matrix Decompositions",
+                text: "Eigendecomposition A = PDPâ»Â¹ requires A to be:",
+                options: ["Square matrix", "Rectangular matrix", "Symmetric only", "Positive definite only"],
+                correct: 0,
+                explanation: "Eigendecomposition is defined only for square matrices."
+            },
+            {
+                id: 6, chapter: 4, chapterName: "Matrix Decompositions",
+                text: "The Cholesky decomposition A = LLáµ€ requires A to be:",
+                options: ["Symmetric positive definite", "Any square matrix", "Diagonal", "Orthogonal"],
+                correct: 0,
+                explanation: "Cholesky decomposition exists only for symmetric positive definite matrices."
+            },
+
+            // Chapter 5: Vector Calculus (Q7-9)
+            {
+                id: 7, chapter: 5, chapterName: "Vector Calculus",
+                context: "f: â„â¿ ←’ â„",
+                text: "The gradient âˆ‡f of a scalar function f points in the direction of:",
+                options: ["Steepest ascent", "Steepest descent", "Zero change", "Random direction"],
+                correct: 0,
+                explanation: "The gradient points in the direction of maximum increase of the function."
+            },
+            {
+                id: 8, chapter: 5, chapterName: "Vector Calculus",
+                text: "The Jacobian of f: â„â¿ ←’ â„áµ€ has dimensions:",
+                options: ["m × n", "n × m", "n × n", "m × m"],
+                correct: 0,
+                explanation: "Jacobian has m rows (outputs) and n columns (inputs)."
+            },
+            {
+                id: 9, chapter: 5, chapterName: "Vector Calculus",
+                text: "The Hessian matrix contains:",
+                options: ["Second-order partial derivatives", "First-order derivatives", "Eigenvalues", "Singular values"],
+                correct: 0,
+                explanation: "The Hessian is the matrix of all second-order partial derivatives."
+            },
+
+            // Chapter 6: Probability (Q10-12)
+            {
+                id: 10, chapter: 6, chapterName: "Probability & Distributions",
+                context: "p(x|y) = p(y|x)p(x) / p(y)",
+                text: "This formula is known as:",
+                options: ["Bayes' theorem", "Chain rule", "Law of total probability", "Independence"],
+                correct: 0,
+                explanation: "Bayes' theorem relates posterior to likelihood, prior, and evidence."
+            },
+            {
+                id: 11, chapter: 6, chapterName: "Probability & Distributions",
+                text: "For a Gaussian distribution N(Î¼, ÏƒÂ²), 68% of data falls within:",
+                options: ["Î¼ Â± Ïƒ", "Î¼ Â± 2Ïƒ", "Î¼ Â± 3Ïƒ", "Î¼ Â± 0.5Ïƒ"],
+                correct: 0,
+                explanation: "The 68-95-99.7 rule: ~68% within one standard deviation."
+            },
+            {
+                id: 12, chapter: 6, chapterName: "Probability & Distributions",
+                text: "Two random variables X and Y are independent if:",
+                options: ["p(x,y) = p(x)p(y)", "p(x,y) = p(x) + p(y)", "p(x|y) = p(y|x)", "E[XY] = 0"],
+                correct: 0,
+                explanation: "Independence means joint equals product of marginals."
+            },
+
+            // Chapter 7: Optimization (Q13-15)
+            {
+                id: 13, chapter: 7, chapterName: "Continuous Optimization",
+                context: "Î¸â‚Å“â‚Å â‚ = Î¸â‚œ - Î·âˆ‡L(Î¸â‚œ)",
+                text: "In gradient descent, Î· represents:",
+                options: ["Learning rate", "Loss function", "Gradient", "Momentum"],
+                correct: 0,
+                explanation: "Î· (eta) is the learning rate controlling step size."
+            },
+            {
+                id: 14, chapter: 7, chapterName: "Continuous Optimization",
+                text: "A function is convex if its Hessian is:",
+                options: ["Positive semi-definite everywhere", "Negative definite", "Zero", "Singular"],
+                correct: 0,
+                explanation: "Convexity requires non-negative curvature (PSD Hessian)."
+            },
+            {
+                id: 15, chapter: 7, chapterName: "Continuous Optimization",
+                text: "At a local minimum, the gradient equals:",
+                options: ["Zero vector", "Maximum value", "Undefined", "Negative"],
+                correct: 0,
+                explanation: "First-order necessary condition: âˆ‡f = 0 at extrema."
+            },
+
+            // Chapter 8: Model Evaluation (Q16-18)
+            {
+                id: 16, chapter: 8, chapterName: "When Models Meet Data",
+                text: "High bias typically indicates:",
+                options: ["Underfitting", "Overfitting", "Perfect fit", "No training"],
+                correct: 0,
+                explanation: "High bias means model is too simple (underfitting)."
+            },
+            {
+                id: 17, chapter: 8, chapterName: "When Models Meet Data",
+                text: "Cross-validation is used to:",
+                options: ["Estimate generalization performance", "Train faster", "Reduce features", "Increase bias"],
+                correct: 0,
+                explanation: "CV estimates how well model generalizes to unseen data."
+            },
+            {
+                id: 18, chapter: 8, chapterName: "When Models Meet Data",
+                text: "Regularization helps prevent:",
+                options: ["Overfitting", "Underfitting", "Training", "Data collection"],
+                correct: 0,
+                explanation: "Regularization adds penalty to prevent overfitting."
+            },
+
+            // Chapter 9: Linear Regression (Q19-21)
+            {
+                id: 19, chapter: 9, chapterName: "Linear Regression",
+                context: "Î¸_MLE = (Xáµ€X)â»Â¹Xáµ€y",
+                text: "This closed-form solution minimizes:",
+                options: ["Sum of squared errors", "Absolute errors", "Cross-entropy", "Hinge loss"],
+                correct: 0,
+                explanation: "MLE for Gaussian noise minimizes squared error."
+            },
+            {
+                id: 20, chapter: 9, chapterName: "Linear Regression",
+                text: "Ridge regression adds what type of penalty?",
+                options: ["L2 (squared weights)", "L1 (absolute weights)", "L0 (count)", "No penalty"],
+                correct: 0,
+                explanation: "Ridge uses L2 regularization: Î»â€—wâ€—Â²."
+            },
+            {
+                id: 21, chapter: 9, chapterName: "Linear Regression",
+                text: "In Bayesian linear regression, the output is:",
+                options: ["A distribution over predictions", "A single point estimate", "The training data", "Random noise"],
+                correct: 0,
+                explanation: "Bayesian approach gives full posterior distribution."
+            },
+
+            // Chapter 10: PCA (Q22-24)
+            {
+                id: 22, chapter: 10, chapterName: "Dimensionality Reduction (PCA)",
+                text: "PCA finds directions that maximize:",
+                options: ["Variance of projected data", "Mean of data", "Number of features", "Training error"],
+                correct: 0,
+                explanation: "PCA maximizes variance along principal components."
+            },
+            {
+                id: 23, chapter: 10, chapterName: "Dimensionality Reduction (PCA)",
+                text: "Principal components are computed from:",
+                options: ["Eigenvectors of covariance matrix", "Raw data directly", "Labels", "Test set"],
+                correct: 0,
+                explanation: "PCs are eigenvectors of the data covariance matrix."
+            },
+            {
+                id: 24, chapter: 10, chapterName: "Dimensionality Reduction (PCA)",
+                text: "In PCA, the first principal component explains:",
+                options: ["Maximum variance", "Minimum variance", "Mean value", "Median value"],
+                correct: 0,
+                explanation: "PC1 is the direction of maximum variance."
+            },
+
+            // Chapter 11: GMM (Q25-27)
+            {
+                id: 25, chapter: 11, chapterName: "Density Estimation (GMM)",
+                context: "p(x) = Î£â‚– Ï€â‚– N(x|Î¼â‚–, Î£â‚–)",
+                text: "In a GMM, the Ï€â‚– values must satisfy:",
+                options: ["Sum to 1 and be non-negative", "Sum to 0", "Be negative", "Be integers"],
+                correct: 0,
+                explanation: "Mixture weights form a valid probability distribution."
+            },
+            {
+                id: 26, chapter: 11, chapterName: "Density Estimation (GMM)",
+                text: "The EM algorithm's E-step computes:",
+                options: ["Responsibilities (posterior of latent variables)", "New parameters", "Likelihood", "Prior"],
+                correct: 0,
+                explanation: "E-step computes expected assignments (responsibilities)."
+            },
+            {
+                id: 27, chapter: 11, chapterName: "Density Estimation (GMM)",
+                text: "GMM provides what type of clustering?",
+                options: ["Soft (probabilistic)", "Hard (deterministic)", "Hierarchical", "No clustering"],
+                correct: 0,
+                explanation: "GMM assigns probability of belonging to each cluster."
+            },
+
+            // Chapter 12: SVM (Q28-30)
+            {
+                id: 28, chapter: 12, chapterName: "Classification (SVM)",
+                text: "SVM finds a hyperplane that maximizes:",
+                options: ["Margin between classes", "Number of support vectors", "Training error", "Model complexity"],
+                correct: 0,
+                explanation: "SVM maximizes the margin to the nearest points."
+            },
+            {
+                id: 29, chapter: 12, chapterName: "Classification (SVM)",
+                context: "â„“(t) = max{0, 1-t}",
+                text: "This is called the:",
+                options: ["Hinge loss", "Cross-entropy loss", "Squared loss", "Log loss"],
+                correct: 0,
+                explanation: "Hinge loss is used in SVM classification."
+            },
+            {
+                id: 30, chapter: 12, chapterName: "Classification (SVM)",
+                text: "The kernel trick allows SVM to:",
+                options: ["Work in high-dimensional space without explicit mapping", "Train faster", "Use less memory", "Avoid regularization"],
+                correct: 0,
+                explanation: "Kernels compute inner products in feature space implicitly."
+            }
+        ];
+
+        // State
+        let currentQuestion = 0;
+        let userAnswers = new Array(30).fill(null);
+        let timerInterval = null;
+        let timeRemaining = 30 * 60; // 30 minutes in seconds
+        let examStartTime = null;
+        let examEndTime = null;
+
+        // Chapter mapping
+        const chapters = {
+            2: { name: "Linear Algebra", questions: [0,1,2] },
+            4: { name: "Matrix Decompositions", questions: [3,4,5] },
+            5: { name: "Vector Calculus", questions: [6,7,8] },
+            6: { name: "Probability & Distributions", questions: [9,10,11] },
+            7: { name: "Continuous Optimization", questions: [12,13,14] },
+            8: { name: "When Models Meet Data", questions: [15,16,17] },
+            9: { name: "Linear Regression", questions: [18,19,20] },
+            10: { name: "Dimensionality Reduction (PCA)", questions: [21,22,23] },
+            11: { name: "Density Estimation (GMM)", questions: [24,25,26] },
+            12: { name: "Classification (SVM)", questions: [27,28,29] }
+        };
+
+        // Start Exam
+        function startExam() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            examStartTime = Date.now();
+            startTimer();
+            renderQuestionNav();
+            showQuestion(0);
+        }
+
+        // Timer
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 300) { // 5 minutes
+                    document.getElementById('timer').classList.add('warning');
+                }
+                if (timeRemaining <= 60) { // 1 minute
+                    document.getElementById('timer').classList.remove('warning');
+                    document.getElementById('timer').classList.add('danger');
+                }
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerValue').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Question Navigation
+        function renderQuestionNav() {
+            const nav = document.getElementById('questionNav');
+            nav.innerHTML = questions.map((_, i) => 
+                `<div class="q-dot ${i === 0 ? 'current' : ''}" onclick="showQuestion(${i})">${i + 1}</div>`
+            ).join('');
+        }
+
+        function updateQuestionNav() {
+            const dots = document.querySelectorAll('.q-dot');
+            dots.forEach((dot, i) => {
+                dot.className = 'q-dot';
+                if (i === currentQuestion) dot.classList.add('current');
+                else if (userAnswers[i] !== null) dot.classList.add('answered');
+            });
+        }
+
+        // Show Question
+        function showQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+            
+            document.getElementById('questionNumber').textContent = `Q${index + 1}`;
+            document.getElementById('chapterBadge').textContent = `Chapter ${q.chapter}: ${q.chapterName}`;
+            document.getElementById('progressInfo').textContent = `Question ${index + 1}/30`;
+            
+            if (q.context) {
+                document.getElementById('questionContext').style.display = 'block';
+                document.getElementById('questionContext').textContent = q.context;
+            } else {
+                document.getElementById('questionContext').style.display = 'none';
+            }
+            
+            document.getElementById('questionText').textContent = q.text;
+            
+            const optionsHtml = q.options.map((opt, i) => `
+                <div class="option ${userAnswers[index] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+                    <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+                    <span>${opt}</span>
+                </div>
+            `).join('');
+            document.getElementById('optionsGrid').innerHTML = optionsHtml;
+            
+            // Navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            
+            if (index === questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+            
+            updateQuestionNav();
+        }
+
+        function selectOption(optIndex) {
+            userAnswers[currentQuestion] = optIndex;
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.remove('selected');
+                if (i === optIndex) opt.classList.add('selected');
+            });
+            updateQuestionNav();
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) showQuestion(currentQuestion - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) showQuestion(currentQuestion + 1);
+        }
+
+        // Submit Exam
+        function submitExam() {
+            clearInterval(timerInterval);
+            examEndTime = Date.now();
+            
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            
+            calculateResults();
+        }
+
+        function calculateResults() {
+            let correct = 0;
+            let chapterScores = {};
+            
+            // Initialize chapter scores
+            Object.keys(chapters).forEach(ch => {
+                chapterScores[ch] = { correct: 0, total: 3, name: chapters[ch].name };
+            });
+            
+            // Calculate scores
+            questions.forEach((q, i) => {
+                const isCorrect = userAnswers[i] === q.correct;
+                if (isCorrect) {
+                    correct++;
+                    chapterScores[q.chapter].correct++;
+                }
+            });
+            
+            const percentage = Math.round((correct / 30) * 100);
+            const timeTaken = Math.round((examEndTime - examStartTime) / 1000);
+            const avgTimePerQ = Math.round(timeTaken / 30);
+            
+            // Update score display
+            document.getElementById('finalScore').textContent = percentage + '%';
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = 30 - correct;
+            document.getElementById('timeTaken').textContent = 
+                `${Math.floor(timeTaken / 60)}:${(timeTaken % 60).toString().padStart(2, '0')}`;
+            document.getElementById('avgTime').textContent = avgTimePerQ + 's';
+            
+            // Animate score circle
+            const circle = document.getElementById('scoreCircle');
+            const circumference = 2 * Math.PI * 80;
+            const offset = circumference - (percentage / 100) * circumference;
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 100);
+            
+            // Grade badge
+            const gradeBadge = document.getElementById('gradeBadge');
+            if (percentage >= 90) {
+                gradeBadge.textContent = '🐍â€  Excellent';
+                gradeBadge.className = 'grade-badge excellent';
+            } else if (percentage >= 70) {
+                gradeBadge.textContent = 'âœ… Good';
+                gradeBadge.className = 'grade-badge good';
+            } else if (percentage >= 50) {
+                gradeBadge.textContent = '📊Â¡ Average';
+                gradeBadge.className = 'grade-badge average';
+            } else {
+                gradeBadge.textContent = '📝– Needs Improvement';
+                gradeBadge.className = 'grade-badge needs-work';
+            }
+            
+            // Chapter breakdown
+            renderChapterBreakdown(chapterScores);
+            
+            // Recommendations
+            renderRecommendations(chapterScores);
+            
+            // Detailed results
+            renderDetailedResults();
+        }
+
+        function renderChapterBreakdown(scores) {
+            const container = document.getElementById('chapterBreakdown');
+            let html = '';
+            
+            Object.keys(scores).sort((a, b) => a - b).forEach(ch => {
+                const s = scores[ch];
+                const pct = Math.round((s.correct / s.total) * 100);
+                let colorClass = 'poor';
+                let icon = 'âŒ';
+                if (pct >= 90) { colorClass = 'excellent'; icon = 'âœ…'; }
+                else if (pct >= 67) { colorClass = 'good'; icon = '🐍'â€ Ã‚'; }
+                else if (pct >= 34) { colorClass = 'average'; icon = 'Ã…Â¡Ã‚Â '; }
+                
+                html += `
+                    <div class="chapter-result">
+                        <span class="chapter-name">Ch ${ch}: ${s.name}</span>
+                        <span class="chapter-score">${s.correct}/${s.total}</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${colorClass}" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="status-icon">${icon}</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function renderRecommendations(scores) {
+            const container = document.getElementById('recommendations');
+            let recommendations = [];
+            
+            // Find weak areas
+            Object.keys(scores).forEach(ch => {
+                const s = scores[ch];
+                const pct = (s.correct / s.total) * 100;
+                
+                if (pct < 34) {
+                    recommendations.push({
+                        priority: 'high',
+                        icon: '🔍§Â´',
+                        title: `Focus on Chapter ${ch}: ${s.name}`,
+                        text: `Score: ${s.correct}/3. This is a critical area. Review fundamentals and practice more problems.`
+                    });
+                } else if (pct < 67) {
+                    recommendations.push({
+                        priority: 'medium',
+                        icon: '📝’¡',
+                        title: `Strengthen Chapter ${ch}: ${s.name}`,
+                        text: `Score: ${s.correct}/3. Good foundation but needs reinforcement. Practice intermediate problems.`
+                    });
+                }
+            });
+            
+            // Add general recommendations
+            const totalPct = Object.values(scores).reduce((sum, s) => sum + s.correct, 0) / 30 * 100;
+            
+            if (totalPct < 50) {
+                recommendations.push({
+                    priority: 'high',
+                    icon: '📊Â¡',
+                    title: 'Comprehensive Review Recommended',
+                    text: 'Consider retaking the practice hubs for each chapter before attempting the appraisal again.'
+                });
+            } else if (totalPct < 70) {
+                recommendations.push({
+                    priority: 'medium',
+                    icon: '🎯',
+                    title: 'Targeted Practice Needed',
+                    text: 'Focus on the chapters marked in yellow/red. Use the interactive labs for hands-on learning.'
+                });
+            } else {
+                recommendations.push({
+                    priority: 'low',
+                    icon: '🚀',
+                    title: 'Ready for Advanced Topics',
+                    text: 'Great performance! Consider moving to Quanskill\'s Agentic AI Bootcamp for advanced applications.'
+                });
+            }
+            
+            if (recommendations.length === 0) {
+                recommendations.push({
+                    priority: 'low',
+                    icon: '🐍â€ ',
+                    title: 'Excellent Mastery!',
+                    text: 'You have demonstrated strong understanding across all chapters. Keep practicing to maintain your skills.'
+                });
+            }
+            
+            container.innerHTML = recommendations.map(r => `
+                <div class="recommendation priority-${r.priority}">
+                    <span class="icon">${r.icon}</span>
+                    <div class="content">
+                        <h4>${r.title}</h4>
+                        <p>${r.text}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderDetailedResults() {
+            const container = document.getElementById('detailedResults');
+            
+            let html = '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">';
+            
+            questions.forEach((q, i) => {
+                const isCorrect = userAnswers[i] === q.correct;
+                const answered = userAnswers[i] !== null;
+                
+                html += `
+                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: ${isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; border-radius: 8px;">
+                        <span style="width: 24px; height: 24px; background: ${isCorrect ? 'var(--success)' : 'var(--error)'}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">
+                            ${isCorrect ? 'âœ“' : 'âœ—'}
+                        </span>
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem;">
+                            Q${i + 1}: Ch ${q.chapter}
+                        </span>
+                        <span style="margin-left: auto; font-size: 0.75rem; color: var(--text-secondary);">
+                            ${answered ? String.fromCharCode(65 + userAnswers[i]) : '-'} ←’ ${String.fromCharCode(65 + q.correct)}
+                        </span>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function retakeExam() {
+            // Reset state
+            currentQuestion = 0;
+            userAnswers = new Array(30).fill(null);
+            timeRemaining = 30 * 60;
+            examStartTime = null;
+            examEndTime = null;
+            
+            // Reset UI
+            document.getElementById('timer').classList.remove('warning', 'danger');
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('scoreCircle').style.strokeDashoffset = 502.65;
+        }
+
+        // Initialize KaTeX
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+    {"name": "Nguyễn Văn An", "gender": "Nam", "avg": 9.2},
+    {"name": "Trần Thị Bình", "gender": "Nữ",  "avg": 8.5},
+    {"name": "Lê Văn Cường", "gender": "Nam", "avg": 7.8},
+    {"name": "Phạm Thị Dung", "gender": "Nữ",  "avg": 6.9},
+    {"name": "Hoàng Văn Em", "gender": "Nam", "avg": 5.4},

@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: ML Models and Data | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        /* Navigation Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .section-num {
+            display: inline-block;
+            min-width: 32px;
+            margin-right: 8px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📝¤–';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        /* Key Concepts Grid */
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Section Styling */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Special Boxes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before {
+            content: '📝¤“';
+        }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before {
+            content: '🎓';
+        }
+
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before {
+            content: 'â–¸';
+            color: var(--quanskill-orange);
+        }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before {
+            content: '🎯';
+        }
+
+        /* Code Blocks */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .code-block {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Math Display */
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .katex-display {
+            margin: 1rem 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Tables */
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        /* Quiz Styling */
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before {
+            content: '🧠';
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Interactive Demo */
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before {
+            content: 'âš¡';
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="range"] {
+            width: 150px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--quanskill-blue);
+            cursor: pointer;
+        }
+
+        .control-group select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .demo-canvas {
+            width: 100%;
+            height: 350px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-item {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .result-item .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .result-item .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .result-item .label::before {
+            content: none;
+        }
+
+        /* Algorithm Box */
+        .algorithm-box {
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .algorithm-box h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-orange);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .algorithm-box ol {
+            margin-left: 1.5rem;
+        }
+
+        .algorithm-box li {
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 80px 1.5rem 3rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .progress-bar {
+                left: 0;
+            }
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--quanskill-orange);
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 8 Â· ML Models and Data</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">
+                Introduction
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Core Concepts</div>
+            <a href="#section-8-1" class="nav-link">
+                Data, Models & Learning
+            </a>
+            <a href="#section-8-2" class="nav-link">
+                Empirical Risk Minimization
+            </a>
+            <a href="#section-8-3" class="nav-link">
+                Parameter Estimation
+            </a>
+            <a href="#section-8-4" class="nav-link">
+                Probabilistic Modeling
+            </a>
+            <a href="#section-8-5" class="nav-link">
+                Graphical Models
+            </a>
+            <a href="#section-8-6" class="nav-link">
+                Model Selection
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">
+                Chapter Summary
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <h1>ML Models and Data</h1>
+                <p class="hero-subtitle">
+                    The bridge between mathematical foundations and machine learning practice - understanding how data meets theory to create intelligent predictors.
+                </p>
+                <div class="hero-quote">
+                    "The main question of machine learning is: What do we mean by good models? A good model should perform well not just on training data, but on unseen data."
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts Overview -->
+        <div class="key-concepts">
+            <div class="concept-card">
+                <div class="icon">📊</div>
+                <h5>Data as Vectors</h5>
+                <p>Transform raw data into numerical vectors for mathematical processing</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🎯</div>
+                <h5>Risk Minimization</h5>
+                <p>Find predictors that minimize errors on training and test data</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">📈</div>
+                <h5>Maximum Likelihood</h5>
+                <p>Estimate parameters that make observed data most probable</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🔍®</div>
+                <h5>Bayesian Inference</h5>
+                <p>Update beliefs about parameters using probability distributions</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">📝•’Â¸</div>
+                <h5>Graphical Models</h5>
+                <p>Visual language for probabilistic dependencies</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">âš—</div>
+                <h5>Model Selection</h5>
+                <p>Choose the right model complexity for your data</p>
+            </div>
+        </div>
+
+        <div class="quanskill-box">
+            <div class="label">Your Quanskill Learning Path</div>
+            <p>This chapter bridges mathematical theory with ML practice! You'll learn the three flavors of machine learning: empirical risk minimization, maximum likelihood estimation, and Bayesian inference. At Quanskill, you'll apply these concepts to build regression models, classifiers, and probabilistic systems that generalize well to real-world data!</p>
+        </div>
+
+        <!-- Section 8.1: Data, Models, and Learning -->
+        <section class="section" id="section-8-1">
+            <div class="section-header">
+                <span class="section-number">8.1</span>
+                <h2>Data, Models, and Learning</h2>
+            </div>
+
+            <p>Machine learning systems have three major components: <strong>data</strong>, <strong>models</strong>, and <strong>learning</strong>. The central question is: "What do we mean by good models?" The guiding principle is that <em>good models should perform well on unseen data</em>.</p>
+
+            <div class="ml-box">
+                <div class="label">Why This Matters in ML</div>
+                <p>Every ML pipeline starts with data preparation, model selection, and a learning algorithm. Understanding these three components is fundamental to building systems that don't just memorize training data but truly learn patterns that generalize.</p>
+            </div>
+
+            <h3>8.1.1 Data as Vectors</h3>
+
+            <p>We assume data can be represented in a numerical format. Data is assumed to be <strong>tabular</strong>, where each row represents an <strong>example</strong> (or data point) and each column represents a <strong>feature</strong> (attribute or covariate).</p>
+
+            <div class="definition-box">
+                <div class="label">Definition: Dataset Notation</div>
+                <p>A dataset consists of N examples, each with D features:</p>
+                <div class="math-display">
+                    \[\mathbf{X} = \begin{bmatrix} \mathbf{x}_1^\top \\ \mathbf{x}_2^\top \\ \vdots \\ \mathbf{x}_N^\top \end{bmatrix} \in \mathbb{R}^{N \times D}\]
+                </div>
+                <p>For supervised learning, we have labels: \(\{(\mathbf{x}_1, y_1), \ldots, (\mathbf{x}_N, y_N)\}\)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="label">Example: HR Database Conversion</div>
+                <p>Converting raw data to numerical format:</p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Gender</th>
+                            <th>Degree (encoded)</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Age</th>
+                            <th>Salary (thousands)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>-1</td><td>2</td><td>51.507</td><td>0.129</td><td>36</td><td>89.56</td></tr>
+                        <tr><td>-1</td><td>3</td><td>51.507</td><td>0.128</td><td>47</td><td>123.54</td></tr>
+                        <tr><td>+1</td><td>1</td><td>51.507</td><td>0.128</td><td>26</td><td>23.99</td></tr>
+                    </tbody>
+                </table>
+                <p>Gender: -1 = Male, +1 = Female. Degree: 1 = Bachelor's, 2 = Master's, 3 = PhD</p>
+            </div>
+
+            <h3>8.1.2 Models as Functions</h3>
+
+            <p>A <strong>predictor</strong> is a function that takes a feature vector and produces an output:</p>
+
+            <div class="math-display">
+                \[f: \mathbb{R}^D \rightarrow \mathbb{R}\]
+            </div>
+
+            <p>For linear models, we have:</p>
+
+            <div class="math-display">
+                \[f(\mathbf{x}) = \boldsymbol{\theta}^\top \mathbf{x} + \theta_0\]
+            </div>
+
+            <p>where \(\boldsymbol{\theta}\) are the model parameters and \(\theta_0\) is the bias term.</p>
+
+            <h3>8.1.3 Models as Probability Distributions</h3>
+
+            <p>Instead of deterministic functions, we can model uncertainty using <strong>probabilistic models</strong>. This allows us to quantify confidence in predictions.</p>
+
+            <div class="note-box">
+                <div class="label">Key Insight</div>
+                <p>Probabilistic models express predictive uncertainty. Instead of a single prediction \(f(x)\), we get a distribution over possible outcomes, which is crucial for risk-aware decision making.</p>
+            </div>
+
+            <h3>8.1.4 Learning is Finding Parameters</h3>
+
+            <p>There are three algorithmic phases in machine learning:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Description</th>
+                        <th>Key Task</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Prediction/Inference</strong></td>
+                        <td>Apply trained model to new data</td>
+                        <td>Compute \(f(\mathbf{x}_{new})\)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Training/Estimation</strong></td>
+                        <td>Adjust model based on training data</td>
+                        <td>Find optimal \(\boldsymbol{\theta}^*\)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Model Selection</strong></td>
+                        <td>Choose model structure and hyperparameters</td>
+                        <td>Optimize generalization</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="quiz-box">
+                <div class="label">Quick Check: ML Components</div>
+                <p class="quiz-question">What are the three main components of a machine learning system?</p>
+                <div class="quiz-options" id="quiz1">
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">A) Input, Output, Algorithm</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, true)">B) Data, Models, Learning</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">C) Features, Labels, Predictions</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">D) Training, Testing, Validation</div>
+                </div>
+                <div class="quiz-feedback" id="quiz1-feedback"></div>
+            </div>
+
+            <div class="realworld-box">
+                <div class="label">Real-World Application</div>
+                <p><strong>Recommendation Systems:</strong> Netflix represents users and movies as feature vectors. The model predicts ratings (continuous) or watch probability (probabilistic). Learning finds parameters that minimize prediction error on historical viewing data.</p>
+            </div>
+        </section>
+
+        <!-- Section 8.2: Empirical Risk Minimization -->
+        <section class="section" id="section-8-2">
+            <div class="section-header">
+                <span class="section-number">8.2</span>
+                <h2>Empirical Risk Minimization</h2>
+            </div>
+
+            <p>Empirical Risk Minimization (ERM) is a principle for choosing predictors based on training data. The four key design choices are:</p>
+
+            <ol>
+                <li><strong>Hypothesis Class:</strong> What functions can the predictor take?</li>
+                <li><strong>Loss Function:</strong> How do we measure prediction errors?</li>
+                <li><strong>Regularization:</strong> How do we prevent overfitting?</li>
+                <li><strong>Cross-Validation:</strong> How do we estimate generalization error?</li>
+            </ol>
+
+            <div class="ml-box">
+                <div class="label">Why This Matters in ML</div>
+                <p>ERM is the foundation of most practical ML algorithms, from linear regression to neural networks. Understanding ERM helps you diagnose training problems, tune hyperparameters, and design better models.</p>
+            </div>
+
+            <h3>8.2.1 Hypothesis Class of Functions</h3>
+
+            <p>Given training pairs \((\mathbf{x}_1, y_1), \ldots, (\mathbf{x}_N, y_N)\), we seek a predictor \(f(\cdot, \boldsymbol{\theta})\) such that:</p>
+
+            <div class="math-display">
+                \[f(\mathbf{x}_n, \boldsymbol{\theta}^*) \approx y_n \quad \text{for all } n = 1, \ldots, N\]
+            </div>
+
+            <p>For linear regression with affine functions:</p>
+
+            <div class="math-display">
+                \[f(\mathbf{x}_n, \boldsymbol{\theta}) = \boldsymbol{\theta}^\top \mathbf{x}_n = \theta_0 + \sum_{d=1}^{D} \theta_d x_n^{(d)}\]
+            </div>
+
+            <h3>8.2.2 Loss Function for Training</h3>
+
+            <p>The <strong>loss function</strong> \(\ell(y_n, \hat{y}_n)\) measures prediction error. The <strong>empirical risk</strong> is the average loss over training data:</p>
+
+            <div class="definition-box">
+                <div class="label">Definition: Empirical Risk</div>
+                <div class="math-display">
+                    \[\mathcal{R}_{emp}(f, \mathbf{X}, \mathbf{y}) = \frac{1}{N} \sum_{n=1}^{N} \ell(y_n, \hat{y}_n)\]
+                </div>
+                <p>where \(\hat{y}_n = f(\mathbf{x}_n, \boldsymbol{\theta})\) is the prediction.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="label">Example: Least-Squares Loss</div>
+                <p>Using squared loss \(\ell(y, \hat{y}) = (y - \hat{y})^2\):</p>
+                <div class="math-display">
+                    \[\min_{\boldsymbol{\theta}} \frac{1}{N} \sum_{n=1}^{N} (y_n - \boldsymbol{\theta}^\top \mathbf{x}_n)^2 = \min_{\boldsymbol{\theta}} \frac{1}{N} \|\mathbf{y} - \mathbf{X}\boldsymbol{\theta}\|^2\]
+                </div>
+                <p>This is the famous <strong>least-squares problem</strong> with closed-form solution via normal equations.</p>
+            </div>
+
+            <p>We want to minimize the <strong>expected (true) risk</strong>:</p>
+
+            <div class="math-display">
+                \[\mathcal{R}_{true}(f) = \mathbb{E}_{\mathbf{x}, y}[\ell(y, f(\mathbf{x}))]\]
+            </div>
+
+            <h3>8.2.3 Regularization to Reduce Overfitting</h3>
+
+            <p><strong>Overfitting</strong> occurs when the model fits training data too closely but fails on new data. Regularization adds a penalty term to prevent this:</p>
+
+            <div class="math-display">
+                \[\min_{\boldsymbol{\theta}} \frac{1}{N} \|\mathbf{y} - \mathbf{X}\boldsymbol{\theta}\|^2 + \lambda \|\boldsymbol{\theta}\|^2\]
+            </div>
+
+            <p>The <strong>regularization parameter</strong> \(\lambda\) trades off data fit vs. parameter magnitude.</p>
+
+            <div class="note-box">
+                <div class="label">Connection to Priors</div>
+                <p>Regularization is equivalent to adding a prior distribution on parameters in Bayesian inference! L2 regularization corresponds to a Gaussian prior, and L1 regularization corresponds to a Laplace prior.</p>
+            </div>
+
+            <!-- Interactive Demo: Overfitting -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <span>📝Ž®</span>
+                    <h4>Interactive Demo: Overfitting vs. Regularization</h4>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Polynomial Degree: <span id="degreeVal">3</span></label>
+                        <input type="range" id="degreeSlider" min="1" max="10" value="3" oninput="updateOverfitDemo()">
+                    </div>
+                    <div class="control-group">
+                        <label>Regularization Î»: <span id="lambdaVal">0.01</span></label>
+                        <input type="range" id="lambdaSlider" min="-4" max="2" value="-2" step="0.5" oninput="updateOverfitDemo()">
+                    </div>
+                    <div class="control-group">
+                        <label>Noise Level: <span id="noiseVal">0.3</span></label>
+                        <input type="range" id="noiseSlider" min="0" max="1" value="0.3" step="0.1" oninput="updateOverfitDemo()">
+                    </div>
+                </div>
+                <canvas id="overfitCanvas" class="demo-canvas"></canvas>
+                <div class="demo-results">
+                    <div class="result-item">
+                        <div class="value" id="trainError">0.00</div>
+                        <div class="label">Training Error</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="testError">0.00</div>
+                        <div class="label">Test Error</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="fitStatus">Good</div>
+                        <div class="label">Fit Status</div>
+                    </div>
+                </div>
+                <p id="fitExplanation" style="margin-top: 15px; font-style: italic; color: var(--text-muted);"></p>
+            </div>
+
+            <h3>8.2.4 Cross-Validation</h3>
+
+            <p><strong>K-fold cross-validation</strong> partitions data into K chunks. We train on K-1 chunks and validate on the remaining one, repeating for all combinations:</p>
+
+            <div class="math-display">
+                \[\mathbb{E}_{\mathcal{V}}[\mathcal{R}(f, \mathcal{V})] \approx \frac{1}{K} \sum_{k=1}^{K} \mathcal{R}(f^{(k)}, \mathcal{V}^{(k)})\]
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Quanskill Training Preview</div>
+                <p>In the ML-1 module, you'll implement cross-validation from scratch! You'll compare different K values, visualize the bias-variance tradeoff, and use cross-validation to tune regularization parameters for optimal generalization.</p>
+            </div>
+
+            <div class="quiz-box">
+                <div class="label">Quick Check: Regularization</div>
+                <p class="quiz-question">What happens if the regularization parameter Î» is too large?</p>
+                <div class="quiz-options" id="quiz2">
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">A) The model overfits the training data</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, true)">B) The model underfits and becomes too simple</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">C) The training takes longer to converge</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">D) The model predictions become non-deterministic</div>
+                </div>
+                <div class="quiz-feedback" id="quiz2-feedback"></div>
+            </div>
+        </section>
+
+        <!-- Section 8.3: Parameter Estimation -->
+        <section class="section" id="section-8-3">
+            <div class="section-header">
+                <span class="section-number">8.3</span>
+                <h2>Parameter Estimation</h2>
+            </div>
+
+            <p>In this section, we use probability distributions to model uncertainty. The <strong>likelihood</strong> plays a central role, analogous to loss functions in ERM.</p>
+
+            <h3>8.3.1 Maximum Likelihood Estimation (MLE)</h3>
+
+            <p>The <strong>likelihood</strong> tells us how probable the observed data is for a given parameter setting. We maximize it to find the best parameters:</p>
+
+            <div class="definition-box">
+                <div class="label">Definition: Negative Log-Likelihood</div>
+                <div class="math-display">
+                    \[\mathcal{L}(\boldsymbol{\theta}) = -\log p(\mathbf{x} | \boldsymbol{\theta})\]
+                </div>
+                <p>For i.i.d. data, the likelihood factorizes:</p>
+                <div class="math-display">
+                    \[p(\mathbf{Y} | \mathbf{X}, \boldsymbol{\theta}) = \prod_{n=1}^{N} p(y_n | \mathbf{x}_n, \boldsymbol{\theta})\]
+                </div>
+            </div>
+
+            <div class="example-box">
+                <div class="label">Example: Gaussian Likelihood</div>
+                <p>Assume observations are corrupted by Gaussian noise:</p>
+                <div class="math-display">
+                    \[p(y_n | \mathbf{x}_n, \boldsymbol{\theta}) = \mathcal{N}(y_n | \mathbf{x}_n^\top \boldsymbol{\theta}, \sigma^2)\]
+                </div>
+                <p>The negative log-likelihood becomes:</p>
+                <div class="math-display">
+                    \[\mathcal{L}(\boldsymbol{\theta}) = \frac{1}{2\sigma^2} \sum_{n=1}^{N} (y_n - \mathbf{x}_n^\top \boldsymbol{\theta})^2 + \text{const}\]
+                </div>
+                <p>Minimizing this is equivalent to the least-squares problem!</p>
+            </div>
+
+            <div class="ml-box">
+                <div class="label">Why This Matters in ML</div>
+                <p>MLE provides a principled, probabilistic foundation for many ML algorithms. Different likelihood choices lead to different models: Gaussian ←’ regression, Bernoulli ←’ logistic regression, Poisson ←’ count data models.</p>
+            </div>
+
+            <h3>8.3.2 Maximum A Posteriori Estimation (MAP)</h3>
+
+            <p>With prior knowledge about parameters \(p(\boldsymbol{\theta})\), we use Bayes' theorem:</p>
+
+            <div class="math-display">
+                \[p(\boldsymbol{\theta} | \mathbf{x}) = \frac{p(\mathbf{x} | \boldsymbol{\theta}) p(\boldsymbol{\theta})}{p(\mathbf{x})} \propto p(\mathbf{x} | \boldsymbol{\theta}) p(\boldsymbol{\theta})\]
+            </div>
+
+            <p>MAP estimation maximizes the posterior (equivalently, minimizes negative log-posterior):</p>
+
+            <div class="math-display">
+                \[\boldsymbol{\theta}_{MAP} = \arg\max_{\boldsymbol{\theta}} \left[ \log p(\mathbf{x} | \boldsymbol{\theta}) + \log p(\boldsymbol{\theta}) \right]\]
+            </div>
+
+            <div class="note-box">
+                <div class="label">Connection: MAP = MLE + Regularization</div>
+                <p>With a Gaussian prior \(p(\boldsymbol{\theta}) = \mathcal{N}(\mathbf{0}, \boldsymbol{\Sigma})\), the MAP objective becomes:</p>
+                <div class="math-display">
+                    \[\text{MAP} = \text{(Least Squares)} + \lambda \|\boldsymbol{\theta}\|^2\]
+                </div>
+                <p>This is exactly regularized least squares! The prior acts as a regularizer.</p>
+            </div>
+
+            <h3>8.3.3 Model Fitting: Overfitting vs. Underfitting</h3>
+
+            <p>When fitting a parametrized model class \(\mathcal{M}_\theta\) to data generated by an unknown model \(\mathcal{M}^*\):</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Situation</th>
+                        <th>Description</th>
+                        <th>Symptom</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Overfitting</strong></td>
+                        <td>Model class too rich/flexible</td>
+                        <td>Low train error, high test error</td>
+                        <td>Regularization, more data</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Underfitting</strong></td>
+                        <td>Model class too simple</td>
+                        <td>High train error, high test error</td>
+                        <td>More complex model</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Good Fit</strong></td>
+                        <td>Model class appropriate</td>
+                        <td>Similar train/test error</td>
+                        <td>âœ“ Keep this model</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="quiz-box">
+                <div class="label">Quick Check: MLE vs MAP</div>
+                <p class="quiz-question">What is the key difference between Maximum Likelihood Estimation and Maximum A Posteriori estimation?</p>
+                <div class="quiz-options" id="quiz3">
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">A) MLE uses gradients, MAP uses closed-form solutions</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">B) MLE works with continuous data, MAP with discrete</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, true)">C) MAP incorporates prior knowledge about parameters, MLE does not</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">D) MLE is faster to compute than MAP</div>
+                </div>
+                <div class="quiz-feedback" id="quiz3-feedback"></div>
+            </div>
+
+            <div class="realworld-box">
+                <div class="label">Real-World Application</div>
+                <p><strong>Spam Classification:</strong> MLE would estimate word frequencies from spam/ham emails. MAP can incorporate prior knowledge - we know certain words (like "viagra") are more likely in spam, so we add informative priors to improve classification on small datasets.</p>
+            </div>
+        </section>
+
+        <!-- Section 8.4: Probabilistic Modeling and Inference -->
+        <section class="section" id="section-8-4">
+            <div class="section-header">
+                <span class="section-number">8.4</span>
+                <h2>Probabilistic Modeling and Inference</h2>
+            </div>
+
+            <p>Probabilistic models represent uncertainty using probability distributions. The key advantage is a unified framework for modeling, inference, prediction, and model selection.</p>
+
+            <h3>8.4.1 Probabilistic Models</h3>
+
+            <p>A probabilistic model is specified by the <strong>joint distribution</strong> of all random variables \(p(\mathbf{x}, \boldsymbol{\theta})\). From this, we can derive:</p>
+
+            <ul>
+                <li><strong>Prior × Likelihood:</strong> Via the product rule</li>
+                <li><strong>Marginal likelihood:</strong> \(p(\mathbf{x}) = \int p(\mathbf{x} | \boldsymbol{\theta}) p(\boldsymbol{\theta}) d\boldsymbol{\theta}\)</li>
+                <li><strong>Posterior:</strong> \(p(\boldsymbol{\theta} | \mathbf{x})\) via Bayes' theorem</li>
+            </ul>
+
+            <div class="ml-box">
+                <div class="label">Why This Matters in ML</div>
+                <p>Probabilistic models let you quantify uncertainty in predictions - critical for applications like medical diagnosis, autonomous driving, and financial risk assessment where knowing "how confident" a prediction is can be as important as the prediction itself.</p>
+            </div>
+
+            <h3>8.4.2 Bayesian Inference</h3>
+
+            <p>Instead of finding a single "best" \(\boldsymbol{\theta}^*\), Bayesian inference maintains a full <strong>posterior distribution</strong>:</p>
+
+            <div class="definition-box">
+                <div class="label">Definition: Bayesian Posterior</div>
+                <div class="math-display">
+                    \[p(\boldsymbol{\theta} | \mathcal{X}) = \frac{p(\mathcal{X} | \boldsymbol{\theta}) p(\boldsymbol{\theta})}{p(\mathcal{X})}\]
+                </div>
+                <p>where \(p(\mathcal{X}) = \int p(\mathcal{X} | \boldsymbol{\theta}) p(\boldsymbol{\theta}) d\boldsymbol{\theta}\) is the marginal likelihood (evidence).</p>
+            </div>
+
+            <p>Predictions marginalize out parameter uncertainty:</p>
+
+            <div class="math-display">
+                \[p(\mathbf{x}_{new}) = \int p(\mathbf{x}_{new} | \boldsymbol{\theta}) p(\boldsymbol{\theta}) d\boldsymbol{\theta} = \mathbb{E}_{\boldsymbol{\theta}}[p(\mathbf{x}_{new} | \boldsymbol{\theta})]\]
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Point Estimation (MLE/MAP)</th>
+                        <th>Bayesian Inference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Output</td>
+                        <td>Single parameter value \(\boldsymbol{\theta}^*\)</td>
+                        <td>Distribution \(p(\boldsymbol{\theta} | \mathcal{X})\)</td>
+                    </tr>
+                    <tr>
+                        <td>Computational Task</td>
+                        <td>Optimization</td>
+                        <td>Integration</td>
+                    </tr>
+                    <tr>
+                        <td>Uncertainty</td>
+                        <td>Not captured</td>
+                        <td>Fully represented</td>
+                    </tr>
+                    <tr>
+                        <td>Predictions</td>
+                        <td>\(p(\mathbf{x} | \boldsymbol{\theta}^*)\)</td>
+                        <td>\(\mathbb{E}_\theta[p(\mathbf{x} | \boldsymbol{\theta})]\)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>8.4.3 Latent-Variable Models</h3>
+
+            <p><strong>Latent variables</strong> \(\mathbf{z}\) are hidden variables that simplify the model structure and aid interpretability:</p>
+
+            <div class="math-display">
+                \[p(\mathbf{x} | \boldsymbol{\theta}) = \int p(\mathbf{x} | \mathbf{z}, \boldsymbol{\theta}) p(\mathbf{z}) d\mathbf{z}\]
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Quanskill Training Preview</div>
+                <p>In the ML-2 module, you'll implement latent-variable models including PCA (Chapter 10) and Gaussian Mixture Models (Chapter 11). You'll use the EM algorithm to learn parameters when direct optimization isn't possible!</p>
+            </div>
+
+            <div class="quiz-box">
+                <div class="label">Quick Check: Bayesian Inference</div>
+                <p class="quiz-question">In Bayesian inference, what is the key computational challenge?</p>
+                <div class="quiz-options" id="quiz4">
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">A) Computing gradients of the loss function</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, true)">B) Computing integrals to marginalize out parameters</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">C) Selecting the right learning rate</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">D) Choosing the number of hidden layers</div>
+                </div>
+                <div class="quiz-feedback" id="quiz4-feedback"></div>
+            </div>
+        </section>
+
+        <!-- Section 8.5: Directed Graphical Models -->
+        <section class="section" id="section-8-5">
+            <div class="section-header">
+                <span class="section-number">8.5</span>
+                <h2>Directed Graphical Models</h2>
+            </div>
+
+            <p><strong>Graphical models</strong> provide a visual language for representing probabilistic models. Nodes represent random variables, and edges represent probabilistic dependencies.</p>
+
+            <div class="ml-box">
+                <div class="label">Why This Matters in ML</div>
+                <p>Graphical models are used everywhere: Bayesian networks for medical diagnosis, hidden Markov models for speech recognition, factor graphs for error-correcting codes, and deep generative models like VAEs. Understanding the graphical language helps you design and reason about complex probabilistic systems.</p>
+            </div>
+
+            <h3>8.5.1 Graph Semantics</h3>
+
+            <p>In a directed graphical model (Bayesian network), arrows indicate conditional probabilities. The joint distribution factorizes according to the graph structure:</p>
+
+            <div class="definition-box">
+                <div class="label">Definition: Factorization from Graph</div>
+                <div class="math-display">
+                    \[p(\mathbf{x}) = \prod_{k=1}^{K} p(x_k | \text{Pa}_k)\]
+                </div>
+                <p>where \(\text{Pa}_k\) denotes the parent nodes of \(x_k\) (nodes with arrows pointing to \(x_k\)).</p>
+            </div>
+
+            <div class="example-box">
+                <div class="label">Example: Graph to Joint Distribution</div>
+                <p>For a graph: \(x_1 \rightarrow x_3 \leftarrow x_2\), and \(x_2 \rightarrow x_4\), \(x_5 \rightarrow x_2\):</p>
+                <div class="math-display">
+                    \[p(x_1, x_2, x_3, x_4, x_5) = p(x_1) p(x_5) p(x_2 | x_5) p(x_3 | x_1, x_2) p(x_4 | x_2)\]
+                </div>
+                <p>Each node contributes one factor conditioned on its parents.</p>
+            </div>
+
+            <!-- Interactive Demo: Graphical Model -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <span>📝•’Â¸</span>
+                    <h4>Interactive Demo: Bernoulli Experiment Graphical Model</h4>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Number of Trials (N): <span id="trialsVal">5</span></label>
+                        <input type="range" id="trialsSlider" min="1" max="10" value="5" oninput="updateGraphDemo()">
+                    </div>
+                    <div class="control-group">
+                        <label>True Î¼: <span id="muVal">0.6</span></label>
+                        <input type="range" id="muSlider" min="0" max="1" value="0.6" step="0.1" oninput="updateGraphDemo()">
+                    </div>
+                </div>
+                <canvas id="graphCanvas" class="demo-canvas" style="height: 250px;"></canvas>
+                <p style="margin-top: 15px; text-align: center; color: var(--text-muted);">
+                    The latent parameter Î¼ (unobserved, white) generates N observed outcomes x<sub>n</sub> (shaded) via Bernoulli distribution.
+                </p>
+            </div>
+
+            <h3>8.5.2 Conditional Independence and d-Separation</h3>
+
+            <p><strong>d-Separation</strong> allows us to read conditional independence relations directly from the graph. A path between nodes A and B is <strong>blocked</strong> by C if:</p>
+
+            <ul>
+                <li>Arrows meet head-to-tail or tail-to-tail at a node in C</li>
+                <li>Arrows meet head-to-head at a node NOT in C (and none of its descendants)</li>
+            </ul>
+
+            <div class="note-box">
+                <div class="label">d-Separation Examples</div>
+                <p>For graph: \(a \rightarrow b \rightarrow c \leftarrow d \leftarrow e\)</p>
+                <ul>
+                    <li>\(b \perp\!\!\!\perp d \,|\, a, c\) âœ“ (path blocked)</li>
+                    <li>\(a \perp\!\!\!\perp c \,|\, b\) âœ“ (chain rule)</li>
+                    <li>\(b \not\perp\!\!\!\perp d \,|\, c\) âœ— (c is a collider, conditioning opens path)</li>
+                </ul>
+            </div>
+
+            <div class="quiz-box">
+                <div class="label">Quick Check: Graphical Models</div>
+                <p class="quiz-question">In a directed graphical model, what does the joint distribution factorize as?</p>
+                <div class="quiz-options" id="quiz5">
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">A) Product of all pairwise distributions</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, true)">B) Product of conditionals, each node given its parents</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">C) Sum of marginal distributions</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">D) Product of independent univariate distributions</div>
+                </div>
+                <div class="quiz-feedback" id="quiz5-feedback"></div>
+            </div>
+
+            <div class="realworld-box">
+                <div class="label">Real-World Application</div>
+                <p><strong>Medical Diagnosis:</strong> Bayesian networks model relationships between symptoms, diseases, and test results. The graph encodes knowledge like "flu causes fever" and "fever can cause sweating." Given observed symptoms, we can compute the posterior probability of diseases using efficient message-passing algorithms.</p>
+            </div>
+        </section>
+
+        <!-- Section 8.6: Model Selection -->
+        <section class="section" id="section-8-6">
+            <div class="section-header">
+                <span class="section-number">8.6</span>
+                <h2>Model Selection</h2>
+            </div>
+
+            <p>High-level modeling choices - polynomial degree, number of components, network architecture - critically influence performance. <strong>Model selection</strong> is about finding the simplest model that explains data well (<strong>Occam's Razor</strong>).</p>
+
+            <div class="ml-box">
+                <div class="label">Why This Matters in ML</div>
+                <p>Model selection is what separates good ML practitioners from great ones. Knowing when to use a simple linear model vs. a deep neural network, and how to tune hyperparameters properly, is essential for building systems that work in production.</p>
+            </div>
+
+            <h3>8.6.1 Nested Cross-Validation</h3>
+
+            <p>Two levels of cross-validation: the <strong>inner loop</strong> selects hyperparameters, the <strong>outer loop</strong> estimates generalization error:</p>
+
+            <div class="algorithm-box">
+                <h4>Algorithm: Nested Cross-Validation</h4>
+                <ol>
+                    <li><strong>Outer loop:</strong> Split data into K folds for train/test</li>
+                    <li><strong>For each outer fold:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Inner loop: Use training portion for hyperparameter selection</li>
+                            <li>Train final model with best hyperparameters</li>
+                            <li>Evaluate on held-out test fold</li>
+                        </ul>
+                    </li>
+                    <li><strong>Report:</strong> Average test error across outer folds</li>
+                </ol>
+            </div>
+
+            <h3>8.6.2 Bayesian Model Selection</h3>
+
+            <p>Bayesian inference naturally embodies Occam's Razor! Simple models predict fewer datasets but predict them well. Complex models spread probability over many datasets.</p>
+
+            <p>Given models \(\mathcal{M}_1, \ldots, \mathcal{M}_K\) and data \(\mathcal{D}\), the posterior over models is:</p>
+
+            <div class="math-display">
+                \[p(\mathcal{M}_k | \mathcal{D}) \propto p(\mathcal{M}_k) \cdot p(\mathcal{D} | \mathcal{M}_k)\]
+            </div>
+
+            <p>The <strong>marginal likelihood</strong> (evidence) is:</p>
+
+            <div class="math-display">
+                \[p(\mathcal{D} | \mathcal{M}_k) = \int p(\mathcal{D} | \boldsymbol{\theta}_k) p(\boldsymbol{\theta}_k | \mathcal{M}_k) d\boldsymbol{\theta}_k\]
+            </div>
+
+            <h3>8.6.3 Bayes Factors for Model Comparison</h3>
+
+            <p>To compare two models, compute the <strong>Bayes factor</strong>:</p>
+
+            <div class="definition-box">
+                <div class="label">Definition: Bayes Factor</div>
+                <div class="math-display">
+                    \[\frac{p(\mathcal{M}_1 | \mathcal{D})}{p(\mathcal{M}_2 | \mathcal{D})} = \underbrace{\frac{p(\mathcal{M}_1)}{p(\mathcal{M}_2)}}_{\text{Prior odds}} \cdot \underbrace{\frac{p(\mathcal{D} | \mathcal{M}_1)}{p(\mathcal{D} | \mathcal{M}_2)}}_{\text{Bayes factor}}\]
+                </div>
+                <p>With uniform model priors, we simply compare marginal likelihoods.</p>
+            </div>
+
+            <div class="note-box">
+                <div class="label">Information Criteria</div>
+                <p>When Bayesian computation is expensive, use heuristics:</p>
+                <ul>
+                    <li><strong>AIC (Akaike):</strong> \(\log p(\mathbf{x} | \boldsymbol{\theta}) - M\) (M = # parameters)</li>
+                    <li><strong>BIC (Bayesian):</strong> \(\log p(\mathbf{x} | \boldsymbol{\theta}) - \frac{1}{2}M \log N\) (N = # data points)</li>
+                </ul>
+                <p>BIC penalizes complexity more heavily than AIC.</p>
+            </div>
+
+            <div class="quiz-box">
+                <div class="label">Quick Check: Model Selection</div>
+                <p class="quiz-question">What principle does Bayesian model selection embody?</p>
+                <div class="quiz-options" id="quiz6">
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">A) No Free Lunch Theorem</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, true)">B) Occam's Razor - prefer simpler models</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">C) Universal Approximation Theorem</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">D) Central Limit Theorem</div>
+                </div>
+                <div class="quiz-feedback" id="quiz6-feedback"></div>
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Quanskill Training Preview</div>
+                <p>In your capstone projects, you'll use nested cross-validation to tune hyperparameters and Bayesian model selection to compare algorithms. You'll implement grid search, random search, and even Bayesian optimization for efficient hyperparameter tuning!</p>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">🐍"</span>
+                <h2>Chapter Summary</h2>
+            </div>
+
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">📊</div>
+                    <h5>Data as Vectors</h5>
+                    <p>N examples × D features matrix representation</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🎯</div>
+                    <h5>Empirical Risk</h5>
+                    <p>Average loss over training data</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">📝–ŠÂ¡</div>
+                    <h5>Regularization</h5>
+                    <p>Penalty term to prevent overfitting</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">📈</div>
+                    <h5>MLE</h5>
+                    <p>Find Î¸ that maximizes data likelihood</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🐍Â </div>
+                    <h5>MAP</h5>
+                    <p>MLE + prior = regularized estimation</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🔍®</div>
+                    <h5>Bayesian Inference</h5>
+                    <p>Full posterior distribution on parameters</p>
+                </div>
+            </div>
+
+            <div class="ml-box">
+                <div class="label">Key ML Takeaways</div>
+                <ul>
+                    <li><strong>Three flavors of learning:</strong> ERM, MLE, and Bayesian inference</li>
+                    <li><strong>Regularization = Prior:</strong> L2 regularization corresponds to Gaussian prior</li>
+                    <li><strong>Cross-validation</strong> estimates generalization error from finite data</li>
+                    <li><strong>Overfitting:</strong> Low train error + high test error ←’ too complex model</li>
+                    <li><strong>Graphical models</strong> visualize joint distribution factorization</li>
+                    <li><strong>Marginal likelihood</strong> enables principled model comparison</li>
+                </ul>
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Your Next Steps with Quanskill</div>
+                <p>🎯Â° <strong>Congratulations!</strong> You now have the foundations for all four pillars of ML:</p>
+                <ul>
+                    <li><strong>Chapter 9:</strong> Linear Regression - apply MLE/MAP/Bayesian inference</li>
+                    <li><strong>Chapter 10:</strong> Dimensionality Reduction (PCA) - latent variables</li>
+                    <li><strong>Chapter 11:</strong> Density Estimation (GMM) - EM algorithm</li>
+                    <li><strong>Chapter 12:</strong> Classification (SVM) - ERM with hinge loss</li>
+                </ul>
+                <p>Ready to build real ML systems? Let's continue your journey!</p>
+            </div>
+        </section>
+        </div><!-- end content-wrapper -->
+    </main>
+
+    <script>
+        // Initialize KaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+        });
+
+        // Quiz functionality
+        function checkQuiz(quizId, element, isCorrect) {
+            const options = document.querySelectorAll(`#${quizId} .quiz-option`);
+            const feedback = document.getElementById(`${quizId}-feedback`);
+            
+            // Disable all options
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.textContent = 'âœ“ Correct! Well done!';
+                feedback.className = 'quiz-feedback show correct';
+            } else {
+                element.classList.add('incorrect');
+                // Find and highlight correct answer
+                options.forEach(opt => {
+                    if (opt.getAttribute('onclick').includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.textContent = 'âœ— Not quite. The correct answer is highlighted.';
+                feedback.className = 'quiz-feedback show incorrect';
+            }
+        }
+
+        // Overfitting Demo
+        let trainX = [], trainY = [], testX = [], testY = [];
+        
+        function generateData() {
+            const noise = parseFloat(document.getElementById('noiseSlider').value);
+            trainX = []; trainY = []; testX = []; testY = [];
+            
+            // True function: sin(x)
+            for (let i = 0; i < 10; i++) {
+                const x = -3 + (i / 9) * 6;
+                trainX.push(x);
+                trainY.push(Math.sin(x) + (Math.random() - 0.5) * noise * 2);
+            }
+            
+            for (let i = 0; i < 20; i++) {
+                const x = -3 + Math.random() * 6;
+                testX.push(x);
+                testY.push(Math.sin(x) + (Math.random() - 0.5) * noise * 2);
+            }
+        }
+
+        function fitPolynomial(degree, lambda) {
+            // Simple polynomial fit with regularization (using normal equations approximation)
+            const N = trainX.length;
+            
+            // Build design matrix
+            const X = [];
+            for (let i = 0; i < N; i++) {
+                const row = [];
+                for (let d = 0; d <= degree; d++) {
+                    row.push(Math.pow(trainX[i], d));
+                }
+                X.push(row);
+            }
+            
+            // Simplified least squares (just return function for demo)
+            // In practice, would solve (X^T X + Î»I)^{-1} X^T y
+            return function(x) {
+                // Approximate fit using simple polynomial interpolation
+                let result = 0;
+                const coeffs = [];
+                
+                // Simple coefficient estimation
+                for (let d = 0; d <= degree; d++) {
+                    let coeff = 0;
+                    for (let i = 0; i < N; i++) {
+                        coeff += trainY[i] * Math.pow(trainX[i], d) / N;
+                    }
+                    coeff = coeff / (1 + lambda * (d + 1));
+                    coeffs.push(coeff);
+                }
+                
+                // Normalize coefficients
+                const scale = Math.max(...coeffs.map(Math.abs)) || 1;
+                
+                for (let d = 0; d <= degree; d++) {
+                    result += (coeffs[d] / scale) * Math.pow(x, d) * 0.5;
+                }
+                
+                // Clamp to reasonable range
+                return Math.max(-2, Math.min(2, result));
+            };
+        }
+
+        function updateOverfitDemo() {
+            const degree = parseInt(document.getElementById('degreeSlider').value);
+            const lambdaExp = parseFloat(document.getElementById('lambdaSlider').value);
+            const lambda = Math.pow(10, lambdaExp);
+            const noise = parseFloat(document.getElementById('noiseSlider').value);
+            
+            document.getElementById('degreeVal').textContent = degree;
+            document.getElementById('lambdaVal').textContent = lambda.toFixed(4);
+            document.getElementById('noiseVal').textContent = noise.toFixed(1);
+            
+            generateData();
+            
+            const canvas = document.getElementById('overfitCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const padding = 50;
+            const plotWidth = width - 2 * padding;
+            const plotHeight = height - 2 * padding;
+            
+            function scaleX(x) {
+                return padding + ((x + 3) / 6) * plotWidth;
+            }
+            
+            function scaleY(y) {
+                return height - padding - ((y + 2) / 4) * plotHeight;
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            
+            // Grid lines
+            for (let i = -3; i <= 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(scaleX(i), padding);
+                ctx.lineTo(scaleX(i), height - padding);
+                ctx.stroke();
+            }
+            for (let i = -2; i <= 2; i++) {
+                ctx.beginPath();
+                ctx.moveTo(padding, scaleY(i));
+                ctx.lineTo(width - padding, scaleY(i));
+                ctx.stroke();
+            }
+            
+            // Axis lines
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, scaleY(0));
+            ctx.lineTo(width - padding, scaleY(0));
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), padding);
+            ctx.lineTo(scaleX(0), height - padding);
+            ctx.stroke();
+            
+            // True function (sin)
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = Math.sin(x);
+                const px = scaleX(x);
+                const py = scaleY(y);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Fitted function
+            const fittedFunc = fitPolynomial(degree, lambda);
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -3 + (i / plotWidth) * 6;
+                const y = fittedFunc(x);
+                const px = scaleX(x);
+                const py = scaleY(y);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            
+            // Training points
+            ctx.fillStyle = '#ff9000';
+            trainX.forEach((x, i) => {
+                ctx.beginPath();
+                ctx.arc(scaleX(x), scaleY(trainY[i]), 8, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Test points
+            ctx.fillStyle = '#7c3aed';
+            ctx.globalAlpha = 0.6;
+            testX.forEach((x, i) => {
+                ctx.beginPath();
+                ctx.arc(scaleX(x), scaleY(testY[i]), 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+            
+            // Legend
+            ctx.font = '13px Space Grotesk, sans-serif';
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('True function (sin)', width - 150, 30);
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillText('Fitted polynomial', width - 150, 50);
+            ctx.fillStyle = '#ff9000';
+            ctx.fillText('Training data', width - 150, 70);
+            ctx.fillStyle = '#7c3aed';
+            ctx.fillText('Test data', width - 150, 90);
+            
+            // Calculate errors
+            let trainError = 0;
+            trainX.forEach((x, i) => {
+                trainError += Math.pow(trainY[i] - fittedFunc(x), 2);
+            });
+            trainError = Math.sqrt(trainError / trainX.length);
+            
+            let testError = 0;
+            testX.forEach((x, i) => {
+                testError += Math.pow(testY[i] - fittedFunc(x), 2);
+            });
+            testError = Math.sqrt(testError / testX.length);
+            
+            document.getElementById('trainError').textContent = trainError.toFixed(3);
+            document.getElementById('testError').textContent = testError.toFixed(3);
+            
+            // Determine fit status
+            let status, explanation;
+            if (degree > 6 && lambda < 0.1) {
+                status = 'Overfitting';
+                explanation = 'High polynomial degree with low regularization causes the model to fit noise in training data.';
+            } else if (degree < 3 || lambda > 10) {
+                status = 'Underfitting';
+                explanation = 'Model is too simple or too regularized to capture the underlying pattern.';
+            } else {
+                status = 'Good Fit';
+                explanation = 'Model complexity is appropriate for the data - good balance of bias and variance.';
+            }
+            
+            document.getElementById('fitStatus').textContent = status;
+            document.getElementById('fitExplanation').textContent = explanation;
+        }
+
+        // Graphical Model Demo
+        function updateGraphDemo() {
+            const N = parseInt(document.getElementById('trialsSlider').value);
+            const mu = parseFloat(document.getElementById('muSlider').value);
+            
+            document.getElementById('trialsVal').textContent = N;
+            document.getElementById('muVal').textContent = mu.toFixed(1);
+            
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const centerX = width / 2;
+            const muY = 50;
+            const obsY = 170;
+            const nodeRadius = 25;
+            
+            // Draw Î¼ node (latent)
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(centerX, muY, nodeRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.fillStyle = '#0b2fa0';
+            ctx.font = 'bold 20px Space Grotesk, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Î¼', centerX, muY);
+            
+            // Draw observation nodes
+            const spacing = Math.min(70, (width - 100) / N);
+            const startX = centerX - ((N - 1) * spacing) / 2;
+            
+            // Generate samples
+            const samples = [];
+            for (let i = 0; i < N; i++) {
+                samples.push(Math.random() < mu ? 1 : 0);
+            }
+            
+            for (let i = 0; i < N; i++) {
+                const nodeX = startX + i * spacing;
+                
+                // Draw arrow from Î¼ to observation
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, muY + nodeRadius + 5);
+                ctx.lineTo(nodeX, obsY - nodeRadius - 5);
+                ctx.stroke();
+                
+                // Arrowhead
+                const angle = Math.atan2(obsY - nodeRadius - 5 - (muY + nodeRadius + 5), nodeX - centerX);
+                ctx.beginPath();
+                ctx.moveTo(nodeX, obsY - nodeRadius - 5);
+                ctx.lineTo(nodeX - 8 * Math.cos(angle - 0.4), obsY - nodeRadius - 5 - 8 * Math.sin(angle - 0.4));
+                ctx.moveTo(nodeX, obsY - nodeRadius - 5);
+                ctx.lineTo(nodeX - 8 * Math.cos(angle + 0.4), obsY - nodeRadius - 5 - 8 * Math.sin(angle + 0.4));
+                ctx.stroke();
+                
+                // Draw observation node (shaded = observed)
+                ctx.fillStyle = 'rgba(11, 47, 160, 0.15)';
+                ctx.strokeStyle = '#0b2fa0';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(nodeX, obsY, nodeRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#0b2fa0';
+                ctx.font = 'bold 16px Space Grotesk, sans-serif';
+                ctx.fillText(`x${i+1}`, nodeX, obsY - 5);
+                ctx.font = '14px Space Grotesk, sans-serif';
+                ctx.fillStyle = samples[i] ? '#10b981' : '#ef4444';
+                ctx.fillText(samples[i] ? 'H' : 'T', nodeX, obsY + 12);
+            }
+            
+            // Draw plate notation
+            ctx.strokeStyle = '#4a4a6a';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            const plateX = startX - nodeRadius - 15;
+            const plateWidth = (N - 1) * spacing + 2 * nodeRadius + 30;
+            ctx.strokeRect(plateX, obsY - nodeRadius - 25, plateWidth, nodeRadius * 2 + 50);
+            ctx.setLineDash([]);
+            
+            // Plate label
+            ctx.fillStyle = '#4a4a6a';
+            ctx.font = '12px Space Grotesk, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(`n = 1, ..., ${N}`, plateX + 5, obsY + nodeRadius + 35);
+            
+            // Joint distribution
+            ctx.fillStyle = '#1a1a2e';
+            ctx.font = '14px JetBrains Mono, monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`p(xâ‚,...,x${N} | Î¼) = âˆ p(xâ‚™ | Î¼) = Ber(Î¼)^${samples.filter(s => s).length} × (1-Î¼)^${samples.filter(s => !s).length}`, centerX, height - 20);
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Update active state
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Close mobile menu
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Initialize demos on load
+        window.addEventListener('load', () => {
+            updateOverfitDemo();
+            updateGraphDemo();
+        });
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            updateOverfitDemo();
+            updateGraphDemo();
+        });
+    </script>
+</body>
+</html>

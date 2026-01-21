@@ -1,0 +1,23 @@
+employees = [
+
+        {"id":"E001","name":"Nguyen Van An","gender":"M","base_salary":12000000,"ot_hours":18,"ot_rate":80000,"late_days":0,"kpi":92,"dept":"IT","has_warning":False},
+
+        {"id":"E002","name":"Tran Thi Binh","gender":"F","base_salary":10500000,"ot_hours":10,"ot_rate":70000,"late_days":1,"kpi":86,"dept":"HR","has_warning":False},
+
+        {"id":"E003","name":"Le Van Cuong","gender":"M","base_salary":15000000,"ot_hours":25,"ot_rate":90000,"late_days":2,"kpi":78,"dept":"Sales","has_warning":False},
+
+        {"id":"E004","name":"Pham Thi Dung","gender":"F","base_salary":9800000,"ot_hours":5,"ot_rate":65000,"late_days":3,"kpi":69,"dept":"HR","has_warning":True},
+
+        {"id":"E005","name":"Hoang Van Em","gender":"M","base_salary":8700000,"ot_hours":30,"ot_rate":60000,"late_days":0,"kpi":88,"dept":"Sales","has_warning":False},
+
+        {"id":"E006","name":"Vo Thi Giang","gender":"F","base_salary":13000000,"ot_hours":12,"ot_rate":85000,"late_days":0,"kpi":95,"dept":"IT","has_warning":False},
+
+        {"id":"E007","name":"Do Van Hung","gender":"M","base_salary":11000000,"ot_hours":0,"ot_rate":80000,"late_days":4,"kpi":72,"dept":"HR","has_warning":False},
+
+        {"id":"E008","name":"Bui Thi Kieu","gender":"F","base_salary":9200000,"ot_hours":22,"ot_rate":65000,"late_days":2,"kpi":83,"dept":"Sales","has_warning":False},
+
+        {"id":"E009","name":"Dang Van Long","gender":"M","base_salary":14000000,"ot_hours":8,"ot_rate":95000,"late_days":0,"kpi":91,"dept":"IT","has_warning":True},
+
+        {"id":"E010","name":"Nguyen Thi Mai","gender":"F","base_salary":10000000,"ot_hours":16,"ot_rate":70000,"late_days":1,"kpi":76,"dept":"HR","has_warning":False},
+        
+    ]

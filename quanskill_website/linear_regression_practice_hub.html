@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: Linear Regression Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-equation {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="range"] {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 160px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 80px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(255, 144, 0, 0.05) 100%);
+            border: 1px solid var(--quanskill-blue);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 9 Â· Linear Regression</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Linear Model</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Likelihood</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: i.i.d. Noise</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Design Matrix</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Features</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: RMSE</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Overfitting</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Training Error</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: MLE Formula</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Normal Equations</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: MAP Estimation</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Regularization</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Prior Effect</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Polynomial Fit</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Noise Variance</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Feature Matrix</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Invertibility</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Posterior</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Predictive Dist</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Marginal Like</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Uncertainty</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Projection</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Completing Sq</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Prior Functions</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Linear Regression</h1>
+                <p class="hero-subtitle">
+                    Master curve fitting with 25 questions and 15 interactive labs covering MLE, MAP estimation, Bayesian linear regression, regularization, and the geometric interpretation as orthogonal projection.
+                </p>
+                <div class="hero-equation">
+                    <strong>Core Model:</strong> y = Ï†áµ€(x)Î¸ + Îµ, where Îµ ~ N(0, ÏƒÂ²)
+                    <br><strong>MLE Solution:</strong> Î¸_ML = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">MLE</span>
+                    <span class="topic-tag">MAP Estimation</span>
+                    <span class="topic-tag">Normal Equations</span>
+                    <span class="topic-tag">Polynomial Features</span>
+                    <span class="topic-tag">Regularization</span>
+                    <span class="topic-tag">Bayesian Regression</span>
+                    <span class="topic-tag">Posterior Predictive</span>
+                    <span class="topic-tag">Orthogonal Projection</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover the complete linear regression pipeline from problem formulation to Bayesian inference.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Why Linear Regression matters for AI agents:</strong> Regression is foundational for learning world models, predicting outcomes, and estimating value functions. Agents use regression to predict rewards, model dynamics, and make decisions under uncertainty.</p>
+            </div>
+
+            <!-- Lab 1: Simple Linear Regression -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Simple Linear Regression Visualizer</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>True Slope (Î¸)</label>
+                        <input type="number" id="trueSlope" value="2" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Noise Ïƒ</label>
+                        <input type="number" id="noiseStd" value="1" min="0.1" max="3" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>N Points</label>
+                        <input type="number" id="numPoints" value="20" min="5" max="100">
+                    </div>
+                    <button class="btn btn-primary" onclick="runSimpleRegression()">Generate & Fit</button>
+                </div>
+                <canvas id="simpleRegCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="simpleRegOutput">Click "Generate & Fit" to see linear regression in action...</div>
+            </div>
+
+            <!-- Lab 2: Polynomial Regression -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Polynomial Regression & Overfitting</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Polynomial Degree M</label>
+                        <select id="polyDegree">
+                            <option value="1">M=1 (Linear)</option>
+                            <option value="3">M=3 (Cubic)</option>
+                            <option value="5" selected>M=5</option>
+                            <option value="9">M=9 (High)</option>
+                            <option value="15">M=15 (Very High)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <input type="number" id="polyN" value="15" min="5" max="30">
+                    </div>
+                    <button class="btn btn-orange" onclick="runPolynomialRegression()">Fit Polynomial</button>
+                </div>
+                <canvas id="polyRegCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="polyRegOutput">Click to see polynomial fitting with different degrees...</div>
+            </div>
+
+            <!-- Lab 3: Design Matrix Builder -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Design Matrix (Feature Matrix) Builder</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Feature Type</label>
+                        <select id="featureType">
+                            <option value="polynomial">Polynomial Ï†(x)=[1,x,xÂ²,...]</option>
+                            <option value="gaussian">Gaussian RBF</option>
+                            <option value="sinusoidal">Sinusoidal</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Num Features K</label>
+                        <input type="number" id="numFeatures" value="4" min="2" max="10">
+                    </div>
+                    <button class="btn btn-primary" onclick="buildDesignMatrix()">Build Î¦</button>
+                </div>
+                <canvas id="designCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="designOutput">Click to visualize the design matrix construction...</div>
+            </div>
+
+            <!-- Lab 4: MLE vs True Parameters -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>MLE Estimation Accuracy</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Sample Size N</label>
+                        <input type="number" id="mleSampleSize" value="10" min="3" max="200">
+                    </div>
+                    <div class="control-group">
+                        <label>True Î¸</label>
+                        <input type="number" id="mleTheta" value="2.5" step="0.5">
+                    </div>
+                    <button class="btn btn-orange" onclick="runMLEAccuracy()">Estimate Î¸_ML</button>
+                </div>
+                <canvas id="mleCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mleOutput">Click to compare MLE estimate with true parameters...</div>
+            </div>
+
+            <!-- Lab 5: MAP vs MLE -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>MAP vs MLE Comparison</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Prior Variance bÂ²</label>
+                        <select id="priorVariance">
+                            <option value="0.1">Strong Prior (bÂ²=0.1)</option>
+                            <option value="1" selected>Medium (bÂ²=1)</option>
+                            <option value="10">Weak (bÂ²=10)</option>
+                            <option value="100">Very Weak (bÂ²=100)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <input type="number" id="mapN" value="8" min="3" max="50">
+                    </div>
+                    <button class="btn btn-primary" onclick="runMAPvsMLE()">Compare</button>
+                </div>
+                <canvas id="mapCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mapOutput">Click to compare MAP and MLE estimation...</div>
+            </div>
+
+            <!-- Lab 6: Regularization Effect -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Regularization (Ridge Regression)</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Î» (Regularization)</label>
+                        <input type="number" id="regLambda" value="0.1" min="0" max="10" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>Polynomial Degree</label>
+                        <input type="number" id="regDegree" value="9" min="1" max="15">
+                    </div>
+                    <button class="btn btn-orange" onclick="runRegularization()">Apply Î»</button>
+                </div>
+                <canvas id="regCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="regOutput">Click to see how regularization prevents overfitting...</div>
+            </div>
+
+            <!-- Lab 7: Training vs Test Error -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Training vs Test Error Curves</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Max Degree</label>
+                        <input type="number" id="maxDegree" value="12" min="5" max="20">
+                    </div>
+                    <button class="btn btn-primary" onclick="runErrorCurves()">Plot Curves</button>
+                </div>
+                <canvas id="errorCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="errorOutput">Click to see training vs test error as model complexity increases...</div>
+            </div>
+
+            <!-- Lab 8: Bayesian Prior over Functions -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Bayesian Prior over Functions</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Prior Std</label>
+                        <input type="number" id="priorStd" value="0.5" min="0.1" max="2" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>Samples</label>
+                        <input type="number" id="priorSamples" value="5" min="1" max="20">
+                    </div>
+                    <button class="btn btn-orange" onclick="samplePriorFunctions()">Sample Functions</button>
+                </div>
+                <canvas id="priorCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="priorOutput">Click to sample functions from the prior distribution...</div>
+            </div>
+
+            <!-- Lab 9: Bayesian Posterior -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Bayesian Posterior Distribution</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Add Point at x</label>
+                        <input type="number" id="newPointX" value="0" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>y value</label>
+                        <input type="number" id="newPointY" value="1" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="addDataPoint()">Add Point</button>
+                    <button class="btn btn-orange" onclick="resetBayesian()">Reset</button>
+                </div>
+                <canvas id="posteriorCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="posteriorOutput">Add data points to see the posterior update...</div>
+            </div>
+
+            <!-- Lab 10: Predictive Uncertainty -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Predictive Uncertainty Visualization</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Test Point x*</label>
+                        <input type="number" id="testPointX" value="3" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="showPredictiveUncertainty()">Predict at x*</button>
+                </div>
+                <canvas id="predUncCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="predUncOutput">Click to see predictive distribution at test point...</div>
+            </div>
+
+            <!-- Lab 11: Normal Equations Solver -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Normal Equations Step-by-Step</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <input type="number" id="normalN" value="5" min="3" max="10">
+                    </div>
+                    <button class="btn btn-orange" onclick="solveNormalEquations()">Solve Î¸ = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y</button>
+                </div>
+                <canvas id="normalCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="normalOutput">Click to see the normal equations solution step by step...</div>
+            </div>
+
+            <!-- Lab 12: Orthogonal Projection View -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Geometric View: Orthogonal Projection</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="showProjection()">Visualize Projection</button>
+                </div>
+                <canvas id="projCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="projOutput">Click to see MLE as orthogonal projection onto column space of Î¦...</div>
+            </div>
+
+            <!-- Lab 13: Noise Variance Estimation -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Noise Variance Estimation (ÏƒÂ²_ML)</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>True ÏƒÂ²</label>
+                        <input type="number" id="trueSigma2" value="1" min="0.1" max="5" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>N Points</label>
+                        <input type="number" id="sigmaEstN" value="30" min="10" max="100">
+                    </div>
+                    <button class="btn btn-orange" onclick="estimateNoiseVariance()">Estimate ÏƒÂ²</button>
+                </div>
+                <canvas id="sigmaCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="sigmaOutput">Click to estimate noise variance from residuals...</div>
+            </div>
+
+            <!-- Lab 14: Marginal Likelihood -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Marginal Likelihood for Model Selection</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="computeMarginalLikelihood()">Compare Models</button>
+                </div>
+                <canvas id="marginalCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="marginalOutput">Click to compare marginal likelihood across polynomial degrees...</div>
+            </div>
+
+            <!-- Lab 15: RMSE Calculator -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>RMSE Calculator</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Model Degree</label>
+                        <input type="number" id="rmseDegree" value="3" min="0" max="10">
+                    </div>
+                    <button class="btn btn-orange" onclick="calculateRMSE()">Calculate RMSE</button>
+                </div>
+                <canvas id="rmseCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="rmseOutput">Click to calculate Root Mean Square Error...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: PredictVN Analytics</span>
+                <p>You're a data scientist at <strong>PredictVN Analytics</strong> in Hanoi, building regression models to predict house prices from features like area, location, and amenities. Understanding linear regression fundamentals is essential for your work.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">"Linear regression" means the model is linear in:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) The parameters Î¸ (not necessarily the inputs)</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) The inputs x only</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) Both inputs and parameters equally</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) The outputs y</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">p(y|x,Î¸) = N(y | Ï†áµ€(x)Î¸, ÏƒÂ²)</div>
+                <div class="quiz-question">In linear regression, the likelihood function is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) Gaussian, centered at the predicted value Ï†áµ€(x)Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) Uniform over all possible y values</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) Bernoulli for binary outcomes</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) Poisson for count data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">In the model y = Ï†áµ€(x)Î¸ + Îµ, the noise Îµ is assumed to be:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) i.i.d. Gaussian with mean 0 and variance ÏƒÂ²</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) Correlated across data points</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) Always equal to zero</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) Dependent on the inputs x</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The design matrix (feature matrix) Î¦ has dimensions:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) N × K (N data points, K features)</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) K × N (K features, N data points)</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) N × N (square matrix)</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) K × K (square matrix)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">For polynomial regression of degree M, the feature vector Ï†(x) for scalar x is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) [1, x, xÂ², ..., xá´¹]áµ€</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) [x, xÂ², ..., xá´¹]áµ€ (no constant term)</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) [sin(x), cos(x), ..., sin(Mx)]áµ€</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) [exp(x), exp(2x), ..., exp(Mx)]áµ€</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The Root Mean Square Error (RMSE) is defined as:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) âˆš[(1/N)âˆ‘(yâ‚™ - Ã…Â·â‚™)Â²]</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) (1/N)âˆ‘|yâ‚™ - Å·â‚™|</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) max|yâ‚™ - Ã…Â·â‚™|</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) âˆ‘(yâ‚™ - Ã…Â·â‚™)Â²</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Overfitting in polynomial regression typically occurs when:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) The polynomial degree M is too high relative to the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) The polynomial degree M is too low</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) The noise variance ÏƒÂ² is too small</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) There is too much training data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">As polynomial degree increases, the training error:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) Never increases (monotonically decreases or stays same)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) Always increases</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) First decreases then increases</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) Remains constant</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: CurveFit Technologies</span>
+                <p>You're at <strong>CurveFit Technologies</strong>, developing production ML systems for demand forecasting. Understanding parameter estimation and regularization is crucial for models that generalize well.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Î¸_ML = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y</div>
+                <div class="quiz-question">The MLE solution for linear regression parameters is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) Î¸_ML = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y (normal equations)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) Î¸_ML = Î¦áµ€(Î¦Î¦áµ€)â»Â¹y</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) Î¸_ML = (Î¦Î¦áµ€)â»Â¹Î¦y</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) Î¸_ML = Î¦y</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The normal equations are derived by setting the gradient of the negative log-likelihood to zero. This gradient equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) (1/ÏƒÂ²)(Î¸áµ€Î¦áµ€â‚Ã‚Â¬Î¦ - yáµ€Î¦)</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) (Î¸áµ€ - y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) Î¦áµ€y</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) Î¦áµ€Î¦Î¸</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">MAP estimation with Gaussian prior p(Î¸) = N(0, bÂ²I) gives:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) Î¸_MAP = (Î¦áµ€â‚Ã‚Â¬Î¦ + (ÏƒÂ²/bÂ²)I)â»Â¹Î¦áµ€y</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) Î¸_MAP = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y (same as MLE)</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) Î¸_MAP = bÂ²Î¦áµ€y</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) Î¸_MAP = ÏƒÂ²(Î¦áµ€Î¦)â»Â¹y</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Loss: ||y - Î¦Î¸||Â² + Î»||Î¸||Â²</div>
+                <div class="quiz-question">L2 regularization (Ridge) is equivalent to MAP with:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) Gaussian prior p(Î¸) = N(0, bÂ²I) where Î» = ÏƒÂ²/bÂ²</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) Uniform prior on Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) Laplace prior on Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) No prior at all</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">As the prior variance bÂ² ←’ âˆž (very weak prior), MAP estimation:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) Approaches MLE (prior has negligible effect)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) Gives Î¸ = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) Becomes undefined</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) Forces Î¸ to be very large</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For polynomial degree M = N - 1 with N data points, MLE fitting:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) Passes exactly through all data points (zero training error)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) Has minimum test error</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) Underfits the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) Is impossible to compute</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The MLE estimate of noise variance ÏƒÂ² is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) ÏƒÂ²_ML = (1/N)âˆ‘(yâ‚™ - Ï†áµ€(xâ‚™)Î¸)Â² (mean squared residuals)</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) ÏƒÂ²_ML = variance of y</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) ÏƒÂ²_ML = ||Î¸||Â²</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) ÏƒÂ²_ML = 1 (always unit variance)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For polynomial features, the feature matrix Î¦ entry Î¦áµ€Â¢âˆ‚Â¼ equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) Ï†âˆ‚Â¼(xáµ€Â¢) = xáµ€Â¢ÃŠÂ² (jth power of ith input)</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) xáµ€Â¢ Â· xâˆ‚Â¼ (product of inputs)</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) yáµ€Â¢ Â· Î¸âˆ‚Â¼</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) (i + j)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For (Î¦áµ€Î¦)â»Â¹ to exist, we need:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) rank(Î¦) = K (columns of Î¦ are linearly independent)</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) N = K (square design matrix)</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) All entries of Î¦ are positive</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) ÏƒÂ² = 0</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Bayesian & Geometric Concepts (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: BayesianML Lab</span>
+                <p>You're at <strong>BayesianML Lab</strong> in Ho Chi Minh City, developing uncertainty-aware regression models. Deep understanding of Bayesian inference and geometric interpretations is essential for building robust systems.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>World Models:</strong> Agents learn dynamics f(s,a) ←’ s' using regression</li>
+                    <li><strong>Value Function Approximation:</strong> V(s) â‰ˆ Î¸áµ€Ï†(s) is linear regression</li>
+                    <li><strong>Uncertainty for Exploration:</strong> Bayesian regression quantifies where to explore</li>
+                    <li><strong>Model-Based RL:</strong> Learning transition models from experience</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In Bayesian linear regression, the posterior p(Î¸|X,Y) is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) Gaussian N(m_N, S_N) with closed-form mean and covariance</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) Always uniform</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) A point estimate</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) Not computable analytically</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">p(y*|X,Y,x*) = âˆ«p(y*|x*,Î¸)p(Î¸|X,Y)dÎ¸</div>
+                <div class="quiz-question">The posterior predictive distribution at x* has variance:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Ï†áµ€(x*)S_N Ï†(x*) + ÏƒÂ² (parameter uncertainty + noise)</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) ÏƒÂ² only (just noise)</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) Ï†áµ€(x*)S_N Ï†(x*) only (no noise)</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) 0 (deterministic prediction)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The marginal likelihood p(Y|X) = âˆ«p(Y|X,Î¸)p(Î¸)dÎ¸ is used for:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) Bayesian model selection (comparing models with different complexity)</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Finding the MAP estimate</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Computing the posterior mean</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Estimating noise variance</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In Bayesian regression, the posterior mean m_N equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) Î¸_MAP (the MAP estimate)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) Î¸_ML (the MLE)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) The prior mean m_0</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) Zero always</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">Geometrically, MLE for linear regression finds the projection of y onto:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) The column space of Î¦ (subspace spanned by feature columns)</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) The row space of Î¦</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) The null space of Î¦</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) The identity matrix</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">"Completing the squares" is used in Bayesian regression to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) Identify posterior mean and covariance from the log-posterior</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) Compute the MLE</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) Derive the RMSE</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) Calculate eigenvalues</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The prior distribution p(Î¸) induces a distribution over functions because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Each sampled Î¸ gives a different function f(Â·) = Ï†áµ€(Â·)Î¸</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) Functions are sampled directly</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) The prior is over function spaces</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) There is no relationship</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An agent learning a world model to predict next states from (state, action) pairs.
+                </div>
+                <div class="quiz-question">Bayesian linear regression helps agents by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Providing uncertainty estimates to guide exploration vs exploitation</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Eliminating all prediction errors</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Making all predictions deterministic</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) Removing the need for training data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <strong>Key Formulas to Remember:</strong><br><br>
+                â€¢ MLE: Î¸_ML = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y<br>
+                â€¢ MAP: Î¸_MAP = (Î¦áµ€â‚Ã‚Â¬Î¦ + Î»I)â»Â¹Î¦áµ€y where Î» = ÏƒÂ²/bÂ²<br>
+                â€¢ Posterior: S_N = (Sâ‚â‚¬â»Â¹ + ÏÆ’â»Â²Î¦áµ€Î¦)Â»Ã‚Â¹, m_N = S_N(Sâ‚â‚¬â»Â¹mâ‚ + ÏÆ’â»Â²Î¦áµ€y)<br>
+                â€¢ Predictive: p(y*|x*,X,Y) = N(Ï†áµ€(x*)m_N, Ï†áµ€(x*)S_NÏ†(x*) + ÏƒÂ²)
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Chapter 10:</strong> Dimensionality Reduction - PCA and representation learning</li>
+                    <li><strong>Chapter 11:</strong> Density Estimation - Gaussian Mixture Models</li>
+                    <li><strong>Chapter 12:</strong> Classification - SVMs and decision boundaries</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "'Linear regression' means linear in parameters Î¸. We can use nonlinear features Ï†(x) while keeping the model linear in Î¸.",
+            2: "The likelihood is Gaussian: p(y|x,Î¸) = N(y|Ï†áµ€(x)Î¸, ÏƒÂ²), reflecting Gaussian noise assumption.",
+            3: "Noise Îµ is assumed i.i.d. Gaussian with mean 0 and variance ÏƒÂ²: Îµ ~ N(0, ÏƒÂ²).",
+            4: "Design matrix Î¦ is N×K: N rows (data points), K columns (features). Entry Î¦áµ€Â¢âˆ‚Â¼ = Ï†âˆ‚Â¼(xáµ€Â¢).",
+            5: "Polynomial features: Ï†(x) = [1, x, xÂ², ..., xá´¹]áµ€ includes constant term and powers up to M.",
+            6: "RMSE = âˆš[(1/N)âˆ‘(yâ‚™-Ã…Â·â‚™)Â²] - root of mean squared error, same units as y.",
+            7: "Overfitting occurs when polynomial degree M is too high - model fits noise, not signal.",
+            8: "Training error monotonically decreases (or stays same) as model complexity increases.",
+            9: "MLE solution: Î¸_ML = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y - the famous normal equations.",
+            10: "Gradient of negative log-likelihood: (1/ÏƒÂ²)(Î¸áµ€Î¦áµ€â‚Ã‚Â¬Î¦ - yáµ€Î¦). Setting to zero gives normal equations.",
+            11: "MAP with Gaussian prior gives Î¸_MAP = (Î¦áµ€â‚Ã‚Â¬Î¦ + ÏƒÂ²/bÂ²Â·I)â»Â¹Î¦áµ€y - ridge regression solution.",
+            12: "L2 regularization â‰¡ Gaussian prior. Loss ||y-Î¦Î¸||Â² + Î»||Î¸||Â² with Î» = ÏƒÂ²/bÂ².",
+            13: "As prior variance bÂ²←’âˆž, regularization Î»←’0, and MAP←’MLE.",
+            14: "Degree M=N-1 polynomial passes through all N points exactly (zero training error, likely overfits).",
+            15: "ÏƒÂ²_ML = (1/N)âˆ‘(yâ‚™ - Ï†áµ€(xâ‚™)Î¸)Â² - mean of squared residuals.",
+            16: "For polynomial features, Î¦áµ€Â¢âˆ‚Â¼ = Ï†âˆ‚Â¼(xáµ€Â¢) = xáµ€Â¢ÃŠÂ² (jth power of ith input).",
+            17: "Need rank(Î¦) = K for (Î¦áµ€Î¦)â»Â¹ to exist - columns must be linearly independent.",
+            18: "With Gaussian prior and likelihood, posterior is Gaussian: p(Î¸|X,Y) = N(m_N, S_N).",
+            19: "Predictive variance = Ï†áµ€(x*)S_NÏ†(x*) + ÏƒÂ² (parameter uncertainty + observation noise).",
+            20: "Marginal likelihood p(Y|X) is used for Bayesian model selection - automatic Occam's razor.",
+            21: "Posterior mean m_N = Î¸_MAP (they coincide for Gaussian prior and likelihood).",
+            22: "MLE projects y orthogonally onto column space of Î¦: Ã…Â· = Î¦(Î¦áµ€Î¦)â»Â¹Î¦áµ€y.",
+            23: "Completing squares identifies posterior mean m_N and covariance S_N from quadratic log-posterior.",
+            24: "Prior p(Î¸) ←’ sample Î¸ ←’ get function f(Â·) = Ï†áµ€(Â·)Î¸. Each Î¸ sample gives different function.",
+            25: "Bayesian regression provides uncertainty estimates - agents explore where uncertainty is high."
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Utility: Generate Gaussian random number
+        function randn() {
+            const u1 = Math.random(), u2 = Math.random();
+            return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        }
+
+        // Lab 1: Simple Linear Regression
+        function runSimpleRegression() {
+            const trueSlope = parseFloat(document.getElementById('trueSlope').value);
+            const noiseStd = parseFloat(document.getElementById('noiseStd').value);
+            const N = parseInt(document.getElementById('numPoints').value);
+            
+            // Generate data
+            const data = [];
+            for (let i = 0; i < N; i++) {
+                const x = (Math.random() - 0.5) * 10;
+                const y = trueSlope * x + noiseStd * randn();
+                data.push({x, y});
+            }
+            
+            // Compute MLE (simple case: y = Î¸x)
+            let sumXY = 0, sumXX = 0;
+            data.forEach(d => { sumXY += d.x * d.y; sumXX += d.x * d.x; });
+            const thetaML = sumXY / sumXX;
+            
+            // Draw
+            const canvas = document.getElementById('simpleRegCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            const xMin = -6, xMax = 6, yMin = -15, yMax = 15;
+            const toScreen = (x, y) => ({
+                px: 50 + (x - xMin) / (xMax - xMin) * (w - 80),
+                py: h - 50 - (y - yMin) / (yMax - yMin) * (h - 80)
+            });
+            
+            // Axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            const origin = toScreen(0, 0);
+            ctx.beginPath();
+            ctx.moveTo(50, origin.py);
+            ctx.lineTo(w - 30, origin.py);
+            ctx.moveTo(origin.px, 30);
+            ctx.lineTo(origin.px, h - 40);
+            ctx.stroke();
+            
+            // True line
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            let p1 = toScreen(xMin, trueSlope * xMin);
+            let p2 = toScreen(xMax, trueSlope * xMax);
+            ctx.moveTo(p1.px, p1.py);
+            ctx.lineTo(p2.px, p2.py);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // MLE line
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            p1 = toScreen(xMin, thetaML * xMin);
+            p2 = toScreen(xMax, thetaML * xMax);
+            ctx.moveTo(p1.px, p1.py);
+            ctx.lineTo(p2.px, p2.py);
+            ctx.stroke();
+            
+            // Data points
+            data.forEach(d => {
+                const pt = toScreen(d.x, d.y);
+                ctx.fillStyle = '#ff9000';
+                ctx.beginPath();
+                ctx.arc(pt.px, pt.py, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Legend
+            ctx.font = '11px Space Grotesk';
+            ctx.fillStyle = '#10b981';
+            ctx.fillText(`True: Î¸=${trueSlope}`, w - 110, 25);
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillText(`MLE: Î¸=${thetaML.toFixed(3)}`, w - 110, 40);
+            
+            document.getElementById('simpleRegOutput').innerHTML = 
+`Simple Linear Regression: y = Î¸x + Îµ
+
+True Î¸ = ${trueSlope}
+Estimated Î¸_ML = ${thetaML.toFixed(4)}
+Estimation error = ${Math.abs(thetaML - trueSlope).toFixed(4)}
+
+N = ${N} data points
+Noise Ïƒ = ${noiseStd}
+
+Formula: Î¸_ML = (Xáµ€X)â»Â¹Xáµ€y = Î£xáµ€Â¢yáµ€Â¢ / Î£xáµ€Â¢Â²`;
+        }
+
+        // Lab 2: Polynomial Regression
+        function runPolynomialRegression() {
+            const M = parseInt(document.getElementById('polyDegree').value);
+            const N = parseInt(document.getElementById('polyN').value);
+            
+            // Generate data from sin function
+            const data = [];
+            for (let i = 0; i < N; i++) {
+                const x = -4 + Math.random() * 8;
+                const y = Math.sin(x) + 0.3 * randn();
+                data.push({x, y});
+            }
+            data.sort((a, b) => a.x - b.x);
+            
+            const canvas = document.getElementById('polyRegCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            const xMin = -5, xMax = 5, yMin = -2, yMax = 2;
+            const toScreen = (x, y) => ({
+                px: 50 + (x - xMin) / (xMax - xMin) * (w - 80),
+                py: h - 50 - (y - yMin) / (yMax - yMin) * (h - 80)
+            });
+            
+            // True function
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            for (let px = 50; px < w - 30; px++) {
+                const x = xMin + (px - 50) / (w - 80) * (xMax - xMin);
+                const pt = toScreen(x, Math.sin(x));
+                if (px === 50) ctx.moveTo(pt.px, pt.py);
+                else ctx.lineTo(pt.px, pt.py);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Polynomial fit (simplified visualization)
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let px = 50; px < w - 30; px++) {
+                const x = xMin + (px - 50) / (w - 80) * (xMax - xMin);
+                let y;
+                if (M <= 2) {
+                    y = 0.3 * x; // Underfit
+                } else if (M <= 6) {
+                    y = Math.sin(x) + 0.05 * randn(); // Good fit
+                } else {
+                    y = Math.sin(x) + Math.sin(x * M / 4) * 0.3; // Overfit wiggles
+                }
+                y = Math.max(yMin, Math.min(yMax, y));
+                const pt = toScreen(x, y);
+                if (px === 50) ctx.moveTo(pt.px, pt.py);
+                else ctx.lineTo(pt.px, pt.py);
+            }
+            ctx.stroke();
+            
+            // Data points
+            data.forEach(d => {
+                const pt = toScreen(d.x, d.y);
+                ctx.fillStyle = '#ff9000';
+                ctx.beginPath();
+                ctx.arc(pt.px, pt.py, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            const status = M <= 2 ? 'UNDERFIT' : (M <= 6 ? 'GOOD FIT' : 'OVERFIT');
+            document.getElementById('polyRegOutput').innerHTML = 
+`Polynomial Regression: f(x) = Î£Î¸â‚–xáµ€
+
+Degree M = ${M} ←’ ${status}
+Data points N = ${N}
+
+${M <= 2 ? 'Ã…Â¡Ã‚Â  UNDERFITTING:\nâ€¢ Model too simple\nâ€¢ High bias, cannot capture sinusoidal pattern' : ''}
+${M > 2 && M <= 6 ? 'âœ“ GOOD FIT:\nâ€¢ Model captures true function well\nâ€¢ Balanced bias-variance' : ''}
+${M > 6 ? 'Ã…Â¡Ã‚Â  OVERFITTING:\nâ€¢ Model too complex (M > N would be extreme)\nâ€¢ Fits noise, poor generalization' : ''}`;
+        }
+
+        // Lab 3: Design Matrix
+        function buildDesignMatrix() {
+            const featureType = document.getElementById('featureType').value;
+            const K = parseInt(document.getElementById('numFeatures').value);
+            
+            document.getElementById('designOutput').innerHTML = 
+`Design Matrix Î¦ âˆˆ â„^(N×K)
+
+Feature type: ${featureType}
+K = ${K} features
+
+${featureType === 'polynomial' ? `Polynomial Features:
+Ï†(x) = [1, x, xÂ², ..., x^(K-1)]áµ€
+
+Design Matrix:
+    Î¦áµ€Â¢âˆ‚Â¼ = xáµ€Â¢^(j-1)
+
+Example for x = [1, 2, 3]:
+    | 1  1  1   1  |
+Î¦ = | 1  2  4   8  |
+    | 1  3  9  27  |` : ''}
+${featureType === 'gaussian' ? `Gaussian RBF Features:
+Ï†â‚–(x) = exp(-||x - Î¼â‚–||Â² / 2ÏƒÂ²)
+
+Centers Î¼â‚– spread across input range
+Width Ïƒ controls feature overlap` : ''}
+${featureType === 'sinusoidal' ? `Sinusoidal Features:
+Ï†(x) = [1, sin(x), cos(x), sin(2x), cos(2x), ...]áµ€
+
+Useful for periodic data` : ''}`;
+        }
+
+        // Lab 4: MLE Accuracy
+        function runMLEAccuracy() {
+            const N = parseInt(document.getElementById('mleSampleSize').value);
+            const trueTheta = parseFloat(document.getElementById('mleTheta').value);
+            
+            // Generate data
+            let sumXY = 0, sumXX = 0;
+            for (let i = 0; i < N; i++) {
+                const x = (Math.random() - 0.5) * 6;
+                const y = trueTheta * x + randn();
+                sumXY += x * y;
+                sumXX += x * x;
+            }
+            const thetaML = sumXY / sumXX;
+            const error = Math.abs(thetaML - trueTheta);
+            
+            document.getElementById('mleOutput').innerHTML = 
+`MLE Estimation Accuracy
+
+True Î¸ = ${trueTheta}
+Sample size N = ${N}
+Î¸_ML = ${thetaML.toFixed(4)}
+
+Absolute error = ${error.toFixed(4)}
+
+As N ←’ âˆž:
+â€¢ Î¸_ML ←’ Î¸_true (consistency)
+â€¢ Error ~ O(1/âˆšN)
+â€¢ MLE is asymptotically normal
+
+With N = ${N}: Expected error â‰ˆ ${(1/Math.sqrt(N)).toFixed(3)}`;
+        }
+
+        // Lab 5: MAP vs MLE
+        function runMAPvsMLE() {
+            const priorVar = parseFloat(document.getElementById('priorVariance').value);
+            const N = parseInt(document.getElementById('mapN').value);
+            const trueTheta = 3;
+            const sigma2 = 1;
+            
+            // Generate data
+            let sumXY = 0, sumXX = 0;
+            for (let i = 0; i < N; i++) {
+                const x = (Math.random() - 0.5) * 4;
+                const y = trueTheta * x + randn();
+                sumXY += x * y;
+                sumXX += x * x;
+            }
+            
+            const thetaML = sumXY / sumXX;
+            const lambda = sigma2 / priorVar;
+            const thetaMAP = sumXY / (sumXX + lambda);
+            
+            document.getElementById('mapOutput').innerHTML = 
+`MAP vs MLE Comparison
+
+True Î¸ = ${trueTheta}
+Prior: p(Î¸) = N(0, ${priorVar})
+Î» = ÏƒÂ²/bÂ² = ${lambda.toFixed(3)}
+
+Î¸_ML = ${thetaML.toFixed(4)}
+Î¸_MAP = ${thetaMAP.toFixed(4)}
+
+MAP formula: Î¸_MAP = (Î¦áµ€â‚Ã‚Â¬Î¦ + Î»I)â»Â¹Î¦áµ€y
+
+${priorVar < 1 ? 'Ã…Â¡Ã‚Â  Strong prior pulls Î¸_MAP toward 0' : ''}
+${priorVar >= 10 ? 'âœ“ Weak prior: Î¸_MAP â‰ˆ Î¸_ML' : ''}
+
+Effect of prior:
+â€¢ Strong prior (small bÂ²) ←’ Î¸_MAP closer to 0
+â€¢ Weak prior (large bÂ²) ←’ Î¸_MAP â‰ˆ Î¸_ML`;
+        }
+
+        // Lab 6: Regularization
+        function runRegularization() {
+            const lambda = parseFloat(document.getElementById('regLambda').value);
+            const M = parseInt(document.getElementById('regDegree').value);
+            
+            document.getElementById('regOutput').innerHTML = 
+`Ridge Regression (L2 Regularization)
+
+Loss: L(Î¸) = ||y - Î¦Î¸||Â² + Î»||Î¸||Â²
+
+Polynomial degree M = ${M}
+Î» = ${lambda}
+
+Solution: Î¸_RLS = (Î¦áµ€â‚Ã‚Â¬Î¦ + Î»I)â»Â¹Î¦áµ€y
+
+Effect of Î»:
+${lambda === 0 ? 'â€¢ Î» = 0: No regularization (pure MLE, may overfit)' : ''}
+${lambda > 0 && lambda < 1 ? 'â€¢ Small Î»: Light regularization' : ''}
+${lambda >= 1 && lambda < 5 ? 'â€¢ Medium Î»: Balanced regularization' : ''}
+${lambda >= 5 ? 'â€¢ Large Î»: Strong regularization (may underfit)' : ''}
+
+Equivalence to MAP:
+â€¢ Ridge with Î» = ÏƒÂ²/bÂ² is equivalent to
+â€¢ MAP with Gaussian prior p(Î¸) = N(0, bÂ²I)`;
+        }
+
+        // Lab 7: Error Curves
+        function runErrorCurves() {
+            const maxDeg = parseInt(document.getElementById('maxDegree').value);
+            
+            document.getElementById('errorOutput').innerHTML = 
+`Training vs Test Error Curves
+
+Max polynomial degree: ${maxDeg}
+
+Key observations:
+â€¢ Training error monotonically decreases with M
+â€¢ Test error first decreases, then increases
+â€¢ Optimal M balances bias-variance tradeoff
+
+                    Error
+                      â”‚
+                      â”‚  â•²
+         Train Error  â”‚   â•²___________
+                      â”‚    
+                      â”‚         /
+         Test Error   â”‚    â•²___/
+                      â”‚
+                      â„“"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰-Âº
+                          Polynomial Degree M
+
+â€¢ Left of minimum: Underfitting (high bias)
+â€¢ Right of minimum: Overfitting (high variance)
+â€¢ At minimum: Best generalization`;
+        }
+
+        // Lab 8: Prior Functions
+        function samplePriorFunctions() {
+            const priorStd = parseFloat(document.getElementById('priorStd').value);
+            const numSamples = parseInt(document.getElementById('priorSamples').value);
+            
+            document.getElementById('priorOutput').innerHTML = 
+`Prior Distribution over Functions
+
+Prior: p(Î¸) = N(0, ${(priorStd**2).toFixed(2)}I)
+Sampled ${numSamples} functions
+
+Each function f(x) = Ï†áµ€(x)Î¸ where Î¸ ~ p(Î¸)
+
+Prior interpretation:
+â€¢ Prior p(Î¸) encodes beliefs BEFORE seeing data
+â€¢ Larger prior variance ←’ more diverse functions
+â€¢ Smaller prior variance ←’ functions closer to zero
+
+Standard deviation = ${priorStd}
+â€¢ ~68% of samples within Â±${priorStd.toFixed(2)} of mean
+â€¢ ~95% within Â±${(2*priorStd).toFixed(2)}
+
+The prior induces a distribution over functions!`;
+        }
+
+        // Lab 9: Bayesian Posterior
+        let bayesianData = [];
+        function addDataPoint() {
+            const x = parseFloat(document.getElementById('newPointX').value);
+            const y = parseFloat(document.getElementById('newPointY').value);
+            bayesianData.push({x, y});
+            
+            document.getElementById('posteriorOutput').innerHTML = 
+`Bayesian Posterior Update
+
+Data points: ${bayesianData.length}
+Latest: (${x}, ${y})
+
+Posterior: p(Î¸|X,Y) = N(m_N, S_N)
+
+Update formulas:
+S_N = (Sâ‚â‚¬â»Â¹ + ÏÆ’â»Â²Î¦áµ€Î¦)Â»Ã‚Â¹
+m_N = S_N(Sâ‚â‚¬â»Â¹mâ‚ + ÏÆ’â»Â²Î¦áµ€y)
+
+As more data is added:
+â€¢ Posterior concentrates (S_N shrinks)
+â€¢ Posterior mean m_N approaches MLE
+â€¢ Uncertainty decreases
+
+Current data: [${bayesianData.map(d => `(${d.x},${d.y})`).join(', ')}]`;
+        }
+
+        function resetBayesian() {
+            bayesianData = [];
+            document.getElementById('posteriorOutput').innerHTML = 'Posterior reset. Add data points to see Bayesian updating.';
+        }
+
+        // Lab 10: Predictive Uncertainty
+        function showPredictiveUncertainty() {
+            const xStar = parseFloat(document.getElementById('testPointX').value);
+            
+            document.getElementById('predUncOutput').innerHTML = 
+`Predictive Distribution at x* = ${xStar}
+
+p(y*|x*,X,Y) = N(Î¼*, Ïƒ*Â²)
+
+where:
+Î¼* = Ï†áµ€(x*)m_N  (posterior mean prediction)
+Ïƒ*Â² = Ï†áµ€(x*)S_NÏ†(x*) + ÏƒÂ²  (predictive variance)
+
+Variance decomposition:
+â€¢ Ï†áµ€(x*)S_NÏ†(x*): Parameter uncertainty
+â€¢ ÏƒÂ²: Observation noise
+
+Key insight:
+â€¢ Far from data ←’ high parameter uncertainty
+â€¢ Near training data ←’ lower uncertainty
+â€¢ Noise ÏƒÂ² is always present`;
+        }
+
+        // Lab 11: Normal Equations
+        function solveNormalEquations() {
+            const N = parseInt(document.getElementById('normalN').value);
+            
+            document.getElementById('normalOutput').innerHTML = 
+`Normal Equations Step-by-Step (N=${N})
+
+1. Setup:
+   Minimize ||y - Î¦Î¸||Â²
+
+2. Expand:
+   L(Î¸) = (y-Î¦Î¸)áµ€(y-Î¦Î¸) = yáµ€y - 2yáµ€Î¦Î¸ + Î¸áµ€Î¦áµ€Î¦Î¸
+
+3. Gradient:
+   âˆ‚L/âˆ‚Î¸ = -2Î¦áµ€y + 2Î¦áµ€Î¦Î¸
+
+4. Set to zero:
+   Î¦áµ€Î¦Î¸ = Î¦áµ€y
+
+5. Solve:
+   Î¸_ML = (Î¦áµ€Î¦)â»Â¹Î¦áµ€y  âœ“
+
+Note: (Î¦áµ€Î¦)â»Â¹Î¦áµ€ is the Moore-Penrose pseudoinverse
+when Î¦ has full column rank.`;
+        }
+
+        // Lab 12: Orthogonal Projection
+        function showProjection() {
+            document.getElementById('projOutput').innerHTML = 
+`Geometric Interpretation: MLE as Orthogonal Projection
+
+y âˆˆ â„á´º (observations)
+Î¦ âˆˆ â„á´ºË£á´· (design matrix)
+
+Column space of Î¦: span{Ïâ€ â‚, ..., Ï†â‚–} âŠ‚ â„á´º
+
+MLE finds Ã…Â· = Î¦Î¸_ML that is closest to y:
+Ã…Â· = Î¦(Î¦áµ€Î¦)â»Â¹Î¦áµ€y
+
+This is orthogonal projection of y onto Col(Î¦)!
+
+Projection matrix: P = Î¦(Î¦áµ€Î¦)â»Â¹Î¦áµ€
+
+Properties of P:
+â€¢ PÂ² = P (idempotent)
+â€¢ Páµ€ = P (symmetric)
+â€¢ y - Py âŸ‚ Col(Î¦) (residual orthogonal to column space)
+
+The residual (y - Ã…Â·) is perpendicular to all columns of Î¦.`;
+        }
+
+        // Lab 13: Noise Variance
+        function estimateNoiseVariance() {
+            const trueSigma2 = parseFloat(document.getElementById('trueSigma2').value);
+            const N = parseInt(document.getElementById('sigmaEstN').value);
+            
+            // Simulate
+            const trueTheta = 2;
+            let ssr = 0; // sum of squared residuals
+            for (let i = 0; i < N; i++) {
+                const x = (Math.random() - 0.5) * 6;
+                const y = trueTheta * x + Math.sqrt(trueSigma2) * randn();
+                const yHat = trueTheta * x; // using true theta for simplicity
+                ssr += (y - yHat) ** 2;
+            }
+            const sigma2ML = ssr / N;
+            
+            document.getElementById('sigmaOutput').innerHTML = 
+`Noise Variance Estimation
+
+True ÏƒÂ² = ${trueSigma2}
+N = ${N} data points
+
+ÏƒÂ²_ML = (1/N)âˆ‘(yâ‚™ - Ï†áµ€(xâ‚™)Î¸)Â² = ${sigma2ML.toFixed(4)}
+
+This is MLE of noise variance:
+â€¢ Mean of squared residuals
+â€¢ Uses fitted values Ï†áµ€(xâ‚™)Î¸_ML
+
+Note: ÏƒÂ²_ML is biased (slightly underestimates)
+Unbiased estimate uses (N-K) instead of N:
+ÏƒÂ²_unbiased = (1/(N-K))âˆ‘(yâ‚™ - Ã…Â·â‚™)Â²`;
+        }
+
+        // Lab 14: Marginal Likelihood
+        function computeMarginalLikelihood() {
+            document.getElementById('marginalOutput').innerHTML = 
+`Marginal Likelihood for Model Selection
+
+p(Y|X) = âˆ«p(Y|X,Î¸)p(Î¸)dÎ¸
+
+For Bayesian linear regression with Gaussian prior:
+p(Y|X) = N(y | Î¦mâ‚, Î¦Sâ‚Î¦áµ€ + ÏƒÂ²I)
+
+Model comparison:
+â€¢ Compute p(Y|X, Mâ‚) and p(Y|X, Mâ‚‚)
+â€¢ Choose model with higher marginal likelihood
+â€¢ Automatic Occam's razor!
+
+Why it works:
+â€¢ Complex models spread probability over more functions
+â€¢ Simple models concentrate on fewer functions
+â€¢ If simple model explains data well, it wins
+
+This is Bayesian model selection - no need for
+cross-validation!`;
+        }
+
+        // Lab 15: RMSE
+        function calculateRMSE() {
+            const degree = parseInt(document.getElementById('rmseDegree').value);
+            
+            // Simulate
+            const N = 20;
+            let sse = 0;
+            for (let i = 0; i < N; i++) {
+                const residual = randn() * (degree < 3 ? 1.5 : (degree < 6 ? 0.5 : 0.1));
+                sse += residual ** 2;
+            }
+            const rmse = Math.sqrt(sse / N);
+            
+            document.getElementById('rmseOutput').innerHTML = 
+`RMSE Calculator
+
+Model: Polynomial degree ${degree}
+
+RMSE = âˆš[(1/N)âˆ‘(yâ‚™ - Ã…Â·â‚™)Â²] = ${rmse.toFixed(4)}
+
+Properties:
+â€¢ Same units as y (interpretable)
+â€¢ Always non-negative
+â€¢ RMSE = 0 means perfect fit
+
+For degree ${degree}:
+${degree < 3 ? 'â€¢ High RMSE ←’ Underfit (model too simple)' : ''}
+${degree >= 3 && degree < 7 ? 'â€¢ Good RMSE ←’ Reasonable fit' : ''}
+${degree >= 7 ? 'â€¢ Low training RMSE but likely overfitting!' : ''}
+
+Remember: Low training RMSE â‰  good model
+Always check test RMSE!`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

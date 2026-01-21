@@ -1,0 +1,7 @@
+Hàm **open()** cũng cho phép chỉ định **chế độ mở file**:
+- **'r'**: Mở file để đọc (mặc định).
+- **'w'**: Mở file để ghi (nếu file đã tồn tại, nó sẽ bị ghi đè).
+- **'a'**: Mở file để thêm nội dung (append).
+- **'r+'**: Mở file để vừa đọc vừa ghi.
+
+Ví dụ, giả sử chúng ta có file `test.txt` trong cùng thư mục với nội dung:

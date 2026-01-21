@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: Pandas Fundamentals | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-orange: #ff9000;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --series-color: #8b5cf6;
+            --dataframe-color: #06b6d4;
+            --cleaning-color: #ec4899;
+            --groupby-color: #10b981;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.8; font-size: 17px; }
+        .header { background: var(--gradient-blue); color: white; padding: 1rem 2rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .header-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .sidebar { position: fixed; left: 0; top: 60px; bottom: 0; width: 300px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; padding: 1.5rem 0; z-index: 900; transition: transform 0.3s; }
+        .sidebar-header { padding: 0 1.5rem 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+        .logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--quanskill-blue); }
+        .chapter-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); }
+        .nav-section { padding: 0.5rem 1.5rem; }
+        .nav-section-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); padding: 0.5rem 1rem; font-weight: 600; }
+        .nav-link { display: block; padding: 0.6rem 1rem; color: var(--text-secondary); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; border-radius: 8px; margin-bottom: 0.25rem; transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+        .nav-link.active { background: rgba(11, 47, 160, 0.1); color: var(--quanskill-blue); border-left-color: var(--quanskill-orange); font-weight: 500; }
+        .main-content { margin-left: 300px; padding: 80px 2rem 4rem; max-width: calc(100% - 300px); }
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+        .hero { background: var(--gradient-blue); color: white; padding: 4rem 3rem; border-radius: 20px; margin-bottom: 3rem; position: relative; overflow: hidden; }
+        .hero::after { content: '📝¼'; position: absolute; bottom: 20px; right: 40px; font-size: 80px; opacity: 0.15; font-family: 'JetBrains Mono', monospace; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-badge { display: inline-block; background: var(--quanskill-orange); padding: 0.35rem 1rem; border-radius: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.15rem; opacity: 0.9; max-width: 600px; }
+        .hero-quote { margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-left: 4px solid var(--quanskill-orange); border-radius: 0 12px 12px 0; font-style: italic; }
+        .key-concepts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .concept-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; transition: transform 0.2s; }
+        .concept-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .concept-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; font-size: 1.25rem; }
+        .concept-card.series .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.dataframe .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.cleaning .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .concept-card.groupby .icon { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .concept-card h5 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .concept-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0; }
+        .section { background: var(--bg-card); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
+        .section-number { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: white; padding: 0.5rem 1rem; border-radius: 8px; white-space: nowrap; }
+        .section-number.series { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.dataframe { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.cleaning { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .section-number.groupby { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 600; color: var(--quanskill-blue); }
+        .section h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 600; margin: 2rem 0 1rem; }
+        .section p { margin-bottom: 1.25rem; }
+        .definition-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%); border-left: 4px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .definition-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: block; }
+        .note-box { background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%); border-left: 4px solid var(--quanskill-orange); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .note-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #e68200; margin-bottom: 0.75rem; display: block; }
+        .series-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%); border-left: 4px solid var(--series-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .series-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--series-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .series-box .label::before { content: '📊'; }
+        .dataframe-box { background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%); border-left: 4px solid var(--dataframe-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .dataframe-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--dataframe-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .dataframe-box .label::before { content: '📝‹'; }
+        .cleaning-box { background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%); border-left: 4px solid var(--cleaning-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .cleaning-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--cleaning-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .cleaning-box .label::before { content: '📝§¹'; }
+        .groupby-box { background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%); border-left: 4px solid var(--groupby-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .groupby-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--groupby-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .groupby-box .label::before { content: '📈'; }
+        .quanskill-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%); border: 2px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; position: relative; }
+        .quanskill-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-orange); border-radius: 12px 12px 0 0; }
+        .quanskill-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quanskill-box .label::before { content: '🎓'; }
+        code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: var(--quanskill-blue); }
+        pre { background: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.6; }
+        pre code { background: transparent; padding: 0; color: #e2e8f0; }
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .data-table, .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .data-table th, .comparison-table th { background: var(--code-bg); font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--quanskill-blue); padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid var(--border-color); }
+        .data-table td, .comparison-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .data-table tr:hover td, .comparison-table tr:hover td { background: rgba(11, 47, 160, 0.02); }
+        .quiz-box { background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px dashed var(--quanskill-orange); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; }
+        .quiz-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: #e68200; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quiz-box .label::before { content: '🧠'; }
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .quiz-option { padding: 0.75rem 1rem; background: white; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; }
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        .quiz-feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+        .summary-box { background: var(--gradient-blue); color: white; padding: 2rem; border-radius: 16px; margin: 2rem 0; }
+        .summary-box h3 { font-family: 'Space Grotesk', sans-serif; color: white; margin-top: 0; }
+        .summary-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .summary-item { display: flex; align-items: center; gap: 0.5rem; }
+        .summary-item::before { content: '🐍'; background: var(--quanskill-orange); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+        .dataframe-visual { background: var(--code-bg); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+        .dataframe-visual-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--quanskill-blue); margin-bottom: 1rem; }
+        .df-table { border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+        .df-table th { background: var(--dataframe-color); color: white; padding: 0.5rem 1rem; text-align: center; }
+        .df-table td { border: 1px solid var(--border-color); padding: 0.5rem 1rem; text-align: center; background: white; }
+        .df-table .index { background: #f1f5f9; font-weight: 600; color: var(--text-secondary); }
+        .io-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .io-card { background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 1rem; transition: all 0.3s; }
+        .io-card:hover { border-color: var(--dataframe-color); box-shadow: 0 4px 16px rgba(6, 182, 212, 0.15); }
+        .io-card h5 { font-family: 'JetBrains Mono', monospace; color: var(--dataframe-color); margin-bottom: 0.5rem; }
+        .io-card .desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .io-card code { display: block; background: #1e293b; color: #e2e8f0; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; }
+        .floating-back-btn { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-blue); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; text-decoration: none !important; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.85rem; z-index: 9999; box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .floating-back-btn:hover { transform: translateY(-2px); background: var(--gradient-orange); }
+        .progress-bar { position: fixed; top: 60px; left: 300px; right: 0; height: 3px; background: var(--border-color); z-index: 800; }
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+        .mobile-menu-btn { display: none; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--quanskill-blue); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 1.25rem; }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn { top: auto; bottom: 20px; right: 15px; padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 9 Â· Pandas</div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Data Structures</div>
+            <a href="#section-9-1" class="nav-link">Series</a>
+            <a href="#section-9-2" class="nav-link">DataFrame</a>
+            <a href="#section-9-3" class="nav-link">Indexing & Selection</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Data I/O</div>
+            <a href="#section-9-4" class="nav-link">Reading Data</a>
+            <a href="#section-9-5" class="nav-link">Writing Data</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Data Cleaning</div>
+            <a href="#section-9-6" class="nav-link">Missing Data</a>
+            <a href="#section-9-7" class="nav-link">Data Transformation</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Analysis</div>
+            <a href="#section-9-8" class="nav-link">GroupBy Operations</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Summary</a>
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 9</span>
+                <h1>Pandas Fundamentals</h1>
+                <p class="hero-subtitle">Master Pandas - the essential library for data manipulation and analysis. Learn to work with tabular data like a pro.</p>
+                <div class="hero-quote">"Pandas makes data cleaning and analysis fast and convenient. It's where NumPy meets real-world data."<br><br>- <strong>Quanskill Data Science Philosophy</strong></div>
+            </div>
+        </section>
+
+        <!-- Key Concepts -->
+        <div class="key-concepts">
+            <div class="concept-card series"><div class="icon">📊</div><h5>Series</h5><p>1D labeled array</p></div>
+            <div class="concept-card dataframe"><div class="icon">📝‹</div><h5>DataFrame</h5><p>2D tabular data</p></div>
+            <div class="concept-card dataframe"><div class="icon">🐍"</div><h5>Data I/O</h5><p>CSV, Excel, JSON</p></div>
+            <div class="concept-card cleaning"><div class="icon">📝§¹</div><h5>Cleaning</h5><p>Handle missing data</p></div>
+            <div class="concept-card groupby"><div class="icon">📈</div><h5>GroupBy</h5><p>Split-apply-combine</p></div>
+            <div class="concept-card series"><div class="icon">🔍—</div><h5>Merge</h5><p>Combine datasets</p></div>
+        </div>
+
+        <!-- Section 9.1: Series -->
+        <section class="section" id="section-9-1">
+            <div class="section-header"><span class="section-number series">9.1</span><h2>The Pandas Series</h2></div>
+            <p>A <strong>Series</strong> is a one-dimensional labeled array that can hold any data type. Think of it as a column in a spreadsheet with an index.</p>
+            <div class="definition-box">
+                <span class="label">What is Pandas?</span>
+                <p><strong>Pandas</strong> is designed for working with tabular and heterogeneous data. While NumPy excels at homogeneous numerical arrays, Pandas handles real-world messy data with labeled axes.</p>
+            </div>
+            <pre><code><span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+<span class="code-comment"># Create a Series from a list</span>
+s = pd.Series([<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>, <span class="code-number">40</span>])
+<span class="code-function">print</span>(s)
+<span class="code-comment"># 0    10
+# 1    20
+# 2    30
+# 3    40
+# dtype: int64</span>
+
+<span class="code-comment"># Series with custom index</span>
+s = pd.Series([<span class="code-number">100</span>, <span class="code-number">200</span>, <span class="code-number">300</span>], index=[<span class="code-string">'a'</span>, <span class="code-string">'b'</span>, <span class="code-string">'c'</span>])
+<span class="code-function">print</span>(s[<span class="code-string">'b'</span>])  <span class="code-comment"># 200</span></code></pre>
+            <div class="series-box">
+                <span class="label">Series from Dictionary</span>
+<pre style="margin-bottom: 0;"><code>population = pd.Series({
+    <span class="code-string">'California'</span>: <span class="code-number">39538223</span>,
+    <span class="code-string">'Texas'</span>: <span class="code-number">29145505</span>,
+    <span class="code-string">'Florida'</span>: <span class="code-number">21538187</span>
+})
+<span class="code-function">print</span>(population[<span class="code-string">'Texas'</span>])  <span class="code-comment"># 29145505</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 9.2: DataFrame -->
+        <section class="section" id="section-9-2">
+            <div class="section-header"><span class="section-number dataframe">9.2</span><h2>The DataFrame</h2></div>
+            <p>A <strong>DataFrame</strong> is a two-dimensional table with labeled rows and columns. It's the most commonly used Pandas object.</p>
+            <div class="definition-box">
+                <span class="label">DataFrame Structure</span>
+                <p>Think of a DataFrame as a dictionary of Series sharing the same index, or as a spreadsheet/SQL table with rows and columns.</p>
+            </div>
+            <pre><code><span class="code-comment"># Create DataFrame from dictionary</span>
+data = {
+    <span class="code-string">'Name'</span>: [<span class="code-string">'Alice'</span>, <span class="code-string">'Bob'</span>, <span class="code-string">'Carol'</span>],
+    <span class="code-string">'Age'</span>: [<span class="code-number">25</span>, <span class="code-number">30</span>, <span class="code-number">35</span>],
+    <span class="code-string">'City'</span>: [<span class="code-string">'NYC'</span>, <span class="code-string">'LA'</span>, <span class="code-string">'Chicago'</span>]
+}
+df = pd.DataFrame(data)
+<span class="code-function">print</span>(df)</code></pre>
+            <div class="dataframe-visual">
+                <div class="dataframe-visual-title">DataFrame Visualization</div>
+                <table class="df-table">
+                    <thead><tr><th></th><th>Name</th><th>Age</th><th>City</th></tr></thead>
+                    <tbody>
+                        <tr><td class="index">0</td><td>Alice</td><td>25</td><td>NYC</td></tr>
+                        <tr><td class="index">1</td><td>Bob</td><td>30</td><td>LA</td></tr>
+                        <tr><td class="index">2</td><td>Carol</td><td>35</td><td>Chicago</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <pre><code><span class="code-comment"># Access columns</span>
+<span class="code-function">print</span>(df[<span class="code-string">'Name'</span>])      <span class="code-comment"># Returns Series</span>
+<span class="code-function">print</span>(df.Age)          <span class="code-comment"># Attribute access</span>
+
+<span class="code-comment"># DataFrame properties</span>
+<span class="code-function">print</span>(df.shape)        <span class="code-comment"># (3, 3)</span>
+<span class="code-function">print</span>(df.columns)      <span class="code-comment"># Index(['Name', 'Age', 'City'])</span>
+<span class="code-function">print</span>(df.dtypes)       <span class="code-comment"># Data types of each column</span></code></pre>
+        </section>
+
+        <!-- Section 9.3: Indexing & Selection -->
+        <section class="section" id="section-9-3">
+            <div class="section-header"><span class="section-number dataframe">9.3</span><h2>Indexing & Selection</h2></div>
+            <p>Pandas provides powerful ways to select and filter data using <code>loc</code> (label-based) and <code>iloc</code> (integer-based).</p>
+            <pre><code><span class="code-comment"># loc: Label-based indexing</span>
+df.loc[<span class="code-number">0</span>]              <span class="code-comment"># First row</span>
+df.loc[<span class="code-number">0</span>, <span class="code-string">'Name'</span>]      <span class="code-comment"># 'Alice'</span>
+df.loc[<span class="code-number">0</span>:<span class="code-number">1</span>, [<span class="code-string">'Name'</span>, <span class="code-string">'Age'</span>]]  <span class="code-comment"># Slice rows and columns</span>
+
+<span class="code-comment"># iloc: Integer-based indexing</span>
+df.iloc[<span class="code-number">0</span>]             <span class="code-comment"># First row</span>
+df.iloc[<span class="code-number">0</span>, <span class="code-number">1</span>]          <span class="code-comment"># Row 0, Column 1</span>
+df.iloc[:<span class="code-number">2</span>, :<span class="code-number">2</span>]        <span class="code-comment"># First 2 rows, first 2 columns</span>
+
+<span class="code-comment"># Boolean indexing</span>
+df[df[<span class="code-string">'Age'</span>] > <span class="code-number">25</span>]     <span class="code-comment"># Rows where Age > 25</span></code></pre>
+            <div class="note-box">
+                <span class="label">âš  loc vs iloc</span>
+                <p><strong>loc</strong> uses labels (inclusive on both ends). <strong>iloc</strong> uses integer positions (exclusive on the end, like Python slicing).</p>
+            </div>
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What does <code>df.loc[0:2]</code> return if the index is [0, 1, 2, 3]?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Rows 0 and 1 only</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Rows 0, 1, and 2</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Error</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! loc is label-based and inclusive on both ends.</div>
+                <div class="quiz-feedback incorrect">loc is label-based and inclusive on both ends, so 0:2 includes rows 0, 1, and 2.</div>
+            </div>
+        </section>
+
+        <!-- Section 9.4: Reading Data -->
+        <section class="section" id="section-9-4">
+            <div class="section-header"><span class="section-number dataframe">9.4</span><h2>Reading Data</h2></div>
+            <p>Pandas can read data from many file formats. The most common is CSV.</p>
+            <div class="io-cards">
+                <div class="io-card"><h5>read_csv()</h5><p class="desc">CSV files</p><code>pd.read_csv('data.csv')</code></div>
+                <div class="io-card"><h5>read_excel()</h5><p class="desc">Excel files</p><code>pd.read_excel('data.xlsx')</code></div>
+                <div class="io-card"><h5>read_json()</h5><p class="desc">JSON files</p><code>pd.read_json('data.json')</code></div>
+                <div class="io-card"><h5>read_sql()</h5><p class="desc">SQL databases</p><code>pd.read_sql(query, conn)</code></div>
+            </div>
+            <pre><code><span class="code-comment"># Read CSV file</span>
+df = pd.<span class="code-function">read_csv</span>(<span class="code-string">'sales_data.csv'</span>)
+
+<span class="code-comment"># Common parameters</span>
+df = pd.<span class="code-function">read_csv</span>(<span class="code-string">'data.csv'</span>,
+    index_col=<span class="code-string">'id'</span>,           <span class="code-comment"># Set column as index</span>
+    parse_dates=[<span class="code-string">'date'</span>],      <span class="code-comment"># Parse date columns</span>
+    na_values=[<span class="code-string">'NA'</span>, <span class="code-string">'?'</span>],     <span class="code-comment"># Custom NA values</span>
+    nrows=<span class="code-number">1000</span>                 <span class="code-comment"># Read only first 1000 rows</span>
+)
+
+<span class="code-comment"># Quick data inspection</span>
+df.<span class="code-function">head</span>()        <span class="code-comment"># First 5 rows</span>
+df.<span class="code-function">tail</span>()        <span class="code-comment"># Last 5 rows</span>
+df.<span class="code-function">info</span>()        <span class="code-comment"># Column types and non-null counts</span>
+df.<span class="code-function">describe</span>()    <span class="code-comment"># Statistical summary</span></code></pre>
+        </section>
+
+        <!-- Section 9.5: Writing Data -->
+        <section class="section" id="section-9-5">
+            <div class="section-header"><span class="section-number dataframe">9.5</span><h2>Writing Data</h2></div>
+            <p>Export your DataFrame to various file formats for sharing or storage.</p>
+            <pre><code><span class="code-comment"># Write to CSV</span>
+df.<span class="code-function">to_csv</span>(<span class="code-string">'output.csv'</span>, index=<span class="code-keyword">False</span>)
+
+<span class="code-comment"># Write to Excel</span>
+df.<span class="code-function">to_excel</span>(<span class="code-string">'output.xlsx'</span>, sheet_name=<span class="code-string">'Sheet1'</span>)
+
+<span class="code-comment"># Write to JSON</span>
+df.<span class="code-function">to_json</span>(<span class="code-string">'output.json'</span>, orient=<span class="code-string">'records'</span>)</code></pre>
+            <table class="data-table">
+                <thead><tr><th>Method</th><th>Description</th><th>Common Parameters</th></tr></thead>
+                <tbody>
+                    <tr><td><code>to_csv()</code></td><td>Write to CSV</td><td>index, sep, header</td></tr>
+                    <tr><td><code>to_excel()</code></td><td>Write to Excel</td><td>sheet_name, index</td></tr>
+                    <tr><td><code>to_json()</code></td><td>Write to JSON</td><td>orient, indent</td></tr>
+                    <tr><td><code>to_sql()</code></td><td>Write to SQL</td><td>name, con, if_exists</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 9.6: Missing Data -->
+        <section class="section" id="section-9-6">
+            <div class="section-header"><span class="section-number cleaning">9.6</span><h2>Handling Missing Data</h2></div>
+            <p>Real-world data is messy. Pandas represents missing values as <code>NaN</code> (Not a Number) or <code>None</code>.</p>
+            <pre><code><span class="code-comment"># Detect missing values</span>
+df.<span class="code-function">isna</span>()         <span class="code-comment"># Boolean mask of NaN values</span>
+df.<span class="code-function">isna</span>().<span class="code-function">sum</span>()   <span class="code-comment"># Count NaN per column</span>
+
+<span class="code-comment"># Drop missing values</span>
+df.<span class="code-function">dropna</span>()                  <span class="code-comment"># Drop rows with any NaN</span>
+df.<span class="code-function">dropna</span>(how=<span class="code-string">'all'</span>)         <span class="code-comment"># Drop rows where ALL are NaN</span>
+df.<span class="code-function">dropna</span>(axis=<span class="code-string">'columns'</span>)    <span class="code-comment"># Drop columns with NaN</span>
+df.<span class="code-function">dropna</span>(thresh=<span class="code-number">2</span>)          <span class="code-comment"># Keep rows with at least 2 non-NaN</span>
+
+<span class="code-comment"># Fill missing values</span>
+df.<span class="code-function">fillna</span>(<span class="code-number">0</span>)                  <span class="code-comment"># Fill with constant</span>
+df.<span class="code-function">fillna</span>(df.<span class="code-function">mean</span>())          <span class="code-comment"># Fill with column means</span>
+df.<span class="code-function">fillna</span>(method=<span class="code-string">'ffill'</span>)    <span class="code-comment"># Forward fill</span>
+df.<span class="code-function">fillna</span>(method=<span class="code-string">'bfill'</span>)    <span class="code-comment"># Backward fill</span></code></pre>
+            <div class="cleaning-box">
+                <span class="label">Data Cleaning Example</span>
+<pre style="margin-bottom: 0;"><code><span class="code-comment"># Fill different columns with different values</span>
+df.<span class="code-function">fillna</span>({<span class="code-string">'Age'</span>: df[<span class="code-string">'Age'</span>].<span class="code-function">median</span>(), <span class="code-string">'City'</span>: <span class="code-string">'Unknown'</span>})</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 9.7: Data Transformation -->
+        <section class="section" id="section-9-7">
+            <div class="section-header"><span class="section-number cleaning">9.7</span><h2>Data Transformation</h2></div>
+            <p>Transform and reshape your data for analysis.</p>
+            <pre><code><span class="code-comment"># Add new columns</span>
+df[<span class="code-string">'Bonus'</span>] = df[<span class="code-string">'Salary'</span>] * <span class="code-number">0.1</span>
+
+<span class="code-comment"># Apply functions</span>
+df[<span class="code-string">'Name'</span>].<span class="code-function">apply</span>(<span class="code-keyword">lambda</span> x: x.upper())
+df[<span class="code-string">'Age'</span>].<span class="code-function">apply</span>(np.sqrt)
+
+<span class="code-comment"># Replace values</span>
+df.<span class="code-function">replace</span>({<span class="code-string">'NYC'</span>: <span class="code-string">'New York'</span>, <span class="code-string">'LA'</span>: <span class="code-string">'Los Angeles'</span>})
+
+<span class="code-comment"># Remove duplicates</span>
+df.<span class="code-function">drop_duplicates</span>()
+df.<span class="code-function">drop_duplicates</span>(subset=[<span class="code-string">'Name'</span>])  <span class="code-comment"># Based on specific columns</span>
+
+<span class="code-comment"># Rename columns</span>
+df.<span class="code-function">rename</span>(columns={<span class="code-string">'Name'</span>: <span class="code-string">'FullName'</span>, <span class="code-string">'Age'</span>: <span class="code-string">'Years'</span>})
+
+<span class="code-comment"># Sort values</span>
+df.<span class="code-function">sort_values</span>(<span class="code-string">'Age'</span>, ascending=<span class="code-keyword">False</span>)</code></pre>
+        </section>
+
+        <!-- Section 9.8: GroupBy Operations -->
+        <section class="section" id="section-9-8">
+            <div class="section-header"><span class="section-number groupby">9.8</span><h2>GroupBy Operations</h2></div>
+            <p>The <strong>split-apply-combine</strong> pattern is fundamental to data analysis. GroupBy splits data into groups, applies a function, then combines results.</p>
+            <div class="definition-box">
+                <span class="label">Split-Apply-Combine</span>
+                <p><strong>Split:</strong> Divide data by key. <strong>Apply:</strong> Compute function per group. <strong>Combine:</strong> Merge results into one object.</p>
+            </div>
+            <pre><code><span class="code-comment"># Sample data</span>
+df = pd.DataFrame({
+    <span class="code-string">'Department'</span>: [<span class="code-string">'Sales'</span>, <span class="code-string">'Sales'</span>, <span class="code-string">'IT'</span>, <span class="code-string">'IT'</span>, <span class="code-string">'HR'</span>],
+    <span class="code-string">'Employee'</span>: [<span class="code-string">'Alice'</span>, <span class="code-string">'Bob'</span>, <span class="code-string">'Carol'</span>, <span class="code-string">'Dave'</span>, <span class="code-string">'Eve'</span>],
+    <span class="code-string">'Salary'</span>: [<span class="code-number">70000</span>, <span class="code-number">80000</span>, <span class="code-number">90000</span>, <span class="code-number">85000</span>, <span class="code-number">60000</span>]
+})
+
+<span class="code-comment"># Group and aggregate</span>
+df.<span class="code-function">groupby</span>(<span class="code-string">'Department'</span>)[<span class="code-string">'Salary'</span>].<span class="code-function">mean</span>()
+<span class="code-comment"># Department
+# HR       60000.0
+# IT       87500.0
+# Sales    75000.0</span>
+
+<span class="code-comment"># Multiple aggregations</span>
+df.<span class="code-function">groupby</span>(<span class="code-string">'Department'</span>).<span class="code-function">agg</span>({
+    <span class="code-string">'Salary'</span>: [<span class="code-string">'mean'</span>, <span class="code-string">'sum'</span>, <span class="code-string">'count'</span>]
+})</code></pre>
+            <div class="groupby-box">
+                <span class="label">Common Aggregation Functions</span>
+                <p><code>sum()</code>, <code>mean()</code>, <code>median()</code>, <code>min()</code>, <code>max()</code>, <code>count()</code>, <code>std()</code>, <code>first()</code>, <code>last()</code></p>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header"><span class="section-number" style="background: var(--gradient-orange);">Summary</span><h2>Chapter 9 Review</h2></div>
+            <p>You've learned the fundamentals of Pandas - essential for data manipulation and analysis in Python.</p>
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Series: 1D labeled array</div>
+                    <div class="summary-item">DataFrame: 2D tabular structure</div>
+                    <div class="summary-item">loc (labels) vs iloc (integers)</div>
+                    <div class="summary-item">read_csv() and to_csv() for I/O</div>
+                    <div class="summary-item">isna(), dropna(), fillna() for NaN</div>
+                    <div class="summary-item">apply() for transformations</div>
+                    <div class="summary-item">groupby() for aggregations</div>
+                    <div class="summary-item">merge() and concat() for combining</div>
+                </div>
+            </div>
+            <h3>Essential Functions</h3>
+            <table class="comparison-table">
+                <thead><tr><th>Category</th><th>Functions</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Creation</strong></td><td><code>Series(), DataFrame(), read_csv(), read_excel()</code></td></tr>
+                    <tr><td><strong>Selection</strong></td><td><code>loc, iloc, [], head(), tail()</code></td></tr>
+                    <tr><td><strong>Cleaning</strong></td><td><code>isna(), dropna(), fillna(), drop_duplicates()</code></td></tr>
+                    <tr><td><strong>Transform</strong></td><td><code>apply(), replace(), rename(), sort_values()</code></td></tr>
+                    <tr><td><strong>Aggregate</strong></td><td><code>groupby(), sum(), mean(), count(), agg()</code></td></tr>
+                    <tr><td><strong>Combine</strong></td><td><code>merge(), concat(), join()</code></td></tr>
+                </tbody>
+            </table>
+            <h3>What's Next?</h3>
+            <p>In <strong>Chapter 10</strong>, you'll learn Data Visualization with Matplotlib and Seaborn to create compelling charts and graphs.</p>
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Sales Data Analysis:</strong></p>
+                <ol>
+                    <li>Load a sales CSV with products, regions, and revenue</li>
+                    <li>Clean missing values and remove duplicates</li>
+                    <li>Calculate total revenue by region using groupby</li>
+                    <li>Find the top 5 products by sales volume</li>
+                </ol>
+            </div>
+        </section>
+
+        </div>
+    </main>
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressFill').style.width = (winScroll / height) * 100 + '%';
+        });
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 100) current = section.getAttribute('id'); });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

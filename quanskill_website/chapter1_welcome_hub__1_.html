@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuanSkill - Mathematics for Data Science and AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #FF9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --quanskill-dark: #1a1a2e;
+            --quanskill-light-blue: #e6f0ff;
+            --quanskill-light-orange: #fff4e6;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef7 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--quanskill-blue) 0%, var(--quanskill-orange) 100%);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--quanskill-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header h1 span {
+            color: var(--quanskill-orange);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.15em;
+            margin-bottom: 25px;
+            max-width: 800px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--quanskill-light-blue);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 12px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.8em;
+        }
+
+        .stat-card .stat-info {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .progress-section {
+            background: var(--quanskill-light-blue);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--quanskill-blue);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .progress-header span {
+            color: var(--quanskill-blue);
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 14px;
+            background: #d1e5ff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--quanskill-blue) 0%, var(--quanskill-orange) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.8em;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--quanskill-orange);
+            display: inline-block;
+        }
+
+        .section-title .emoji {
+            margin-right: 10px;
+        }
+
+        .modules-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(11, 47, 160, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(11, 47, 160, 0.15);
+            border-color: var(--quanskill-blue);
+        }
+
+        .module-card.completed {
+            border: 3px solid var(--quanskill-orange);
+        }
+
+        .module-card.completed .module-header {
+            background: linear-gradient(135deg, var(--quanskill-light-orange) 0%, #fff 100%);
+        }
+
+        .module-header {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transition: background 0.3s ease;
+        }
+
+        .module-header:hover {
+            background: var(--quanskill-light-blue);
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            margin-top: 4px;
+            cursor: pointer;
+            accent-color: var(--quanskill-orange);
+        }
+
+        .module-info {
+            flex: 1;
+        }
+
+        .module-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--quanskill-blue) 0%, var(--quanskill-blue-light) 100%);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .module-title {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.35em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .module-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-item.xp {
+            color: var(--quanskill-orange);
+            font-weight: 600;
+        }
+
+        .difficulty-badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .difficulty-foundational { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-intermediate { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-advanced { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .expand-btn {
+            color: var(--quanskill-blue);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-top: 4px;
+        }
+
+        .expand-btn.expanded {
+            transform: rotate(180deg);
+        }
+
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .module-content.show {
+            max-height: 1500px;
+        }
+
+        .module-content-inner {
+            padding: 25px;
+        }
+
+        .content-section {
+            margin-bottom: 25px;
+        }
+
+        .content-section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .objectives-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives-list li {
+            padding: 8px 0 8px 28px;
+            position: relative;
+            color: #555;
+        }
+
+        .objectives-list li:before {
+            content: "âœ“";
+            position: absolute;
+            left: 0;
+            color: var(--quanskill-orange);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .topics-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .topic-tag {
+            background: var(--quanskill-light-blue);
+            color: var(--quanskill-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid var(--quanskill-blue);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--quanskill-blue) 0%, var(--quanskill-blue-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .lab-btn {
+            background: linear-gradient(135deg, var(--quanskill-orange) 0%, var(--quanskill-orange-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lab-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(255, 144, 0, 0.3);
+        }
+
+        .assessment-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .assessment-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .learning-path {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(11, 47, 160, 0.08);
+            padding: 35px;
+            margin-top: 40px;
+        }
+
+        .learning-path h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .path-tracks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .path-track {
+            background: linear-gradient(135deg, var(--quanskill-light-blue) 0%, #fff 100%);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .path-track:hover {
+            transform: translateY(-3px);
+        }
+
+        .path-track h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .path-track p {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        .path-track .chapters {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-orange);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--quanskill-blue) 0%, var(--quanskill-blue-dark) 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .footer p {
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        .footer-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-stat {
+            text-align: center;
+        }
+
+        .footer-stat .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .footer-stat .label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Final Assessment Card */
+        .assessment-card {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .assessment-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+        }
+
+        .assessment-card p {
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .assessment-card .assessment-btn {
+            background: white;
+            color: #7c3aed;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stat-card {
+                width: 100%;
+            }
+
+            .path-tracks {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .start-btn, .lab-btn, .assessment-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <a href="index.html"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 50px; border-radius: 8px;"></a>
+                <div>
+                    <h1>Mathematics for <span>Data Science & AI</span></h1>
+                    <p>A comprehensive journey through the mathematical foundations that power machine learning and artificial intelligence. Master linear algebra, calculus, probability, optimization, and apply them to real ML algorithms.</p>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <span class="stat-icon">📚</span>
+                    <div class="stat-info">
+                        <div class="stat-value">11</div>
+                        <div class="stat-label">Chapters</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📝§ª</span>
+                    <div class="stat-info">
+                        <div class="stat-value">11</div>
+                        <div class="stat-label">Practice Labs</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">â­</span>
+                    <div class="stat-info">
+                        <div class="stat-value">13,200+</div>
+                        <div class="stat-label">Total XP</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">âˆ‚</span>
+                    <div class="stat-info">
+                        <div class="stat-value">10-12</div>
+                        <div class="stat-label">Weeks</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span>Overall Progress</span>
+                    <span id="progressText">0/11 chapters completed</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mathematical Foundations Section -->
+        <h2 class="section-title"><span class="emoji">🐍"</span> Mathematical Foundations</h2>
+        <div class="modules-grid" id="foundationsGrid">
+            <!-- Foundation modules will be inserted here -->
+        </div>
+
+        <!-- Machine Learning Algorithms Section -->
+        <h2 class="section-title"><span class="emoji">📝¤–</span> Machine Learning Algorithms</h2>
+        <div class="modules-grid" id="mlGrid">
+            <!-- ML modules will be inserted here -->
+        </div>
+
+        <!-- Final Assessment -->
+        <div class="assessment-card">
+            <h3>🎯 Final Assessment</h3>
+            <p>Test your mastery of mathematical foundations for machine learning with our comprehensive assessment covering all chapters.</p>
+            <button class="assessment-btn" onclick="openModule('final_appraisal.html')">🐍" Take Final Assessment</button>
+        </div>
+
+        <div class="learning-path">
+            <h3>📝—º Learning Path Structure</h3>
+            <div class="path-tracks">
+                <div class="path-track">
+                    <h4>🐍" Mathematical Foundations</h4>
+                    <p>Linear algebra, analytic geometry, matrix decompositions, vector calculus, probability, and optimization</p>
+                    <div class="chapters">Chapters 2-8</div>
+                </div>
+                <div class="path-track">
+                    <h4>📝¤– Core ML Algorithms</h4>
+                    <p>Linear regression, PCA, density estimation with GMM, and SVM classification</p>
+                    <div class="chapters">Chapters 9-12</div>
+                </div>
+                <div class="path-track">
+                    <h4>📝§ª Practice Labs</h4>
+                    <p>Hands-on exercises with interactive quizzes and coding challenges for each chapter</p>
+                    <div class="chapters">All Chapters</div>
+                </div>
+                <div class="path-track" style="background: linear-gradient(135deg, var(--quanskill-light-orange) 0%, #fff 100%); border-color: var(--quanskill-orange);">
+                    <h4>🚀 What's Next?</h4>
+                    <p>After completion: Deep Learning, Neural Networks, NLP, and Computer Vision</p>
+                    <div class="chapters" style="color: var(--quanskill-blue);">Coming Soon!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>🎯 Ready to Master the Math Behind AI?</h3>
+            <p>Join thousands of learners building strong mathematical foundations for machine learning with Quanskill's interactive, hands-on approach.</p>
+            <div class="footer-stats">
+                <div class="footer-stat">
+                    <div class="value">100+</div>
+                    <div class="label">Practice Problems</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="value">50+</div>
+                    <div class="label">Interactive Quizzes</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="value">11</div>
+                    <div class="label">Comprehensive Labs</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modules = [
+            // Mathematical Foundations (Chapters 2-8)
+            { 
+                id: 2, 
+                section: 'foundations',
+                title: "Linear Algebra", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "foundational",
+                objectives: [
+                    "Master vectors, matrices, and their operations",
+                    "Understand linear transformations and their properties",
+                    "Solve systems of linear equations",
+                    "Apply linear algebra to data representation"
+                ], 
+                prerequisites: [], 
+                keyTopics: ["Vectors", "Matrices", "Linear Transformations", "Systems of Equations", "Vector Spaces", "Basis & Rank"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "linear-algebra-chapter2__3_.html",
+                labFile: "linear_algebra_practice_hub__1_.html"
+            },
+            { 
+                id: 3, 
+                section: 'foundations',
+                title: "Analytic Geometry", 
+                duration: "4-5 hours", 
+                xp: 1000,
+                difficulty: "foundational",
+                objectives: [
+                    "Understand geometric interpretations of linear algebra",
+                    "Work with norms, distances, and angles",
+                    "Master orthogonality and projections",
+                    "Apply geometric concepts to ML problems"
+                ], 
+                prerequisites: [2], 
+                keyTopics: ["Norms", "Inner Products", "Distances", "Angles", "Orthogonality", "Projections"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "chapter3_analytic_geometry.html",
+                labFile: "chapter3_analytic_geometry_hub.html"
+            },
+            { 
+                id: 4, 
+                section: 'foundations',
+                title: "Matrix Decompositions", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Master eigenvalue decomposition",
+                    "Understand and apply SVD",
+                    "Work with Cholesky decomposition",
+                    "Apply decompositions to dimensionality reduction"
+                ], 
+                prerequisites: [2, 3], 
+                keyTopics: ["Eigenvalues", "Eigenvectors", "SVD", "Cholesky", "Determinants", "Trace"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "matrix-decompositions-chapter4.html",
+                labFile: "matrix_decomposition_practice_hub.html"
+            },
+            { 
+                id: 5, 
+                section: 'foundations',
+                title: "Vector Calculus", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Master partial derivatives and gradients",
+                    "Understand Jacobians and Hessians",
+                    "Apply chain rule in neural networks",
+                    "Compute gradients for optimization"
+                ], 
+                prerequisites: [2], 
+                keyTopics: ["Gradients", "Partial Derivatives", "Jacobians", "Hessians", "Chain Rule", "Taylor Series"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "vector-calculus-chapter5.html",
+                labFile: "vector_calculus_practice_hub.html"
+            },
+            { 
+                id: 6, 
+                section: 'foundations',
+                title: "Probability & Distributions", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Master probability rules and Bayes' theorem",
+                    "Understand key probability distributions",
+                    "Work with expectations and covariance",
+                    "Apply Gaussian distributions to ML"
+                ], 
+                prerequisites: [2], 
+                keyTopics: ["Probability Rules", "Bayes' Theorem", "Distributions", "Gaussian", "Expectations", "Covariance"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "probability-distributions-chapter6.html",
+                labFile: "probability_distributions_practice_hub.html"
+            },
+            { 
+                id: 7, 
+                section: 'foundations',
+                title: "Continuous Optimization", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Master gradient descent and its variants",
+                    "Understand convexity and its importance",
+                    "Apply constrained optimization techniques",
+                    "Implement optimization for ML training"
+                ], 
+                prerequisites: [5], 
+                keyTopics: ["Gradient Descent", "Convexity", "Lagrange Multipliers", "Learning Rate", "Momentum", "Convergence"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "continuous-optimization-chapter7.html",
+                labFile: "continuous_optimization_practice_hub.html"
+            },
+            { 
+                id: 8, 
+                section: 'foundations',
+                title: "When Models Meet Data", 
+                duration: "4-5 hours", 
+                xp: 1000,
+                difficulty: "intermediate",
+                objectives: [
+                    "Understand the bias-variance tradeoff",
+                    "Master regularization techniques",
+                    "Apply cross-validation properly",
+                    "Evaluate model performance effectively"
+                ], 
+                prerequisites: [6, 7], 
+                keyTopics: ["Empirical Risk", "Regularization", "Cross-Validation", "Bias-Variance", "Overfitting", "Underfitting"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "ml_models_data__2_.html",
+                labFile: "when_models_meet_data_practice_hub.html"
+            },
+            // Machine Learning Algorithms (Chapters 9-12)
+            { 
+                id: 9, 
+                section: 'ml',
+                title: "Linear Regression", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "intermediate",
+                objectives: [
+                    "Derive linear regression from first principles",
+                    "Understand MLE and MAP estimation",
+                    "Apply Bayesian linear regression",
+                    "Implement and evaluate regression models"
+                ], 
+                prerequisites: [4, 6, 7], 
+                keyTopics: ["Least Squares", "MLE", "MAP", "Bayesian Regression", "Feature Engineering", "Model Selection"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "linear_regression.html",
+                labFile: "linear_regression_practice_hub.html"
+            },
+            { 
+                id: 10, 
+                section: 'ml',
+                title: "Dimensionality Reduction (PCA)", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "advanced",
+                objectives: [
+                    "Understand PCA from multiple perspectives",
+                    "Apply variance maximization principle",
+                    "Implement PCA using SVD",
+                    "Apply PCA for feature extraction"
+                ], 
+                prerequisites: [4, 7], 
+                keyTopics: ["PCA", "Variance Maximization", "Projection", "Reconstruction", "Eigenfaces", "Latent Variables"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "dimensionality_reduction.html",
+                labFile: "pca_practice_hub.html"
+            },
+            { 
+                id: 11, 
+                section: 'ml',
+                title: "Density Estimation (GMM)", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "advanced",
+                objectives: [
+                    "Master Gaussian Mixture Models",
+                    "Understand the EM algorithm",
+                    "Apply probabilistic clustering",
+                    "Implement density estimation"
+                ], 
+                prerequisites: [6, 7], 
+                keyTopics: ["GMM", "EM Algorithm", "Mixture Models", "Latent Variables", "Clustering", "Soft Assignment"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "density_estimation.html",
+                labFile: "gmm_practice_hub.html"
+            },
+            { 
+                id: 12, 
+                section: 'ml',
+                title: "Classification (SVM)", 
+                duration: "5-6 hours", 
+                xp: 1200,
+                difficulty: "advanced",
+                objectives: [
+                    "Understand margin-based classification",
+                    "Master the kernel trick",
+                    "Apply dual formulation and Lagrange multipliers",
+                    "Implement SVM for classification tasks"
+                ], 
+                prerequisites: [7], 
+                keyTopics: ["Margins", "Support Vectors", "Kernels", "Dual Problem", "Soft Margin", "RBF Kernel"],
+                hasTheory: true,
+                hasLab: true,
+                theoryFile: "classification_svm.html",
+                labFile: "svm_practice_hub.html"
+            }
+        ];
+
+        let completedModules = new Set();
+
+        function renderModules() {
+            const foundationsGrid = document.getElementById('foundationsGrid');
+            const mlGrid = document.getElementById('mlGrid');
+
+            const foundationModules = modules.filter(m => m.section === 'foundations');
+            const mlModules = modules.filter(m => m.section === 'ml');
+
+            foundationsGrid.innerHTML = foundationModules.map(renderModuleCard).join('');
+            mlGrid.innerHTML = mlModules.map(renderModuleCard).join('');
+
+            updateProgress();
+        }
+
+        function renderModuleCard(module) {
+            const difficultyClass = `difficulty-${module.difficulty}`;
+            const difficultyLabel = module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1);
+            
+            return `
+                <div class="module-card ${completedModules.has(module.id) ? 'completed' : ''}" id="module-${module.id}">
+                    <div class="module-header" onclick="toggleModule(${module.id})">
+                        <input type="checkbox" class="checkbox" 
+                            ${completedModules.has(module.id) ? 'checked' : ''} 
+                            onclick="event.stopPropagation(); toggleComplete(${module.id})">
+                        <div class="module-info">
+                            <span class="module-number">Chapter ${module.id}</span>
+                            <div class="module-title">${module.title}</div>
+                            <div class="module-meta">
+                                <span class="meta-item">âˆ‚ ${module.duration}</span>
+                                <span class="meta-item xp">â­ ${module.xp} XP</span>
+                                <span class="difficulty-badge ${difficultyClass}">${difficultyLabel}</span>
+                                ${module.prerequisites.length > 0 ? `<span class="meta-item">📝‹ Prereq: Ch. ${module.prerequisites.join(', ')}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="expand-btn" id="expand-${module.id}">â–¼</span>
+                    </div>
+                    <div class="module-content" id="content-${module.id}">
+                        <div class="module-content-inner">
+                            <div class="content-section">
+                                <h4>🎯 Learning Objectives</h4>
+                                <ul class="objectives-list">
+                                    ${module.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="content-section">
+                                <h4>📚 Key Topics</h4>
+                                <div class="topics-container">
+                                    ${module.keyTopics.map(topic => `<span class="topic-tag">${topic}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                ${module.hasTheory ? `<button class="start-btn" onclick="openModule('${module.theoryFile}')">📝– Start Chapter ${module.id}</button>` : ''}
+                                ${module.hasLab ? `<button class="lab-btn" onclick="openModule('${module.labFile}')">📝§ª Practice Lab</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleModule(id) {
+            const content = document.getElementById(`content-${id}`);
+            const expandBtn = document.getElementById(`expand-${id}`);
+            content.classList.toggle('show');
+            expandBtn.classList.toggle('expanded');
+        }
+
+        function toggleComplete(id) {
+            if (completedModules.has(id)) {
+                completedModules.delete(id);
+            } else {
+                completedModules.add(id);
+            }
+            updateProgress();
+            const card = document.getElementById(`module-${id}`);
+            card.classList.toggle('completed');
+        }
+
+        function updateProgress() {
+            const total = modules.length;
+            const completed = completedModules.size;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${completed}/${total} chapters completed`;
+        }
+
+        function openModule(filename) {
+            window.open(filename, '_blank');
+        }
+
+        // Initialize
+        renderModules();
+    </script>
+</body>
+</html>

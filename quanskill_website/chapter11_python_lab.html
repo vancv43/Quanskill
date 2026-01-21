@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Time Series Lab | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .xp-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link.completed {
+            color: var(--success);
+        }
+
+        .nav-link.completed::after {
+            content: 'Ã¢Å“"';
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: 'Ã¢ÂÂ°';
+            position: absolute;
+            bottom: 20px; right: 40px;
+            font-size: 80px;
+            opacity: 0.2;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .lab-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .lab-card:hover {
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .lab-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .lab-title-group { display: flex; align-items: center; gap: 1rem; }
+
+        .lab-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .lab-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .lab-xp {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--quanskill-orange);
+            background: rgba(255, 144, 0, 0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        .lab-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .code-editor {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .code-editor-header {
+            background: #0f172a;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-editor-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .code-editor-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-editor-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-editor-dot.red { background: #ef4444; }
+        .code-editor-dot.yellow { background: #eab308; }
+        .code-editor-dot.green { background: #22c55e; }
+
+        .code-input {
+            width: 100%;
+            min-height: 150px;
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            padding: 1rem;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .code-input:focus { outline: none; }
+
+        .code-input::placeholder { color: #64748b; }
+
+        .code-output {
+            background: #0f172a;
+            border-top: 1px solid #334155;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #a5f3fc;
+            min-height: 80px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .code-output.error { color: #fca5a5; }
+        .code-output.success { color: #86efac; }
+
+        .btn-run {
+            background: var(--gradient-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 144, 0, 0.4);
+        }
+
+        .btn-run:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-check {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.4);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .hint-box {
+            background: rgba(255, 144, 0, 0.08);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .hint-box .hint-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hint-box .hint-label::before { content: 'Ã°Å¸'Â¡'; }
+
+        .task-box {
+            background: rgba(11, 47, 160, 0.05);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .task-box .task-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-box .task-label::before { content: 'Ã°Å¸Å½Â¯'; }
+
+        .feedback-box {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .feedback-box.show { display: block; animation: slideIn 0.3s ease; }
+
+        .feedback-box.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .feedback-box.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+
+        .feedback-box.partial {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--warning);
+            color: var(--warning);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 2000;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .achievement-popup .emoji { font-size: 4rem; margin-bottom: 1rem; }
+
+        .achievement-popup h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-popup .xp-earned {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.show { display: block; }
+
+        .concept-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(26, 79, 208, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .concept-box h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-box h4::before { content: 'Ã¢ÂÂ°'; }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .mcq-option {
+            padding: 1rem 1.25rem;
+            background: var(--code-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .mcq-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .mcq-option.selected {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.1);
+        }
+
+        .mcq-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .mcq-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .back-btn {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .header-stats { display: none; }
+            .mcq-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="emoji">🎉</div>
+        <h3>Lab Completed!</h3>
+        <p class="xp-earned">+<span id="xpEarned">50</span> XP</p>
+        <button class="btn-run" onclick="closeAchievement()" style="margin-top: 1rem;">Continue</button>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">Ã¢ËœÂ°</button>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span>Ã°Å¸"Â¥ Streak:</span>
+                    <span class="stat-value" id="streakCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Ã¢Â­Â XP:</span>
+                    <span class="stat-value" id="totalXP">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Ã¢Å“â€¦ Completed:</span>
+                    <span class="stat-value"><span id="completedLabs">0</span>/10</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 11 Ã‚Â· Time Series Lab</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarXP">0 XP</div>
+            <div class="score-label">Total Experience</div>
+            <div class="xp-bar">
+                <div class="xp-fill" id="xpFill" style="width: 0%"></div>
+            </div>
+            <div class="score-label" style="margin-top: 0.25rem; font-size: 0.7rem;">Level <span id="currentLevel">1</span></div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Date & Time Basics</div>
+            <div class="nav-link active" onclick="scrollToLab('lab1')" id="nav-lab1">
+                <span>Lab 1: DateTime Types</span>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab2')" id="nav-lab2">
+                <span>Lab 2: DatetimeIndex</span>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab3')" id="nav-lab3">
+                <span>Lab 3: Date Ranges</span>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Frequency & Resampling</div>
+            <div class="nav-link" onclick="scrollToLab('lab4')" id="nav-lab4">
+                <span>Lab 4: Frequencies</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab5')" id="nav-lab5">
+                <span>Lab 5: Resampling</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab6')" id="nav-lab6">
+                <span>Lab 6: Downsampling</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Window Functions</div>
+            <div class="nav-link" onclick="scrollToLab('lab7')" id="nav-lab7">
+                <span>Lab 7: Rolling Windows</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab8')" id="nav-lab8">
+                <span>Lab 8: Shifting Data</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Challenge</div>
+            <div class="nav-link" onclick="scrollToLab('lab9')" id="nav-lab9">
+                <span>Lab 9: Mini Project</span>
+                <span class="difficulty-badge difficulty-hard">Hard</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab10')" id="nav-lab10">
+                <span>Lab 10: Quiz</span>
+                <span class="difficulty-badge difficulty-hard">Hard</span>
+            </div>
+        </div>
+    </nav>
+
+    <a href="javascript:history.back()" class="back-btn" title="Go Back">Ã¢â€ Â</a>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <span class="hero-badge">Ã°Å¸Â§Âª Interactive Lab</span>
+                    <h1>Time Series Lab</h1>
+                    <p class="hero-subtitle">Master temporal data analysis! Learn to work with dates, resample frequencies, and apply moving window functions.</p>
+                </div>
+            </section>
+
+            <!-- Concept Box -->
+            <div class="concept-box">
+                <h4>Time Series Fundamentals</h4>
+                <p>Time series data is indexed by timestamps. Key operations include:</p>
+                <p><strong>Ã¢â‚¬Â¢ DatetimeIndex:</strong> Index for time-stamped data</p>
+                <p><strong>Ã¢â‚¬Â¢ Resampling:</strong> Convert between frequencies (daily Ã¢â€ ' monthly)</p>
+                <p><strong>Ã¢â‚¬Â¢ Rolling:</strong> Calculate statistics over sliding windows</p>
+                <p style="margin-top: 0.5rem;"><code>pd.date_range()</code> | <code>resample()</code> | <code>rolling()</code></p>
+            </div>
+
+            <!-- Lab 1: DateTime Types -->
+            <div class="lab-card" id="lab1">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 1</span>
+                        <h2 class="lab-title">DateTime Types</h2>
+                    </div>
+                    <span class="lab-xp">+50 XP</span>
+                </div>
+                
+                <p class="lab-description">Python's <code>datetime</code> module and pandas <code>Timestamp</code> are fundamental for time series work.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Create datetime objects and calculate the difference between two dates using <code>timedelta</code>.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">datetime_basics.py</span>
+                    </div>
+                    <textarea class="code-input" id="code1" placeholder="from datetime import datetime, timedelta
+import pandas as pd
+
+# Create datetime objects
+start = datetime(2024, 1, 1)
+end = datetime(2024, 12, 31)
+
+# Calculate difference
+delta = end - start
+print(f'Days between: {delta.days}')
+
+# Pandas Timestamp
+ts = pd.Timestamp('2024-06-15')
+print(f'Timestamp: {ts}')
+print(f'Year: {ts.year}, Month: {ts.month}')"></textarea>
+                    <div class="code-output" id="output1">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(1)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(1)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p><code>datetime(year, month, day)</code> creates dates. Subtracting dates gives a <code>timedelta</code>.</p>
+                </div>
+
+                <div class="feedback-box" id="feedback1"></div>
+            </div>
+
+            <!-- Lab 2: DatetimeIndex -->
+            <div class="lab-card" id="lab2">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 2</span>
+                        <h2 class="lab-title">DatetimeIndex</h2>
+                    </div>
+                    <span class="lab-xp">+50 XP</span>
+                </div>
+                
+                <p class="lab-description">A <code>DatetimeIndex</code> is the foundation of pandas time seriesÃ¢â‚¬"it indexes your data by timestamps.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Create a time series with a DatetimeIndex and access data by date.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">datetime_index.py</span>
+                    </div>
+                    <textarea class="code-input" id="code2" placeholder="import pandas as pd
+import numpy as np
+
+# Create a time series with DatetimeIndex
+dates = pd.to_datetime(['2024-01-01', '2024-01-02', '2024-01-03', 
+                        '2024-01-04', '2024-01-05'])
+ts = pd.Series([100, 102, 98, 105, 110], index=dates)
+
+print('Time Series:')
+print(ts)
+
+print('\nIndex type:', type(ts.index))
+
+# Select by date
+print('\nValue on 2024-01-03:', ts['2024-01-03'])"></textarea>
+                    <div class="code-output" id="output2">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(2)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(2)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p><code>pd.to_datetime()</code> converts strings to datetime. Use date strings to select data!</p>
+                </div>
+
+                <div class="feedback-box" id="feedback2"></div>
+            </div>
+
+            <!-- Lab 3: Date Ranges -->
+            <div class="lab-card" id="lab3">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 3</span>
+                        <h2 class="lab-title">Generating Date Ranges</h2>
+                    </div>
+                    <span class="lab-xp">+75 XP</span>
+                </div>
+                
+                <p class="lab-description"><code>pd.date_range()</code> generates sequences of dates with specified frequency.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Generate date ranges with different frequencies: daily, weekly, and monthly.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">date_ranges.py</span>
+                    </div>
+                    <textarea class="code-input" id="code3" placeholder="import pandas as pd
+
+# Daily dates
+daily = pd.date_range('2024-01-01', periods=5, freq='D')
+print('Daily:')
+print(daily)
+
+# Weekly dates
+weekly = pd.date_range('2024-01-01', periods=4, freq='W')
+print('\nWeekly:')
+print(weekly)
+
+# Monthly dates
+monthly = pd.date_range('2024-01-01', periods=6, freq='M')
+print('\nMonthly (end of month):')
+print(monthly)"></textarea>
+                    <div class="code-output" id="output3">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(3)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(3)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>Common frequencies: 'D' (day), 'W' (week), 'M' (month end), 'MS' (month start), 'H' (hour)</p>
+                </div>
+
+                <div class="feedback-box" id="feedback3"></div>
+            </div>
+
+            <!-- Lab 4: Frequencies -->
+            <div class="lab-card" id="lab4">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 4</span>
+                        <h2 class="lab-title">Frequency Strings</h2>
+                    </div>
+                    <span class="lab-xp">+75 XP</span>
+                </div>
+                
+                <p class="lab-description">Pandas uses frequency strings to define time intervals: 'D', 'W', 'M', 'Q', 'A', 'H', 'T', 'S'.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Create date ranges using different frequency multiples like '2D' (every 2 days) or '4H' (every 4 hours).</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">frequencies.py</span>
+                    </div>
+                    <textarea class="code-input" id="code4" placeholder="import pandas as pd
+
+# Every 2 days
+every_2_days = pd.date_range('2024-01-01', periods=5, freq='2D')
+print('Every 2 days:')
+print(every_2_days)
+
+# Every 4 hours
+every_4_hours = pd.date_range('2024-01-01', periods=6, freq='4H')
+print('\nEvery 4 hours:')
+print(every_4_hours)
+
+# Business days only
+business_days = pd.date_range('2024-01-01', periods=5, freq='B')
+print('\nBusiness days:')
+print(business_days)"></textarea>
+                    <div class="code-output" id="output4">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(4)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(4)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>'B' = business day, 'Q' = quarter end, 'A' = year end, 'T' or 'min' = minute</p>
+                </div>
+
+                <div class="feedback-box" id="feedback4"></div>
+            </div>
+
+            <!-- Lab 5: Resampling -->
+            <div class="lab-card" id="lab5">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 5</span>
+                        <h2 class="lab-title">Resampling Basics</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description"><code>resample()</code> converts time series from one frequency to anotherÃ¢â‚¬"like a time-based groupby!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Resample daily data to weekly and monthly frequencies using mean aggregation.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">resampling.py</span>
+                    </div>
+                    <textarea class="code-input" id="code5" placeholder="import pandas as pd
+import numpy as np
+
+# Create daily data
+dates = pd.date_range('2024-01-01', periods=30, freq='D')
+daily_data = pd.Series(np.random.randint(50, 150, 30), index=dates)
+
+print('Daily data (first 5):')
+print(daily_data.head())
+
+# Resample to weekly mean
+weekly = daily_data.resample('W').mean()
+print('\nWeekly mean:')
+print(weekly)
+
+# Resample to monthly sum
+monthly = daily_data.resample('M').sum()
+print('\nMonthly sum:')
+print(monthly)"></textarea>
+                    <div class="code-output" id="output5">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(5)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(5)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p><code>resample()</code> returns a resampler objectÃ¢â‚¬"apply <code>mean()</code>, <code>sum()</code>, <code>count()</code>, etc.</p>
+                </div>
+
+                <div class="feedback-box" id="feedback5"></div>
+            </div>
+
+            <!-- Lab 6: Downsampling -->
+            <div class="lab-card" id="lab6">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 6</span>
+                        <h2 class="lab-title">Downsampling & OHLC</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">Downsampling reduces frequency. For financial data, <code>ohlc()</code> gives Open-High-Low-Close values.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Downsample minute data to 5-minute bars with OHLC aggregation.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">ohlc.py</span>
+                    </div>
+                    <textarea class="code-input" id="code6" placeholder="import pandas as pd
+import numpy as np
+
+# Create minute-level price data
+dates = pd.date_range('2024-01-01 09:00', periods=15, freq='T')
+prices = pd.Series([100, 101, 99, 102, 103, 101, 104, 105, 103, 
+                    106, 104, 107, 108, 106, 109], index=dates)
+
+print('Minute prices:')
+print(prices)
+
+# Downsample to 5-minute OHLC
+ohlc = prices.resample('5T').ohlc()
+print('\n5-minute OHLC:')
+print(ohlc)"></textarea>
+                    <div class="code-output" id="output6">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(6)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(6)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>OHLC is common in finance: Open (first), High (max), Low (min), Close (last)</p>
+                </div>
+
+                <div class="feedback-box" id="feedback6"></div>
+            </div>
+
+            <!-- Lab 7: Rolling Windows -->
+            <div class="lab-card" id="lab7">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 7</span>
+                        <h2 class="lab-title">Rolling Windows</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">The <code>rolling()</code> method calculates statistics over a sliding windowÃ¢â‚¬"great for smoothing data!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Calculate 3-day and 7-day rolling means to smooth noisy data.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">rolling.py</span>
+                    </div>
+                    <textarea class="code-input" id="code7" placeholder="import pandas as pd
+import numpy as np
+
+# Create noisy data
+dates = pd.date_range('2024-01-01', periods=10, freq='D')
+data = pd.Series([100, 105, 98, 110, 95, 108, 102, 115, 99, 112], index=dates)
+
+print('Original data:')
+print(data)
+
+# 3-day rolling mean
+rolling_3 = data.rolling(window=3).mean()
+print('\n3-day rolling mean:')
+print(rolling_3)
+
+# 7-day rolling mean
+rolling_7 = data.rolling(window=7).mean()
+print('\n7-day rolling mean:')
+print(rolling_7)"></textarea>
+                    <div class="code-output" id="output7">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(7)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(7)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>First (window-1) values are NaN because there's not enough data. Use <code>min_periods</code> to change this.</p>
+                </div>
+
+                <div class="feedback-box" id="feedback7"></div>
+            </div>
+
+            <!-- Lab 8: Shifting Data -->
+            <div class="lab-card" id="lab8">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 8</span>
+                        <h2 class="lab-title">Shifting Data</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">The <code>shift()</code> method moves data forward or backward in timeÃ¢â‚¬"useful for calculating changes!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Use shift to calculate day-over-day changes and percent returns.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">shifting.py</span>
+                    </div>
+                    <textarea class="code-input" id="code8" placeholder="import pandas as pd
+
+# Stock prices
+dates = pd.date_range('2024-01-01', periods=5, freq='D')
+prices = pd.Series([100, 102, 99, 105, 108], index=dates)
+
+print('Prices:')
+print(prices)
+
+# Previous day's price
+previous = prices.shift(1)
+print('\nShifted (lag 1):')
+print(previous)
+
+# Daily change
+change = prices - prices.shift(1)
+print('\nDaily change:')
+print(change)
+
+# Percent return
+pct_return = (prices / prices.shift(1) - 1) * 100
+print('\nPercent return:')
+print(pct_return)"></textarea>
+                    <div class="code-output" id="output8">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(8)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(8)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p><code>shift(1)</code> moves data forward (lag), <code>shift(-1)</code> moves backward (lead). Also see <code>pct_change()</code>!</p>
+                </div>
+
+                <div class="feedback-box" id="feedback8"></div>
+            </div>
+
+            <!-- Lab 9: Mini Project -->
+            <div class="lab-card" id="lab9">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 9</span>
+                        <h2 class="lab-title">Mini Project: Stock Analysis</h2>
+                    </div>
+                    <span class="lab-xp">+150 XP</span>
+                </div>
+                
+                <p class="lab-description">Put it all together! Analyze stock data with resampling, rolling averages, and returns.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Create a complete stock analysis: monthly resampling, 5-day moving average, and daily returns.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">stock_analysis.py</span>
+                    </div>
+                    <textarea class="code-input" id="code9" placeholder="import pandas as pd
+import numpy as np
+
+# Simulate 60 days of stock prices
+np.random.seed(42)
+dates = pd.date_range('2024-01-01', periods=60, freq='D')
+returns = np.random.randn(60) * 0.02  # 2% daily volatility
+prices = 100 * (1 + returns).cumprod()
+stock = pd.Series(prices, index=dates, name='STOCK')
+
+print('Stock prices (first 5):')
+print(stock.head())
+
+# Monthly OHLC
+monthly_ohlc = stock.resample('M').ohlc()
+print('\nMonthly OHLC:')
+print(monthly_ohlc)
+
+# 5-day moving average
+ma_5 = stock.rolling(5).mean()
+print('\n5-day MA (last 5):')
+print(ma_5.tail())
+
+# Daily returns
+daily_returns = stock.pct_change() * 100
+print('\nDaily returns (last 5):')
+print(daily_returns.tail())
+
+# Summary stats
+print(f'\nAvg daily return: {daily_returns.mean():.2f}%')
+print(f'Volatility (std): {daily_returns.std():.2f}%')"></textarea>
+                    <div class="code-output" id="output9">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(9)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(9)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="feedback-box" id="feedback9"></div>
+            </div>
+
+            <!-- Lab 10: Quiz -->
+            <div class="lab-card" id="lab10">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 10</span>
+                        <h2 class="lab-title">Chapter 11 Quiz</h2>
+                    </div>
+                    <span class="lab-xp">+200 XP</span>
+                </div>
+                
+                <p class="lab-description">Test your knowledge! Answer all questions correctly to complete the chapter.</p>
+
+                <div class="task-box">
+                    <div class="task-label">Question 1</div>
+                    <p>What does <code>pd.date_range()</code> generate?</p>
+                </div>
+                <div class="mcq-options" id="q1-options">
+                    <div class="mcq-option" onclick="selectMCQ(1, 0)">A list of strings</div>
+                    <div class="mcq-option" onclick="selectMCQ(1, 1)">A DatetimeIndex</div>
+                    <div class="mcq-option" onclick="selectMCQ(1, 2)">A DataFrame</div>
+                    <div class="mcq-option" onclick="selectMCQ(1, 3)">A timedelta</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 2</div>
+                    <p>What frequency string means "business day"?</p>
+                </div>
+                <div class="mcq-options" id="q2-options">
+                    <div class="mcq-option" onclick="selectMCQ(2, 0)">D</div>
+                    <div class="mcq-option" onclick="selectMCQ(2, 1)">B</div>
+                    <div class="mcq-option" onclick="selectMCQ(2, 2)">BD</div>
+                    <div class="mcq-option" onclick="selectMCQ(2, 3)">W</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 3</div>
+                    <p>What does <code>resample('M').mean()</code> do?</p>
+                </div>
+                <div class="mcq-options" id="q3-options">
+                    <div class="mcq-option" onclick="selectMCQ(3, 0)">Calculate minute averages</div>
+                    <div class="mcq-option" onclick="selectMCQ(3, 1)">Calculate monthly averages</div>
+                    <div class="mcq-option" onclick="selectMCQ(3, 2)">Calculate moving averages</div>
+                    <div class="mcq-option" onclick="selectMCQ(3, 3)">Calculate maximum values</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 4</div>
+                    <p>What does <code>ohlc()</code> stand for?</p>
+                </div>
+                <div class="mcq-options" id="q4-options">
+                    <div class="mcq-option" onclick="selectMCQ(4, 0)">Open-High-Low-Close</div>
+                    <div class="mcq-option" onclick="selectMCQ(4, 1)">Order-High-Low-Count</div>
+                    <div class="mcq-option" onclick="selectMCQ(4, 2)">Open-Hour-Last-Close</div>
+                    <div class="mcq-option" onclick="selectMCQ(4, 3)">Only-High-Low-Change</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 5</div>
+                    <p>What does <code>rolling(7).mean()</code> calculate?</p>
+                </div>
+                <div class="mcq-options" id="q5-options">
+                    <div class="mcq-option" onclick="selectMCQ(5, 0)">7-period moving average</div>
+                    <div class="mcq-option" onclick="selectMCQ(5, 1)">Sum of 7 values</div>
+                    <div class="mcq-option" onclick="selectMCQ(5, 2)">Every 7th value</div>
+                    <div class="mcq-option" onclick="selectMCQ(5, 3)">7% of the mean</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 6</div>
+                    <p>What does <code>shift(1)</code> do?</p>
+                </div>
+                <div class="mcq-options" id="q6-options">
+                    <div class="mcq-option" onclick="selectMCQ(6, 0)">Moves data forward by 1 period</div>
+                    <div class="mcq-option" onclick="selectMCQ(6, 1)">Moves data backward by 1 period</div>
+                    <div class="mcq-option" onclick="selectMCQ(6, 2)">Adds 1 to all values</div>
+                    <div class="mcq-option" onclick="selectMCQ(6, 3)">Removes the first row</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 7</div>
+                    <p>Converting daily to monthly data is called?</p>
+                </div>
+                <div class="mcq-options" id="q7-options">
+                    <div class="mcq-option" onclick="selectMCQ(7, 0)">Upsampling</div>
+                    <div class="mcq-option" onclick="selectMCQ(7, 1)">Downsampling</div>
+                    <div class="mcq-option" onclick="selectMCQ(7, 2)">Interpolation</div>
+                    <div class="mcq-option" onclick="selectMCQ(7, 3)">Aggregation</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 8</div>
+                    <p>Which method converts strings to datetime?</p>
+                </div>
+                <div class="mcq-options" id="q8-options">
+                    <div class="mcq-option" onclick="selectMCQ(8, 0)">pd.to_datetime()</div>
+                    <div class="mcq-option" onclick="selectMCQ(8, 1)">pd.date_range()</div>
+                    <div class="mcq-option" onclick="selectMCQ(8, 2)">pd.DatetimeIndex()</div>
+                    <div class="mcq-option" onclick="selectMCQ(8, 3)">pd.parse_date()</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 9</div>
+                    <p>What frequency is 'Q'?</p>
+                </div>
+                <div class="mcq-options" id="q9-options">
+                    <div class="mcq-option" onclick="selectMCQ(9, 0)">Quarterly</div>
+                    <div class="mcq-option" onclick="selectMCQ(9, 1)">Quick (seconds)</div>
+                    <div class="mcq-option" onclick="selectMCQ(9, 2)">Quintile</div>
+                    <div class="mcq-option" onclick="selectMCQ(9, 3)">Quantity</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 10</div>
+                    <p>To calculate percent change, use:</p>
+                </div>
+                <div class="mcq-options" id="q10-options">
+                    <div class="mcq-option" onclick="selectMCQ(10, 0)">pct_change()</div>
+                    <div class="mcq-option" onclick="selectMCQ(10, 1)">percent()</div>
+                    <div class="mcq-option" onclick="selectMCQ(10, 2)">diff_pct()</div>
+                    <div class="mcq-option" onclick="selectMCQ(10, 3)">change()</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-check" onclick="checkQuiz()">Ã¢Å“" Submit Quiz</button>
+                </div>
+
+                <div class="feedback-box" id="feedback10"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Game state
+        let totalXP = 0;
+        let completedLabs = new Set();
+        let streak = 0;
+        let quizAnswers = {};
+        const correctQuizAnswers = {1: 1, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0, 7: 1, 8: 0, 9: 0, 10: 0};
+        const labXP = {1: 50, 2: 50, 3: 75, 4: 75, 5: 100, 6: 100, 7: 100, 8: 100, 9: 150, 10: 200};
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function scrollToLab(labId) {
+            document.getElementById(labId).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById('nav-' + labId).classList.add('active');
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalXP').textContent = totalXP;
+            document.getElementById('sidebarXP').textContent = totalXP + ' XP';
+            document.getElementById('completedLabs').textContent = completedLabs.size;
+            document.getElementById('streakCount').textContent = streak;
+            
+            const level = Math.floor(totalXP / 100) + 1;
+            const xpInLevel = totalXP % 100;
+            document.getElementById('currentLevel').textContent = level;
+            document.getElementById('xpFill').style.width = xpInLevel + '%';
+        }
+
+        function showFeedback(labNum, type, message) {
+            const feedback = document.getElementById('feedback' + labNum);
+            feedback.className = 'feedback-box show ' + type;
+            feedback.innerHTML = (type === 'success' ? '🎉 ' : type === 'error' ? 'Ã¢ÂÅ’ ' : 'Ã¢Å¡Â  ') + message;
+        }
+
+        function awardXP(labNum) {
+            if (!completedLabs.has(labNum)) {
+                completedLabs.add(labNum);
+                const xp = labXP[labNum];
+                totalXP += xp;
+                streak++;
+                updateStats();
+                
+                document.getElementById('nav-lab' + labNum).classList.add('completed');
+                
+                document.getElementById('xpEarned').textContent = xp;
+                document.getElementById('overlay').classList.add('show');
+                document.getElementById('achievementPopup').classList.add('show');
+            }
+        }
+
+        function closeAchievement() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('achievementPopup').classList.remove('show');
+        }
+
+        // Time series simulation
+        function simulateTimeSeries(code) {
+            const outputs = [];
+            
+            // Lab 1: DateTime Types
+            if (code.includes('datetime') && code.includes('timedelta')) {
+                outputs.push("Days between: 365");
+                outputs.push("Timestamp: 2024-06-15 00:00:00");
+                outputs.push("Year: 2024, Month: 6");
+            }
+            // Lab 2: DatetimeIndex
+            else if (code.includes('DatetimeIndex') || (code.includes('to_datetime') && code.includes('Series'))) {
+                outputs.push("Time Series:");
+                outputs.push("2024-01-01    100");
+                outputs.push("2024-01-02    102");
+                outputs.push("2024-01-03     98");
+                outputs.push("2024-01-04    105");
+                outputs.push("2024-01-05    110");
+                outputs.push("dtype: int64");
+                outputs.push("");
+                outputs.push("Index type: <class 'pandas.core.indexes.datetimes.DatetimeIndex'>");
+                outputs.push("");
+                outputs.push("Value on 2024-01-03: 98");
+            }
+            // Lab 3: Date Ranges
+            else if (code.includes('date_range') && code.includes("freq='W'") && code.includes("freq='M'")) {
+                outputs.push("Daily:");
+                outputs.push("DatetimeIndex(['2024-01-01', '2024-01-02', '2024-01-03',");
+                outputs.push("               '2024-01-04', '2024-01-05'],");
+                outputs.push("              dtype='datetime64[ns]', freq='D')");
+                outputs.push("");
+                outputs.push("Weekly:");
+                outputs.push("DatetimeIndex(['2024-01-07', '2024-01-14', '2024-01-21',");
+                outputs.push("               '2024-01-28'],");
+                outputs.push("              dtype='datetime64[ns]', freq='W-SUN')");
+                outputs.push("");
+                outputs.push("Monthly (end of month):");
+                outputs.push("DatetimeIndex(['2024-01-31', '2024-02-29', '2024-03-31',");
+                outputs.push("               '2024-04-30', '2024-05-31', '2024-06-30'],");
+                outputs.push("              dtype='datetime64[ns]', freq='M')");
+            }
+            // Lab 4: Frequencies
+            else if (code.includes("freq='2D'") || code.includes("freq='4H'")) {
+                outputs.push("Every 2 days:");
+                outputs.push("DatetimeIndex(['2024-01-01', '2024-01-03', '2024-01-05',");
+                outputs.push("               '2024-01-07', '2024-01-09'],");
+                outputs.push("              dtype='datetime64[ns]', freq='2D')");
+                outputs.push("");
+                outputs.push("Every 4 hours:");
+                outputs.push("DatetimeIndex(['2024-01-01 00:00:00', '2024-01-01 04:00:00',");
+                outputs.push("               '2024-01-01 08:00:00', '2024-01-01 12:00:00',");
+                outputs.push("               '2024-01-01 16:00:00', '2024-01-01 20:00:00'],");
+                outputs.push("              dtype='datetime64[ns]', freq='4H')");
+                outputs.push("");
+                outputs.push("Business days:");
+                outputs.push("DatetimeIndex(['2024-01-01', '2024-01-02', '2024-01-03',");
+                outputs.push("               '2024-01-04', '2024-01-05'],");
+                outputs.push("              dtype='datetime64[ns]', freq='B')");
+            }
+            // Lab 5: Resampling
+            else if (code.includes("resample('W')") && code.includes("resample('M')")) {
+                outputs.push("Daily data (first 5):");
+                outputs.push("2024-01-01    87");
+                outputs.push("2024-01-02    102");
+                outputs.push("2024-01-03    78");
+                outputs.push("2024-01-04    115");
+                outputs.push("2024-01-05    93");
+                outputs.push("Freq: D, dtype: int64");
+                outputs.push("");
+                outputs.push("Weekly mean:");
+                outputs.push("2024-01-07     95.0");
+                outputs.push("2024-01-14    101.3");
+                outputs.push("2024-01-21     98.7");
+                outputs.push("2024-01-28    103.2");
+                outputs.push("2024-02-04     97.5");
+                outputs.push("Freq: W-SUN, dtype: float64");
+                outputs.push("");
+                outputs.push("Monthly sum:");
+                outputs.push("2024-01-31    3012");
+                outputs.push("Freq: M, dtype: int64");
+            }
+            // Lab 6: OHLC
+            else if (code.includes('ohlc')) {
+                outputs.push("Minute prices:");
+                outputs.push("2024-01-01 09:00:00    100");
+                outputs.push("2024-01-01 09:01:00    101");
+                outputs.push("2024-01-01 09:02:00     99");
+                outputs.push("...");
+                outputs.push("2024-01-01 09:14:00    109");
+                outputs.push("Freq: T, dtype: int64");
+                outputs.push("");
+                outputs.push("5-minute OHLC:");
+                outputs.push("                     open  high  low  close");
+                outputs.push("2024-01-01 09:00:00   100   103   99    103");
+                outputs.push("2024-01-01 09:05:00   101   105  101    103");
+                outputs.push("2024-01-01 09:10:00   106   109  104    109");
+            }
+            // Lab 7: Rolling
+            else if (code.includes('rolling') && code.includes('window=')) {
+                outputs.push("Original data:");
+                outputs.push("2024-01-01    100");
+                outputs.push("2024-01-02    105");
+                outputs.push("2024-01-03     98");
+                outputs.push("...");
+                outputs.push("2024-01-10    112");
+                outputs.push("dtype: int64");
+                outputs.push("");
+                outputs.push("3-day rolling mean:");
+                outputs.push("2024-01-01       NaN");
+                outputs.push("2024-01-02       NaN");
+                outputs.push("2024-01-03    101.00");
+                outputs.push("2024-01-04    104.33");
+                outputs.push("2024-01-05    101.00");
+                outputs.push("...");
+                outputs.push("dtype: float64");
+                outputs.push("");
+                outputs.push("7-day rolling mean:");
+                outputs.push("2024-01-01       NaN");
+                outputs.push("...");
+                outputs.push("2024-01-07    102.43");
+                outputs.push("2024-01-08    104.71");
+                outputs.push("2024-01-09    103.86");
+                outputs.push("2024-01-10    105.86");
+                outputs.push("dtype: float64");
+            }
+            // Lab 8: Shifting
+            else if (code.includes('shift(1)') && code.includes('pct_return')) {
+                outputs.push("Prices:");
+                outputs.push("2024-01-01    100");
+                outputs.push("2024-01-02    102");
+                outputs.push("2024-01-03     99");
+                outputs.push("2024-01-04    105");
+                outputs.push("2024-01-05    108");
+                outputs.push("dtype: int64");
+                outputs.push("");
+                outputs.push("Shifted (lag 1):");
+                outputs.push("2024-01-01      NaN");
+                outputs.push("2024-01-02    100.0");
+                outputs.push("2024-01-03    102.0");
+                outputs.push("2024-01-04     99.0");
+                outputs.push("2024-01-05    105.0");
+                outputs.push("dtype: float64");
+                outputs.push("");
+                outputs.push("Daily change:");
+                outputs.push("2024-01-01    NaN");
+                outputs.push("2024-01-02    2.0");
+                outputs.push("2024-01-03   -3.0");
+                outputs.push("2024-01-04    6.0");
+                outputs.push("2024-01-05    3.0");
+                outputs.push("dtype: float64");
+                outputs.push("");
+                outputs.push("Percent return:");
+                outputs.push("2024-01-01       NaN");
+                outputs.push("2024-01-02    2.000");
+                outputs.push("2024-01-03   -2.941");
+                outputs.push("2024-01-04    6.061");
+                outputs.push("2024-01-05    2.857");
+                outputs.push("dtype: float64");
+            }
+            // Lab 9: Mini Project
+            else if (code.includes('cumprod') && code.includes('pct_change')) {
+                outputs.push("Stock prices (first 5):");
+                outputs.push("2024-01-01    100.99");
+                outputs.push("2024-01-02     99.62");
+                outputs.push("2024-01-03    101.92");
+                outputs.push("2024-01-04    105.48");
+                outputs.push("2024-01-05    104.12");
+                outputs.push("Name: STOCK, dtype: float64");
+                outputs.push("");
+                outputs.push("Monthly OHLC:");
+                outputs.push("            open      high       low     close");
+                outputs.push("2024-01-31  100.99    115.23     94.18    108.42");
+                outputs.push("2024-02-29  109.15    122.87    103.56    118.93");
+                outputs.push("");
+                outputs.push("5-day MA (last 5):");
+                outputs.push("2024-02-25    116.45");
+                outputs.push("2024-02-26    117.21");
+                outputs.push("2024-02-27    117.89");
+                outputs.push("2024-02-28    118.34");
+                outputs.push("2024-02-29    118.93");
+                outputs.push("Name: STOCK, dtype: float64");
+                outputs.push("");
+                outputs.push("Daily returns (last 5):");
+                outputs.push("2024-02-25    1.23");
+                outputs.push("2024-02-26   -0.87");
+                outputs.push("2024-02-27    2.15");
+                outputs.push("2024-02-28   -0.45");
+                outputs.push("2024-02-29    1.78");
+                outputs.push("Name: STOCK, dtype: float64");
+                outputs.push("");
+                outputs.push("Avg daily return: 0.31%");
+                outputs.push("Volatility (std): 1.98%");
+            }
+            // Generic
+            else if (code.includes('print')) {
+                outputs.push(">>> Code executed successfully");
+            }
+            
+            return outputs.join('\n');
+        }
+
+        // Python code execution using Piston API (for syntax checking)
+        async function executePython(code) {
+            try {
+                const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        language: 'python',
+                        version: '3.10.0',
+                        files: [{
+                            content: code
+                        }]
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.run) {
+                    if (result.run.stderr && result.run.stderr.trim()) {
+                        return { success: false, output: result.run.stderr, hasError: true };
+                    }
+                    return { success: true, output: result.run.output || '', hasError: false };
+                } else {
+                    return { success: false, output: 'Error: Could not execute code', hasError: true };
+                }
+            } catch (e) {
+                // Network error - fall back to simulation only
+                return { success: true, output: '', hasError: false, networkError: true };
+            }
+        }
+
+        async function runCode(labNum) {
+            const code = document.getElementById('code' + labNum).value;
+            const outputEl = document.getElementById('output' + labNum);
+            
+            if (!code.trim()) {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = 'Please write some code first!';
+                return;
+            }
+            
+            outputEl.className = 'code-output';
+            outputEl.textContent = 'â³ Running code...';
+            
+            // First check with Piston for real Python errors
+            const pistonResult = await executePython(code);
+            
+            if (pistonResult.hasError) {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = pistonResult.output;
+                return;
+            }
+            
+            // Use simulation for specialized output
+            const simResult = simulateTimeSeries(code);
+            
+            if (simResult.success) {
+                outputEl.className = 'code-output';
+                const pistonOut = (pistonResult.output || '').trim();
+                outputEl.textContent = pistonOut || simResult.output || '(No output)';
+            } else {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = simResult.output;
+            }
+        }
+
+        async function checkLab(labNum) {
+            const code = document.getElementById('code' + labNum).value;
+            const codeLower = code.toLowerCase();
+            const outputEl = document.getElementById('output' + labNum);
+            
+            outputEl.className = 'code-output';
+            outputEl.textContent = 'â³ Checking...';
+            
+            // First check with Piston for real Python errors
+            const pistonResult = await executePython(code);
+            
+            if (pistonResult.hasError) {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = pistonResult.output;
+                showFeedback(labNum, 'error', 'Your code has errors. Please fix them and try again!');
+                streak = 0;
+                updateStats();
+                return;
+            }
+            
+            // Use simulation for display
+            const simResult = simulateTimeSeries(code);
+            const pistonOut = (pistonResult.output || '').trim();
+            outputEl.className = 'code-output';
+            outputEl.textContent = pistonOut || simResult.output || '(No output)';
+            
+            let passed = false;
+            
+            switch(labNum) {
+                case 1:
+                    passed = code.includes('datetime') && code.includes('timedelta');
+                    break;
+                case 2:
+                    passed = code.includes('to_datetime') && code.includes('series');
+                    break;
+                case 3:
+                    passed = code.includes('date_range') && code.includes("freq=");
+                    break;
+                case 4:
+                    passed = code.includes("'2d'") || code.includes("'4h'") || code.includes("'b'");
+                    break;
+                case 5:
+                    passed = code.includes('resample') && code.includes('mean');
+                    break;
+                case 6:
+                    passed = code.includes('ohlc');
+                    break;
+                case 7:
+                    passed = code.includes('rolling') && code.includes('mean');
+                    break;
+                case 8:
+                    passed = code.includes('shift') && (code.includes('pct') || code.includes('change'));
+                    break;
+                case 9:
+                    passed = code.includes('resample') && code.includes('rolling') && code.includes('pct_change');
+                    break;
+            }
+            
+            if (passed) {
+                showFeedback(labNum, 'success', 'Excellent work! You completed this lab successfully!');
+                awardXP(labNum);
+            } else {
+                showFeedback(labNum, 'error', 'Not quite right. Check your code and try again!');
+                streak = 0;
+                updateStats();
+            }
+        }
+        function selectMCQ(question, answer) {
+            quizAnswers[question] = answer;
+            const options = document.querySelectorAll(`#q${question}-options .mcq-option`);
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === answer) opt.classList.add('selected');
+            });
+        }
+
+        function checkQuiz() {
+            let correct = 0;
+            
+            for (let q = 1; q <= 10; q++) {
+                const options = document.querySelectorAll(`#q${q}-options .mcq-option`);
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('correct', 'incorrect');
+                    if (idx === correctQuizAnswers[q]) {
+                        opt.classList.add('correct');
+                    } else if (quizAnswers[q] === idx) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (quizAnswers[q] === correctQuizAnswers[q]) {
+                    correct++;
+                }
+            }
+            
+            const percentage = (correct / 10) * 100;
+            
+            if (correct >= 8) {
+                showFeedback(10, 'success', `Excellent! You got ${correct}/10 correct (${percentage}%)! Ã¢ÂÂ°`);
+                awardXP(10);
+            } else if (correct >= 5) {
+                showFeedback(10, 'partial', `Good effort! You got ${correct}/10 correct (${percentage}%). Need 80% to pass. Review and try again!`);
+            } else {
+                showFeedback(10, 'error', `You got ${correct}/10 correct (${percentage}%). Review the material and try again!`);
+            }
+        }
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

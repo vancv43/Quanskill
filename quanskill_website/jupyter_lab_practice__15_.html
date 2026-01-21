@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Coding Lab | 300 Exercises</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --qs-blue: #1a3a8f;
+            --qs-blue-dark: #152e73;
+            --qs-blue-light: #2548a8;
+            --qs-orange: #f7941d;
+            --qs-orange-dark: #e07d0a;
+            --qs-orange-light: #ffab40;
+            --bg-dark: #1a1f2e;
+            --bg-darker: #141820;
+            --bg-panel: #232a3b;
+            --text-primary: #f0f4f8;
+            --text-secondary: #a8b2c1;
+            --text-muted: #6b7785;
+            --border-color: #2d3548;
+            --success-green: #4ade80;
+            --sidebar-width: 260px;
+            --header-height: 40px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--text-primary); height: 100vh; overflow: hidden; font-size: 13px; }
+        
+        .header { height: var(--header-height); background: var(--qs-orange); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; }
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .logo { width: 22px; height: 22px; border-radius: 4px; }
+        .header-title { font-weight: 700; font-size: 14px; color: white; display: flex; align-items: center; gap: 6px; }
+        .badge { background: rgba(255,255,255,0.25); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .header-stats { display: flex; align-items: center; gap: 6px; color: white; font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 600; }
+        .header-actions { display: flex; gap: 6px; }
+        .header-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 500; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+        .header-btn:hover { background: rgba(255,255,255,0.3); }
+        .header-btn.primary { background: white; color: var(--qs-orange); }
+        .header-btn.env { background: var(--qs-blue); color: white; }
+        .header-btn.env:hover { background: var(--qs-blue-light); }
+        
+        .app-container { display: flex; height: calc(100vh - var(--header-height)); }
+        
+        .sidebar { width: var(--sidebar-width); background: var(--qs-blue); display: flex; flex-direction: column; flex-shrink: 0; transition: width 0.3s ease; overflow: hidden; position: relative; }
+        .sidebar.collapsed { width: 0; }
+        
+        .filters { padding: 8px; display: flex; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .filter-select, .search-input { flex: 1; background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 8px; border-radius: 4px; font-size: 11px; }
+        .filter-select:focus, .search-input:focus { outline: 1px solid var(--qs-orange); }
+        .search-input::placeholder { color: rgba(255,255,255,0.5); }
+        
+        .progress-bar { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; }
+        .progress-track { flex: 1; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+        .progress-fill { height: 100%; background: var(--success-green); border-radius: 2px; transition: width 0.3s; }
+        .progress-text { font-family: 'Fira Code', monospace; font-size: 10px; color: var(--qs-orange-light); }
+        
+        .question-list { flex: 1; overflow-y: auto; padding: 4px; }
+        .question-list::-webkit-scrollbar { width: 6px; }
+        .question-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        .question-list::-webkit-scrollbar-thumb { background: var(--qs-orange); border-radius: 3px; }
+        
+        .question-item { padding: 8px 10px; margin-bottom: 2px; border-radius: 4px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
+        .question-item:hover { background: rgba(255,255,255,0.1); }
+        .question-item.active { background: var(--qs-orange); border-left-color: white; }
+        .question-item.completed { border-left-color: var(--success-green); }
+        .q-header { display: flex; align-items: center; gap: 6px; }
+        .q-num { font-family: 'Fira Code', monospace; font-size: 10px; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.2); padding: 1px 4px; border-radius: 2px; }
+        .q-title { font-weight: 500; font-size: 12px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .q-diff { font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .q-diff.beginner { background: var(--success-green); color: #000; }
+        .q-diff.intermediate { background: var(--qs-orange); color: #000; }
+        .q-diff.advanced { background: #ef4444; color: white; }
+        .q-topic { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        .sidebar-toggle {
+            position: absolute;
+            left: 0;
+            bottom: 60px;
+            z-index: 200;
+            background: var(--qs-orange);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 50px;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+        }
+        .sidebar-toggle:hover { background: var(--qs-orange-light); }
+        
+        .question-panel { background: var(--bg-darker); padding: 8px 12px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; min-height: 70px; }
+        .question-panel.minimized { min-height: 36px; padding: 4px 12px; }
+        .question-panel.minimized .question-text, .question-panel.minimized .hint-panel, .question-panel.minimized .solution-panel { display: none; }
+        
+        .question-info { flex: 1; min-width: 0; }
+        .question-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .question-title { font-size: 13px; font-weight: 600; color: var(--qs-orange); }
+        .diff-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .diff-badge.beginner { background: rgba(74, 222, 128, 0.2); color: var(--success-green); }
+        .diff-badge.intermediate { background: rgba(247, 148, 29, 0.2); color: var(--qs-orange); }
+        .diff-badge.advanced { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .question-text { font-size: 14px; color: #ffffff; font-weight: 500; }
+        
+        .question-actions { display: flex; gap: 4px; flex-shrink: 0; }
+        .action-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.15s; }
+        .action-btn:hover { border-color: var(--qs-orange); color: var(--qs-orange); }
+        .action-btn.done { background: var(--success-green); border-color: var(--success-green); color: #000; }
+        .action-btn.done:hover { background: #22c55e; }
+        
+        .hint-panel, .solution-panel { margin-top: 6px; padding: 6px 10px; border-radius: 4px; font-size: 11px; display: none; }
+        .hint-panel.show, .solution-panel.show { display: block; }
+        .hint-panel { background: rgba(247, 148, 29, 0.1); border-left: 3px solid var(--qs-orange); color: var(--qs-orange-light); }
+        .solution-panel { background: rgba(74, 222, 128, 0.1); border-left: 3px solid var(--success-green); }
+        .solution-panel pre { font-family: 'Fira Code', monospace; color: var(--success-green); font-size: 11px; margin: 0; white-space: pre-wrap; }
+        
+        .coding-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-dark); }
+        .jupyter-toolbar { background: var(--bg-panel); padding: 4px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .jupyter-info { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; }
+        .jupyter-logo { width: 14px; height: 14px; }
+        .jupyter-links { display: flex; gap: 4px; }
+        .jupyter-link { padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: 500; text-decoration: none; }
+        .jupyter-link.primary { background: var(--qs-orange); color: white; }
+        .jupyter-link.secondary { background: var(--bg-dark); color: var(--text-secondary); }
+        .jupyter-link:hover { opacity: 0.9; }
+        
+        .jupyter-frame-wrapper { flex: 1; display: flex; }
+        .jupyter-frame { flex: 1; width: 100%; height: 100%; border: none; background: white; }
+        
+        .toast { position: fixed; bottom: 12px; right: 12px; background: var(--success-green); color: #000; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 12px; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 1000; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .home-btn { position: fixed; bottom: 12px; left: 12px; background: var(--qs-blue); color: white; padding: 6px 12px; border-radius: 14px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; z-index: 100; }
+        .home-btn:hover { background: var(--qs-blue-light); }
+        
+        /* Modal Popup */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-container {
+            width: 95%;
+            height: 90%;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            background: var(--qs-blue);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title { color: white; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.3); }
+        .modal-body { flex: 1; }
+        .modal-frame { width: 100%; height: 100%; border: none; }
+        
+        @media (max-width: 800px) {
+            .sidebar { position: fixed; left: 0; top: var(--header-height); height: calc(100vh - var(--header-height)); z-index: 50; }
+            .header-stats { display: none; }
+        }
+        
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-left">
+            
+            <div class="header-title">🐍 Python Coding Lab <span class="badge">300</span></div>
+        </div>
+        <div class="header-stats"><span id="completedCount">0</span> / 300</div>
+        <div class="header-actions">
+            <button class="header-btn env" onclick="openEnvironment()">📝 View Environment</button>
+            <a href="index.html" class="header-btn">← Hub</a>
+            <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" class="header-btn primary">🚀 Full Screen</a>
+        </div>
+    </header>
+    
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="filters">
+                <select class="filter-select" id="topicFilter">
+                    <option value="all">All Topics</option>
+                    <option value="Basics">Basics</option>
+                    <option value="Variables">Variables</option>
+                    <option value="Strings">Strings</option>
+                    <option value="Lists">Lists</option>
+                    <option value="Tuples">Tuples</option>
+                    <option value="Dictionaries">Dicts</option>
+                    <option value="Sets">Sets</option>
+                    <option value="Control Flow">Control</option>
+                    <option value="Functions">Functions</option>
+                    <option value="List Comprehensions">Comprehensions</option>
+                    <option value="File I/O">File I/O</option>
+                    <option value="Error Handling">Errors</option>
+                    <option value="OOP">OOP</option>
+                    <option value="Date & Time">Date/Time</option>
+                    <option value="Math & Random">Math/Random</option>
+                    <option value="Regex">Regex</option>
+                    <option value="Collections">Collections</option>
+                    <option value="Itertools">Itertools</option>
+                    <option value="Magic Methods">Magic Methods</option>
+                    <option value="Modern Python">Modern Python</option>
+                    <option value="Advanced I/O">Advanced I/O</option>
+                    <option value="Advanced Functions">Adv Functions</option>
+                    <option value="Algorithms">Algorithms</option>
+                </select>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+            </div>
+            <div class="progress-bar">
+                <div class="progress-track"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+                <span class="progress-text" id="progressText">0/300</span>
+            </div>
+            <div class="question-list" id="questionList"></div>
+        </aside>
+        
+        <main class="main-content">
+            <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">â—€</button>
+            
+            <div class="question-panel" id="questionPanel">
+                <div class="question-info">
+                    <div class="question-header">
+                        <span class="question-title" id="questionTitle">Q1: Hello World</span>
+                        <span class="diff-badge beginner" id="difficultyBadge">Beginner</span>
+                    </div>
+                    <p class="question-text" id="questionText">Print 'Hello, World!' to the console.</p>
+                    <div class="hint-panel" id="hintPanel"></div>
+                    <div class="solution-panel" id="solutionPanel"><pre id="solutionCode"></pre></div>
+                </div>
+                <div class="question-actions">
+                    <button class="action-btn" onclick="toggleHint()">📝’¡ Hint</button>
+                    <button class="action-btn" onclick="toggleSolution()">👍 Show</button>
+                    <button class="action-btn" onclick="copySolution()">📝‹</button>
+                    <button class="action-btn done" onclick="markComplete()">âœ“ Done</button>
+                    <button class="action-btn" onclick="toggleQuestionPanel()">â–¼</button>
+                </div>
+            </div>
+            
+            <div class="coding-container">
+                <div class="jupyter-toolbar">
+                    <div class="jupyter-info">
+                        <svg class="jupyter-logo" viewBox="0 0 44 51"><g fill="none"><path d="M22 49.8C10 49.8 0.2 38.8 0.2 25.4C0.2 12 10 1.1 22 1.1C34 1.1 43.8 12 43.8 25.4C43.8 38.8 34 49.8 22 49.8Z" fill="#4E4E4E"/><path d="M22 46.2C12 46.2 4 36.9 4 25.4C4 14 12 4.7 22 4.7C32 4.7 40 14 40 25.4C40 36.9 32 46.2 22 46.2Z" fill="#F37626"/></g></svg>
+                        <span>Python 3 Editor</span>
+                    </div>
+                    <div class="jupyter-links">
+                        <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" class="jupyter-link primary">Programiz</a>
+                        <a href="https://colab.research.google.com/#create=true" target="_blank" class="jupyter-link secondary">Colab</a>
+                        <a href="https://www.online-python.com/" target="_blank" class="jupyter-link secondary">Online-Python</a>
+                    </div>
+                </div>
+                <div class="jupyter-frame-wrapper">
+                    <iframe id="jupyterFrame" class="jupyter-frame" src="https://trinket.io/embed/python3" title="Python Editor" allowfullscreen loading="eager"></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Environment Modal Popup -->
+    <div class="modal-overlay" id="envModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">📝 JupyterLab Environment - Upload, Save & Manage Files</div>
+                <button class="modal-close" onclick="closeEnvironment()">âœ•</button>
+            </div>
+            <div class="modal-body">
+                <iframe class="modal-frame" src="about:blank" id="envFrame" title="JupyterLab Environment"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <a href="index.html" class="home-btn">📝  Home</a>
+    <div class="toast" id="toast">Copied!</div>
+    
+    <script>
+const questions = [
+    {id:1,topic:"Basics",title:"Hello World",difficulty:"Beginner",question:"Print 'Hello, World!' to the console.",hint:"Use print() function.",solution:'print("Hello, World!")'},
+    {id:2,topic:"Basics",title:"Print Your Name",difficulty:"Beginner",question:"Print your name to the console.",hint:"Use print() with a string.",solution:'print("Your Name")'},
+    {id:3,topic:"Basics",title:"Print Multiple Lines",difficulty:"Beginner",question:"Print 'Line 1', 'Line 2', 'Line 3' on separate lines.",hint:"Use three print() or \\n.",solution:'print("Line 1")\nprint("Line 2")\nprint("Line 3")'},
+    {id:4,topic:"Basics",title:"Comments",difficulty:"Beginner",question:"Write single & multi-line comments, then print 'Comments work!'",hint:"# for single, triple quotes for multi.",solution:'# Single comment\n"""\nMulti-line\n"""\nprint("Comments work!")'},
+    {id:5,topic:"Basics",title:"Basic Arithmetic",difficulty:"Beginner",question:"Print the result of 15 + 27.",hint:"Put calculation in print().",solution:"print(15 + 27)"},
+    {id:6,topic:"Basics",title:"Subtraction",difficulty:"Beginner",question:"Print the result of 100 - 37.",hint:"Use - operator.",solution:"print(100 - 37)"},
+    {id:7,topic:"Basics",title:"Multiplication",difficulty:"Beginner",question:"Print the result of 12 * 8.",hint:"Use * operator.",solution:"print(12 * 8)"},
+    {id:8,topic:"Basics",title:"Division",difficulty:"Beginner",question:"Print the result of 45 / 9.",hint:"Use / operator.",solution:"print(45 / 9)"},
+    {id:9,topic:"Basics",title:"Integer Division",difficulty:"Beginner",question:"Print floor division of 17 by 5.",hint:"Use // operator.",solution:"print(17 // 5)"},
+    {id:10,topic:"Basics",title:"Modulo Operator",difficulty:"Beginner",question:"Print remainder of 17 divided by 5.",hint:"Use % operator.",solution:"print(17 % 5)"},
+    {id:11,topic:"Basics",title:"Exponentiation",difficulty:"Beginner",question:"Print 2 raised to power 10.",hint:"Use ** operator.",solution:"print(2 ** 10)"},
+    {id:12,topic:"Basics",title:"Order of Operations",difficulty:"Beginner",question:"Print (5 + 3) * 2 - 4 / 2.",hint:"PEMDAS rules apply.",solution:"print((5 + 3) * 2 - 4 / 2)"},
+    {id:13,topic:"Basics",title:"Negative Numbers",difficulty:"Beginner",question:"Print -5 + 10.",hint:"Negatives work normally.",solution:"print(-5 + 10)"},
+    {id:14,topic:"Basics",title:"Float Numbers",difficulty:"Beginner",question:"Print 3.14 * 2.",hint:"Decimals are floats.",solution:"print(3.14 * 2)"},
+    {id:15,topic:"Basics",title:"Type Function",difficulty:"Beginner",question:"Print the type of 42.",hint:"Use type() function.",solution:"print(type(42))"},
+    {id:16,topic:"Basics",title:"String Type",difficulty:"Beginner",question:"Print the type of 'Hello'.",hint:"Strings use quotes.",solution:'print(type("Hello"))'},
+    {id:17,topic:"Basics",title:"Float Type",difficulty:"Beginner",question:"Print the type of 3.14.",hint:"Decimals are floats.",solution:"print(type(3.14))"},
+    {id:18,topic:"Basics",title:"Boolean Values",difficulty:"Beginner",question:"Print True and False.",hint:"Capital T and F.",solution:"print(True)\nprint(False)"},
+    {id:19,topic:"Basics",title:"Boolean Type",difficulty:"Beginner",question:"Print type of True.",hint:"Use type().",solution:"print(type(True))"},
+    {id:20,topic:"Basics",title:"Comparison",difficulty:"Beginner",question:"Print whether 5 > 3.",hint:"Use > operator.",solution:"print(5 > 3)"},
+    {id:21,topic:"Basics",title:"Equality Check",difficulty:"Beginner",question:"Print whether 10 == 10.",hint:"Use == for equality.",solution:"print(10 == 10)"},
+    {id:22,topic:"Basics",title:"Not Equal",difficulty:"Beginner",question:"Print whether 5 != 3.",hint:"Use != for not equal.",solution:"print(5 != 3)"},
+    {id:23,topic:"Basics",title:"Logical AND",difficulty:"Beginner",question:"Print True and False.",hint:"Use 'and' keyword.",solution:"print(True and False)"},
+    {id:24,topic:"Basics",title:"Logical OR",difficulty:"Beginner",question:"Print True or False.",hint:"Use 'or' keyword.",solution:"print(True or False)"},
+    {id:25,topic:"Basics",title:"Logical NOT",difficulty:"Beginner",question:"Print not True.",hint:"Use 'not' keyword.",solution:"print(not True)"},
+    {id:26,topic:"Variables",title:"Create Variable",difficulty:"Beginner",question:"Create x = 10 and print it.",hint:"Use = to assign.",solution:"x = 10\nprint(x)"},
+    {id:27,topic:"Variables",title:"String Variable",difficulty:"Beginner",question:"Create name variable and print it.",hint:"Put name in quotes.",solution:'name = "Alice"\nprint(name)'},
+    {id:28,topic:"Variables",title:"Multiple Variables",difficulty:"Beginner",question:"Create a=5, b=10, print sum.",hint:"print(a + b)",solution:"a = 5\nb = 10\nprint(a + b)"},
+    {id:29,topic:"Variables",title:"Reassignment",difficulty:"Beginner",question:"Create x=5, change to 10, print.",hint:"Assign new value.",solution:"x = 5\nx = 10\nprint(x)"},
+    {id:30,topic:"Variables",title:"Multiple Assignment",difficulty:"Beginner",question:"Assign 1,2,3 to a,b,c in one line.",hint:"a, b, c = 1, 2, 3",solution:"a, b, c = 1, 2, 3\nprint(a, b, c)"},
+    {id:31,topic:"Variables",title:"Same Value",difficulty:"Beginner",question:"Assign 5 to x, y, z in one line.",hint:"x = y = z = 5",solution:"x = y = z = 5\nprint(x, y, z)"},
+    {id:32,topic:"Variables",title:"Swap Variables",difficulty:"Intermediate",question:"Swap a=1 and b=2.",hint:"a, b = b, a",solution:"a = 1\nb = 2\na, b = b, a\nprint(a, b)"},
+    {id:33,topic:"Variables",title:"Variable Naming",difficulty:"Beginner",question:"Create my_age variable.",hint:"Use underscores.",solution:"my_age = 25\nprint(my_age)"},
+    {id:34,topic:"Variables",title:"Augmented Assignment",difficulty:"Beginner",question:"Create x=10, add 5 with +=.",hint:"x += 5",solution:"x = 10\nx += 5\nprint(x)"},
+    {id:35,topic:"Variables",title:"Subtract Assignment",difficulty:"Beginner",question:"Create x=20, subtract 7 with -=.",hint:"x -= 7",solution:"x = 20\nx -= 7\nprint(x)"},
+    {id:36,topic:"Variables",title:"Multiply Assignment",difficulty:"Beginner",question:"Create x=4, multiply by 3.",hint:"x *= 3",solution:"x = 4\nx *= 3\nprint(x)"},
+    {id:37,topic:"Variables",title:"Int to Float",difficulty:"Beginner",question:"Convert x=5 to float.",hint:"Use float().",solution:"x = 5\nx = float(x)\nprint(x)"},
+    {id:38,topic:"Variables",title:"Float to Int",difficulty:"Beginner",question:"Convert x=5.7 to int.",hint:"Use int().",solution:"x = 5.7\nx = int(x)\nprint(x)"},
+    {id:39,topic:"Variables",title:"String to Int",difficulty:"Beginner",question:"Convert s='42' to int, add 8.",hint:"int(s) + 8",solution:'s = "42"\nprint(int(s) + 8)'},
+    {id:40,topic:"Variables",title:"Number to String",difficulty:"Beginner",question:"Convert x=100 to string, print type.",hint:"Use str().",solution:"x = 100\ns = str(x)\nprint(type(s))"},
+    {id:41,topic:"Variables",title:"Constants",difficulty:"Beginner",question:"Create PI=3.14159 constant.",hint:"ALL_CAPS convention.",solution:"PI = 3.14159\nprint(PI)"},
+    {id:42,topic:"Variables",title:"Delete Variable",difficulty:"Intermediate",question:"Create x=5, delete with del.",hint:"del x",solution:"x = 5\ndel x\n# print(x) would error"},
+    {id:43,topic:"Variables",title:"Check Types",difficulty:"Beginner",question:"Create int, float, str; print types.",hint:"Use type() for each.",solution:'a=10\nb=3.14\nc="hi"\nprint(type(a),type(b),type(c))'},
+    {id:44,topic:"Variables",title:"Global Variable",difficulty:"Intermediate",question:"Use global x=10 in function.",hint:"Global vars are outside.",solution:"x = 10\ndef show():\n    print(x)\nshow()"},
+    {id:45,topic:"Variables",title:"Calculate Area",difficulty:"Beginner",question:"width=5, height=3, print area.",hint:"area = width * height",solution:"width = 5\nheight = 3\nprint(width * height)"},
+    {id:46,topic:"Strings",title:"Create String",difficulty:"Beginner",question:"Create 'Hello Python' and print.",hint:"Use quotes.",solution:'msg = "Hello Python"\nprint(msg)'},
+    {id:47,topic:"Strings",title:"String Length",difficulty:"Beginner",question:"Print length of 'Python'.",hint:"Use len().",solution:'s = "Python"\nprint(len(s))'},
+    {id:48,topic:"Strings",title:"Access Character",difficulty:"Beginner",question:"Get first char of 'Hello'.",hint:"Index [0].",solution:'s = "Hello"\nprint(s[0])'},
+    {id:49,topic:"Strings",title:"Last Character",difficulty:"Beginner",question:"Get last char of 'World'.",hint:"Index [-1].",solution:'s = "World"\nprint(s[-1])'},
+    {id:50,topic:"Strings",title:"String Slicing",difficulty:"Beginner",question:"Extract 'Py' from 'Python'.",hint:"[0:2]",solution:'s = "Python"\nprint(s[0:2])'},
+    {id:51,topic:"Strings",title:"Slice from Start",difficulty:"Beginner",question:"Get first 3 chars of 'Programming'.",hint:"[:3]",solution:'s = "Programming"\nprint(s[:3])'},
+    {id:52,topic:"Strings",title:"Slice to End",difficulty:"Beginner",question:"Get from index 4 to end of 'HelloWorld'.",hint:"[4:]",solution:'s = "HelloWorld"\nprint(s[4:])'},
+    {id:53,topic:"Strings",title:"Concatenation",difficulty:"Beginner",question:"Join 'Hello' and 'World' with space.",hint:"Use + operator.",solution:'print("Hello" + " " + "World")'},
+    {id:54,topic:"Strings",title:"Repetition",difficulty:"Beginner",question:"Print 'Ha' three times.",hint:"Use * operator.",solution:'print("Ha" * 3)'},
+    {id:55,topic:"Strings",title:"Uppercase",difficulty:"Beginner",question:"Convert 'hello' to uppercase.",hint:".upper() method.",solution:'s = "hello"\nprint(s.upper())'},
+    {id:56,topic:"Strings",title:"Lowercase",difficulty:"Beginner",question:"Convert 'HELLO' to lowercase.",hint:".lower() method.",solution:'s = "HELLO"\nprint(s.lower())'},
+    {id:57,topic:"Strings",title:"Title Case",difficulty:"Beginner",question:"Convert 'hello world' to title case.",hint:".title() method.",solution:'s = "hello world"\nprint(s.title())'},
+    {id:58,topic:"Strings",title:"Strip Whitespace",difficulty:"Beginner",question:"Remove spaces from '  hello  '.",hint:".strip() method.",solution:'s = "  hello  "\nprint(s.strip())'},
+    {id:59,topic:"Strings",title:"Replace",difficulty:"Beginner",question:"Replace 'world' with 'Python'.",hint:".replace(old, new)",solution:'s = "Hello world"\nprint(s.replace("world", "Python"))'},
+    {id:60,topic:"Strings",title:"Split String",difficulty:"Beginner",question:"Split 'a,b,c,d' by comma.",hint:".split(',')",solution:'s = "a,b,c,d"\nprint(s.split(","))'},
+    {id:61,topic:"Strings",title:"Join Strings",difficulty:"Beginner",question:"Join ['a','b','c'] with '-'.",hint:"'-'.join(list)",solution:"print('-'.join(['a','b','c']))"},
+    {id:62,topic:"Strings",title:"Find Substring",difficulty:"Beginner",question:"Find 'world' in 'Hello world'.",hint:".find() method.",solution:'s = "Hello world"\nprint(s.find("world"))'},
+    {id:63,topic:"Strings",title:"Count Chars",difficulty:"Beginner",question:"Count 'l' in 'Hello World'.",hint:".count() method.",solution:'s = "Hello World"\nprint(s.count("l"))'},
+    {id:64,topic:"Strings",title:"Check Start",difficulty:"Beginner",question:"Check if 'Python' starts with 'Py'.",hint:".startswith()",solution:'s = "Python"\nprint(s.startswith("Py"))'},
+    {id:65,topic:"Strings",title:"Check End",difficulty:"Beginner",question:"Check if 'hello.py' ends with '.py'.",hint:".endswith()",solution:'s = "hello.py"\nprint(s.endswith(".py"))'},
+    {id:66,topic:"Strings",title:"F-String",difficulty:"Beginner",question:"Use f-string with name and age.",hint:"f'text {var}'",solution:'name="Alice"\nage=25\nprint(f"I am {name}, {age}")'},
+    {id:67,topic:"Strings",title:"Format Method",difficulty:"Intermediate",question:"Use .format() for 'Hello, World!'.",hint:"'{}'.format()",solution:'print("{}, {}!".format("Hello", "World"))'},
+    {id:68,topic:"Strings",title:"Alphanumeric",difficulty:"Beginner",question:"Check if 'Python3' is alphanumeric.",hint:".isalnum()",solution:'s = "Python3"\nprint(s.isalnum())'},
+    {id:69,topic:"Strings",title:"Check Digit",difficulty:"Beginner",question:"Check if '12345' is all digits.",hint:".isdigit()",solution:'s = "12345"\nprint(s.isdigit())'},
+    {id:70,topic:"Strings",title:"Multiline String",difficulty:"Beginner",question:"Create 3-line multiline string.",hint:"Triple quotes.",solution:'s = """Line 1\nLine 2\nLine 3"""\nprint(s)'},
+    {id:71,topic:"Lists",title:"Create List",difficulty:"Beginner",question:"Create [1,2,3,4,5] and print.",hint:"Square brackets.",solution:"nums = [1,2,3,4,5]\nprint(nums)"},
+    {id:72,topic:"Lists",title:"Access Element",difficulty:"Beginner",question:"Get 2nd element from [10,20,30,40].",hint:"Index [1].",solution:"nums = [10,20,30,40]\nprint(nums[1])"},
+    {id:73,topic:"Lists",title:"Negative Index",difficulty:"Beginner",question:"Get 2nd-to-last from [1,2,3,4,5].",hint:"Index [-2].",solution:"nums = [1,2,3,4,5]\nprint(nums[-2])"},
+    {id:74,topic:"Lists",title:"List Slicing",difficulty:"Beginner",question:"Get index 1,2,3 from [0,1,2,3,4,5].",hint:"[1:4]",solution:"nums = [0,1,2,3,4,5]\nprint(nums[1:4])"},
+    {id:75,topic:"Lists",title:"Modify Element",difficulty:"Beginner",question:"Change 2nd element of [1,2,3] to 20.",hint:"list[1] = 20",solution:"nums = [1,2,3]\nnums[1] = 20\nprint(nums)"},
+    {id:76,topic:"Lists",title:"Append",difficulty:"Beginner",question:"Add 4 to end of [1,2,3].",hint:".append()",solution:"nums = [1,2,3]\nnums.append(4)\nprint(nums)"},
+    {id:77,topic:"Lists",title:"Insert",difficulty:"Beginner",question:"Insert 10 at index 1 in [1,2,3].",hint:".insert(idx, val)",solution:"nums = [1,2,3]\nnums.insert(1,10)\nprint(nums)"},
+    {id:78,topic:"Lists",title:"Remove",difficulty:"Beginner",question:"Remove value 2 from [1,2,3,2,4].",hint:".remove()",solution:"nums = [1,2,3,2,4]\nnums.remove(2)\nprint(nums)"},
+    {id:79,topic:"Lists",title:"Pop",difficulty:"Beginner",question:"Pop last element from [1,2,3,4].",hint:".pop()",solution:"nums = [1,2,3,4]\nlast = nums.pop()\nprint(last, nums)"},
+    {id:80,topic:"Lists",title:"Length",difficulty:"Beginner",question:"Print length of [1,2,3,4,5].",hint:"len()",solution:"nums = [1,2,3,4,5]\nprint(len(nums))"},
+    {id:81,topic:"Lists",title:"Sort",difficulty:"Beginner",question:"Sort [3,1,4,1,5,9,2,6].",hint:".sort()",solution:"nums = [3,1,4,1,5,9,2,6]\nnums.sort()\nprint(nums)"},
+    {id:82,topic:"Lists",title:"Reverse",difficulty:"Beginner",question:"Reverse [1,2,3,4,5].",hint:".reverse()",solution:"nums = [1,2,3,4,5]\nnums.reverse()\nprint(nums)"},
+    {id:83,topic:"Lists",title:"Find Index",difficulty:"Beginner",question:"Find index of 30 in [10,20,30,40].",hint:".index()",solution:"nums = [10,20,30,40]\nprint(nums.index(30))"},
+    {id:84,topic:"Lists",title:"Count",difficulty:"Beginner",question:"Count 2s in [1,2,2,3,2,4].",hint:".count()",solution:"nums = [1,2,2,3,2,4]\nprint(nums.count(2))"},
+    {id:85,topic:"Lists",title:"Concatenate",difficulty:"Beginner",question:"Combine [1,2] and [3,4].",hint:"Use + operator.",solution:"a = [1,2]\nb = [3,4]\nprint(a + b)"},
+    {id:86,topic:"Lists",title:"Extend",difficulty:"Beginner",question:"Extend [1,2] with [3,4].",hint:".extend()",solution:"a = [1,2]\na.extend([3,4])\nprint(a)"},
+    {id:87,topic:"Lists",title:"Copy",difficulty:"Intermediate",question:"Copy [1,2,3].",hint:".copy()",solution:"orig = [1,2,3]\ncopy = orig.copy()\nprint(copy)"},
+    {id:88,topic:"Lists",title:"Clear",difficulty:"Beginner",question:"Clear [1,2,3,4].",hint:".clear()",solution:"nums = [1,2,3,4]\nnums.clear()\nprint(nums)"},
+    {id:89,topic:"Lists",title:"Membership",difficulty:"Beginner",question:"Check if 3 in [1,2,3,4,5].",hint:"Use 'in'.",solution:"nums = [1,2,3,4,5]\nprint(3 in nums)"},
+    {id:90,topic:"Lists",title:"Sum",difficulty:"Beginner",question:"Sum [1,2,3,4,5].",hint:"sum()",solution:"nums = [1,2,3,4,5]\nprint(sum(nums))"},
+    {id:91,topic:"Tuples",title:"Create Tuple",difficulty:"Beginner",question:"Create (1,2,3) and print.",hint:"Parentheses.",solution:"t = (1,2,3)\nprint(t)"},
+    {id:92,topic:"Tuples",title:"Access Element",difficulty:"Beginner",question:"Get 1st from ('a','b','c').",hint:"Index [0].",solution:"t = ('a','b','c')\nprint(t[0])"},
+    {id:93,topic:"Tuples",title:"Slicing",difficulty:"Beginner",question:"Get first 2 from (1,2,3,4,5).",hint:"[:2]",solution:"t = (1,2,3,4,5)\nprint(t[:2])"},
+    {id:94,topic:"Tuples",title:"Length",difficulty:"Beginner",question:"Get length of (10,20,30,40).",hint:"len()",solution:"t = (10,20,30,40)\nprint(len(t))"},
+    {id:95,topic:"Tuples",title:"Single Element",difficulty:"Intermediate",question:"Create tuple with single 5.",hint:"(5,) with comma.",solution:"t = (5,)\nprint(t, type(t))"},
+    {id:96,topic:"Tuples",title:"Unpacking",difficulty:"Beginner",question:"Unpack (1,2,3) to a,b,c.",hint:"a, b, c = tuple",solution:"t = (1,2,3)\na,b,c = t\nprint(a,b,c)"},
+    {id:97,topic:"Tuples",title:"Concatenation",difficulty:"Beginner",question:"Combine (1,2) and (3,4).",hint:"Use + operator.",solution:"t1 = (1,2)\nt2 = (3,4)\nprint(t1 + t2)"},
+    {id:98,topic:"Tuples",title:"Repetition",difficulty:"Beginner",question:"Repeat (1,2) three times.",hint:"Use * operator.",solution:"t = (1,2)\nprint(t * 3)"},
+    {id:99,topic:"Tuples",title:"Count",difficulty:"Beginner",question:"Count 2s in (1,2,2,3,2).",hint:".count()",solution:"t = (1,2,2,3,2)\nprint(t.count(2))"},
+    {id:100,topic:"Tuples",title:"Index",difficulty:"Beginner",question:"Find index of 'b' in ('a','b','c').",hint:".index()",solution:"t = ('a','b','c')\nprint(t.index('b'))"},
+    {id:101,topic:"Tuples",title:"To List",difficulty:"Beginner",question:"Convert (1,2,3) to list.",hint:"list()",solution:"t = (1,2,3)\nprint(list(t))"},
+    {id:102,topic:"Tuples",title:"From List",difficulty:"Beginner",question:"Convert [1,2,3] to tuple.",hint:"tuple()",solution:"lst = [1,2,3]\nprint(tuple(lst))"},
+    {id:103,topic:"Tuples",title:"Nested",difficulty:"Intermediate",question:"Access 3 from ((1,2),(3,4)).",hint:"t[1][0]",solution:"t = ((1,2),(3,4))\nprint(t[1][0])"},
+    {id:104,topic:"Tuples",title:"Membership",difficulty:"Beginner",question:"Check 'apple' in tuple.",hint:"Use 'in'.",solution:"fruits = ('apple','banana')\nprint('apple' in fruits)"},
+    {id:105,topic:"Tuples",title:"Max Min",difficulty:"Beginner",question:"Find max/min of (5,2,8,1,9).",hint:"max(), min()",solution:"t = (5,2,8,1,9)\nprint(max(t), min(t))"},
+    {id:106,topic:"Dictionaries",title:"Create Dict",difficulty:"Beginner",question:"Create {'name':'Alice','age':25}.",hint:"Curly braces.",solution:"person = {'name':'Alice','age':25}\nprint(person)"},
+    {id:107,topic:"Dictionaries",title:"Access Value",difficulty:"Beginner",question:"Get 'name' from dict.",hint:"dict['key']",solution:"person = {'name':'Bob'}\nprint(person['name'])"},
+    {id:108,topic:"Dictionaries",title:"Get Method",difficulty:"Beginner",question:"Use .get() for missing key.",hint:".get() returns None.",solution:"person = {'name':'Alice'}\nprint(person.get('city'))"},
+    {id:109,topic:"Dictionaries",title:"Add Key-Value",difficulty:"Beginner",question:"Add 'city':'NYC' to dict.",hint:"dict['key'] = val",solution:"person = {'name':'Alice'}\nperson['city'] = 'NYC'\nprint(person)"},
+    {id:110,topic:"Dictionaries",title:"Update Value",difficulty:"Beginner",question:"Change age to 26.",hint:"dict['age'] = 26",solution:"person = {'name':'Alice','age':25}\nperson['age'] = 26\nprint(person)"},
+    {id:111,topic:"Dictionaries",title:"Remove Key",difficulty:"Beginner",question:"Remove 'age' from dict.",hint:"del dict['key']",solution:"person = {'name':'Alice','age':25}\ndel person['age']\nprint(person)"},
+    {id:112,topic:"Dictionaries",title:"Get Keys",difficulty:"Beginner",question:"Get all keys from dict.",hint:".keys()",solution:"d = {'a':1,'b':2,'c':3}\nprint(list(d.keys()))"},
+    {id:113,topic:"Dictionaries",title:"Get Values",difficulty:"Beginner",question:"Get all values from dict.",hint:".values()",solution:"d = {'a':1,'b':2,'c':3}\nprint(list(d.values()))"},
+    {id:114,topic:"Dictionaries",title:"Get Items",difficulty:"Beginner",question:"Get key-value pairs.",hint:".items()",solution:"d = {'x':10,'y':20}\nprint(list(d.items()))"},
+    {id:115,topic:"Dictionaries",title:"Length",difficulty:"Beginner",question:"Get dict length.",hint:"len()",solution:"d = {'a':1,'b':2,'c':3}\nprint(len(d))"},
+    {id:116,topic:"Dictionaries",title:"Check Key",difficulty:"Beginner",question:"Check if 'name' in dict.",hint:"Use 'in'.",solution:"person = {'name':'Alice'}\nprint('name' in person)"},
+    {id:117,topic:"Dictionaries",title:"Pop",difficulty:"Beginner",question:"Pop 'age' from dict.",hint:".pop('key')",solution:"person = {'name':'A','age':25}\nage = person.pop('age')\nprint(age, person)"},
+    {id:118,topic:"Dictionaries",title:"Clear",difficulty:"Beginner",question:"Clear dict.",hint:".clear()",solution:"d = {'a':1,'b':2}\nd.clear()\nprint(d)"},
+    {id:119,topic:"Dictionaries",title:"Copy",difficulty:"Beginner",question:"Copy dict.",hint:".copy()",solution:"orig = {'x':1,'y':2}\ncopy = orig.copy()\nprint(copy)"},
+    {id:120,topic:"Dictionaries",title:"Update",difficulty:"Intermediate",question:"Merge dicts with update().",hint:".update()",solution:"d1 = {'a':1}\nd1.update({'b':2})\nprint(d1)"},
+    {id:121,topic:"Dictionaries",title:"From Keys",difficulty:"Intermediate",question:"Create dict from keys with value 0.",hint:"dict.fromkeys()",solution:"keys = ['a','b','c']\nd = dict.fromkeys(keys, 0)\nprint(d)"},
+    {id:122,topic:"Dictionaries",title:"Setdefault",difficulty:"Intermediate",question:"Set default for missing key.",hint:".setdefault()",solution:"person = {'name':'Alice'}\nperson.setdefault('city','Unknown')\nprint(person)"},
+    {id:123,topic:"Dictionaries",title:"Nested Dict",difficulty:"Intermediate",question:"Access nested dict value.",hint:"dict['outer']['inner']",solution:"data = {'person':{'name':'Alice'}}\nprint(data['person']['name'])"},
+    {id:124,topic:"Dictionaries",title:"Comprehension",difficulty:"Intermediate",question:"Create {x: x**2 for x in range(5)}.",hint:"Dict comprehension.",solution:"squares = {x: x**2 for x in range(5)}\nprint(squares)"},
+    {id:125,topic:"Dictionaries",title:"Loop",difficulty:"Beginner",question:"Loop through dict items.",hint:".items() in for.",solution:"d = {'a':1,'b':2}\nfor k,v in d.items():\n    print(k, v)"},
+    {id:126,topic:"Sets",title:"Create Set",difficulty:"Beginner",question:"Create {1,2,3,4,5}.",hint:"Curly braces.",solution:"s = {1,2,3,4,5}\nprint(s)"},
+    {id:127,topic:"Sets",title:"Add",difficulty:"Beginner",question:"Add 6 to set.",hint:".add()",solution:"s = {1,2,3}\ns.add(6)\nprint(s)"},
+    {id:128,topic:"Sets",title:"Remove",difficulty:"Beginner",question:"Remove 2 from set.",hint:".remove()",solution:"s = {1,2,3}\ns.remove(2)\nprint(s)"},
+    {id:129,topic:"Sets",title:"Union",difficulty:"Beginner",question:"Union of {1,2,3} and {3,4,5}.",hint:"| operator.",solution:"a = {1,2,3}\nb = {3,4,5}\nprint(a | b)"},
+    {id:130,topic:"Sets",title:"Intersection",difficulty:"Beginner",question:"Intersection of {1,2,3} and {2,3,4}.",hint:"& operator.",solution:"a = {1,2,3}\nb = {2,3,4}\nprint(a & b)"},
+    {id:131,topic:"Sets",title:"Difference",difficulty:"Beginner",question:"Difference {1,2,3} - {2,3,4}.",hint:"- operator.",solution:"a = {1,2,3}\nb = {2,3,4}\nprint(a - b)"},
+    {id:132,topic:"Sets",title:"Symmetric Diff",difficulty:"Intermediate",question:"Symmetric difference.",hint:"^ operator.",solution:"a = {1,2,3}\nb = {2,3,4}\nprint(a ^ b)"},
+    {id:133,topic:"Sets",title:"Membership",difficulty:"Beginner",question:"Check 3 in set.",hint:"Use 'in'.",solution:"s = {1,2,3,4}\nprint(3 in s)"},
+    {id:134,topic:"Sets",title:"Length",difficulty:"Beginner",question:"Get set length.",hint:"len()",solution:"s = {1,2,3,4,5}\nprint(len(s))"},
+    {id:135,topic:"Sets",title:"Clear",difficulty:"Beginner",question:"Clear set.",hint:".clear()",solution:"s = {1,2,3}\ns.clear()\nprint(s)"},
+    {id:136,topic:"Sets",title:"Copy",difficulty:"Beginner",question:"Copy set.",hint:".copy()",solution:"orig = {1,2,3}\ncopy = orig.copy()\nprint(copy)"},
+    {id:137,topic:"Sets",title:"Subset",difficulty:"Intermediate",question:"Check {1,2} subset of {1,2,3,4}.",hint:".issubset()",solution:"a = {1,2}\nb = {1,2,3,4}\nprint(a.issubset(b))"},
+    {id:138,topic:"Sets",title:"Superset",difficulty:"Intermediate",question:"Check superset.",hint:".issuperset()",solution:"a = {1,2,3,4}\nb = {1,2}\nprint(a.issuperset(b))"},
+    {id:139,topic:"Sets",title:"Frozen Set",difficulty:"Intermediate",question:"Create immutable frozenset.",hint:"frozenset()",solution:"fs = frozenset([1,2,3])\nprint(fs, type(fs))"},
+    {id:140,topic:"Sets",title:"Remove Duplicates",difficulty:"Beginner",question:"Remove dups from list with set.",hint:"list(set(lst))",solution:"lst = [1,2,2,3,3,3]\nprint(list(set(lst)))"},
+    {id:141,topic:"Control Flow",title:"If Statement",difficulty:"Beginner",question:"Print 'Adult' if age >= 18.",hint:"if condition:",solution:"age = 20\nif age >= 18:\n    print('Adult')"},
+    {id:142,topic:"Control Flow",title:"If-Else",difficulty:"Beginner",question:"Print Adult or Minor.",hint:"if-else",solution:"age = 15\nif age >= 18:\n    print('Adult')\nelse:\n    print('Minor')"},
+    {id:143,topic:"Control Flow",title:"Elif",difficulty:"Beginner",question:"Grade: A(90+),B(80+),C(70+),F.",hint:"if-elif-else",solution:"score = 85\nif score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelif score >= 70:\n    print('C')\nelse:\n    print('F')"},
+    {id:144,topic:"Control Flow",title:"Nested If",difficulty:"Intermediate",question:"Check positive and even.",hint:"Nested ifs.",solution:"num = 10\nif num > 0:\n    if num % 2 == 0:\n        print('Positive even')"},
+    {id:145,topic:"Control Flow",title:"For Loop",difficulty:"Beginner",question:"Print 1 to 5.",hint:"range(1, 6)",solution:"for i in range(1, 6):\n    print(i)"},
+    {id:146,topic:"Control Flow",title:"Loop List",difficulty:"Beginner",question:"Loop through ['a','b','c'].",hint:"for item in list",solution:"for letter in ['a','b','c']:\n    print(letter)"},
+    {id:147,topic:"Control Flow",title:"Range Step",difficulty:"Beginner",question:"Print even 2-10.",hint:"range(2, 11, 2)",solution:"for i in range(2, 11, 2):\n    print(i)"},
+    {id:148,topic:"Control Flow",title:"While Loop",difficulty:"Beginner",question:"Print 1-5 with while.",hint:"while condition:",solution:"i = 1\nwhile i <= 5:\n    print(i)\n    i += 1"},
+    {id:149,topic:"Control Flow",title:"Break",difficulty:"Beginner",question:"Print 1-10, stop at 5.",hint:"break",solution:"for i in range(1, 11):\n    if i > 5:\n        break\n    print(i)"},
+    {id:150,topic:"Control Flow",title:"Continue",difficulty:"Beginner",question:"Print 1-5, skip 3.",hint:"continue",solution:"for i in range(1, 6):\n    if i == 3:\n        continue\n    print(i)"},
+    {id:151,topic:"Control Flow",title:"For-Else",difficulty:"Intermediate",question:"Use for-else to search.",hint:"else after for.",solution:"for n in [1,2,3,4,5]:\n    if n == 7:\n        print('Found')\n        break\nelse:\n    print('Not found')"},
+    {id:152,topic:"Control Flow",title:"Nested Loops",difficulty:"Intermediate",question:"Print 1-3 multiplication.",hint:"Nested for loops.",solution:"for i in range(1, 4):\n    for j in range(1, 4):\n        print(f'{i}x{j}={i*j}')"},
+    {id:153,topic:"Control Flow",title:"Enumerate",difficulty:"Beginner",question:"Print index and value.",hint:"enumerate()",solution:"for i, v in enumerate(['a','b','c']):\n    print(i, v)"},
+    {id:154,topic:"Control Flow",title:"Zip",difficulty:"Intermediate",question:"Pair two lists.",hint:"zip()",solution:"for n, l in zip([1,2,3], ['a','b','c']):\n    print(n, l)"},
+    {id:155,topic:"Control Flow",title:"Pass",difficulty:"Beginner",question:"Empty if with pass.",hint:"pass placeholder.",solution:"x = 10\nif x > 5:\n    pass\nprint('Done')"},
+    {id:156,topic:"Control Flow",title:"Ternary",difficulty:"Intermediate",question:"Assign 'even' or 'odd'.",hint:"x if cond else y",solution:"num = 7\nresult = 'even' if num%2==0 else 'odd'\nprint(result)"},
+    {id:157,topic:"Control Flow",title:"Sum Loop",difficulty:"Beginner",question:"Sum 1 to 100.",hint:"Accumulate in loop.",solution:"total = 0\nfor i in range(1, 101):\n    total += i\nprint(total)"},
+    {id:158,topic:"Control Flow",title:"Find Max",difficulty:"Intermediate",question:"Find max in list.",hint:"Track max value.",solution:"nums = [3,7,2,9,4]\nm = nums[0]\nfor n in nums:\n    if n > m:\n        m = n\nprint(m)"},
+    {id:159,topic:"Control Flow",title:"Count Vowels",difficulty:"Intermediate",question:"Count vowels in string.",hint:"Check each char.",solution:"text = 'Hello World'\ncount = 0\nfor c in text.lower():\n    if c in 'aeiou':\n        count += 1\nprint(count)"},
+    {id:160,topic:"Control Flow",title:"Factorial",difficulty:"Intermediate",question:"Calculate 5!.",hint:"Multiply 1*2*3*4*5.",solution:"n = 5\nfact = 1\nfor i in range(1, n+1):\n    fact *= i\nprint(fact)"},
+    {id:161,topic:"Control Flow",title:"Fibonacci",difficulty:"Advanced",question:"Print first 10 Fibonacci.",hint:"a, b = b, a+b",solution:"a, b = 0, 1\nfor _ in range(10):\n    print(a)\n    a, b = b, a + b"},
+    {id:162,topic:"Control Flow",title:"Prime Check",difficulty:"Advanced",question:"Check if 17 is prime.",hint:"Check divisibility.",solution:"n = 17\nis_prime = True\nfor i in range(2, int(n**0.5)+1):\n    if n % i == 0:\n        is_prime = False\n        break\nprint(is_prime)"},
+    {id:163,topic:"Control Flow",title:"Pattern",difficulty:"Intermediate",question:"Print * triangle 5 rows.",hint:"'*' * i",solution:"for i in range(1, 6):\n    print('*' * i)"},
+    {id:164,topic:"Control Flow",title:"Reverse String",difficulty:"Intermediate",question:"Reverse 'Python'.",hint:"Build new string.",solution:"text = 'Python'\nrev = ''\nfor c in text:\n    rev = c + rev\nprint(rev)"},
+    {id:165,topic:"Control Flow",title:"FizzBuzz",difficulty:"Intermediate",question:"FizzBuzz 1-15.",hint:"Check mod 3, 5, 15.",solution:"for i in range(1, 16):\n    if i % 15 == 0:\n        print('FizzBuzz')\n    elif i % 3 == 0:\n        print('Fizz')\n    elif i % 5 == 0:\n        print('Buzz')\n    else:\n        print(i)"},
+    {id:166,topic:"Functions",title:"Define Function",difficulty:"Beginner",question:"Create greet() that prints 'Hello!'.",hint:"def name():",solution:"def greet():\n    print('Hello!')\ngreet()"},
+    {id:167,topic:"Functions",title:"Parameter",difficulty:"Beginner",question:"Function with name param.",hint:"def f(param):",solution:"def greet(name):\n    print(f'Hello, {name}!')\ngreet('Alice')"},
+    {id:168,topic:"Functions",title:"Return",difficulty:"Beginner",question:"Return square of number.",hint:"return value",solution:"def square(n):\n    return n ** 2\nprint(square(5))"},
+    {id:169,topic:"Functions",title:"Multiple Params",difficulty:"Beginner",question:"Add two numbers.",hint:"def add(a, b):",solution:"def add(a, b):\n    return a + b\nprint(add(3, 5))"},
+    {id:170,topic:"Functions",title:"Default Param",difficulty:"Beginner",question:"Default name='World'.",hint:"def f(p='default'):",solution:"def greet(name='World'):\n    print(f'Hello, {name}!')\ngreet()\ngreet('Alice')"},
+    {id:171,topic:"Functions",title:"Keyword Args",difficulty:"Intermediate",question:"Call with keyword args.",hint:"f(param=value)",solution:"def info(name, age):\n    print(f'{name} is {age}')\ninfo(age=25, name='Alice')"},
+    {id:172,topic:"Functions",title:"*args",difficulty:"Intermediate",question:"Sum any number of args.",hint:"*args",solution:"def sum_all(*args):\n    return sum(args)\nprint(sum_all(1,2,3,4,5))"},
+    {id:173,topic:"Functions",title:"**kwargs",difficulty:"Intermediate",question:"Print key-value pairs.",hint:"**kwargs",solution:"def print_info(**kwargs):\n    for k,v in kwargs.items():\n        print(f'{k}: {v}')\nprint_info(name='Alice', age=25)"},
+    {id:174,topic:"Functions",title:"Return Multiple",difficulty:"Intermediate",question:"Return min and max.",hint:"return a, b",solution:"def min_max(nums):\n    return min(nums), max(nums)\nlo, hi = min_max([3,1,4,1,5])\nprint(lo, hi)"},
+    {id:175,topic:"Functions",title:"Lambda",difficulty:"Intermediate",question:"Lambda to double number.",hint:"lambda x: expr",solution:"double = lambda x: x * 2\nprint(double(5))"},
+    {id:176,topic:"Functions",title:"Map",difficulty:"Intermediate",question:"Double all with map.",hint:"map(func, iter)",solution:"nums = [1,2,3,4]\ndoubled = list(map(lambda x: x*2, nums))\nprint(doubled)"},
+    {id:177,topic:"Functions",title:"Filter",difficulty:"Intermediate",question:"Filter even numbers.",hint:"filter(func, iter)",solution:"nums = [1,2,3,4,5,6]\nevens = list(filter(lambda x: x%2==0, nums))\nprint(evens)"},
+    {id:178,topic:"Functions",title:"Reduce",difficulty:"Advanced",question:"Product with reduce.",hint:"from functools import reduce",solution:"from functools import reduce\nnums = [1,2,3,4,5]\nproduct = reduce(lambda a,b: a*b, nums)\nprint(product)"},
+    {id:179,topic:"Functions",title:"Recursive",difficulty:"Advanced",question:"Recursive factorial.",hint:"Function calls itself.",solution:"def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n-1)\nprint(factorial(5))"},
+    {id:180,topic:"Functions",title:"Recursive Fib",difficulty:"Advanced",question:"Recursive Fibonacci.",hint:"fib(n-1) + fib(n-2)",solution:"def fib(n):\n    if n <= 1:\n        return n\n    return fib(n-1) + fib(n-2)\nprint(fib(10))"},
+    {id:181,topic:"Functions",title:"Docstring",difficulty:"Beginner",question:"Add docstring.",hint:"Triple quotes after def.",solution:'def greet(name):\n    """Greets person."""\n    print(f"Hello, {name}!")\nprint(greet.__doc__)'},
+    {id:182,topic:"Functions",title:"Global",difficulty:"Intermediate",question:"Modify global variable.",hint:"global keyword",solution:"count = 0\ndef increment():\n    global count\n    count += 1\nincrement()\nprint(count)"},
+    {id:183,topic:"Functions",title:"Nested Function",difficulty:"Intermediate",question:"Inner helper function.",hint:"Function inside function.",solution:"def outer(x):\n    def inner(y):\n        return y * 2\n    return inner(x) + 1\nprint(outer(5))"},
+    {id:184,topic:"Functions",title:"Closure",difficulty:"Advanced",question:"Closure with multiplier.",hint:"Inner accesses outer var.",solution:"def multiplier(n):\n    def multiply(x):\n        return x * n\n    return multiply\ndouble = multiplier(2)\nprint(double(5))"},
+    {id:185,topic:"Functions",title:"Decorator",difficulty:"Advanced",question:"Simple decorator.",hint:"Wraps function.",solution:"def decorator(func):\n    def wrapper():\n        print('Before')\n        func()\n        print('After')\n    return wrapper\n@decorator\ndef say_hi():\n    print('Hi!')\nsay_hi()"},
+    {id:186,topic:"Functions",title:"Type Hints",difficulty:"Intermediate",question:"Add type hints.",hint:"def f(p: type) -> type:",solution:"def add(a: int, b: int) -> int:\n    return a + b\nprint(add(3, 5))"},
+    {id:187,topic:"Functions",title:"Sorted Key",difficulty:"Intermediate",question:"Sort strings by length.",hint:"sorted(list, key=func)",solution:"words = ['apple','pie','banana']\nprint(sorted(words, key=len))"},
+    {id:188,topic:"Functions",title:"Any All",difficulty:"Intermediate",question:"Check any/all positive.",hint:"any(), all()",solution:"nums = [1,-2,3,4]\nprint(any(n > 0 for n in nums))\nprint(all(n > 0 for n in nums))"},
+    {id:189,topic:"Functions",title:"Generator",difficulty:"Advanced",question:"Generator yielding squares.",hint:"yield",solution:"def squares():\n    for i in range(1, 6):\n        yield i ** 2\nfor sq in squares():\n    print(sq)"},
+    {id:190,topic:"Functions",title:"Assert",difficulty:"Intermediate",question:"Assert to validate.",hint:"assert cond, 'msg'",solution:"def divide(a, b):\n    assert b != 0, 'Cannot divide by zero'\n    return a / b\nprint(divide(10, 2))"},
+    {id:191,topic:"List Comprehensions",title:"Basic",difficulty:"Beginner",question:"Squares 1-5 with comprehension.",hint:"[expr for item in iter]",solution:"squares = [x**2 for x in range(1, 6)]\nprint(squares)"},
+    {id:192,topic:"List Comprehensions",title:"With Condition",difficulty:"Beginner",question:"Even numbers 1-10.",hint:"[x for x if cond]",solution:"evens = [x for x in range(1, 11) if x % 2 == 0]\nprint(evens)"},
+    {id:193,topic:"List Comprehensions",title:"Transform",difficulty:"Beginner",question:"Uppercase ['a','b','c'].",hint:"[s.upper() for s in list]",solution:"upper = [s.upper() for s in ['a','b','c']]\nprint(upper)"},
+    {id:194,topic:"List Comprehensions",title:"Multiple Cond",difficulty:"Intermediate",question:"1-20 divisible by 2 and 3.",hint:"Use 'and' in condition.",solution:"nums = [x for x in range(1, 21) if x % 2 == 0 and x % 3 == 0]\nprint(nums)"},
+    {id:195,topic:"List Comprehensions",title:"Flatten",difficulty:"Intermediate",question:"Flatten [[1,2],[3,4],[5,6]].",hint:"Nested comprehension.",solution:"matrix = [[1,2],[3,4],[5,6]]\nflat = [x for row in matrix for x in row]\nprint(flat)"},
+    {id:196,topic:"List Comprehensions",title:"If-Else",difficulty:"Intermediate",question:"Replace negatives with 0.",hint:"x if cond else y",solution:"nums = [-1,2,-3,4]\nresult = [x if x > 0 else 0 for x in nums]\nprint(result)"},
+    {id:197,topic:"List Comprehensions",title:"Dict Comp",difficulty:"Intermediate",question:"Create {x: x**2}.",hint:"{k: v for ...}",solution:"squares = {x: x**2 for x in range(1, 6)}\nprint(squares)"},
+    {id:198,topic:"List Comprehensions",title:"Set Comp",difficulty:"Intermediate",question:"Unique first letters.",hint:"{expr for ...}",solution:"words = ['apple','banana','apricot']\nfirsts = {w[0] for w in words}\nprint(firsts)"},
+    {id:199,topic:"List Comprehensions",title:"Enumerate",difficulty:"Intermediate",question:"(index, value) tuples.",hint:"[(i, v) for ...]",solution:"pairs = [(i, v) for i, v in enumerate(['a','b','c'])]\nprint(pairs)"},
+    {id:200,topic:"List Comprehensions",title:"Zip Comp",difficulty:"Intermediate",question:"Sum corresponding elements.",hint:"[a+b for a,b in zip]",solution:"a = [1,2,3]\nb = [4,5,6]\nsums = [x+y for x,y in zip(a, b)]\nprint(sums)"},
+    {id:201,topic:"List Comprehensions",title:"Filter Words",difficulty:"Beginner",question:"Words longer than 3.",hint:"[w for w if len]",solution:"words = ['hi','hello','hey','world']\nlong = [w for w in words if len(w) > 3]\nprint(long)"},
+    {id:202,topic:"List Comprehensions",title:"Matrix",difficulty:"Intermediate",question:"3x3 matrix of zeros.",hint:"[[0 for] for]",solution:"matrix = [[0 for _ in range(3)] for _ in range(3)]\nprint(matrix)"},
+    {id:203,topic:"List Comprehensions",title:"Generator Expr",difficulty:"Intermediate",question:"Generator for squares.",hint:"(expr for ...)",solution:"squares = (x**2 for x in range(1, 6))\nfor sq in squares:\n    print(sq)"},
+    {id:204,topic:"List Comprehensions",title:"Join Chars",difficulty:"Beginner",question:"Join ['P','y','t','h','o','n'].",hint:"''.join(list)",solution:"chars = ['P','y','t','h','o','n']\nword = ''.join(chars)\nprint(word)"},
+    {id:205,topic:"List Comprehensions",title:"Extract Digits",difficulty:"Intermediate",question:"Extract digits from 'a1b2c3d4'.",hint:"[c for c if isdigit]",solution:"s = 'a1b2c3d4'\ndigits = [c for c in s if c.isdigit()]\nprint(digits)"},
+    {id:206,topic:"File I/O",title:"Write File",difficulty:"Beginner",question:"Write 'Hello, World!' to file.",hint:"open('file', 'w')",solution:"with open('test.txt', 'w') as f:\n    f.write('Hello, World!')"},
+    {id:207,topic:"File I/O",title:"Read File",difficulty:"Beginner",question:"Read entire file.",hint:"open('file', 'r')",solution:"with open('test.txt', 'r') as f:\n    content = f.read()\n    print(content)"},
+    {id:208,topic:"File I/O",title:"Read Lines",difficulty:"Beginner",question:"Read line by line.",hint:"for line in f:",solution:"with open('test.txt', 'r') as f:\n    for line in f:\n        print(line.strip())"},
+    {id:209,topic:"File I/O",title:"Append",difficulty:"Beginner",question:"Append to file.",hint:"open('file', 'a')",solution:"with open('test.txt', 'a') as f:\n    f.write('\\nNew line')"},
+    {id:210,topic:"File I/O",title:"Write Lines",difficulty:"Beginner",question:"Write list of lines.",hint:".writelines()",solution:"lines = ['Line 1\\n', 'Line 2\\n']\nwith open('test.txt', 'w') as f:\n    f.writelines(lines)"},
+    {id:211,topic:"File I/O",title:"Check Exists",difficulty:"Intermediate",question:"Check if file exists.",hint:"os.path.exists()",solution:"import os\nif os.path.exists('test.txt'):\n    print('File exists')"},
+    {id:212,topic:"File I/O",title:"File Size",difficulty:"Intermediate",question:"Get file size.",hint:"os.path.getsize()",solution:"import os\nsize = os.path.getsize('test.txt')\nprint(f'Size: {size} bytes')"},
+    {id:213,topic:"File I/O",title:"Delete File",difficulty:"Intermediate",question:"Delete a file.",hint:"os.remove()",solution:"import os\nif os.path.exists('temp.txt'):\n    os.remove('temp.txt')"},
+    {id:214,topic:"File I/O",title:"Rename",difficulty:"Intermediate",question:"Rename a file.",hint:"os.rename()",solution:"import os\nos.rename('old.txt', 'new.txt')"},
+    {id:215,topic:"File I/O",title:"Read CSV",difficulty:"Intermediate",question:"Read CSV file.",hint:"import csv",solution:"import csv\nwith open('data.csv', 'r') as f:\n    reader = csv.reader(f)\n    for row in reader:\n        print(row)"},
+    {id:216,topic:"File I/O",title:"Write CSV",difficulty:"Intermediate",question:"Write to CSV.",hint:"csv.writer()",solution:"import csv\ndata = [['Name','Age'], ['Alice',25]]\nwith open('data.csv', 'w', newline='') as f:\n    csv.writer(f).writerows(data)"},
+    {id:217,topic:"File I/O",title:"JSON Write",difficulty:"Intermediate",question:"Write dict to JSON.",hint:"json.dump()",solution:"import json\ndata = {'name': 'Alice', 'age': 25}\nwith open('data.json', 'w') as f:\n    json.dump(data, f)"},
+    {id:218,topic:"File I/O",title:"JSON Read",difficulty:"Intermediate",question:"Read JSON file.",hint:"json.load()",solution:"import json\nwith open('data.json', 'r') as f:\n    data = json.load(f)\n    print(data)"},
+    {id:219,topic:"File I/O",title:"List Directory",difficulty:"Intermediate",question:"List files in directory.",hint:"os.listdir()",solution:"import os\nfiles = os.listdir('.')\nfor f in files:\n    print(f)"},
+    {id:220,topic:"File I/O",title:"Create Directory",difficulty:"Intermediate",question:"Create new directory.",hint:"os.makedirs()",solution:"import os\nos.makedirs('new_folder', exist_ok=True)"},
+    {id:221,topic:"Error Handling",title:"Try-Except",difficulty:"Beginner",question:"Handle ZeroDivisionError.",hint:"try-except block.",solution:"try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print('Cannot divide by zero')"},
+    {id:222,topic:"Error Handling",title:"Multiple Except",difficulty:"Intermediate",question:"Handle ValueError, TypeError.",hint:"except (E1, E2):",solution:"try:\n    x = int('abc')\nexcept (ValueError, TypeError) as e:\n    print(f'Error: {e}')"},
+    {id:223,topic:"Error Handling",title:"Finally",difficulty:"Beginner",question:"Use finally for cleanup.",hint:"finally: always runs",solution:"try:\n    f = open('test.txt')\nexcept FileNotFoundError:\n    print('Not found')\nfinally:\n    print('Cleanup')"},
+    {id:224,topic:"Error Handling",title:"Else Block",difficulty:"Intermediate",question:"Else when no exception.",hint:"else: runs if no error",solution:"try:\n    x = 10 / 2\nexcept ZeroDivisionError:\n    print('Error')\nelse:\n    print(f'Result: {x}')"},
+    {id:225,topic:"Error Handling",title:"Raise",difficulty:"Intermediate",question:"Raise ValueError.",hint:"raise Exception('msg')",solution:"def check_positive(n):\n    if n < 0:\n        raise ValueError('Must be positive')\n    return n\ntry:\n    check_positive(-5)\nexcept ValueError as e:\n    print(e)"},
+    {id:226,topic:"Error Handling",title:"Custom Exception",difficulty:"Advanced",question:"Create custom exception.",hint:"class MyError(Exception):",solution:"class NegativeError(Exception):\n    pass\ntry:\n    raise NegativeError('Negative not allowed')\nexcept NegativeError as e:\n    print(e)"},
+    {id:227,topic:"Error Handling",title:"Assert",difficulty:"Intermediate",question:"Assert for validation.",hint:"assert cond, 'msg'",solution:"def divide(a, b):\n    assert b != 0, 'Divisor cannot be zero'\n    return a / b\nprint(divide(10, 2))"},
+    {id:228,topic:"Error Handling",title:"Traceback",difficulty:"Intermediate",question:"Get exception traceback.",hint:"import traceback",solution:"import traceback\ntry:\n    x = 1 / 0\nexcept:\n    traceback.print_exc()"},
+    {id:229,topic:"Error Handling",title:"Re-raise",difficulty:"Advanced",question:"Catch, log, re-raise.",hint:"raise without arg",solution:"try:\n    x = int('abc')\nexcept ValueError:\n    print('Logging error...')\n    raise"},
+    {id:230,topic:"Error Handling",title:"Context Manager",difficulty:"Advanced",question:"Use with for cleanup.",hint:"with handles cleanup",solution:"with open('test.txt', 'w') as f:\n    f.write('Hello')\n# File auto-closed"},
+    {id:231,topic:"Error Handling",title:"KeyError",difficulty:"Beginner",question:"Handle missing dict key.",hint:"except KeyError:",solution:"d = {'a': 1}\ntry:\n    print(d['b'])\nexcept KeyError:\n    print('Key not found')"},
+    {id:232,topic:"Error Handling",title:"IndexError",difficulty:"Beginner",question:"Handle list index error.",hint:"except IndexError:",solution:"lst = [1, 2, 3]\ntry:\n    print(lst[10])\nexcept IndexError:\n    print('Index out of range')"},
+    {id:233,topic:"Error Handling",title:"FileNotFoundError",difficulty:"Beginner",question:"Handle missing file.",hint:"except FileNotFoundError:",solution:"try:\n    with open('missing.txt') as f:\n        print(f.read())\nexcept FileNotFoundError:\n    print('File not found')"},
+    {id:234,topic:"Error Handling",title:"Generic Exception",difficulty:"Intermediate",question:"Catch any exception.",hint:"except Exception as e:",solution:"try:\n    x = 1 / 0\nexcept Exception as e:\n    print(f'Error: {type(e).__name__}: {e}')"},
+    {id:235,topic:"Error Handling",title:"Exception Chain",difficulty:"Advanced",question:"Chain exceptions.",hint:"raise ... from ...",solution:"try:\n    x = int('abc')\nexcept ValueError as e:\n    raise RuntimeError('Conversion failed') from e"},
+    {id:236,topic:"OOP",title:"Create Class",difficulty:"Beginner",question:"Create Person class.",hint:"class Name: def __init__:",solution:"class Person:\n    def __init__(self, name):\n        self.name = name\np = Person('Alice')\nprint(p.name)"},
+    {id:237,topic:"OOP",title:"Instance Method",difficulty:"Beginner",question:"Add greet method.",hint:"def method(self):",solution:"class Person:\n    def __init__(self, name):\n        self.name = name\n    def greet(self):\n        print(f'Hi, I am {self.name}')\nPerson('Alice').greet()"},
+    {id:238,topic:"OOP",title:"Multiple Attrs",difficulty:"Beginner",question:"Class with name and age.",hint:"self.attr = value",solution:"class Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\np = Person('Alice', 25)\nprint(p.name, p.age)"},
+    {id:239,topic:"OOP",title:"Class Variable",difficulty:"Intermediate",question:"Add class variable.",hint:"Outside __init__",solution:"class Dog:\n    species = 'Canis familiaris'\n    def __init__(self, name):\n        self.name = name\nd = Dog('Buddy')\nprint(d.species)"},
+    {id:240,topic:"OOP",title:"Inheritance",difficulty:"Intermediate",question:"Student inherits Person.",hint:"class Child(Parent):",solution:"class Person:\n    def __init__(self, name):\n        self.name = name\nclass Student(Person):\n    def __init__(self, name, grade):\n        super().__init__(name)\n        self.grade = grade\ns = Student('Alice', 'A')\nprint(s.name, s.grade)"},
+    {id:241,topic:"OOP",title:"Override Method",difficulty:"Intermediate",question:"Override parent method.",hint:"Same method name.",solution:"class Animal:\n    def speak(self):\n        print('...')\nclass Dog(Animal):\n    def speak(self):\n        print('Woof!')\nDog().speak()"},
+    {id:242,topic:"OOP",title:"__str__",difficulty:"Intermediate",question:"String representation.",hint:"def __str__(self):",solution:"class Person:\n    def __init__(self, name):\n        self.name = name\n    def __str__(self):\n        return f'Person: {self.name}'\nprint(Person('Alice'))"},
+    {id:243,topic:"OOP",title:"Property",difficulty:"Intermediate",question:"Use @property getter.",hint:"@property",solution:"class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def area(self):\n        return 3.14 * self._r ** 2\nc = Circle(5)\nprint(c.area)"},
+    {id:244,topic:"OOP",title:"Setter",difficulty:"Advanced",question:"Property setter.",hint:"@attr.setter",solution:"class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\n    @radius.setter\n    def radius(self, v):\n        if v > 0:\n            self._r = v\nc = Circle(5)\nc.radius = 10\nprint(c.radius)"},
+    {id:245,topic:"OOP",title:"Class Method",difficulty:"Intermediate",question:"Factory class method.",hint:"@classmethod",solution:"class Person:\n    def __init__(self, name):\n        self.name = name\n    @classmethod\n    def from_string(cls, s):\n        return cls(s.split(',')[0])\np = Person.from_string('Alice,25')\nprint(p.name)"},
+    {id:246,topic:"OOP",title:"Static Method",difficulty:"Intermediate",question:"Static utility method.",hint:"@staticmethod",solution:"class Math:\n    @staticmethod\n    def add(a, b):\n        return a + b\nprint(Math.add(3, 5))"},
+    {id:247,topic:"OOP",title:"Encapsulation",difficulty:"Intermediate",question:"Private attribute.",hint:"self.__private",solution:"class Account:\n    def __init__(self, balance):\n        self.__balance = balance\n    def get_balance(self):\n        return self.__balance\na = Account(100)\nprint(a.get_balance())"},
+    {id:248,topic:"OOP",title:"Multiple Inherit",difficulty:"Advanced",question:"Inherit from two classes.",hint:"class C(A, B):",solution:"class Flyer:\n    def fly(self):\n        print('Flying')\nclass Swimmer:\n    def swim(self):\n        print('Swimming')\nclass Duck(Flyer, Swimmer):\n    pass\nd = Duck()\nd.fly()\nd.swim()"},
+    {id:249,topic:"OOP",title:"Abstract Class",difficulty:"Advanced",question:"Abstract class and method.",hint:"from abc import ABC",solution:"from abc import ABC, abstractmethod\nclass Shape(ABC):\n    @abstractmethod\n    def area(self):\n        pass\nclass Square(Shape):\n    def __init__(self, side):\n        self.side = side\n    def area(self):\n        return self.side ** 2\nprint(Square(5).area())"},
+    {id:250,topic:"OOP",title:"Dataclass",difficulty:"Advanced",question:"Use dataclass decorator.",hint:"@dataclass",solution:"from dataclasses import dataclass\n@dataclass\nclass Point:\n    x: int\n    y: int\np = Point(3, 4)\nprint(p)"},
+    {id:251,topic:"Date & Time",title:"Current Date & Time",difficulty:"Beginner",question:"Print current date and time.",hint:"datetime.now()",solution:"import datetime\nprint(datetime.datetime.now())"},
+    {id:252,topic:"Date & Time",title:"Specific Date",difficulty:"Beginner",question:"Create datetime for Jan 1, 2025.",hint:"datetime(year, month, day)",solution:"from datetime import datetime\ndt = datetime(2025, 1, 1)\nprint(dt)"},
+    {id:253,topic:"Date & Time",title:"Date Formatting",difficulty:"Intermediate",question:"Format date as 'DD-MM-YYYY'.",hint:".strftime('%d-%m-%Y')",solution:"from datetime import datetime\nprint(datetime.now().strftime('%d-%m-%Y'))"},
+    {id:254,topic:"Date & Time",title:"Parse String to Date",difficulty:"Intermediate",question:"Convert '2024-12-25' to datetime.",hint:"strptime(str, format)",solution:"from datetime import datetime\ndate_str = '2024-12-25'\ndt = datetime.strptime(date_str, '%Y-%m-%d')\nprint(dt)"},
+    {id:255,topic:"Date & Time",title:"Date Arithmetic",difficulty:"Intermediate",question:"Calculate date 7 days from now.",hint:"timedelta(days=7)",solution:"from datetime import datetime, timedelta\nfuture = datetime.now() + timedelta(days=7)\nprint(future)"},
+    {id:256,topic:"Math & Random",title:"Random Integer",difficulty:"Beginner",question:"Generate random int between 1-100.",hint:"random.randint(1, 100)",solution:"import random\nprint(random.randint(1, 100))"},
+    {id:257,topic:"Math & Random",title:"Random Choice",difficulty:"Beginner",question:"Pick random from ['red','blue','green'].",hint:"random.choice()",solution:"import random\ncolors = ['red', 'blue', 'green']\nprint(random.choice(colors))"},
+    {id:258,topic:"Math & Random",title:"Shuffle List",difficulty:"Beginner",question:"Shuffle [1,2,3,4,5] in place.",hint:"random.shuffle()",solution:"import random\nnums = [1, 2, 3, 4, 5]\nrandom.shuffle(nums)\nprint(nums)"},
+    {id:259,topic:"Math & Random",title:"Calculate GCD",difficulty:"Intermediate",question:"Find GCD of 48 and 18.",hint:"math.gcd()",solution:"import math\nprint(math.gcd(48, 18))"},
+    {id:260,topic:"Math & Random",title:"Ceiling and Floor",difficulty:"Intermediate",question:"Print ceil and floor of 4.7.",hint:"math.ceil(), math.floor()",solution:"import math\nprint(math.ceil(4.7), math.floor(4.7))"},
+    {id:261,topic:"Regex",title:"Find Pattern",difficulty:"Intermediate",question:"Find all digits in 'I have 2 apples and 5 bananas'.",hint:"re.findall(r'\\d+', s)",solution:"import re\ns = 'I have 2 apples and 5 bananas'\nprint(re.findall(r'\\d+', s))"},
+    {id:262,topic:"Regex",title:"Email Validation",difficulty:"Intermediate",question:"Check if 'test@example.com' is valid email.",hint:"re.search() with pattern",solution:"import re\nemail = 'test@example.com'\nmatch = re.search(r'^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$', email)\nprint(bool(match))"},
+    {id:263,topic:"Regex",title:"Regex Substitution",difficulty:"Intermediate",question:"Replace whitespaces with underscores.",hint:"re.sub(r'\\s', '_', s)",solution:"import re\ns = 'Hello World Python'\nprint(re.sub(r'\\s', '_', s))"},
+    {id:264,topic:"Regex",title:"Split by Regex",difficulty:"Intermediate",question:"Split 'one, two;three four' by delimiters.",hint:"re.split(r'[,\\s;]+', s)",solution:"import re\ns = 'one, two;three four'\nprint(re.split(r'[,\\s;]+', s))"},
+    {id:265,topic:"Collections",title:"Counter",difficulty:"Intermediate",question:"Count char frequency in 'banana'.",hint:"Counter('banana')",solution:"from collections import Counter\nprint(Counter('banana'))"},
+    {id:266,topic:"Collections",title:"DefaultDict",difficulty:"Intermediate",question:"Create defaultdict with int default.",hint:"defaultdict(int)",solution:"from collections import defaultdict\nd = defaultdict(int)\nd['a'] += 1\nprint(d)"},
+    {id:267,topic:"Collections",title:"Named Tuple",difficulty:"Intermediate",question:"Create Point namedtuple with x, y.",hint:"namedtuple('Point', ['x','y'])",solution:"from collections import namedtuple\nPoint = namedtuple('Point', ['x', 'y'])\np = Point(10, 20)\nprint(p.x, p.y)"},
+    {id:268,topic:"Collections",title:"Deque Rotation",difficulty:"Intermediate",question:"Rotate deque [1,2,3] right by 1.",hint:"deque.rotate(1)",solution:"from collections import deque\nd = deque([1, 2, 3])\nd.rotate(1)\nprint(d)"},
+    {id:269,topic:"Itertools",title:"Permutations",difficulty:"Intermediate",question:"Print all permutations of [1,2,3].",hint:"permutations([1,2,3])",solution:"from itertools import permutations\nprint(list(permutations([1, 2, 3])))"},
+    {id:270,topic:"Itertools",title:"Combinations",difficulty:"Intermediate",question:"Print 2-element combos of ['A','B','C'].",hint:"combinations(list, 2)",solution:"from itertools import combinations\nprint(list(combinations(['A', 'B', 'C'], 2)))"},
+    {id:271,topic:"Itertools",title:"Zip Longest",difficulty:"Intermediate",question:"Zip [1,2] and ['a','b','c'] with None fill.",hint:"zip_longest()",solution:"from itertools import zip_longest\nprint(list(zip_longest([1, 2], ['a', 'b', 'c'])))"},
+    {id:272,topic:"Itertools",title:"Accumulate",difficulty:"Intermediate",question:"Cumulative sum of [1,2,3,4].",hint:"accumulate(list)",solution:"from itertools import accumulate\nprint(list(accumulate([1, 2, 3, 4])))"},
+    {id:273,topic:"Magic Methods",title:"Operator Overload +",difficulty:"Advanced",question:"Vector class with __add__.",hint:"def __add__(self, other):",solution:"class Vector:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    def __repr__(self):\n        return f'Vector({self.x}, {self.y})'\nprint(Vector(1, 2) + Vector(3, 4))"},
+    {id:274,topic:"Magic Methods",title:"Custom __len__",difficulty:"Advanced",question:"Basket class with __len__.",hint:"def __len__(self):",solution:"class Basket:\n    def __init__(self, items):\n        self.items = items\n    def __len__(self):\n        return len(self.items)\nprint(len(Basket(['apple', 'orange'])))"},
+    {id:275,topic:"Magic Methods",title:"Callable __call__",difficulty:"Advanced",question:"Multiplier class callable as function.",hint:"def __call__(self, x):",solution:"class Multiplier:\n    def __init__(self, factor):\n        self.factor = factor\n    def __call__(self, x):\n        return x * self.factor\ntriple = Multiplier(3)\nprint(triple(10))"},
+    {id:276,topic:"Magic Methods",title:"Item Access __getitem__",difficulty:"Advanced",question:"Deck class with index access.",hint:"def __getitem__(self, index):",solution:"class Deck:\n    def __init__(self):\n        self.cards = ['Ace', 'King', 'Queen']\n    def __getitem__(self, index):\n        return self.cards[index]\nprint(Deck()[0])"},
+    {id:277,topic:"Magic Methods",title:"Equality __eq__",difficulty:"Advanced",question:"Point class with equality check.",hint:"def __eq__(self, other):",solution:"class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\nprint(Point(1, 1) == Point(1, 1))"},
+    {id:278,topic:"Modern Python",title:"Walrus Operator",difficulty:"Advanced",question:"Use := in if statement.",hint:"if (n := value) > 5:",solution:"if (n := 10) > 5:\n    print(f'{n} is greater than 5')"},
+    {id:279,topic:"Modern Python",title:"Type Hints Var",difficulty:"Intermediate",question:"Declare age with int type hint.",hint:"age: int = 25",solution:"age: int = 25\nprint(age)"},
+    {id:280,topic:"Modern Python",title:"Type Hints List",difficulty:"Intermediate",question:"Function with List[str] parameter.",hint:"from typing import List",solution:"from typing import List\ndef process_names(names: List[str]):\n    print(names)\nprocess_names(['Alice', 'Bob'])"},
+    {id:281,topic:"Modern Python",title:"Dict Merge |",difficulty:"Intermediate",question:"Merge {'a':1} and {'b':2} with |.",hint:"d1 | d2",solution:"d1 = {'a': 1}\nd2 = {'b': 2}\nprint(d1 | d2)"},
+    {id:282,topic:"Modern Python",title:"F-String Debug",difficulty:"Intermediate",question:"Use f-string {x=} syntax.",hint:"f'{x=}'",solution:"x = 10\nprint(f'{x=}')"},
+    {id:283,topic:"Advanced I/O",title:"Pretty Print JSON",difficulty:"Intermediate",question:"Print dict as formatted JSON.",hint:"json.dumps(data, indent=4)",solution:"import json\ndata = {'id': 1, 'name': 'Test'}\nprint(json.dumps(data, indent=4))"},
+    {id:284,topic:"Advanced I/O",title:"Get Env Variable",difficulty:"Intermediate",question:"Fetch PATH environment variable.",hint:"os.environ.get('PATH')",solution:"import os\nprint(os.environ.get('PATH'))"},
+    {id:285,topic:"Advanced I/O",title:"Pathlib Exists",difficulty:"Intermediate",question:"Check if current dir exists.",hint:"Path().exists()",solution:"from pathlib import Path\nprint(Path().exists())"},
+    {id:286,topic:"Advanced I/O",title:"Get CWD",difficulty:"Beginner",question:"Print current working directory.",hint:"os.getcwd()",solution:"import os\nprint(os.getcwd())"},
+    {id:287,topic:"Advanced Functions",title:"Decorator with Args",difficulty:"Advanced",question:"Create @repeat(3) decorator.",hint:"Three nested functions",solution:"def repeat(n):\n    def decorator(func):\n        def wrapper(*args, **kwargs):\n            for _ in range(n):\n                func(*args, **kwargs)\n        return wrapper\n    return decorator\n@repeat(3)\ndef say_hi():\n    print('Hi!')\nsay_hi()"},
+    {id:288,topic:"Advanced Functions",title:"Functools Partial",difficulty:"Intermediate",question:"Create double from multiply using partial.",hint:"partial(multiply, 2)",solution:"from functools import partial\ndef multiply(x, y):\n    return x * y\ndouble = partial(multiply, 2)\nprint(double(5))"},
+    {id:289,topic:"Advanced Functions",title:"LRU Cache",difficulty:"Intermediate",question:"Cache function results with lru_cache.",hint:"@lru_cache(maxsize=None)",solution:"from functools import lru_cache\n@lru_cache(maxsize=None)\ndef heavy(n):\n    return n * n\nprint(heavy(10))"},
+    {id:290,topic:"Advanced Functions",title:"Generator Send",difficulty:"Advanced",question:"Generator with .send() method.",hint:"val = yield expr",solution:"def gen():\n    val = yield 1\n    yield val\ng = gen()\nprint(next(g))\nprint(g.send(10))"},
+    {id:291,topic:"Algorithms",title:"Transpose Matrix",difficulty:"Intermediate",question:"Transpose [[1,2],[3,4]] using zip.",hint:"list(zip(*matrix))",solution:"matrix = [[1, 2], [3, 4]]\nprint(list(zip(*matrix)))"},
+    {id:292,topic:"Algorithms",title:"Flatten List",difficulty:"Advanced",question:"Recursively flatten [1,[2,[3,4]]].",hint:"yield from for recursion",solution:"def flatten(lst):\n    for i in lst:\n        if isinstance(i, list):\n            yield from flatten(i)\n        else:\n            yield i\nprint(list(flatten([1, [2, [3, 4]]])))"},
+    {id:293,topic:"Algorithms",title:"Binary Search Bisect",difficulty:"Intermediate",question:"Find insertion point for 4 in [1,2,5,6].",hint:"bisect.bisect_left()",solution:"import bisect\nnums = [1, 2, 5, 6]\nprint(bisect.bisect_left(nums, 4))"},
+    {id:294,topic:"Algorithms",title:"Sort Multiple Keys",difficulty:"Intermediate",question:"Sort [(1,3),(1,2),(2,1)] by both elements.",hint:"key=lambda x: (x[0], x[1])",solution:"data = [(1, 3), (1, 2), (2, 1)]\nprint(sorted(data, key=lambda x: (x[0], x[1])))"},
+    {id:295,topic:"Algorithms",title:"Palindrome Check",difficulty:"Beginner",question:"Check if 'Racecar' is palindrome.",hint:"s.lower() == s.lower()[::-1]",solution:"s = 'Racecar'\nprint(s.lower() == s.lower()[::-1])"},
+    {id:296,topic:"Algorithms",title:"Deep Copy",difficulty:"Intermediate",question:"Deep copy nested list [[1,2],[3,4]].",hint:"copy.deepcopy()",solution:"import copy\norig = [[1, 2], [3, 4]]\ndup = copy.deepcopy(orig)\ndup[0][0] = 99\nprint(orig[0][0])"},
+    {id:297,topic:"Algorithms",title:"Eval Function",difficulty:"Intermediate",question:"Use eval to calculate '2+2'.",hint:"eval('2+2')",solution:"print(eval('2+2'))"},
+    {id:298,topic:"Algorithms",title:"Exec Function",difficulty:"Intermediate",question:"Use exec to define z=5.",hint:"exec('z=5')",solution:"exec('z=5')\nprint(z)"},
+    {id:299,topic:"Algorithms",title:"Memory Size",difficulty:"Intermediate",question:"Print memory size of int 5.",hint:"sys.getsizeof(5)",solution:"import sys\nprint(sys.getsizeof(5))"},
+    {id:300,topic:"Algorithms",title:"IS vs ==",difficulty:"Intermediate",question:"Show difference between is and ==.",hint:"== values, is identity",solution:"a = [1, 2]\nb = [1, 2]\nprint(a == b)\nprint(a is b)"}
+];
+
+let currentQuestion = questions[0];
+let completed = JSON.parse(localStorage.getItem('jupyterLabCompleted') || '[]');
+
+function init() {
+    renderQuestions();
+    updateProgress();
+    selectQuestion(1);
+    document.getElementById('topicFilter').addEventListener('change', filterQuestions);
+    document.getElementById('searchInput').addEventListener('input', filterQuestions);
+}
+
+function renderQuestions(filter = 'all', search = '') {
+    const list = document.getElementById('questionList');
+    list.innerHTML = '';
+    let filtered = questions;
+    if (filter !== 'all') filtered = filtered.filter(q => q.topic === filter);
+    if (search) filtered = filtered.filter(q => q.title.toLowerCase().includes(search.toLowerCase()) || q.question.toLowerCase().includes(search.toLowerCase()));
+    filtered.forEach(q => {
+        const isCompleted = completed.includes(q.id);
+        const isActive = currentQuestion && currentQuestion.id === q.id;
+        const item = document.createElement('div');
+        item.className = `question-item${isActive ? ' active' : ''}${isCompleted ? ' completed' : ''}`;
+        item.onclick = () => selectQuestion(q.id);
+        item.innerHTML = `<div class="q-header"><span class="q-num">#${q.id}</span><span class="q-title">${q.title}</span><span class="q-diff ${q.difficulty.toLowerCase()}">${q.difficulty[0]}</span></div><div class="q-topic">${q.topic}</div>`;
+        list.appendChild(item);
+    });
+}
+
+function filterQuestions() {
+    const topic = document.getElementById('topicFilter').value;
+    const search = document.getElementById('searchInput').value;
+    renderQuestions(topic, search);
+}
+
+function selectQuestion(id) {
+    currentQuestion = questions.find(q => q.id === id);
+    if (!currentQuestion) return;
+    document.getElementById('questionTitle').textContent = `Q${currentQuestion.id}: ${currentQuestion.title}`;
+    document.getElementById('questionText').textContent = currentQuestion.question;
+    const badge = document.getElementById('difficultyBadge');
+    badge.textContent = currentQuestion.difficulty;
+    badge.className = `diff-badge ${currentQuestion.difficulty.toLowerCase()}`;
+    document.getElementById('hintPanel').classList.remove('show');
+    document.getElementById('solutionPanel').classList.remove('show');
+    document.getElementById('hintPanel').textContent = currentQuestion.hint;
+    document.getElementById('solutionCode').textContent = currentQuestion.solution;
+    filterQuestions();
+}
+
+function toggleHint() { document.getElementById('hintPanel').classList.toggle('show'); }
+function toggleSolution() { document.getElementById('solutionPanel').classList.toggle('show'); }
+function copySolution() { navigator.clipboard.writeText(currentQuestion.solution).then(() => showToast('Copied!')); }
+function markComplete() {
+    if (!completed.includes(currentQuestion.id)) {
+        completed.push(currentQuestion.id);
+        localStorage.setItem('jupyterLabCompleted', JSON.stringify(completed));
+        updateProgress();
+        filterQuestions();
+        showToast('Done! âœ“');
+    }
+}
+function updateProgress() {
+    const count = completed.length;
+    document.getElementById('completedCount').textContent = count;
+    document.getElementById('progressText').textContent = `${count}/300`;
+    document.getElementById('progressFill').style.width = `${(count / 300) * 100}%`;
+}
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1500);
+}
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    sidebar.classList.toggle('collapsed');
+    toggle.textContent = sidebar.classList.contains('collapsed') ? 'â–¶' : 'â—€';
+}
+function toggleQuestionPanel() {
+    document.getElementById('questionPanel').classList.toggle('minimized');
+}
+
+// Environment Modal Functions
+function openEnvironment() {
+    const modal = document.getElementById('envModal');
+    const frame = document.getElementById('envFrame');
+    frame.src = 'https://jupyter.org/try-jupyter/lab/';
+    modal.classList.add('show');
+}
+function closeEnvironment() {
+    const modal = document.getElementById('envModal');
+    const frame = document.getElementById('envFrame');
+    modal.classList.remove('show');
+    frame.src = 'about:blank';
+}
+// Close modal on overlay click
+document.getElementById('envModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEnvironment();
+});
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeEnvironment();
+});
+
+init();
+    </script>
+</body>
+</html>

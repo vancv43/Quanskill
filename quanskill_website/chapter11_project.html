@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Real-World Project | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-orange: #ff9000;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --workflow-color: #8b5cf6;
+            --eda-color: #06b6d4;
+            --model-color: #ec4899;
+            --deploy-color: #10b981;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.8; font-size: 17px; }
+        .header { background: var(--gradient-blue); color: white; padding: 1rem 2rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .header-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .sidebar { position: fixed; left: 0; top: 60px; bottom: 0; width: 300px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; padding: 1.5rem 0; z-index: 900; transition: transform 0.3s; }
+        .sidebar-header { padding: 0 1.5rem 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+        .logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--quanskill-blue); }
+        .chapter-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); }
+        .nav-section { padding: 0.5rem 1.5rem; }
+        .nav-section-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); padding: 0.5rem 1rem; font-weight: 600; }
+        .nav-link { display: block; padding: 0.6rem 1rem; color: var(--text-secondary); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; border-radius: 8px; margin-bottom: 0.25rem; transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+        .nav-link.active { background: rgba(11, 47, 160, 0.1); color: var(--quanskill-blue); border-left-color: var(--quanskill-orange); font-weight: 500; }
+        .main-content { margin-left: 300px; padding: 80px 2rem 4rem; max-width: calc(100% - 300px); }
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+        .hero { background: var(--gradient-blue); color: white; padding: 4rem 3rem; border-radius: 20px; margin-bottom: 3rem; position: relative; overflow: hidden; }
+        .hero::after { content: '🚀'; position: absolute; bottom: 20px; right: 40px; font-size: 80px; opacity: 0.15; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-badge { display: inline-block; background: var(--quanskill-orange); padding: 0.35rem 1rem; border-radius: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.15rem; opacity: 0.9; max-width: 600px; }
+        .hero-quote { margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-left: 4px solid var(--quanskill-orange); border-radius: 0 12px 12px 0; font-style: italic; }
+        .key-concepts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .concept-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; transition: transform 0.2s; }
+        .concept-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .concept-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; font-size: 1.25rem; }
+        .concept-card.workflow .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.eda .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.model .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .concept-card.deploy .icon { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .concept-card h5 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .concept-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0; }
+        .section { background: var(--bg-card); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
+        .section-number { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: white; padding: 0.5rem 1rem; border-radius: 8px; white-space: nowrap; }
+        .section-number.workflow { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.eda { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.model { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .section-number.deploy { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 600; color: var(--quanskill-blue); }
+        .section h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 600; margin: 2rem 0 1rem; }
+        .section p { margin-bottom: 1.25rem; }
+        .definition-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%); border-left: 4px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .definition-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: block; }
+        .note-box { background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%); border-left: 4px solid var(--quanskill-orange); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .note-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #e68200; margin-bottom: 0.75rem; display: block; }
+        .workflow-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%); border-left: 4px solid var(--workflow-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .workflow-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--workflow-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .workflow-box .label::before { content: '🔍„'; }
+        .eda-box { background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%); border-left: 4px solid var(--eda-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .eda-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--eda-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .eda-box .label::before { content: '🐍"'; }
+        .model-box { background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%); border-left: 4px solid var(--model-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .model-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--model-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .model-box .label::before { content: '📝¤–'; }
+        .deploy-box { background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%); border-left: 4px solid var(--deploy-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .deploy-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--deploy-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .deploy-box .label::before { content: '🚀'; }
+        .quanskill-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%); border: 2px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; position: relative; }
+        .quanskill-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-orange); border-radius: 12px 12px 0 0; }
+        .quanskill-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quanskill-box .label::before { content: '🎓'; }
+        code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: var(--quanskill-blue); }
+        pre { background: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.6; }
+        pre code { background: transparent; padding: 0; color: #e2e8f0; }
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .data-table, .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .data-table th, .comparison-table th { background: var(--code-bg); font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--quanskill-blue); padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid var(--border-color); }
+        .data-table td, .comparison-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .data-table tr:hover td, .comparison-table tr:hover td { background: rgba(11, 47, 160, 0.02); }
+        .quiz-box { background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px dashed var(--quanskill-orange); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; }
+        .quiz-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: #e68200; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quiz-box .label::before { content: '🧠'; }
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .quiz-option { padding: 0.75rem 1rem; background: white; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; }
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        .quiz-feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+        .summary-box { background: var(--gradient-blue); color: white; padding: 2rem; border-radius: 16px; margin: 2rem 0; }
+        .summary-box h3 { font-family: 'Space Grotesk', sans-serif; color: white; margin-top: 0; }
+        .summary-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .summary-item { display: flex; align-items: center; gap: 0.5rem; }
+        .summary-item::before { content: '🐍'; background: var(--quanskill-orange); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+        .pipeline-steps { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.5rem 0; }
+        .pipeline-step { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: white; border: 2px solid var(--border-color); border-radius: 12px; transition: all 0.3s; }
+        .pipeline-step:hover { border-color: var(--quanskill-blue); transform: translateX(5px); }
+        .pipeline-step .step-num { width: 36px; height: 36px; background: var(--gradient-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; flex-shrink: 0; }
+        .pipeline-step .step-content h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 0.25rem; }
+        .pipeline-step .step-content p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; }
+        .metric-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .metric-card { background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.3s; }
+        .metric-card:hover { border-color: var(--model-color); }
+        .metric-card .value { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; color: var(--quanskill-blue); }
+        .metric-card .label { font-size: 0.85rem; color: var(--text-secondary); }
+        .floating-back-btn { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-blue); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; text-decoration: none !important; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.85rem; z-index: 9999; box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .floating-back-btn:hover { transform: translateY(-2px); background: var(--gradient-orange); }
+        .progress-bar { position: fixed; top: 60px; left: 300px; right: 0; height: 3px; background: var(--border-color); z-index: 800; }
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+        .mobile-menu-btn { display: none; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--quanskill-blue); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 1.25rem; }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+        .congrats-banner { background: linear-gradient(135deg, var(--quanskill-orange) 0%, #ffab33 100%); color: white; padding: 2rem; border-radius: 16px; text-align: center; margin: 2rem 0; }
+        .congrats-banner h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .congrats-banner p { opacity: 0.9; margin: 0; }
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn { top: auto; bottom: 20px; right: 15px; padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 11 Â· Capstone</div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Project Setup</div>
+            <a href="#section-11-1" class="nav-link">DS Workflow</a>
+            <a href="#section-11-2" class="nav-link">Data Loading</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Analysis</div>
+            <a href="#section-11-3" class="nav-link">EDA & Cleaning</a>
+            <a href="#section-11-4" class="nav-link">Feature Engineering</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Modeling</div>
+            <a href="#section-11-5" class="nav-link">Model Building</a>
+            <a href="#section-11-6" class="nav-link">Evaluation</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#section-11-7" class="nav-link">Visualization</a>
+            <a href="#summary" class="nav-link">Course Summary</a>
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 11 Â· Capstone</span>
+                <h1>Real-World Data Science Project</h1>
+                <p class="hero-subtitle">Apply everything you've learned! Build a complete data science pipeline from raw data to insights and predictions.</p>
+                <div class="hero-quote">"The 80/20 rule: Data scientists spend 80% of their time preparing data. Master this, and you master data science."<br><br>- <strong>Industry Wisdom</strong></div>
+            </div>
+        </section>
+
+        <!-- Key Concepts -->
+        <div class="key-concepts">
+            <div class="concept-card workflow"><div class="icon">🔍„</div><h5>Workflow</h5><p>End-to-end pipeline</p></div>
+            <div class="concept-card eda"><div class="icon">🐍"</div><h5>EDA</h5><p>Explore & understand</p></div>
+            <div class="concept-card eda"><div class="icon">📝§¹</div><h5>Cleaning</h5><p>Handle messy data</p></div>
+            <div class="concept-card model"><div class="icon">📝¤–</div><h5>Modeling</h5><p>scikit-learn basics</p></div>
+            <div class="concept-card deploy"><div class="icon">📊</div><h5>Visualize</h5><p>Communicate results</p></div>
+            <div class="concept-card workflow"><div class="icon">🎯</div><h5>Insights</h5><p>Business value</p></div>
+        </div>
+
+        <!-- Section 11.1: Data Science Workflow -->
+        <section class="section" id="section-11-1">
+            <div class="section-header"><span class="section-number workflow">11.1</span><h2>The Data Science Workflow</h2></div>
+            <p>Every data science project follows a similar pattern. Understanding this workflow is key to delivering successful projects.</p>
+            <div class="definition-box">
+                <span class="label">Project: Customer Churn Prediction</span>
+                <p>We'll predict which customers are likely to leave (churn) a telecom company. This classic problem applies to many industries!</p>
+            </div>
+            <div class="pipeline-steps">
+                <div class="pipeline-step"><div class="step-num">1</div><div class="step-content"><h5>Define the Problem</h5><p>What question are we answering? What's the business impact?</p></div></div>
+                <div class="pipeline-step"><div class="step-num">2</div><div class="step-content"><h5>Gather & Load Data</h5><p>Collect data from various sources into Python</p></div></div>
+                <div class="pipeline-step"><div class="step-num">3</div><div class="step-content"><h5>Explore & Clean (EDA)</h5><p>Understand data, handle missing values, fix issues</p></div></div>
+                <div class="pipeline-step"><div class="step-num">4</div><div class="step-content"><h5>Feature Engineering</h5><p>Create and transform features for modeling</p></div></div>
+                <div class="pipeline-step"><div class="step-num">5</div><div class="step-content"><h5>Build Models</h5><p>Train machine learning models on the data</p></div></div>
+                <div class="pipeline-step"><div class="step-num">6</div><div class="step-content"><h5>Evaluate & Iterate</h5><p>Measure performance, improve the model</p></div></div>
+                <div class="pipeline-step"><div class="step-num">7</div><div class="step-content"><h5>Communicate Results</h5><p>Visualize insights and present findings</p></div></div>
+            </div>
+        </section>
+
+        <!-- Section 11.2: Data Loading -->
+        <section class="section" id="section-11-2">
+            <div class="section-header"><span class="section-number workflow">11.2</span><h2>Loading & Initial Inspection</h2></div>
+            <p>Every project starts with loading data and getting familiar with its structure.</p>
+            <pre><code><span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">import</span> matplotlib.pyplot <span class="code-keyword">as</span> plt
+<span class="code-keyword">import</span> seaborn <span class="code-keyword">as</span> sns
+
+<span class="code-comment"># Load the dataset</span>
+df = pd.<span class="code-function">read_csv</span>(<span class="code-string">'telecom_churn.csv'</span>)
+
+<span class="code-comment"># First look at the data</span>
+<span class="code-function">print</span>(df.<span class="code-function">shape</span>)           <span class="code-comment"># (7043, 21) - rows, columns</span>
+<span class="code-function">print</span>(df.<span class="code-function">head</span>())           <span class="code-comment"># First 5 rows</span>
+<span class="code-function">print</span>(df.<span class="code-function">info</span>())           <span class="code-comment"># Data types & non-null counts</span>
+<span class="code-function">print</span>(df.<span class="code-function">describe</span>())       <span class="code-comment"># Statistical summary</span></code></pre>
+            <div class="workflow-box">
+                <span class="label">Key Questions to Ask</span>
+                <ul style="margin-bottom: 0;">
+                    <li>How many rows and columns?</li>
+                    <li>What are the data types?</li>
+                    <li>Are there missing values?</li>
+                    <li>What's the target variable? (Churn: Yes/No)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 11.3: EDA & Cleaning -->
+        <section class="section" id="section-11-3">
+            <div class="section-header"><span class="section-number eda">11.3</span><h2>EDA & Data Cleaning</h2></div>
+            <p><strong>Exploratory Data Analysis (EDA)</strong> helps us understand patterns, spot anomalies, and prepare for modeling.</p>
+            <h3>Check for Missing Values</h3>
+            <pre><code><span class="code-comment"># Missing values per column</span>
+<span class="code-function">print</span>(df.<span class="code-function">isna</span>().<span class="code-function">sum</span>())
+
+<span class="code-comment"># Percentage of missing values</span>
+missing_pct = df.<span class="code-function">isna</span>().<span class="code-function">sum</span>() / <span class="code-function">len</span>(df) * <span class="code-number">100</span>
+<span class="code-function">print</span>(missing_pct[missing_pct > <span class="code-number">0</span>])
+
+<span class="code-comment"># Handle missing values</span>
+df[<span class="code-string">'TotalCharges'</span>] = pd.<span class="code-function">to_numeric</span>(df[<span class="code-string">'TotalCharges'</span>], errors=<span class="code-string">'coerce'</span>)
+df[<span class="code-string">'TotalCharges'</span>].<span class="code-function">fillna</span>(df[<span class="code-string">'TotalCharges'</span>].<span class="code-function">median</span>(), inplace=<span class="code-keyword">True</span>)</code></pre>
+            <h3>Explore the Target Variable</h3>
+            <pre><code><span class="code-comment"># Class distribution</span>
+<span class="code-function">print</span>(df[<span class="code-string">'Churn'</span>].<span class="code-function">value_counts</span>(normalize=<span class="code-keyword">True</span>))
+<span class="code-comment"># No     0.73
+# Yes    0.27</span>
+
+<span class="code-comment"># Visualize</span>
+sns.<span class="code-function">countplot</span>(x=<span class="code-string">'Churn'</span>, data=df)
+plt.<span class="code-function">title</span>(<span class="code-string">'Churn Distribution'</span>)
+plt.<span class="code-function">show</span>()</code></pre>
+            <div class="eda-box">
+                <span class="label">EDA Visualizations</span>
+<pre style="margin-bottom: 0;"><code><span class="code-comment"># Correlation heatmap</span>
+plt.<span class="code-function">figure</span>(figsize=(<span class="code-number">12</span>, <span class="code-number">8</span>))
+sns.<span class="code-function">heatmap</span>(df.<span class="code-function">corr</span>(), annot=<span class="code-keyword">True</span>, cmap=<span class="code-string">'coolwarm'</span>)
+plt.<span class="code-function">title</span>(<span class="code-string">'Feature Correlations'</span>)
+
+<span class="code-comment"># Churn by tenure</span>
+sns.<span class="code-function">boxplot</span>(x=<span class="code-string">'Churn'</span>, y=<span class="code-string">'tenure'</span>, data=df)</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 11.4: Feature Engineering -->
+        <section class="section" id="section-11-4">
+            <div class="section-header"><span class="section-number eda">11.4</span><h2>Feature Engineering</h2></div>
+            <p><strong>Feature engineering</strong> transforms raw data into features that better represent the problem to the model.</p>
+            <pre><code><span class="code-comment"># Create new features</span>
+df[<span class="code-string">'AvgMonthlyCharges'</span>] = df[<span class="code-string">'TotalCharges'</span>] / (df[<span class="code-string">'tenure'</span>] + <span class="code-number">1</span>)
+
+<span class="code-comment"># Encode categorical variables</span>
+df[<span class="code-string">'Churn_binary'</span>] = df[<span class="code-string">'Churn'</span>].<span class="code-function">map</span>({<span class="code-string">'Yes'</span>: <span class="code-number">1</span>, <span class="code-string">'No'</span>: <span class="code-number">0</span>})
+
+<span class="code-comment"># One-hot encoding for categorical columns</span>
+cat_cols = [<span class="code-string">'gender'</span>, <span class="code-string">'Contract'</span>, <span class="code-string">'PaymentMethod'</span>]
+df_encoded = pd.<span class="code-function">get_dummies</span>(df, columns=cat_cols, drop_first=<span class="code-keyword">True</span>)
+
+<span class="code-comment"># Select features and target</span>
+feature_cols = [<span class="code-string">'tenure'</span>, <span class="code-string">'MonthlyCharges'</span>, <span class="code-string">'TotalCharges'</span>, 
+                <span class="code-string">'Contract_One year'</span>, <span class="code-string">'Contract_Two year'</span>]
+X = df_encoded[feature_cols]
+y = df_encoded[<span class="code-string">'Churn_binary'</span>]</code></pre>
+            <div class="note-box">
+                <span class="label">📝’¡ Feature Engineering Tips</span>
+                <p>Create features that capture business logic: tenure groups, total services count, charge ratios. Domain knowledge is invaluable!</p>
+            </div>
+        </section>
+
+        <!-- Section 11.5: Model Building -->
+        <section class="section" id="section-11-5">
+            <div class="section-header"><span class="section-number model">11.5</span><h2>Building ML Models</h2></div>
+            <p>Now we train machine learning models using <strong>scikit-learn</strong>, the most popular ML library in Python.</p>
+            <pre><code><span class="code-keyword">from</span> sklearn.model_selection <span class="code-keyword">import</span> train_test_split
+<span class="code-keyword">from</span> sklearn.preprocessing <span class="code-keyword">import</span> StandardScaler
+<span class="code-keyword">from</span> sklearn.linear_model <span class="code-keyword">import</span> LogisticRegression
+<span class="code-keyword">from</span> sklearn.ensemble <span class="code-keyword">import</span> RandomForestClassifier
+
+<span class="code-comment"># Split data: 80% train, 20% test</span>
+X_train, X_test, y_train, y_test = <span class="code-function">train_test_split</span>(
+    X, y, test_size=<span class="code-number">0.2</span>, random_state=<span class="code-number">42</span>
+)
+
+<span class="code-comment"># Scale features</span>
+scaler = <span class="code-function">StandardScaler</span>()
+X_train_scaled = scaler.<span class="code-function">fit_transform</span>(X_train)
+X_test_scaled = scaler.<span class="code-function">transform</span>(X_test)
+
+<span class="code-comment"># Train Logistic Regression</span>
+lr_model = <span class="code-function">LogisticRegression</span>()
+lr_model.<span class="code-function">fit</span>(X_train_scaled, y_train)
+
+<span class="code-comment"># Train Random Forest</span>
+rf_model = <span class="code-function">RandomForestClassifier</span>(n_estimators=<span class="code-number">100</span>, random_state=<span class="code-number">42</span>)
+rf_model.<span class="code-function">fit</span>(X_train_scaled, y_train)</code></pre>
+            <div class="model-box">
+                <span class="label">Scikit-Learn Pattern</span>
+                <p><strong>1. Import</strong> ←’ <strong>2. Instantiate</strong> ←’ <strong>3. Fit</strong> ←’ <strong>4. Predict</strong><br>
+                This pattern works for almost every model in scikit-learn!</p>
+            </div>
+        </section>
+
+        <!-- Section 11.6: Evaluation -->
+        <section class="section" id="section-11-6">
+            <div class="section-header"><span class="section-number model">11.6</span><h2>Model Evaluation</h2></div>
+            <p>Evaluate model performance using appropriate metrics for classification problems.</p>
+            <pre><code><span class="code-keyword">from</span> sklearn.metrics <span class="code-keyword">import</span> accuracy_score, precision_score, recall_score, f1_score
+<span class="code-keyword">from</span> sklearn.metrics <span class="code-keyword">import</span> confusion_matrix, classification_report
+
+<span class="code-comment"># Make predictions</span>
+y_pred = rf_model.<span class="code-function">predict</span>(X_test_scaled)
+
+<span class="code-comment"># Calculate metrics</span>
+<span class="code-function">print</span>(<span class="code-string">f"Accuracy:  {accuracy_score(y_test, y_pred):.3f}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Precision: {precision_score(y_test, y_pred):.3f}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Recall:    {recall_score(y_test, y_pred):.3f}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"F1 Score:  {f1_score(y_test, y_pred):.3f}"</span>)
+
+<span class="code-comment"># Confusion Matrix</span>
+cm = <span class="code-function">confusion_matrix</span>(y_test, y_pred)
+sns.<span class="code-function">heatmap</span>(cm, annot=<span class="code-keyword">True</span>, fmt=<span class="code-string">'d'</span>, cmap=<span class="code-string">'Blues'</span>)
+plt.<span class="code-function">xlabel</span>(<span class="code-string">'Predicted'</span>)
+plt.<span class="code-function">ylabel</span>(<span class="code-string">'Actual'</span>)</code></pre>
+            <div class="metric-cards">
+                <div class="metric-card"><div class="value">0.82</div><div class="label">Accuracy</div></div>
+                <div class="metric-card"><div class="value">0.68</div><div class="label">Precision</div></div>
+                <div class="metric-card"><div class="value">0.54</div><div class="label">Recall</div></div>
+                <div class="metric-card"><div class="value">0.60</div><div class="label">F1 Score</div></div>
+            </div>
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">For churn prediction, which metric is most important if we want to catch as many churners as possible?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Accuracy</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Precision</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Recall</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Recall measures how many actual churners we caught. High recall means fewer missed churners.</div>
+                <div class="quiz-feedback incorrect">Think about it: Recall = True Positives / All Actual Positives. We want to catch as many churners as possible!</div>
+            </div>
+        </section>
+
+        <!-- Section 11.7: Visualization & Insights -->
+        <section class="section" id="section-11-7">
+            <div class="section-header"><span class="section-number deploy">11.7</span><h2>Insights & Visualization</h2></div>
+            <p>The final step: communicate findings clearly to stakeholders.</p>
+            <pre><code><span class="code-comment"># Feature importance from Random Forest</span>
+importance = pd.DataFrame({
+    <span class="code-string">'feature'</span>: feature_cols,
+    <span class="code-string">'importance'</span>: rf_model.feature_importances_
+}).<span class="code-function">sort_values</span>(<span class="code-string">'importance'</span>, ascending=<span class="code-keyword">False</span>)
+
+plt.<span class="code-function">figure</span>(figsize=(<span class="code-number">10</span>, <span class="code-number">6</span>))
+sns.<span class="code-function">barplot</span>(x=<span class="code-string">'importance'</span>, y=<span class="code-string">'feature'</span>, data=importance)
+plt.<span class="code-function">title</span>(<span class="code-string">'Feature Importance for Churn Prediction'</span>)
+plt.<span class="code-function">xlabel</span>(<span class="code-string">'Importance Score'</span>)
+plt.<span class="code-function">tight_layout</span>()
+plt.<span class="code-function">savefig</span>(<span class="code-string">'feature_importance.png'</span>, dpi=<span class="code-number">300</span>)</code></pre>
+            <div class="deploy-box">
+                <span class="label">Key Business Insights</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Contract type</strong> is the strongest predictor - month-to-month customers churn most</li>
+                    <li><strong>Tenure</strong> matters - new customers are at highest risk</li>
+                    <li><strong>Monthly charges</strong> - higher charges correlate with higher churn</li>
+                    <li><strong>Action:</strong> Offer long-term contract incentives to new customers</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header"><span class="section-number" style="background: var(--gradient-orange);">Summary</span><h2>Course Complete! 🎉</h2></div>
+            
+            <div class="congrats-banner">
+                <h3>🐍â€  Congratulations!</h3>
+                <p>You've completed the Python for Data Science course. You now have the skills to tackle real-world data problems!</p>
+            </div>
+
+            <p>You've learned to build a complete data science pipeline from start to finish.</p>
+            <div class="summary-box">
+                <h3>🎯 Project Workflow Mastered</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Define problem & load data</div>
+                    <div class="summary-item">EDA with pandas & seaborn</div>
+                    <div class="summary-item">Clean missing values</div>
+                    <div class="summary-item">Feature engineering</div>
+                    <div class="summary-item">Train/test split</div>
+                    <div class="summary-item">Model training (fit)</div>
+                    <div class="summary-item">Evaluate with metrics</div>
+                    <div class="summary-item">Communicate insights</div>
+                </div>
+            </div>
+            <h3>Skills You've Gained</h3>
+            <table class="comparison-table">
+                <thead><tr><th>Chapter</th><th>Skills</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1-5: Python Basics</strong></td><td>Variables, collections, control flow, functions, strings</td></tr>
+                    <tr><td><strong>6-7: Files & OOP</strong></td><td>File I/O, exceptions, classes, objects</td></tr>
+                    <tr><td><strong>8: NumPy</strong></td><td>Arrays, vectorization, broadcasting</td></tr>
+                    <tr><td><strong>9: Pandas</strong></td><td>DataFrames, data cleaning, groupby</td></tr>
+                    <tr><td><strong>10: Visualization</strong></td><td>Matplotlib, Seaborn, charts</td></tr>
+                    <tr><td><strong>11: ML Project</strong></td><td>scikit-learn, end-to-end pipeline</td></tr>
+                </tbody>
+            </table>
+            <h3>What's Next?</h3>
+            <p>Continue your data science journey with these next steps:</p>
+            <div class="quanskill-box">
+                <span class="label">Your Learning Path Forward</span>
+                <ol>
+                    <li><strong>Practice:</strong> Work on Kaggle competitions and real datasets</li>
+                    <li><strong>Deep dive:</strong> Learn more ML algorithms (XGBoost, Neural Networks)</li>
+                    <li><strong>Specialize:</strong> NLP, Computer Vision, Time Series, or Deep Learning</li>
+                    <li><strong>Deploy:</strong> Learn Flask/FastAPI to build ML APIs</li>
+                    <li><strong>Portfolio:</strong> Build 3-5 projects to showcase your skills</li>
+                </ol>
+            </div>
+        </section>
+
+        </div>
+    </main>
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressFill').style.width = (winScroll / height) * 100 + '%';
+        });
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 100) current = section.getAttribute('id'); });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

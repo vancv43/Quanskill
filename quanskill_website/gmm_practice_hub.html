@@ -1,0 +1,2168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Density Estimation with GMM Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-equation {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="range"] {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 160px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 80px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(255, 144, 0, 0.05) 100%);
+            border: 1px solid var(--quanskill-blue);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 11 Â· Gaussian Mixture Models</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Mixture Model</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: GMM Definition</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Mixture Weights</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: GMM Parameters</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Multimodal</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Log-Likelihood</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: No Closed-Form</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: K=1 GMM</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Responsibility</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Mean Update</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Covariance Update</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Weight Update</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: E-Step</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: M-Step</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: EM Convergence</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Nk Meaning</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Soft Assignment</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Latent Variable</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: One-Hot z</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Marginal Likelihood</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Posterior = Resp</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Ancestral Sampling</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: GMM vs K-means</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Local Optima</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Density Estimation with Gaussian Mixture Models</h1>
+                <p class="hero-subtitle">
+                    Master GMMs with 25 questions and 15 interactive labs covering mixture models, EM algorithm, responsibilities, and latent variable perspectives.
+                </p>
+                <div class="hero-equation">
+                    <strong>GMM:</strong> p(x|Î¸) = Î£â‚– Ï€â‚– N(x|Î¼â‚–, Î£â‚–)
+                    <br><strong>EM:</strong> E-step (responsibilities) ←’ M-step (update Î¼, Î£, Ï€)
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Mixture Models</span>
+                    <span class="topic-tag">Gaussian Components</span>
+                    <span class="topic-tag">EM Algorithm</span>
+                    <span class="topic-tag">Responsibilities</span>
+                    <span class="topic-tag">Latent Variables</span>
+                    <span class="topic-tag">Soft Clustering</span>
+                    <span class="topic-tag">Density Estimation</span>
+                    <span class="topic-tag">Maximum Likelihood</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover GMM from basic mixtures to the full EM algorithm.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Why GMMs matter for AI agents:</strong> Agents model uncertainty in their environment using probability distributions. GMMs allow agents to represent complex, multimodal distributions over states, actions, or observations - essential for robust decision-making in uncertain worlds.</p>
+            </div>
+
+            <!-- Lab 1: Single Gaussian vs Mixture -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Single Gaussian vs Mixture</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Number of Components K</label>
+                        <select id="numComponents">
+                            <option value="1">K = 1 (Single Gaussian)</option>
+                            <option value="2">K = 2</option>
+                            <option value="3" selected>K = 3</option>
+                            <option value="5">K = 5</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="showMixture()">Visualize Mixture</button>
+                </div>
+                <canvas id="mixtureCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mixtureOutput">Click to visualize GMM with different K values...</div>
+            </div>
+
+            <!-- Lab 2: Mixture Weights -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Mixture Weights Ï€â‚–</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Ï€â‚</label>
+                        <input type="range" id="pi1" min="0" max="100" value="50" onchange="updateWeights()">
+                    </div>
+                    <div class="control-group">
+                        <label>Ï€â‚‚</label>
+                        <input type="range" id="pi2" min="0" max="100" value="30" onchange="updateWeights()">
+                    </div>
+                    <div class="control-group">
+                        <label>Ï€â‚ƒ (auto)</label>
+                        <span id="pi3Display">0.20</span>
+                    </div>
+                    <button class="btn btn-orange" onclick="visualizeWeights()">Update GMM</button>
+                </div>
+                <canvas id="weightsCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="weightsOutput">Adjust weights to see their effect on the mixture...</div>
+            </div>
+
+            <!-- Lab 3: Responsibilities Visualization -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Responsibilities râ‚™â‚—</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Data Point x</label>
+                        <input type="number" id="dataPointX" value="0" step="0.5">
+                    </div>
+                    <button class="btn btn-primary" onclick="computeResponsibilities()">Compute râ‚™â‚—</button>
+                </div>
+                <canvas id="respCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="respOutput">Click to see how responsibilities are computed...</div>
+            </div>
+
+            <!-- Lab 4: E-Step Visualization -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>E-Step: Compute Responsibilities</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="runEStep()">Run E-Step</button>
+                </div>
+                <canvas id="estepCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="estepOutput">Click to see the E-step in action...</div>
+            </div>
+
+            <!-- Lab 5: M-Step Mean Update -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>M-Step: Mean Update</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="runMStepMeans()">Update Means</button>
+                </div>
+                <canvas id="mstepMeanCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mstepMeanOutput">Click to see how means are updated using responsibilities...</div>
+            </div>
+
+            <!-- Lab 6: M-Step Covariance Update -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>M-Step: Covariance Update</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="runMStepCovariance()">Update Covariances</button>
+                </div>
+                <canvas id="mstepCovCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="mstepCovOutput">Click to see how covariances are updated...</div>
+            </div>
+
+            <!-- Lab 7: Full EM Iteration -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Full EM Algorithm</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Iterations</label>
+                        <input type="number" id="emIterations" value="10" min="1" max="100">
+                    </div>
+                    <button class="btn btn-primary" onclick="runFullEM()">Run EM</button>
+                    <button class="btn btn-orange" onclick="stepEM()">Single Step</button>
+                </div>
+                <canvas id="emCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="emOutput">Click to run the full EM algorithm...</div>
+            </div>
+
+            <!-- Lab 8: Log-Likelihood Curve -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Log-Likelihood Evolution</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="plotLogLikelihood()">Plot Log-Likelihood</button>
+                </div>
+                <canvas id="llCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="llOutput">Click to see how log-likelihood increases with EM iterations...</div>
+            </div>
+
+            <!-- Lab 9: 2D GMM Visualization -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>2D GMM with Ellipses</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>K Components</label>
+                        <select id="k2d">
+                            <option value="2">K = 2</option>
+                            <option value="3" selected>K = 3</option>
+                            <option value="4">K = 4</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="show2DGMM()">Visualize 2D GMM</button>
+                </div>
+                <canvas id="gmm2dCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="gmm2dOutput">Click to see 2D GMM with covariance ellipses...</div>
+            </div>
+
+            <!-- Lab 10: Sampling from GMM -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Ancestral Sampling from GMM</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>N Samples</label>
+                        <input type="number" id="nSamples" value="100" min="10" max="500">
+                    </div>
+                    <button class="btn btn-primary" onclick="sampleFromGMM()">Sample Data</button>
+                </div>
+                <canvas id="sampleCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="sampleOutput">Click to generate samples from a GMM...</div>
+            </div>
+
+            <!-- Lab 11: Latent Variable z -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Latent Variable z (One-Hot)</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="showLatentVariable()">Show z Distribution</button>
+                </div>
+                <canvas id="latentCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="latentOutput">Click to visualize the latent variable interpretation...</div>
+            </div>
+
+            <!-- Lab 12: GMM vs K-means -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>GMM vs K-means Comparison</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="compareGMMKmeans()">Compare Methods</button>
+                </div>
+                <canvas id="compareCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="compareOutput">Click to see soft (GMM) vs hard (K-means) clustering...</div>
+            </div>
+
+            <!-- Lab 13: Initialization Effects -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Initialization & Local Optima</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="showInitializationEffect()">Random Restart</button>
+                </div>
+                <canvas id="initCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="initOutput">Click to see how initialization affects EM convergence...</div>
+            </div>
+
+            <!-- Lab 14: Model Selection -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Choosing K (Model Selection)</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="modelSelection()">Test Different K</button>
+                </div>
+                <canvas id="modelSelCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="modelSelOutput">Click to see log-likelihood for different K values...</div>
+            </div>
+
+            <!-- Lab 15: Responsibility Matrix -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Responsibility Matrix Visualization</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-orange" onclick="showResponsibilityMatrix()">Show Matrix</button>
+                </div>
+                <canvas id="respMatCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="respMatOutput">Click to visualize the N×K responsibility matrix...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: ClusterAI Vietnam</span>
+                <p>You're a data scientist at <strong>ClusterAI Vietnam</strong> in Hanoi, building customer segmentation models. Understanding GMMs helps you identify distinct customer groups with probabilistic assignments rather than hard boundaries.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A mixture model represents a distribution p(x) as:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) A convex combination of K base distributions: p(x) = Î£â‚– Ï€â‚–pâ‚–(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) A single Gaussian distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) A uniform distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) The product of K distributions</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">p(x|Î¸) = Î£â‚– Ï€â‚– N(x|Î¼â‚–, Î£â‚–)</div>
+                <div class="quiz-question">In a Gaussian Mixture Model, each component is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) A Gaussian distribution N(x|Î¼â‚–, Î£â‚–) with its own mean and covariance</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) A uniform distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) A Bernoulli distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) An exponential distribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The mixture weights Ï€â‚– must satisfy:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) 0 â‰¤ Ï€â‚– â‰¤ 1 and Î£â‚– Ï€â‚– = 1 (form a probability distribution)</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) All Ï€â‚– = 1/K (must be equal)</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) Î£â‚– Ï€â‚– = K</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) No constraints needed</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The full parameter set Î¸ of a GMM with K components includes:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) {Î¼â‚–, Î£â‚–, Ï€â‚– : k = 1,...,K} - means, covariances, and weights</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) Only the means Î¼â‚–</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) Only the weights Ï€â‚–</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) A single parameter Î¸</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">GMMs are more expressive than single Gaussians because they can model:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) Multimodal distributions (multiple peaks/clusters)</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) Only unimodal distributions</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) Only symmetric distributions</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) Only discrete data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">L = Î£â‚™ log p(xâ‚™|Î¸) = Î£â‚™ log Î£â‚– Ï€â‚–N(xâ‚™|Î¼â‚–, Î£â‚–)</div>
+                <div class="quiz-question">The log-likelihood for GMM has a sum inside the log because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) Each data point's probability is a sum over K mixture components</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) We use multiple datasets</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) It's a typo - should be product</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) We sum over different features</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Unlike linear regression, GMM parameter estimation has no closed-form solution because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) The log cannot be moved inside the sum over components</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) The data is too complex</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) We don't know the number of components</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) The covariance matrices are fixed</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">When K = 1, a GMM reduces to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) A single Gaussian distribution N(x|Î¼, Î£)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) A uniform distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) A mixture of two Gaussians</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) An undefined model</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: DensityML Labs</span>
+                <p>You're at <strong>DensityML Labs</strong> in Ho Chi Minh City, implementing the EM algorithm for customer behavior analysis. Understanding responsibilities and update equations is crucial for building effective density estimators.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">râ‚™â‚— = Ï€â‚–N(xâ‚™|Î¼â‚–,Î£â‚–) / Î£âˆ‚Â¼ Ï€âˆ‚Â¼N(xâ‚™|Î¼âˆ‚Â¼,Î£âˆ‚Â¼)</div>
+                <div class="quiz-question">The responsibility râ‚™â‚— represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) Probability that component k generated data point xâ‚™ (soft assignment)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) The weight of component k</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) The mean of component k</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) The number of data points in cluster k</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Î¼â‚"â¿áµ€ = Î£â‚™ râ‚™â‚—xâ‚™ / Î£â‚™ râ‚™â‚—</div>
+                <div class="quiz-question">The mean update formula is a:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) Responsibility-weighted average of all data points</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) Simple arithmetic mean of all data</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) Median of data points</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) Random initialization</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Î£â‚"â¿áµ€ = (1/Nâ‚–) Î£â‚™ râ‚™â‚—(xâ‚™ - Î¼â‚–)(xâ‚™ - Î¼â‚–)áµ€</div>
+                <div class="quiz-question">The covariance update uses the updated means Î¼â‚– and computes:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) Responsibility-weighted covariance around Î¼â‚–</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) Global data covariance</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) Identity matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) Diagonal covariance only</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Ï€â‚"â¿áµ€ = Nâ‚– / N where Nâ‚– = Î£â‚™ râ‚™â‚—</div>
+                <div class="quiz-question">The mixture weight update Ï€â‚– = Nâ‚–/N represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) Fraction of total responsibility assigned to component k</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) Hard count of points in cluster k</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) Always 1/K</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) The log-likelihood contribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">In the E-step of EM for GMM, we:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) Compute responsibilities râ‚™â‚— using current parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) Update the means Î¼â‚–</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) Update the covariances Î£â‚–</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) Update the weights Ï€â‚–</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">In the M-step of EM for GMM, we:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) Update Î¼â‚–, Î£â‚–, Ï€â‚– using current responsibilities</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) Only compute responsibilities</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) Initialize parameters randomly</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) Evaluate the log-likelihood only</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The EM algorithm is guaranteed to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) Increase (or maintain) log-likelihood at each iteration</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) Find the global maximum always</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) Decrease log-likelihood</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) Converge in exactly 10 iterations</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Nâ‚– = Î£â‚™ râ‚™â‚—</div>
+                <div class="quiz-question">Nâ‚– (sum of responsibilities for component k) represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) Effective number of data points assigned to component k</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) Exactly K</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) The covariance trace</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) The log-likelihood</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">GMM provides "soft" clustering because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) Each point has probabilistic membership in all clusters via responsibilities</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) Points are assigned to exactly one cluster</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) Cluster boundaries are fixed</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) Only two clusters are allowed</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Concepts (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: LatentML Research</span>
+                <p>You're at <strong>LatentML Research</strong> in Da Nang, developing probabilistic generative models. Deep understanding of latent variables, marginal likelihoods, and connections to other methods is essential.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>World Modeling:</strong> Agents model environment dynamics with mixture distributions</li>
+                    <li><strong>Exploration:</strong> Uncertainty in GMM helps agents explore diverse states</li>
+                    <li><strong>Generative Models:</strong> GMM is foundation for VAEs, diffusion models</li>
+                    <li><strong>Anomaly Detection:</strong> Low probability under GMM indicates novel situations</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In the latent variable perspective, GMM introduces a discrete latent variable z where:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) zâ‚– âˆˆ {0,1} indicates which component generated the data point</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) z is continuous-valued like in PCA</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) z is the observed data</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) z is the same as the parameters Î¸</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">z = [zâ‚,...,zâ‚–]áµ€ with exactly one zâ‚– = 1, others = 0</div>
+                <div class="quiz-question">The latent variable z is a one-hot encoding because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Each data point is generated by exactly one component</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) Multiple components can generate each point</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) z can have all entries equal to 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) z is a continuous variable</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">p(x|Î¸) = Î£_z p(x|z,Î¸)p(z|Î¸)</div>
+                <div class="quiz-question">The marginal likelihood p(x|Î¸) is obtained by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) Summing out the latent variable z over all K configurations</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Integrating over continuous z</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Conditioning on z</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Ignoring the latent variable</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The posterior p(zâ‚—=1|x) equals the responsibility râ‚™â‚— because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) Both are derived from Bayes' theorem: p(z|x) âˆ p(x|z)p(z)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) It's a coincidence</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) They are defined differently but happen to be equal</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) The posterior is always uniform</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">To sample from a GMM (ancestral sampling), we:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) First sample k from p(z)=Ï€, then sample x from N(x|Î¼â‚–,Î£â‚–)</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) Sample from all K components simultaneously</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) Only sample the means</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) Sample from a uniform distribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">K-means is related to GMM in that K-means:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) Uses hard assignments (râˆˆ{0,1}) instead of soft responsibilities</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) Models covariances for each cluster</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) Provides probabilistic assignments</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) Has no relationship to GMM</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">EM for GMM may converge to local optima, so practitioners often:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Run EM multiple times with different initializations and keep best result</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) Always use K=1 to avoid the problem</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Use gradient descent instead</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Ignore the issue as it rarely happens</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An agent models possible user intents as a GMM over behavioral features.
+                </div>
+                <div class="quiz-question">The agent benefits from GMM because:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Soft clustering allows uncertain assignment to multiple intent categories</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) It forces users into exactly one category</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) It ignores user behavior</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) It only works for single users</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <strong>Key Formulas to Remember:</strong><br><br>
+                â€¢ GMM: p(x|Î¸) = Î£â‚– Ï€â‚– N(x|Î¼â‚–, Î£â‚–)<br>
+                â€¢ Responsibility: râ‚™â‚— = Ï€â‚–N(xâ‚™|Î¼â‚–,Î£â‚–) / Î£âˆ‚Â¼ Ï€âˆ‚Â¼N(xâ‚™|Î¼âˆ‚Â¼,Î£âˆ‚Â¼)<br>
+                â€¢ Mean update: Î¼â‚– = (1/Nâ‚–) Î£â‚™ râ‚™â‚—xâ‚™<br>
+                â€¢ Covariance: Î£â‚– = (1/Nâ‚–) Î£â‚™ râ‚™â‚—(xâ‚™-Î¼â‚–)(xâ‚™-Î¼â‚–)áµ€<br>
+                â€¢ Weight: Ï€â‚– = Nâ‚–/N where Nâ‚– = Î£â‚™ râ‚™â‚—<br>
+                â€¢ Posterior: p(zâ‚–=1|x) = râ‚™â‚— (responsibility = posterior)
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Chapter 12:</strong> Classification with Support Vector Machines</li>
+                    <li><strong>Deep Learning:</strong> Variational Auto-encoders extend GMM ideas</li>
+                    <li><strong>Clustering:</strong> K-means as special case of GMM</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "Mixture models express p(x) as a convex combination: p(x) = Î£â‚– Ï€â‚–pâ‚–(x) with Ï€â‚– â‰¥ 0 and Î£Ï€â‚– = 1.",
+            2: "In GMM, each component pâ‚–(x) is a Gaussian N(x|Î¼â‚–, Î£â‚–) with its own mean Î¼â‚– and covariance Î£â‚–.",
+            3: "Mixture weights Ï€â‚– must be non-negative and sum to 1, forming a valid probability distribution over components.",
+            4: "GMM parameters Î¸ = {Î¼â‚–, Î£â‚–, Ï€â‚– : k=1,...,K} include means, covariances, and weights for all K components.",
+            5: "GMMs can model multimodal distributions with multiple peaks/clusters, unlike unimodal single Gaussians.",
+            6: "Each p(xâ‚™|Î¸) = Î£â‚– Ï€â‚–N(xâ‚™|Î¼â‚–,Î£â‚–) is a sum over K components, which appears inside the log.",
+            7: "The log-of-sum structure prevents closed-form solutions - we can't move log inside the sum over k.",
+            8: "With K=1, the GMM becomes p(x) = Ï€â‚N(x|Î¼â‚,Î£â‚) = N(x|Î¼,Î£), a single Gaussian (Ï€â‚=1).",
+            9: "Responsibility râ‚™â‚— = p(zâ‚—=1|xâ‚™) is the probability that component k generated point xâ‚™ - a soft assignment.",
+            10: "Î¼â‚– update is responsibility-weighted average: Î¼â‚– = Î£â‚™ râ‚™â‚—xâ‚™ / Î£â‚™ râ‚™â‚—, pulling Î¼â‚– toward high-responsibility points.",
+            11: "Î£â‚– update computes responsibility-weighted covariance around the (updated) mean Î¼â‚–.",
+            12: "Ï€â‚– = Nâ‚–/N is the fraction of total responsibility assigned to component k (Nâ‚– = Î£â‚™ râ‚™â‚—).",
+            13: "E-step (Expectation): Compute responsibilities râ‚™â‚— using current parameter values.",
+            14: "M-step (Maximization): Update all parameters (Î¼â‚–, Î£â‚–, Ï€â‚–) using current responsibilities.",
+            15: "EM monotonically increases log-likelihood at each iteration (or stays same at convergence).",
+            16: "Nâ‚– = Î£â‚™ râ‚™â‚— is the effective count of points assigned to component k (soft count).",
+            17: "GMM gives soft clustering: each point has probabilistic membership râ‚™â‚— in all K clusters.",
+            18: "Latent z is discrete with zâ‚– âˆˆ {0,1} indicating which of K components generated the data.",
+            19: "One-hot encoding: exactly one zâ‚–=1 (others 0) because each point comes from exactly one component.",
+            20: "Marginal likelihood sums out z: p(x|Î¸) = Î£â‚– p(x|zâ‚–=1)p(zâ‚–=1) = Î£â‚– Ï€â‚–N(x|Î¼â‚–,Î£â‚–).",
+            21: "Both responsibility and posterior are p(zâ‚–=1|x) = Ï€â‚–N(x|Î¼â‚–,Î£â‚–)/Î£âˆ‚Â¼Ï€âˆ‚Â¼ N(x|Î¼âˆ‚Â¼,Î£âˆ‚Â¼) from Bayes' theorem.",
+            22: "Ancestral sampling: (1) sample component k from Ï€, (2) sample x from N(Î¼â‚–, Î£â‚–).",
+            23: "K-means uses hard assignments (point belongs to exactly one cluster), GMM uses soft responsibilities.",
+            24: "Multiple random restarts help avoid bad local optima - keep the run with highest final log-likelihood.",
+            25: "GMM allows uncertain intent classification - user may partially match multiple intent categories."
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        function randn() {
+            const u1 = Math.random(), u2 = Math.random();
+            return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        }
+
+        function gaussianPDF(x, mu, sigma) {
+            return Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2)) / (sigma * Math.sqrt(2 * Math.PI));
+        }
+
+        // Lab 1: Mixture visualization
+        function showMixture() {
+            const K = parseInt(document.getElementById('numComponents').value);
+            const canvas = document.getElementById('mixtureCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+
+            // Define components
+            const components = [];
+            const colors = ['#0b2fa0', '#ff9000', '#10b981', '#7c3aed', '#ef4444'];
+            for (let k = 0; k < K; k++) {
+                components.push({
+                    mu: -3 + 6 * k / (K - 1 || 1),
+                    sigma: 0.8 + Math.random() * 0.4,
+                    pi: 1 / K,
+                    color: colors[k % colors.length]
+                });
+            }
+
+            // Draw
+            const xMin = -6, xMax = 6;
+            const scale = w / (xMax - xMin);
+            const yScale = h * 0.8;
+
+            // Draw individual components (dashed)
+            ctx.setLineDash([5, 5]);
+            for (let k = 0; k < K; k++) {
+                ctx.beginPath();
+                ctx.strokeStyle = components[k].color;
+                ctx.lineWidth = 2;
+                for (let px = 0; px < w; px++) {
+                    const x = xMin + px / scale;
+                    const y = components[k].pi * gaussianPDF(x, components[k].mu, components[k].sigma);
+                    const py = h - 30 - y * yScale * 5;
+                    if (px === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+            }
+
+            // Draw mixture (solid)
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 3;
+            for (let px = 0; px < w; px++) {
+                const x = xMin + px / scale;
+                let y = 0;
+                for (let k = 0; k < K; k++) {
+                    y += components[k].pi * gaussianPDF(x, components[k].mu, components[k].sigma);
+                }
+                const py = h - 30 - y * yScale * 5;
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Axis
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, h - 30);
+            ctx.lineTo(w, h - 30);
+            ctx.stroke();
+
+            document.getElementById('mixtureOutput').innerHTML = 
+`Gaussian Mixture Model with K = ${K} components
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+${components.map((c, k) => `Component ${k+1}: Î¼ = ${c.mu.toFixed(2)}, Ïƒ = ${c.sigma.toFixed(2)}, Ï€ = ${c.pi.toFixed(2)}`).join('\n')}
+
+GMM: p(x) = Î£â‚– Ï€â‚– N(x|Î¼â‚–, Ïƒâ‚–Â²)
+
+Dashed lines: individual components (weighted)
+Solid line: mixture density (sum)`;
+        }
+
+        // Lab 2: Weights
+        function updateWeights() {
+            const p1 = parseInt(document.getElementById('pi1').value);
+            const p2 = parseInt(document.getElementById('pi2').value);
+            const p3 = Math.max(0, 100 - p1 - p2);
+            document.getElementById('pi3Display').textContent = (p3/100).toFixed(2);
+        }
+
+        function visualizeWeights() {
+            updateWeights();
+            const pi1 = parseInt(document.getElementById('pi1').value) / 100;
+            const pi2 = parseInt(document.getElementById('pi2').value) / 100;
+            const pi3 = Math.max(0, 1 - pi1 - pi2);
+
+            document.getElementById('weightsOutput').innerHTML = 
+`Mixture Weights
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Ï€â‚ = ${pi1.toFixed(2)}
+Ï€â‚‚ = ${pi2.toFixed(2)}
+Ï€â‚ƒ = ${pi3.toFixed(2)}
+"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"
+Sum = ${(pi1 + pi2 + pi3).toFixed(2)} (must equal 1)
+
+Constraints:
+â€¢ 0 â‰¤ Ï€â‚– â‰¤ 1 for all k
+â€¢ Î£â‚– Ï€â‚– = 1
+
+Interpretation:
+Ï€â‚– is the prior probability that a random
+data point comes from component k`;
+        }
+
+        // Lab 3: Responsibilities
+        function computeResponsibilities() {
+            const x = parseFloat(document.getElementById('dataPointX').value);
+            
+            // Fixed GMM parameters
+            const components = [
+                {mu: -2, sigma: 1, pi: 0.4},
+                {mu: 0, sigma: 0.5, pi: 0.3},
+                {mu: 3, sigma: 1.2, pi: 0.3}
+            ];
+            
+            // Compute responsibilities
+            const likelihoods = components.map(c => c.pi * gaussianPDF(x, c.mu, c.sigma));
+            const sum = likelihoods.reduce((a, b) => a + b, 0);
+            const responsibilities = likelihoods.map(l => l / sum);
+
+            document.getElementById('respOutput').innerHTML = 
+`Responsibilities for x = ${x}
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+GMM Components:
+â€¢ Component 1: Î¼â‚ = -2, ÏÆ’â‚ = 1, Ï€â‚ = 0.4
+â€¢ Component 2: Î¼â‚‚ = 0, Ïƒâ‚‚ = 0.5, Ï€â‚‚ = 0.3  
+â€¢ Component 3: Î¼â‚ƒ = 3, Ïƒâ‚ƒ = 1.2, Ï€â‚ƒ = 0.3
+
+Weighted Likelihoods:
+â€¢ Ï€â‚N(x|Î¼â‚,ÏÆ’â‚) = ${likelihoods[0].toFixed(6)}
+â€¢ Ï€â‚‚N(x|Î¼â‚‚,Ïƒâ‚‚) = ${likelihoods[1].toFixed(6)}
+â€¢ Ï€â‚ƒN(x|Î¼â‚ƒ,Ïƒâ‚ƒ) = ${likelihoods[2].toFixed(6)}
+
+Responsibilities (normalized):
+â€¢ râ‚ = ${responsibilities[0].toFixed(4)} (${(responsibilities[0]*100).toFixed(1)}%)
+â€¢ râ‚‚ = ${responsibilities[1].toFixed(4)} (${(responsibilities[1]*100).toFixed(1)}%)
+â€¢ râ‚ƒ = ${responsibilities[2].toFixed(4)} (${(responsibilities[2]*100).toFixed(1)}%)
+
+Sum = ${responsibilities.reduce((a,b) => a+b, 0).toFixed(4)} (always 1)`;
+        }
+
+        // Lab 4: E-Step
+        function runEStep() {
+            document.getElementById('estepOutput').innerHTML = 
+`E-Step: Compute Responsibilities
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+For each data point xâ‚™ and component k:
+
+râ‚™â‚— = Ï€â‚–N(xâ‚™|Î¼â‚–,Î£â‚–) / Î£âˆ‚Â¼ Ï€âˆ‚Â¼N(xâ‚™|Î¼âˆ‚Â¼,Î£âˆ‚Â¼)
+
+This computes the posterior probability
+that component k generated point xâ‚™.
+
+Properties:
+â€¢ râ‚™â‚— â‰¥ 0 for all n, k
+â€¢ Î£â‚– râ‚™â‚— = 1 for each n (rows sum to 1)
+â€¢ Nâ‚– = Î£â‚™ râ‚™â‚— (effective count for component k)
+
+The E-step uses CURRENT parameters
+(Î¼â‚–, Î£â‚–, Ï€â‚–) to compute responsibilities.`;
+        }
+
+        // Lab 5: M-Step Means
+        function runMStepMeans() {
+            document.getElementById('mstepMeanOutput').innerHTML = 
+`M-Step: Update Means
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+For each component k:
+
+Î¼â‚"â¿áµ€ = Î£â‚™ râ‚™â‚—xâ‚™ / Î£â‚™ râ‚™â‚— = (1/Nâ‚–) Î£â‚™ râ‚™â‚—xâ‚™
+
+This is a responsibility-weighted average!
+
+Intuition:
+â€¢ Mean Î¼â‚– is "pulled" toward data points
+â€¢ Strength of pull âˆ responsibility râ‚™â‚—
+â€¢ High râ‚™â‚— points have more influence
+
+Example with 3 points:
+xâ‚ = -2, râ‚â‚" = 0.8
+xâ‚‚ = 0,  râ‚‚â‚– = 0.1
+xâ‚ƒ = 3,  râ‚ƒâ‚– = 0.1
+
+Î¼â‚– = (0.8×-2 + 0.1×0 + 0.1×3) / (0.8+0.1+0.1)
+   = (-1.6 + 0 + 0.3) / 1.0 = -1.3`;
+        }
+
+        // Lab 6: M-Step Covariance
+        function runMStepCovariance() {
+            document.getElementById('mstepCovOutput').innerHTML = 
+`M-Step: Update Covariances
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+For each component k:
+
+Î£â‚"â¿áµ€ = (1/Nâ‚–) Î£â‚™ râ‚™â‚—(xâ‚™ - Î¼â‚–)(xâ‚™ - Î¼â‚–)áµ€
+
+This is a responsibility-weighted covariance!
+
+Steps:
+1. Use the UPDATED means Î¼â‚– from previous step
+2. Compute weighted outer products
+3. Normalize by Nâ‚– = Î£â‚™ râ‚™â‚—
+
+Note: The M-step updates means FIRST,
+then uses them to update covariances.
+
+For 1D data, this simplifies to:
+Ïƒâ‚–Â² = (1/Nâ‚–) Î£â‚™ râ‚™â‚—(xâ‚™ - Î¼â‚–)Â²`;
+        }
+
+        // Lab 7: Full EM
+        let emIteration = 0;
+        function runFullEM() {
+            const iterations = parseInt(document.getElementById('emIterations').value);
+            
+            document.getElementById('emOutput').innerHTML = 
+`Full EM Algorithm - ${iterations} iterations
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Algorithm:
+1. Initialize Î¼â‚–, Î£â‚–, Ï€â‚–
+2. Repeat until convergence:
+   E-step: Compute râ‚™â‚— for all n, k
+   M-step: Update Î¼â‚–, Î£â‚–, Ï€â‚–
+3. Check log-likelihood for convergence
+
+Log-likelihood increases (or stays same)
+at each iteration - GUARANTEED!
+
+Typical convergence: 10-50 iterations
+depending on data and initialization.
+
+EM converges to LOCAL optimum, not
+necessarily GLOBAL optimum.`;
+        }
+
+        function stepEM() {
+            emIteration++;
+            document.getElementById('emOutput').innerHTML = 
+`EM Step ${emIteration}
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+${emIteration % 2 === 1 ? 
+`E-Step: Computing responsibilities râ‚™â‚—...
+Using current parameters to evaluate
+p(zâ‚–=1|xâ‚™) for each data point.` :
+`M-Step: Updating parameters...
+Î¼â‚– ← responsibility-weighted mean
+Î£â‚– ← responsibility-weighted covariance
+Ï€â‚– ← Nâ‚– / N`}
+
+Click again for next step!`;
+        }
+
+        // Lab 8: Log-Likelihood
+        function plotLogLikelihood() {
+            document.getElementById('llOutput').innerHTML = 
+`Log-Likelihood Evolution
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+L = Î£â‚™ log p(xâ‚™|Î¸)
+  = Î£â‚™ log Î£â‚– Ï€â‚–N(xâ‚™|Î¼â‚–,Î£â‚–)
+
+Properties:
+â€¢ L increases (or stays same) at each EM iteration
+â€¢ Convergence when Î£"L < threshold
+â€¢ Higher L = better fit to data
+
+Typical pattern:
+Iter 0:  L = -28.3 (initialization)
+Iter 1:  L = -22.1 (big jump)
+Iter 2:  L = -18.5 
+Iter 3:  L = -15.8
+Iter 4:  L = -14.6
+Iter 5:  L = -14.4 (converged)
+
+Early iterations: large improvements
+Later iterations: diminishing returns`;
+        }
+
+        // Lab 9: 2D GMM
+        function show2DGMM() {
+            const K = parseInt(document.getElementById('k2d').value);
+            
+            document.getElementById('gmm2dOutput').innerHTML = 
+`2D Gaussian Mixture Model with K = ${K}
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+In 2D, each component has:
+â€¢ Mean Î¼â‚– âˆˆ â„Ã‚Â² (center of ellipse)
+â€¢ Covariance Î£â‚– âˆˆ â„Ã‚Â²Ã‚Â² (shape of ellipse)
+â€¢ Weight Ï€â‚– (height/importance)
+
+Covariance determines:
+â€¢ Axis lengths (eigenvalues of Î£â‚–)
+â€¢ Orientation (eigenvectors of Î£â‚–)
+â€¢ Correlation between xâ‚ and xâ‚‚
+
+Visualization:
+â€¢ Ellipses show 1-Ïƒ contours of each Gaussian
+â€¢ Larger Ï€â‚– ←’ more "prominent" component
+â€¢ Overlapping ellipses ←’ soft clustering`;
+        }
+
+        // Lab 10: Sampling
+        function sampleFromGMM() {
+            const N = parseInt(document.getElementById('nSamples').value);
+            
+            document.getElementById('sampleOutput').innerHTML = 
+`Ancestral Sampling from GMM
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Generated ${N} samples using:
+
+For each sample:
+1. Sample k ~ Categorical(Ï€â‚, ..., Ï€â‚–)
+   (Choose which component)
+2. Sample x ~ N(Î¼â‚–, Î£â‚–)
+   (Sample from that Gaussian)
+
+This is called "ancestral sampling"
+because we sample following the
+generative model's DAG structure:
+
+Ï€ ←’ z ←’ x
+    ←‘
+  (Î¼â‚–, Î£â‚–)
+
+The samples x follow the GMM distribution!`;
+        }
+
+        // Lab 11: Latent Variable
+        function showLatentVariable() {
+            document.getElementById('latentOutput').innerHTML = 
+`Latent Variable z (One-Hot Encoding)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+z = [zâ‚, zâ‚‚, ..., zâ‚–]áµ€
+
+Constraints:
+â€¢ zâ‚– âˆˆ {0, 1} for all k
+â€¢ Î£â‚– zâ‚– = 1 (exactly one is 1)
+
+Example (K=3):
+z = [1,0,0]áµ€ ←’ Component 1 generated x
+z = [0,1,0]áµ€ ←’ Component 2 generated x
+z = [0,0,1]áµ€ ←’ Component 3 generated x
+
+Prior: p(zâ‚– = 1) = Ï€â‚–
+Likelihood: p(x|zâ‚– = 1) = N(x|Î¼â‚–, Î£â‚–)
+Joint: p(x, zâ‚– = 1) = Ï€â‚–N(x|Î¼â‚–, Î£â‚–)
+
+Marginalizing out z:
+p(x) = Î£â‚– p(x, zâ‚–=1) = Î£â‚– Ï€â‚–N(x|Î¼â‚–, Î£â‚–)
+     = GMM density!`;
+        }
+
+        // Lab 12: GMM vs K-means
+        function compareGMMKmeans() {
+            document.getElementById('compareOutput').innerHTML = 
+`GMM vs K-means Comparison
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+                  GMM           K-means
+"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"Û‰"
+Assignment:    Soft (râ‚™â‚—)    Hard (0 or 1)
+Clusters:      Elliptical    Spherical
+Covariances:   Per-cluster   Implicit (I)
+Output:        Probabilities  Labels
+Objective:     Max likelihood Min distance
+
+K-means is a special case of GMM:
+â€¢ All Î£â‚– = ÏƒÂ²I (spherical, same variance)
+â€¢ Responsibilities ←’ hard: r âˆˆ {0,1}
+â€¢ ÏƒÂ² ←’ 0 (hard assignment limit)
+
+GMM advantages:
+âœ“ Probabilistic assignments
+âœ“ Uncertainty quantification
+âœ“ Flexible cluster shapes
+âœ“ Can generate new data
+
+K-means advantages:
+âœ“ Faster (simpler updates)
+âœ“ More robust to initialization
+âœ“ Easier to interpret`;
+        }
+
+        // Lab 13: Initialization
+        function showInitializationEffect() {
+            const finalLL = -10 - Math.random() * 20;
+            document.getElementById('initOutput').innerHTML = 
+`Initialization & Local Optima
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Random restart result:
+Final Log-Likelihood: ${finalLL.toFixed(2)}
+
+EM Problem:
+â€¢ Only guarantees convergence to LOCAL optimum
+â€¢ Different initializations ←’ different solutions
+â€¢ Some local optima are much worse than global
+
+Solutions:
+1. Multiple random restarts
+   - Run EM 10-50 times with different init
+   - Keep result with highest log-likelihood
+
+2. K-means++ initialization
+   - Initialize means using K-means
+   - Often gives good starting point
+
+3. Careful initialization
+   - Random data points as initial means
+   - Data covariance as initial Î£â‚–
+   - Equal weights Ï€ = 1/K
+
+Click again to see another random restart!`;
+        }
+
+        // Lab 14: Model Selection
+        function modelSelection() {
+            document.getElementById('modelSelOutput').innerHTML = 
+`Choosing Number of Components K
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Methods:
+
+1. Log-Likelihood (problematic alone):
+   â€¢ Always increases with K
+   â€¢ K = N gives perfect fit (overfitting!)
+
+2. BIC (Bayesian Information Criterion):
+   BIC = log p(X|Î¸) - (d/2)log N
+   â€¢ d = number of parameters
+   â€¢ Penalizes complexity
+   â€¢ Lower BIC = better model
+
+3. AIC (Akaike Information Criterion):
+   AIC = 2d - 2 log p(X|Î¸)
+   â€¢ Similar penalty approach
+
+4. Cross-Validation:
+   â€¢ Split data into train/validation
+   â€¢ Choose K with best validation likelihood
+
+5. Bayesian approach:
+   â€¢ Place prior on K
+   â€¢ Compute marginal likelihood p(X)
+   â€¢ Use for model comparison`;
+        }
+
+        // Lab 15: Responsibility Matrix
+        function showResponsibilityMatrix() {
+            document.getElementById('respMatOutput').innerHTML = 
+`Responsibility Matrix R âˆˆ â„á´ºË£á´·
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      Component 1  Component 2  Component 3
+xâ‚    [  0.95         0.03         0.02  ]
+xâ‚‚    [  0.87         0.10         0.03  ]
+xâ‚ƒ    [  0.12         0.85         0.03  ]
+xâ‚"    [  0.05         0.90         0.05  ]
+xâ‚â€¦    [  0.01         0.04         0.95  ]
+xâ‚†    [  0.02         0.08         0.90  ]
+xâ‚‡    [  0.03         0.07         0.90  ]
+
+Properties:
+â€¢ Each row sums to 1 (soft assignment)
+â€¢ R[n,k] = râ‚™â‚— = p(zâ‚–=1|xâ‚™)
+â€¢ Column sums give Nâ‚– = Î£â‚™ râ‚™â‚—
+
+Example interpretation:
+â€¢ xâ‚ almost certainly from Component 1
+â€¢ xâ‚ƒ mostly from Component 2, some uncertainty
+â€¢ Points can have mixed membership`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

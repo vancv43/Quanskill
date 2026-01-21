@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Control Flow & Functions | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --conditional-color: #8b5cf6;
+            --loop-color: #06b6d4;
+            --function-color: #ec4899;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '🔍„';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 80px;
+            opacity: 0.15;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card.conditional .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.loop .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.function .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-number.conditional { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.loop { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.function { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .conditional-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border-left: 4px solid var(--conditional-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .conditional-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--conditional-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .conditional-box .label::before { content: '🔍€'; }
+
+        .loop-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
+            border-left: 4px solid var(--loop-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .loop-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--loop-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loop-box .label::before { content: '🐍"'; }
+
+        .function-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%);
+            border-left: 4px solid var(--function-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .function-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--function-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .function-box .label::before { content: 'âš¡'; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🌍'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .code-output { color: #86efac; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .flowchart {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .flowchart-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-box {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .flow-start { background: var(--quanskill-blue); color: white; border-radius: 20px; }
+        .flow-condition { background: var(--conditional-color); color: white; transform: rotate(45deg); padding: 1rem; }
+        .flow-condition span { display: block; transform: rotate(-45deg); }
+        .flow-process { background: white; border: 2px solid var(--quanskill-blue); color: var(--quanskill-blue); }
+        .flow-end { background: var(--quanskill-orange); color: white; border-radius: 20px; }
+        .flow-arrow { color: var(--text-secondary); font-size: 1.5rem; }
+        .flow-branch { display: flex; gap: 3rem; justify-content: center; }
+        .flow-label { font-size: 0.8rem; color: var(--text-secondary); }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+
+        .syntax-box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--quanskill-orange);
+        }
+
+        .syntax-box .syntax-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange);
+            margin-bottom: 0.75rem;
+        }
+
+        .syntax-box code {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        .summary-box {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            margin-top: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item::before {
+            content: '🐍';
+            background: var(--quanskill-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .control-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .control-type {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .control-type:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .control-type .symbol { font-size: 2rem; margin-bottom: 0.5rem; }
+        .control-type h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .control-type .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 3 Â· Control Flow</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Conditionals</div>
+            <a href="#section-3-1" class="nav-link">if Statements</a>
+            <a href="#section-3-2" class="nav-link">if-else & elif</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Loops</div>
+            <a href="#section-3-3" class="nav-link">for Loops</a>
+            <a href="#section-3-4" class="nav-link">while Loops</a>
+            <a href="#section-3-5" class="nav-link">Loop Control</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Functions</div>
+            <a href="#section-3-6" class="nav-link">Defining Functions</a>
+            <a href="#section-3-7" class="nav-link">Lambda Functions</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 3</span>
+                <h1>Control Flow & Functions</h1>
+                <p class="hero-subtitle">
+                    Master decision-making with conditionals, automate repetitive tasks with loops, and create reusable code blocks with functions - the building blocks of every data science workflow.
+                </p>
+                <div class="hero-quote">
+                    "Good code is like a good story: it flows logically, repeats key themes elegantly, and each function plays its part perfectly."
+                    <br><br>- <strong>Quanskill Programming Philosophy</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts Overview -->
+        <div class="key-concepts">
+            <div class="concept-card conditional">
+                <div class="icon">🔍€</div>
+                <h5>if Statement</h5>
+                <p>Execute code based on conditions</p>
+            </div>
+            <div class="concept-card conditional">
+                <div class="icon">🔍„</div>
+                <h5>elif / else</h5>
+                <p>Handle multiple conditions</p>
+            </div>
+            <div class="concept-card loop">
+                <div class="icon">🐍"</div>
+                <h5>for Loop</h5>
+                <p>Iterate over sequences</p>
+            </div>
+            <div class="concept-card loop">
+                <div class="icon">âˆ‚</div>
+                <h5>while Loop</h5>
+                <p>Repeat until condition false</p>
+            </div>
+            <div class="concept-card function">
+                <div class="icon">âš¡</div>
+                <h5>Functions</h5>
+                <p>Reusable code blocks</p>
+            </div>
+            <div class="concept-card function">
+                <div class="icon">Î»</div>
+                <h5>Lambda</h5>
+                <p>Anonymous functions</p>
+            </div>
+        </div>
+
+        <!-- Section 3.1: if Statements -->
+        <section class="section" id="section-3-1">
+            <div class="section-header">
+                <span class="section-number conditional">3.1</span>
+                <h2>Conditional Statements: if</h2>
+            </div>
+
+            <p>
+                Every day, we analyze situations and make decisions. Programming is no different. <strong>Conditional statements</strong> allow your program to make decisions and execute different code based on whether conditions are true or false.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Conditional Statement</span>
+                <p>A <strong>conditional statement</strong> checks whether a specific condition is true before executing code. If the condition is true, the code block runs; otherwise, it's skipped. This is the foundation of decision-making in programming.</p>
+            </div>
+
+            <h3>The if Statement</h3>
+
+            <p>The <code>if</code> statement is the most fundamental conditional. It executes a block of code only if the specified condition evaluates to <code>True</code>.</p>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">if</span> condition:
+    <span class="code-comment"># Code block to execute if condition is True</span>
+    statement(s)</code></pre>
+            </div>
+
+            <div class="flowchart">
+                <div class="flowchart-title">if Statement Flow</div>
+                <div class="flow-container">
+                    <div class="flow-box flow-start">Start</div>
+                    <div class="flow-arrow">←“</div>
+                    <div class="flow-box flow-process">Check Condition</div>
+                    <div class="flow-arrow">←“</div>
+                    <div class="flow-branch">
+                        <div style="text-align: center;">
+                            <div class="flow-label">True âœ“</div>
+                            <div class="flow-arrow">←“</div>
+                            <div class="flow-box flow-process">Execute Code Block</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="flow-label">False âœ—</div>
+                            <div class="flow-arrow">←“</div>
+                            <div class="flow-box" style="background: #f1f5f9; color: var(--text-secondary);">Skip</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">←“</div>
+                    <div class="flow-box flow-end">Continue</div>
+                </div>
+            </div>
+
+            <pre><code><span class="code-comment"># Simple if statement</span>
+x = <span class="code-number">15</span>
+
+<span class="code-keyword">if</span> x > <span class="code-number">10</span>:
+    <span class="code-function">print</span>(<span class="code-string">"x is greater than 10"</span>)
+
+<span class="code-function">print</span>(<span class="code-string">"This always executes"</span>)
+
+<span class="code-comment"># Output:</span>
+<span class="code-output"># x is greater than 10</span>
+<span class="code-output"># This always executes</span></code></pre>
+
+            <h4>Comparison Operators</h4>
+
+            <p>Conditions are created using comparison operators:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>==</code></td><td>Equal to</td><td><code>5 == 5</code></td><td>True</td></tr>
+                    <tr><td><code>!=</code></td><td>Not equal to</td><td><code>5 != 3</code></td><td>True</td></tr>
+                    <tr><td><code>&gt;</code></td><td>Greater than</td><td><code>5 > 3</code></td><td>True</td></tr>
+                    <tr><td><code>&lt;</code></td><td>Less than</td><td><code>3 < 5</code></td><td>True</td></tr>
+                    <tr><td><code>&gt;=</code></td><td>Greater than or equal</td><td><code>5 >= 5</code></td><td>True</td></tr>
+                    <tr><td><code>&lt;=</code></td><td>Less than or equal</td><td><code>3 <= 5</code></td><td>True</td></tr>
+                </tbody>
+            </table>
+
+            <div class="realworld-box">
+                <span class="label">Data Science Example</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Check if a student passed</span>
+score = <span class="code-number">75</span>
+passing_grade = <span class="code-number">60</span>
+
+<span class="code-keyword">if</span> score >= passing_grade:
+    <span class="code-function">print</span>(<span class="code-string">"Congratulations! You passed the exam."</span>)
+
+<span class="code-comment"># Check for outliers in data</span>
+data_point = <span class="code-number">150</span>
+threshold = <span class="code-number">100</span>
+
+<span class="code-keyword">if</span> data_point > threshold:
+    <span class="code-function">print</span>(<span class="code-string">f"Warning: Outlier detected: {data_point}"</span>)</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 3.2: if-else & elif -->
+        <section class="section" id="section-3-2">
+            <div class="section-header">
+                <span class="section-number conditional">3.2</span>
+                <h2>if-else and elif Statements</h2>
+            </div>
+
+            <p>
+                Sometimes you need to execute different code when a condition is false, or check multiple conditions in sequence. Python provides <code>else</code> and <code>elif</code> for these scenarios.
+            </p>
+
+            <h3>The if-else Statement</h3>
+
+            <p>The <code>else</code> block executes when the <code>if</code> condition is False:</p>
+
+            <pre><code><span class="code-comment"># if-else statement</span>
+age = <span class="code-number">16</span>
+
+<span class="code-keyword">if</span> age >= <span class="code-number">18</span>:
+    <span class="code-function">print</span>(<span class="code-string">"You are an adult."</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"You are a minor."</span>)
+
+<span class="code-comment"># Output: You are a minor.</span></code></pre>
+
+            <h3>The elif Statement</h3>
+
+            <p>Use <code>elif</code> (else if) to check multiple conditions in sequence:</p>
+
+            <pre><code><span class="code-comment"># Grade classification system</span>
+score = <span class="code-number">78</span>
+
+<span class="code-keyword">if</span> score >= <span class="code-number">90</span>:
+    grade = <span class="code-string">"A"</span>
+    <span class="code-function">print</span>(<span class="code-string">"Excellent! Grade: A"</span>)
+<span class="code-keyword">elif</span> score >= <span class="code-number">80</span>:
+    grade = <span class="code-string">"B"</span>
+    <span class="code-function">print</span>(<span class="code-string">"Good job! Grade: B"</span>)
+<span class="code-keyword">elif</span> score >= <span class="code-number">70</span>:
+    grade = <span class="code-string">"C"</span>
+    <span class="code-function">print</span>(<span class="code-string">"Satisfactory. Grade: C"</span>)
+<span class="code-keyword">elif</span> score >= <span class="code-number">60</span>:
+    grade = <span class="code-string">"D"</span>
+    <span class="code-function">print</span>(<span class="code-string">"Passed. Grade: D"</span>)
+<span class="code-keyword">else</span>:
+    grade = <span class="code-string">"F"</span>
+    <span class="code-function">print</span>(<span class="code-string">"Failed. Grade: F"</span>)
+
+<span class="code-comment"># Output: Satisfactory. Grade: C</span></code></pre>
+
+            <h3>Nested if Statements</h3>
+
+            <p>You can place <code>if</code> statements inside other <code>if</code> statements for complex logic:</p>
+
+            <pre><code><span class="code-comment"># Nested conditions for loan approval</span>
+income = <span class="code-number">75000</span>
+credit_score = <span class="code-number">720</span>
+
+<span class="code-keyword">if</span> income >= <span class="code-number">50000</span>:
+    <span class="code-keyword">if</span> credit_score >= <span class="code-number">700</span>:
+        <span class="code-function">print</span>(<span class="code-string">"âœ… Loan approved!"</span>)
+    <span class="code-keyword">else</span>:
+        <span class="code-function">print</span>(<span class="code-string">"âŒ Loan denied: Credit score too low"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"âŒ Loan denied: Income too low"</span>)
+
+<span class="code-comment"># Output: âœ… Loan approved!</span></code></pre>
+
+            <div class="conditional-box">
+                <span class="label">Logical Operators</span>
+                <p>Combine multiple conditions with <code>and</code>, <code>or</code>, and <code>not</code>:</p>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Using logical operators</span>
+age = <span class="code-number">25</span>
+has_license = <span class="code-keyword">True</span>
+
+<span class="code-keyword">if</span> age >= <span class="code-number">18</span> <span class="code-keyword">and</span> has_license:
+    <span class="code-function">print</span>(<span class="code-string">"You can drive!"</span>)
+
+<span class="code-keyword">if</span> age < <span class="code-number">18</span> <span class="code-keyword">or</span> <span class="code-keyword">not</span> has_license:
+    <span class="code-function">print</span>(<span class="code-string">"You cannot drive."</span>)</code></pre>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What is the output of this code?<br><code>x = 5<br>if x > 10: print("A")<br>elif x > 3: print("B")<br>else: print("C")</code></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">A</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">B</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">C</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">A and B</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! x=5 is not > 10, so we check elif: 5 > 3 is True, so "B" is printed.</div>
+                <div class="quiz-feedback incorrect">Not quite. Check each condition in order: first if fails, then elif is checked.</div>
+            </div>
+        </section>
+
+        <!-- Section 3.3: for Loops -->
+        <section class="section" id="section-3-3">
+            <div class="section-header">
+                <span class="section-number loop">3.3</span>
+                <h2>for Loops</h2>
+            </div>
+
+            <p>
+                When you need to repeat code for each item in a sequence (like a list, tuple, or string), the <code>for</code> loop is your tool of choice. It's the workhorse of data processing in Python.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: for Loop</span>
+                <p>A <strong>for loop</strong> iterates over a sequence (list, tuple, string, range, etc.), executing the code block once for each element. The loop variable takes on each value in the sequence, one at a time.</p>
+            </div>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">for</span> variable <span class="code-keyword">in</span> sequence:
+    <span class="code-comment"># Code block executed for each item</span>
+    statement(s)</code></pre>
+            </div>
+
+            <h3>Basic for Loop Examples</h3>
+
+            <pre><code><span class="code-comment"># Iterate over a list</span>
+fruits = [<span class="code-string">'apple'</span>, <span class="code-string">'banana'</span>, <span class="code-string">'cherry'</span>]
+
+<span class="code-keyword">for</span> fruit <span class="code-keyword">in</span> fruits:
+    <span class="code-function">print</span>(fruit)
+
+<span class="code-comment"># Output:</span>
+<span class="code-output"># apple</span>
+<span class="code-output"># banana</span>
+<span class="code-output"># cherry</span>
+
+<span class="code-comment"># Iterate over a string</span>
+<span class="code-keyword">for</span> char <span class="code-keyword">in</span> <span class="code-string">"Python"</span>:
+    <span class="code-function">print</span>(char, end=<span class="code-string">" "</span>)
+
+<span class="code-comment"># Output: P y t h o n</span></code></pre>
+
+            <h3>The range() Function</h3>
+
+            <p>Use <code>range()</code> to generate a sequence of numbers:</p>
+
+            <pre><code><span class="code-comment"># range(stop) - 0 to stop-1</span>
+<span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">5</span>):
+    <span class="code-function">print</span>(i, end=<span class="code-string">" "</span>)  <span class="code-comment"># 0 1 2 3 4</span>
+
+<span class="code-comment"># range(start, stop)</span>
+<span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">6</span>):
+    <span class="code-function">print</span>(i, end=<span class="code-string">" "</span>)  <span class="code-comment"># 1 2 3 4 5</span>
+
+<span class="code-comment"># range(start, stop, step)</span>
+<span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">0</span>, <span class="code-number">10</span>, <span class="code-number">2</span>):
+    <span class="code-function">print</span>(i, end=<span class="code-string">" "</span>)  <span class="code-comment"># 0 2 4 6 8</span>
+
+<span class="code-comment"># Countdown</span>
+<span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">5</span>, <span class="code-number">0</span>, <span class="code-number">-1</span>):
+    <span class="code-function">print</span>(i, end=<span class="code-string">" "</span>)  <span class="code-comment"># 5 4 3 2 1</span></code></pre>
+
+            <h3>Loop with enumerate()</h3>
+
+            <p>Get both index and value with <code>enumerate()</code>:</p>
+
+            <pre><code>fruits = [<span class="code-string">'apple'</span>, <span class="code-string">'banana'</span>, <span class="code-string">'cherry'</span>]
+
+<span class="code-keyword">for</span> index, fruit <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(fruits):
+    <span class="code-function">print</span>(<span class="code-string">f"{index}: {fruit}"</span>)
+
+<span class="code-comment"># Output:</span>
+<span class="code-output"># 0: apple</span>
+<span class="code-output"># 1: banana</span>
+<span class="code-output"># 2: cherry</span></code></pre>
+
+            <div class="loop-box">
+                <span class="label">Data Science Pattern: Summing Values</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Calculate sum and average of a dataset</span>
+scores = [<span class="code-number">85</span>, <span class="code-number">92</span>, <span class="code-number">78</span>, <span class="code-number">95</span>, <span class="code-number">88</span>, <span class="code-number">76</span>, <span class="code-number">90</span>]
+
+total = <span class="code-number">0</span>
+<span class="code-keyword">for</span> score <span class="code-keyword">in</span> scores:
+    total += score
+
+average = total / <span class="code-function">len</span>(scores)
+<span class="code-function">print</span>(<span class="code-string">f"Total: {total}, Average: {average:.2f}"</span>)
+
+<span class="code-comment"># Output: Total: 604, Average: 86.29</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 3.4: while Loops -->
+        <section class="section" id="section-3-4">
+            <div class="section-header">
+                <span class="section-number loop">3.4</span>
+                <h2>while Loops</h2>
+            </div>
+
+            <p>
+                The <code>while</code> loop repeats a block of code as long as a condition remains True. It's perfect when you don't know in advance how many iterations you need.
+            </p>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">while</span> condition:
+    <span class="code-comment"># Code block executed while condition is True</span>
+    statement(s)
+    <span class="code-comment"># Update condition to avoid infinite loop!</span></code></pre>
+            </div>
+
+            <pre><code><span class="code-comment"># Count from 1 to 5</span>
+count = <span class="code-number">1</span>
+
+<span class="code-keyword">while</span> count <= <span class="code-number">5</span>:
+    <span class="code-function">print</span>(count)
+    count += <span class="code-number">1</span>  <span class="code-comment"># Important: update the condition!</span>
+
+<span class="code-comment"># Output: 1 2 3 4 5</span></code></pre>
+
+            <h3>while vs for: When to Use Each</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Use Case</th>
+                        <th>Best Loop</th>
+                        <th>Why</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Iterate over a list/sequence</td>
+                        <td><strong>for</strong></td>
+                        <td>Known number of iterations</td>
+                    </tr>
+                    <tr>
+                        <td>Repeat until condition met</td>
+                        <td><strong>while</strong></td>
+                        <td>Unknown number of iterations</td>
+                    </tr>
+                    <tr>
+                        <td>User input validation</td>
+                        <td><strong>while</strong></td>
+                        <td>Repeat until valid input</td>
+                    </tr>
+                    <tr>
+                        <td>Process each row in data</td>
+                        <td><strong>for</strong></td>
+                        <td>Known dataset size</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note-box">
+                <span class="label">âš  Infinite Loop Warning</span>
+                <p>Always ensure your while loop condition will eventually become False. Otherwise, your program will run forever! Common fix: update the variable used in the condition inside the loop.</p>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># âŒ Infinite loop - BAD!</span>
+x = <span class="code-number">5</span>
+<span class="code-keyword">while</span> x > <span class="code-number">0</span>:
+    <span class="code-function">print</span>(x)  <span class="code-comment"># x never changes!</span>
+
+<span class="code-comment"># âœ… Proper loop - GOOD!</span>
+x = <span class="code-number">5</span>
+<span class="code-keyword">while</span> x > <span class="code-number">0</span>:
+    <span class="code-function">print</span>(x)
+    x -= <span class="code-number">1</span>      <span class="code-comment"># x decreases, will reach 0</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 3.5: Loop Control -->
+        <section class="section" id="section-3-5">
+            <div class="section-header">
+                <span class="section-number loop">3.5</span>
+                <h2>Loop Control Statements</h2>
+            </div>
+
+            <p>
+                Python provides three statements to control loop execution: <code>break</code>, <code>continue</code>, and <code>pass</code>.
+            </p>
+
+            <div class="control-comparison">
+                <div class="control-type">
+                    <div class="symbol">📝›‘</div>
+                    <h5>break</h5>
+                    <p class="desc">Exit the loop immediately</p>
+                </div>
+                <div class="control-type">
+                    <div class="symbol">â­</div>
+                    <h5>continue</h5>
+                    <p class="desc">Skip to next iteration</p>
+                </div>
+                <div class="control-type">
+                    <div class="symbol">â¸</div>
+                    <h5>pass</h5>
+                    <p class="desc">Do nothing (placeholder)</p>
+                </div>
+            </div>
+
+            <h3>break Statement</h3>
+
+            <pre><code><span class="code-comment"># Find first number divisible by 7</span>
+<span class="code-keyword">for</span> num <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">100</span>):
+    <span class="code-keyword">if</span> num % <span class="code-number">7</span> == <span class="code-number">0</span>:
+        <span class="code-function">print</span>(<span class="code-string">f"First number divisible by 7: {num}"</span>)
+        <span class="code-keyword">break</span>  <span class="code-comment"># Exit loop immediately</span>
+
+<span class="code-comment"># Output: First number divisible by 7: 7</span></code></pre>
+
+            <h3>continue Statement</h3>
+
+            <pre><code><span class="code-comment"># Print only odd numbers</span>
+<span class="code-keyword">for</span> num <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">11</span>):
+    <span class="code-keyword">if</span> num % <span class="code-number">2</span> == <span class="code-number">0</span>:
+        <span class="code-keyword">continue</span>  <span class="code-comment"># Skip even numbers</span>
+    <span class="code-function">print</span>(num, end=<span class="code-string">" "</span>)
+
+<span class="code-comment"># Output: 1 3 5 7 9</span></code></pre>
+
+            <h3>pass Statement</h3>
+
+            <pre><code><span class="code-comment"># Placeholder for future code</span>
+<span class="code-keyword">for</span> item <span class="code-keyword">in</span> data:
+    <span class="code-keyword">if</span> condition:
+        <span class="code-keyword">pass</span>  <span class="code-comment"># TODO: implement later</span>
+    <span class="code-keyword">else</span>:
+        process(item)</code></pre>
+
+            <div class="realworld-box">
+                <span class="label">Data Cleaning Example</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Skip invalid data entries</span>
+data = [<span class="code-number">85</span>, <span class="code-number">-1</span>, <span class="code-number">92</span>, <span class="code-string">"N/A"</span>, <span class="code-number">78</span>, <span class="code-keyword">None</span>, <span class="code-number">95</span>]
+clean_data = []
+
+<span class="code-keyword">for</span> value <span class="code-keyword">in</span> data:
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> <span class="code-function">isinstance</span>(value, (<span class="code-function">int</span>, <span class="code-function">float</span>)):
+        <span class="code-keyword">continue</span>  <span class="code-comment"># Skip non-numeric</span>
+    <span class="code-keyword">if</span> value < <span class="code-number">0</span>:
+        <span class="code-keyword">continue</span>  <span class="code-comment"># Skip negative</span>
+    clean_data.<span class="code-function">append</span>(value)
+
+<span class="code-function">print</span>(clean_data)  <span class="code-comment"># [85, 92, 78, 95]</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 3.6: Defining Functions -->
+        <section class="section" id="section-3-6">
+            <div class="section-header">
+                <span class="section-number function">3.6</span>
+                <h2>Defining Functions</h2>
+            </div>
+
+            <p>
+                Functions are reusable blocks of code that perform specific tasks. They make your code modular, readable, and easier to debug. Python uses the <code>def</code> keyword to define functions.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Function</span>
+                <p>A <strong>function</strong> is a named block of code that takes inputs (parameters), performs operations, and optionally returns a result. Functions allow you to write code once and reuse it many times.</p>
+            </div>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Function Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">def</span> <span class="code-function">function_name</span>(parameter1, parameter2):
+    <span class="code-string">"""Docstring: Describe what the function does."""</span>
+    <span class="code-comment"># Function body</span>
+    result = <span class="code-comment">... do something ...</span>
+    <span class="code-keyword">return</span> result</code></pre>
+            </div>
+
+            <h3>Creating and Calling Functions</h3>
+
+            <pre><code><span class="code-comment"># Define a simple function</span>
+<span class="code-keyword">def</span> <span class="code-function">greet</span>(name):
+    <span class="code-string">"""Return a greeting message."""</span>
+    <span class="code-keyword">return</span> <span class="code-string">f"Hello, {name}! Welcome to Quanskill."</span>
+
+<span class="code-comment"># Call the function</span>
+message = greet(<span class="code-string">"Alice"</span>)
+<span class="code-function">print</span>(message)
+
+<span class="code-comment"># Output: Hello, Alice! Welcome to Quanskill.</span></code></pre>
+
+            <h3>Function with Multiple Parameters</h3>
+
+            <pre><code><span class="code-keyword">def</span> <span class="code-function">calculate_area</span>(length, width):
+    <span class="code-string">"""Calculate the area of a rectangle."""</span>
+    area = length * width
+    <span class="code-keyword">return</span> area
+
+<span class="code-comment"># Call with positional arguments</span>
+result = calculate_area(<span class="code-number">5</span>, <span class="code-number">3</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Area: {result}"</span>)  <span class="code-comment"># Area: 15</span>
+
+<span class="code-comment"># Call with keyword arguments</span>
+result = calculate_area(width=<span class="code-number">4</span>, length=<span class="code-number">6</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Area: {result}"</span>)  <span class="code-comment"># Area: 24</span></code></pre>
+
+            <h3>Default Parameter Values</h3>
+
+            <pre><code><span class="code-keyword">def</span> <span class="code-function">power</span>(base, exponent=<span class="code-number">2</span>):
+    <span class="code-string">"""Calculate base raised to exponent (default: squared)."""</span>
+    <span class="code-keyword">return</span> base ** exponent
+
+<span class="code-function">print</span>(power(<span class="code-number">5</span>))       <span class="code-comment"># 25 (5Â²)</span>
+<span class="code-function">print</span>(power(<span class="code-number">2</span>, <span class="code-number">10</span>))   <span class="code-comment"># 1024 (2Ã‚Â¹â°)</span></code></pre>
+
+            <h3>Return Multiple Values</h3>
+
+            <pre><code><span class="code-keyword">def</span> <span class="code-function">get_statistics</span>(numbers):
+    <span class="code-string">"""Calculate and return multiple statistics."""</span>
+    total = <span class="code-function">sum</span>(numbers)
+    average = total / <span class="code-function">len</span>(numbers)
+    minimum = <span class="code-function">min</span>(numbers)
+    maximum = <span class="code-function">max</span>(numbers)
+    <span class="code-keyword">return</span> total, average, minimum, maximum
+
+<span class="code-comment"># Unpack returned values</span>
+data = [<span class="code-number">85</span>, <span class="code-number">92</span>, <span class="code-number">78</span>, <span class="code-number">95</span>, <span class="code-number">88</span>]
+total, avg, low, high = get_statistics(data)
+
+<span class="code-function">print</span>(<span class="code-string">f"Sum: {total}, Avg: {avg:.1f}, Min: {low}, Max: {high}"</span>)
+<span class="code-comment"># Output: Sum: 438, Avg: 87.6, Min: 78, Max: 95</span></code></pre>
+
+            <div class="function-box">
+                <span class="label">Built-in Functions You Already Know</span>
+                <table class="data-table" style="margin-bottom: 0;">
+                    <thead>
+                        <tr><th>Function</th><th>Description</th><th>Example</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>print()</code></td><td>Display output</td><td><code>print("Hello")</code></td></tr>
+                        <tr><td><code>len()</code></td><td>Get length</td><td><code>len([1,2,3])</code> ←’ 3</td></tr>
+                        <tr><td><code>type()</code></td><td>Get data type</td><td><code>type(42)</code> ←’ int</td></tr>
+                        <tr><td><code>sum()</code></td><td>Sum of iterable</td><td><code>sum([1,2,3])</code> ←’ 6</td></tr>
+                        <tr><td><code>max()</code></td><td>Maximum value</td><td><code>max([1,5,3])</code> ←’ 5</td></tr>
+                        <tr><td><code>min()</code></td><td>Minimum value</td><td><code>min([1,5,3])</code> ←’ 1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 3.7: Lambda Functions -->
+        <section class="section" id="section-3-7">
+            <div class="section-header">
+                <span class="section-number function">3.7</span>
+                <h2>Lambda Functions</h2>
+            </div>
+
+            <p>
+                Lambda functions are small, anonymous functions defined in a single line. They're perfect for quick operations, especially when working with functions like <code>map()</code>, <code>filter()</code>, and <code>sorted()</code>.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Lambda Function</span>
+                <p>A <strong>lambda function</strong> is an anonymous (unnamed) function defined with the <code>lambda</code> keyword. It can take any number of arguments but contains only a single expression, which is automatically returned.</p>
+            </div>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Lambda Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">lambda</span> arguments: expression</code></pre>
+            </div>
+
+            <h3>Basic Lambda Examples</h3>
+
+            <pre><code><span class="code-comment"># Regular function</span>
+<span class="code-keyword">def</span> <span class="code-function">add</span>(x, y):
+    <span class="code-keyword">return</span> x + y
+
+<span class="code-comment"># Equivalent lambda</span>
+add_lambda = <span class="code-keyword">lambda</span> x, y: x + y
+
+<span class="code-function">print</span>(add(<span class="code-number">5</span>, <span class="code-number">3</span>))         <span class="code-comment"># 8</span>
+<span class="code-function">print</span>(add_lambda(<span class="code-number">5</span>, <span class="code-number">3</span>))  <span class="code-comment"># 8</span>
+
+<span class="code-comment"># Square function</span>
+square = <span class="code-keyword">lambda</span> x: x ** <span class="code-number">2</span>
+<span class="code-function">print</span>(square(<span class="code-number">4</span>))  <span class="code-comment"># 16</span></code></pre>
+
+            <h3>Lambda with map()</h3>
+
+            <pre><code><span class="code-comment"># Square all numbers in a list</span>
+numbers = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>]
+
+squared = <span class="code-function">list</span>(<span class="code-function">map</span>(<span class="code-keyword">lambda</span> x: x ** <span class="code-number">2</span>, numbers))
+<span class="code-function">print</span>(squared)  <span class="code-comment"># [1, 4, 9, 16, 25]</span>
+
+<span class="code-comment"># Convert temperatures: Celsius to Fahrenheit</span>
+celsius = [<span class="code-number">0</span>, <span class="code-number">20</span>, <span class="code-number">30</span>, <span class="code-number">40</span>]
+fahrenheit = <span class="code-function">list</span>(<span class="code-function">map</span>(<span class="code-keyword">lambda</span> c: (c * <span class="code-number">9</span>/<span class="code-number">5</span>) + <span class="code-number">32</span>, celsius))
+<span class="code-function">print</span>(fahrenheit)  <span class="code-comment"># [32.0, 68.0, 86.0, 104.0]</span></code></pre>
+
+            <h3>Lambda with filter()</h3>
+
+            <pre><code><span class="code-comment"># Filter even numbers</span>
+numbers = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>, <span class="code-number">7</span>, <span class="code-number">8</span>, <span class="code-number">9</span>, <span class="code-number">10</span>]
+
+evens = <span class="code-function">list</span>(<span class="code-function">filter</span>(<span class="code-keyword">lambda</span> x: x % <span class="code-number">2</span> == <span class="code-number">0</span>, numbers))
+<span class="code-function">print</span>(evens)  <span class="code-comment"># [2, 4, 6, 8, 10]</span>
+
+<span class="code-comment"># Filter passing grades</span>
+scores = [<span class="code-number">45</span>, <span class="code-number">72</span>, <span class="code-number">88</span>, <span class="code-number">55</span>, <span class="code-number">90</span>, <span class="code-number">38</span>]
+passing = <span class="code-function">list</span>(<span class="code-function">filter</span>(<span class="code-keyword">lambda</span> s: s >= <span class="code-number">60</span>, scores))
+<span class="code-function">print</span>(passing)  <span class="code-comment"># [72, 88, 90]</span></code></pre>
+
+            <h3>Lambda with sorted()</h3>
+
+            <pre><code><span class="code-comment"># Sort by custom key</span>
+students = [
+    {<span class="code-string">'name'</span>: <span class="code-string">'Alice'</span>, <span class="code-string">'grade'</span>: <span class="code-number">85</span>},
+    {<span class="code-string">'name'</span>: <span class="code-string">'Bob'</span>, <span class="code-string">'grade'</span>: <span class="code-number">92</span>},
+    {<span class="code-string">'name'</span>: <span class="code-string">'Charlie'</span>, <span class="code-string">'grade'</span>: <span class="code-number">78</span>}
+]
+
+<span class="code-comment"># Sort by grade (ascending)</span>
+sorted_students = <span class="code-function">sorted</span>(students, key=<span class="code-keyword">lambda</span> x: x[<span class="code-string">'grade'</span>])
+
+<span class="code-comment"># Sort by grade (descending)</span>
+top_students = <span class="code-function">sorted</span>(students, key=<span class="code-keyword">lambda</span> x: x[<span class="code-string">'grade'</span>], reverse=<span class="code-keyword">True</span>)
+
+<span class="code-function">print</span>(top_students[<span class="code-number">0</span>][<span class="code-string">'name'</span>])  <span class="code-comment"># Bob (highest grade)</span></code></pre>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What does this lambda return?<br><code>f = lambda x, y: x if x > y else y</code><br><code>f(5, 8)</code></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">5</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">8</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">True</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Error</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! This lambda returns the larger of the two values. Since 5 is not > 8, it returns y which is 8.</div>
+                <div class="quiz-feedback incorrect">Not quite. This is a max function: returns x if x > y, else returns y.</div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter 3 Review</h2>
+            </div>
+
+            <p>
+                Congratulations! You've mastered Python's control flow structures and functions - the tools that transform static code into dynamic, intelligent programs.
+            </p>
+
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">if/elif/else for decision-making</div>
+                    <div class="summary-item">for loops iterate over sequences</div>
+                    <div class="summary-item">while loops repeat until condition false</div>
+                    <div class="summary-item">break, continue, pass control flow</div>
+                    <div class="summary-item">def creates reusable functions</div>
+                    <div class="summary-item">lambda for quick anonymous functions</div>
+                </div>
+            </div>
+
+            <h3>What's Next?</h3>
+
+            <p>In <strong>Chapter 4</strong>, you'll explore file handling and modules:</p>
+
+            <ul>
+                <li><strong>File Operations:</strong> Read from and write to files</li>
+                <li><strong>Exception Handling:</strong> Gracefully handle errors</li>
+                <li><strong>Modules:</strong> Organize and reuse code across files</li>
+                <li><strong>Math & Random Modules:</strong> Built-in tools for data science</li>
+            </ul>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Build a Grade Calculator:</strong></p>
+                <ol>
+                    <li>Create a function that takes a list of scores</li>
+                    <li>Use a loop to calculate the average</li>
+                    <li>Use if/elif/else to assign a letter grade</li>
+                    <li>Return both the average and the grade</li>
+                    <li>Bonus: Use filter() to count how many scores are above average</li>
+                </ol>
+                <p>This exercise combines conditionals, loops, and functions - the complete toolkit!</p>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

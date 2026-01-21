@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability and Distributions | Mathematics for Machine Learning | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📝Ž²';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Definition Boxes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .definition-box .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Theorem/Remark Boxes */
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        /* ML Connection Boxes */
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before {
+            content: '📝¤“';
+        }
+
+        /* Quanskill Training Box */
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before {
+            content: '🎓';
+        }
+
+        /* Real World Example Boxes */
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before {
+            content: '🎯';
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before {
+            content: 'â–¸';
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Quiz Box */
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before {
+            content: '🧠';
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Math Display */
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+        }
+
+        .katex-display {
+            margin: 1rem 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .interactive-demo h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interactive-demo h4::before {
+            content: 'âš¡';
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .demo-input label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .demo-input input, .demo-input select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            width: 120px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .demo-input input:focus, .demo-input select:focus {
+            outline: none;
+            border-color: var(--quanskill-blue);
+        }
+
+        .demo-btn {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(11, 47, 160, 0.3);
+        }
+
+        .demo-btn.secondary {
+            background: var(--gradient-orange);
+        }
+
+        .demo-result {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Key Concepts Summary */
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Visualization canvas */
+        .viz-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .progress-bar {
+                left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+            }
+
+            body {
+                font-size: 16px;
+            }
+        }
+
+        /* Scroll animations */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Distribution comparison table */
+        .dist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .dist-table th, .dist-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dist-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .dist-table tr:hover {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        /* Probability visualization */
+        .prob-bar {
+            height: 20px;
+            background: var(--quanskill-blue);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .prob-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        .prob-label {
+            width: 80px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .prob-bar-container {
+            flex: 1;
+            height: 20px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .prob-value {
+            width: 60px;
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 50px; border-radius: 8px;"></a>
+                <span>Quanskill</span>
+            </div>
+            <button class="nav-toggle" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Chapter 6</div>
+            <div class="chapter-title">Probability & Distributions</div>
+        </div>
+        <nav class="nav-section">
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#section-6-1" class="nav-link">Probability Space</a>
+            <a href="#section-6-2" class="nav-link">Discrete & Continuous</a>
+            <a href="#section-6-3" class="nav-link">Sum Rule, Product Rule & Bayes</a>
+            <a href="#section-6-4" class="nav-link">Mean, Variance & Independence</a>
+            <a href="#section-6-5" class="nav-link">Gaussian Distribution</a>
+            <a href="#section-6-6" class="nav-link">Conjugacy & Exponential Family</a>
+            <a href="#section-6-7" class="nav-link">Change of Variables</a>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero" id="intro">
+                <div class="hero-content">
+                    <span class="hero-badge">Quanskill ML Foundations</span>
+                    <h1>Probability & Distributions</h1>
+                    <p>Master the language of uncertainty. Probability theory provides the mathematical framework for reasoning about data, making predictions, and quantifying confidence - the foundation of all modern machine learning.</p>
+                </div>
+            </section>
+
+            <!-- Key Concepts Overview -->
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">🐍Â </div>
+                    <h5>Random Variables</h5>
+                    <p>Functions mapping outcomes to quantities we care about</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">📊</div>
+                    <h5>Distributions</h5>
+                    <p>Describe how probability is spread across outcomes</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🔍„</div>
+                    <h5>Bayes' Theorem</h5>
+                    <p>Update beliefs when new evidence arrives</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">📈</div>
+                    <h5>Gaussian</h5>
+                    <p>The most important distribution in ML</p>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Your Quanskill Learning Path</div>
+                <p>Probability is the language that machine learning speaks! Every ML model makes probabilistic predictions, quantifies uncertainty, or learns from data using probability theory. At Quanskill, you'll use these concepts to understand Naive Bayes classifiers, Gaussian Mixture Models, Bayesian inference, and probabilistic neural networks!</p>
+            </div>
+
+            <!-- Section 6.1: Construction of a Probability Space -->
+            <section class="section" id="section-6-1">
+                <div class="section-header">
+                    <span class="section-number">6.1</span>
+                    <h2>Construction of a Probability Space</h2>
+                </div>
+
+                <p>Probability theory provides a mathematical framework for reasoning about uncertain outcomes. At its core, we need three components to define a probability space: a sample space, an event space, and a probability measure.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Every ML model deals with uncertainty: uncertainty in data (noise), uncertainty in predictions, and uncertainty in model parameters. Probability theory gives us the tools to quantify and reason about this uncertainty systematically. Bayesian ML, in particular, treats everything as a probability distribution!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Probability Space Components</div>
+                    <ul>
+                        <li><strong>Sample Space Î©:</strong> The set of all possible outcomes of an experiment</li>
+                        <li><strong>Event Space A:</strong> Collection of subsets of Î© that we can assign probabilities to</li>
+                        <li><strong>Probability P:</strong> A function P(A) âˆˆ [0,1] for each event A âˆˆ A, with P(Î©) = 1</li>
+                    </ul>
+                </div>
+
+                <h3>Random Variables</h3>
+                <p>A <strong>random variable</strong> is a function X: Î© ←’ T that maps outcomes to a target space T of quantities we care about. Despite the name, it's neither random nor a variable - it's a deterministic function!</p>
+
+                <div class="example-box">
+                    <div class="label">Example: Coin Toss</div>
+                    <p>Two coin tosses have sample space Î© = {HH, HT, TH, TT}. If we care about the number of heads, we define random variable X mapping:</p>
+                    <p style="font-family: 'JetBrains Mono', monospace; margin-left: 1rem;">
+                        X(HH) = 2, X(HT) = 1, X(TH) = 1, X(TT) = 0
+                    </p>
+                    <p>Now T = {0, 1, 2} and we work with probabilities P(X = k).</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Two Interpretations of Probability</div>
+                    <ul>
+                        <li><strong>Frequentist:</strong> Probability is the long-run relative frequency of an event</li>
+                        <li><strong>Bayesian:</strong> Probability represents degree of belief or uncertainty</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">In ML, we often take the Bayesian view - probabilities represent our uncertainty, which we update as we see more data.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Probability Basics</div>
+                    <p class="quiz-question">If we roll a fair 6-sided die, what is P(even number)?</p>
+                    <div class="quiz-options" id="quiz1">
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">A) 1/6</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, true)">B) 1/2</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">C) 2/3</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">D) 1/3</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Probabilistic ML Course</div>
+                    <p>In Quanskill's <strong>Probabilistic Machine Learning</strong> track, you'll see how random variables model data, how distributions represent uncertainty in predictions, and how Bayesian inference updates beliefs. This foundation powers everything from spam filters to large language models!</p>
+                </div>
+            </section>
+
+            <!-- Section 6.2: Discrete and Continuous Probabilities -->
+            <section class="section" id="section-6-2">
+                <div class="section-header">
+                    <span class="section-number">6.2</span>
+                    <h2>Discrete and Continuous Probabilities</h2>
+                </div>
+
+                <p>The way we describe probability distributions depends on whether our random variable takes discrete values (like counts) or continuous values (like measurements).</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Classification problems have discrete outputs (class labels), while regression problems have continuous outputs (real numbers). Understanding both types of distributions is essential - you'll use PMFs for categorical predictions and PDFs for continuous ones!</p>
+                </div>
+
+                <h3>Discrete Random Variables</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Probability Mass Function (PMF)</div>
+                    <p>For a discrete random variable X, the PMF gives the probability of each outcome:</p>
+                    <div class="math-display">
+                        $$P(X = x) = p(x), \quad \text{where } \sum_{x} p(x) = 1$$
+                    </div>
+                </div>
+
+                <h3>Continuous Random Variables</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Probability Density Function (PDF)</div>
+                    <p>For a continuous random variable X, the PDF describes probability density:</p>
+                    <div class="math-display">
+                        $$P(a \leq X \leq b) = \int_a^b f(x) dx, \quad \text{where } \int_{-\infty}^{\infty} f(x)dx = 1$$
+                    </div>
+                    <p><strong>Note:</strong> For continuous variables, P(X = x) = 0 for any specific x! We only get non-zero probability for intervals.</p>
+                </div>
+
+                <!-- Interactive: PMF vs PDF -->
+                <div class="interactive-demo">
+                    <h4>Interactive: PMF vs PDF Visualization</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Compare discrete (PMF) and continuous (PDF) distributions:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Distribution Type:</label>
+                            <select id="distType" onchange="updateDistDemo()">
+                                <option value="discrete">Discrete (Binomial)</option>
+                                <option value="continuous">Continuous (Gaussian)</option>
+                            </select>
+                        </div>
+                        <div class="demo-input">
+                            <label>Parameter:</label>
+                            <input type="range" id="distParam" min="0.1" max="0.9" step="0.1" value="0.5" oninput="updateDistDemo()">
+                        </div>
+                    </div>
+                    <canvas id="distCanvas" class="viz-canvas" width="500" height="250"></canvas>
+                    <div class="demo-result">
+                        <p id="distInfo">Click above to see distribution details</p>
+                    </div>
+                </div>
+
+                <h3>Cumulative Distribution Function (CDF)</h3>
+                <p>The CDF gives the probability that X is less than or equal to x:</p>
+                <div class="math-display">
+                    $$F_X(x) = P(X \leq x) = \int_{-\infty}^{x} f(t)dt$$
+                </div>
+
+                <table class="dist-table">
+                    <tr>
+                        <th>Type</th>
+                        <th>Point Probability</th>
+                        <th>Interval Probability</th>
+                    </tr>
+                    <tr>
+                        <td>Discrete</td>
+                        <td>P(X = x) - PMF</td>
+                        <td>Sum of PMF values</td>
+                    </tr>
+                    <tr>
+                        <td>Continuous</td>
+                        <td>p(x) - PDF (density, can be > 1!)</td>
+                        <td>P(X â‰¤ x) - CDF</td>
+                    </tr>
+                </table>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: PDF Properties</div>
+                    <p class="quiz-question">Can a probability density function f(x) have values greater than 1?</p>
+                    <div class="quiz-options" id="quiz2">
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, true)">A) Yes, as long as the total area under the curve equals 1</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">B) No, probabilities must be between 0 and 1</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">C) Only for uniform distributions</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">D) Only at exactly one point</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+
+                <div class="realworld-box">
+                    <div class="label">Real-World Application</div>
+                    <p><strong>Image Classification:</strong> A classifier outputs a discrete PMF over class labels: P(cat) = 0.7, P(dog) = 0.25, P(other) = 0.05. The softmax function in neural networks produces exactly this kind of discrete distribution!</p>
+                </div>
+            </section>
+
+            <!-- Section 6.3: Sum Rule, Product Rule, and Bayes' Theorem -->
+            <section class="section" id="section-6-3">
+                <div class="section-header">
+                    <span class="section-number">6.3</span>
+                    <h2>Sum Rule, Product Rule & Bayes' Theorem</h2>
+                </div>
+
+                <p>There are only two fundamental rules in probability - the sum rule and product rule. From these, we derive the powerful Bayes' theorem that underlies all Bayesian machine learning.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>The sum rule lets us marginalize out variables we don't care about. The product rule lets us factor joint distributions. Bayes' theorem lets us update beliefs with data - the core of Bayesian learning, posterior inference, and probabilistic graphical models!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Fundamental Rule</div>
+                    <div class="title">Sum Rule (Marginalization)</div>
+                    <div class="math-display">
+                        $$p(x) = \sum_y p(x, y) \quad \text{(discrete)} \quad \text{or} \quad p(x) = \int p(x, y) dy \quad \text{(continuous)}$$
+                    </div>
+                    <p>To get the marginal distribution of X, sum/integrate out Y from the joint.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Fundamental Rule</div>
+                    <div class="title">Product Rule</div>
+                    <div class="math-display">
+                        $$p(x, y) = p(y | x) p(x) = p(x | y) p(y)$$
+                    </div>
+                    <p>The joint distribution factors into a conditional times a marginal.</p>
+                </div>
+
+                <h3>Bayes' Theorem</h3>
+                <p>Combining both rules gives us the most important result in probabilistic ML:</p>
+
+                <div class="theorem-box">
+                    <div class="label">Theorem</div>
+                    <div class="math-display">
+                        $$\underbrace{p(\theta | \mathcal{D})}_{\text{posterior}} = \frac{\overbrace{p(\mathcal{D} | \theta)}^{\text{likelihood}} \cdot \overbrace{p(\theta)}^{\text{prior}}}{\underbrace{p(\mathcal{D})}_{\text{evidence}}}$$
+                    </div>
+                    <ul style="margin-top: 1rem;">
+                        <li><strong>Prior p(Î¸):</strong> What we believe before seeing data</li>
+                        <li><strong>Likelihood p(D|Î¸):</strong> How likely is the data given parameters</li>
+                        <li><strong>Posterior p(Î¸|D):</strong> Updated belief after seeing data</li>
+                        <li><strong>Evidence p(D):</strong> Normalizing constant (marginal likelihood)</li>
+                    </ul>
+                </div>
+
+                <!-- Interactive: Bayes' Theorem -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Bayes' Theorem in Action</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Medical test example: Update disease probability given a positive test result</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Prior P(Disease):</label>
+                            <input type="number" id="prior" value="0.01" min="0.001" max="0.5" step="0.01" onchange="updateBayes()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Sensitivity P(+|D):</label>
+                            <input type="number" id="sensitivity" value="0.95" min="0.5" max="0.999" step="0.01" onchange="updateBayes()">
+                        </div>
+                        <div class="demo-input">
+                            <label>False Positive P(+|Â¬D):</label>
+                            <input type="number" id="falsepos" value="0.05" min="0.001" max="0.3" step="0.01" onchange="updateBayes()">
+                        </div>
+                    </div>
+                    <div class="demo-result" id="bayesResult">
+                        <p><strong>Prior belief:</strong> <span id="priorDisplay">1%</span> chance of disease</p>
+                        <p><strong>After positive test:</strong> <span id="posteriorDisplay">--</span> chance of disease</p>
+                        <p style="margin-top: 1rem; color: var(--text-secondary);" id="bayesExplanation"></p>
+                    </div>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Bayes' Theorem</div>
+                    <p class="quiz-question">In Bayes' theorem, what does the likelihood p(D|Î¸) represent?</p>
+                    <div class="quiz-options" id="quiz3">
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">A) Our prior belief about parameters</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, true)">B) How probable the data is given the parameters</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">C) The probability of the parameters given data</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">D) The total probability of the data</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Bayesian ML Lab</div>
+                    <p>In <strong>Bayesian Machine Learning</strong>, you'll implement Bayes' theorem for Naive Bayes classifiers, compute posteriors for regression parameters, and see how priors regularize models. You'll understand why "Bayesian" neural networks and Gaussian processes are powerful!</p>
+                </div>
+            </section>
+
+            <!-- Section 6.4: Summary Statistics and Independence -->
+            <section class="section" id="section-6-4">
+                <div class="section-header">
+                    <span class="section-number">6.4</span>
+                    <h2>Mean, Variance & Independence</h2>
+                </div>
+
+                <p>Summary statistics compress a distribution into a few numbers. The mean tells us the "center" and the variance tells us the "spread". Independence tells us when variables don't affect each other.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>The expected value (mean) is what we optimize in ML - minimizing expected loss! Variance measures uncertainty in predictions. Understanding covariance and independence is crucial for feature selection, PCA, and understanding model behavior.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Expected Value (Mean)</div>
+                    <div class="math-display">
+                        $$\mathbb{E}[X] = \int x \cdot p(x) dx \quad \text{or} \quad \mathbb{E}[X] = \sum_x x \cdot p(x)$$
+                    </div>
+                    <p>The "average" outcome weighted by probability. For a function g(X):</p>
+                    <div class="math-display">
+                        $$\mathbb{E}[g(X)] = \int g(x) \cdot p(x) dx$$
+                    </div>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Variance and Covariance</div>
+                    <div class="math-display">
+                        $$\text{Var}[X] = \mathbb{E}[(X - \mu)^2] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$$
+                    </div>
+                    <div class="math-display">
+                        $$\text{Cov}[X, Y] = \mathbb{E}[(X - \mu_X)(Y - \mu_Y)] = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]$$
+                    </div>
+                </div>
+
+                <h3>Properties of Expectation and Variance</h3>
+                <table class="dist-table">
+                    <tr>
+                        <th>Property</th>
+                        <th>Formula</th>
+                    </tr>
+                    <tr>
+                        <td>Linearity of E</td>
+                        <td>E[aX + bY] = aE[X] + bE[Y]</td>
+                    </tr>
+                    <tr>
+                        <td>Variance scaling</td>
+                        <td>Var[aX] = aÂ²Var[X]</td>
+                    </tr>
+                    <tr>
+                        <td>Variance of sum</td>
+                        <td>Var[X + Y] = Var[X] + Var[Y] + 2Cov[X,Y]</td>
+                    </tr>
+                    <tr>
+                        <td>Linear transform</td>
+                        <td>E[Ax + b] = AE[x] + b, Var[Ax] = AÎ£A<sup>T</sup></td>
+                    </tr>
+                </table>
+
+                <h3>Independence</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Statistical Independence</div>
+                    <p>X and Y are independent (X âŠ¥ Y) if and only if:</p>
+                    <div class="math-display">
+                        $$p(x, y) = p(x)p(y)$$
+                    </div>
+                    <p>Equivalently: p(x|y) = p(x), knowing Y tells us nothing about X.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Important:</strong> Cov[X,Y] = 0 does NOT imply independence! (Only the reverse is true.)</p>
+                </div>
+
+                <!-- Interactive: Correlation Demo -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Covariance and Correlation</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Visualize how covariance captures linear relationship:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Correlation Ï:</label>
+                            <input type="range" id="corrSlider" min="-0.95" max="0.95" step="0.05" value="0.7" oninput="updateCorrDemo()">
+                        </div>
+                    </div>
+                    <canvas id="corrCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-result">
+                        <p><strong>Correlation:</strong> Ï = <span id="corrValue">0.70</span></p>
+                        <p id="corrInterpretation" style="color: var(--text-secondary);"></p>
+                    </div>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Variance</div>
+                    <p class="quiz-question">What is Var[3X + 5] if Var[X] = 4?</p>
+                    <div class="quiz-options" id="quiz4">
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">A) 17</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">B) 12</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, true)">C) 36</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">D) 41</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+
+                <div class="realworld-box">
+                    <div class="label">Real-World Application</div>
+                    <p><strong>Portfolio Theory:</strong> In finance, portfolio risk depends on covariance between assets. If two stocks are negatively correlated, combining them reduces total variance - the mathematical foundation of diversification!</p>
+                </div>
+            </section>
+
+            <!-- Section 6.5: Gaussian Distribution -->
+            <section class="section" id="section-6-5">
+                <div class="section-header">
+                    <span class="section-number">6.5</span>
+                    <h2>Gaussian Distribution</h2>
+                </div>
+
+                <p>The Gaussian (normal) distribution is the most important distribution in machine learning. It appears everywhere due to the Central Limit Theorem and has beautiful mathematical properties that make computation tractable.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Gaussians are everywhere in ML! Linear regression assumes Gaussian noise, Gaussian processes are distributions over functions, variational autoencoders use Gaussian latent spaces, and the reparameterization trick relies on Gaussian properties. Master the Gaussian, master probabilistic ML!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Gaussian Distribution</div>
+                    <p><strong>Univariate:</strong></p>
+                    <div class="math-display">
+                        $$\mathcal{N}(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
+                    </div>
+                    <p><strong>Multivariate:</strong></p>
+                    <div class="math-display">
+                        $$\mathcal{N}(\mathbf{x} | \boldsymbol{\mu}, \boldsymbol{\Sigma}) = (2\pi)^{-D/2}|\boldsymbol{\Sigma}|^{-1/2} \exp\left(-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^\top\boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu})\right)$$
+                    </div>
+                </div>
+
+                <!-- Interactive: Gaussian Visualization -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Gaussian Distribution</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Explore how mean and variance affect the Gaussian shape:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Mean Î¼:</label>
+                            <input type="range" id="gaussMean" min="-3" max="3" step="0.1" value="0" oninput="updateGaussDemo()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Std dev Ïƒ:</label>
+                            <input type="range" id="gaussStd" min="0.3" max="2" step="0.1" value="1" oninput="updateGaussDemo()">
+                        </div>
+                    </div>
+                    <canvas id="gaussCanvas" class="viz-canvas" width="500" height="250"></canvas>
+                    <div class="demo-result">
+                        <p><strong>Parameters:</strong> Î¼ = <span id="gaussMuDisplay">0</span>, Ïƒ = <span id="gaussSigmaDisplay">1</span></p>
+                        <p><strong>68% interval:</strong> [<span id="gauss68">-1.00, 1.00</span>]</p>
+                        <p><strong>95% interval:</strong> [<span id="gauss95">-1.96, 1.96</span>]</p>
+                    </div>
+                </div>
+
+                <h3>Key Properties of Gaussians</h3>
+                <div class="theorem-box">
+                    <div class="label">Magical Properties</div>
+                    <ul>
+                        <li><strong>Marginals are Gaussian:</strong> If (X,Y) is jointly Gaussian, then X alone is Gaussian</li>
+                        <li><strong>Conditionals are Gaussian:</strong> p(X|Y=y) is Gaussian with updated mean and variance</li>
+                        <li><strong>Linear transforms preserve Gaussianity:</strong> If X ~ N(Î¼, Î£), then AX + b ~ N(AÎ¼+b, AÎ£A<sup>T</sup>)</li>
+                        <li><strong>Sums of Gaussians are Gaussian:</strong> If X, Y independent Gaussians, X+Y is Gaussian</li>
+                    </ul>
+                </div>
+
+                <h3>Conditional Gaussian</h3>
+                <p>For joint Gaussian p(x,y), the conditional p(x|y) has:</p>
+                <div class="math-display">
+                    $$\mu_{x|y} = \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}(y - \mu_y)$$
+                </div>
+                <div class="math-display">
+                    $$\Sigma_{x|y} = \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}$$
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Gaussian Properties</div>
+                    <p class="quiz-question">If X ~ N(2, 9), what is the distribution of Y = 2X + 3?</p>
+                    <div class="quiz-options" id="quiz5">
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">A) N(7, 9)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">B) N(7, 18)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, true)">C) N(7, 36)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">D) N(4, 36)</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Gaussian Processes Lab</div>
+                    <p>In <strong>Gaussian Processes for ML</strong>, you'll use conditional Gaussians to make predictions with uncertainty, implement GP regression from scratch, and understand how the kernel defines the prior over functions. It's one of the most elegant applications of Gaussian distributions!</p>
+                </div>
+            </section>
+
+            <!-- Section 6.6: Conjugacy and Exponential Family -->
+            <section class="section" id="section-6-6">
+                <div class="section-header">
+                    <span class="section-number">6.6</span>
+                    <h2>Conjugacy & Exponential Family</h2>
+                </div>
+
+                <p>Some prior-likelihood pairs are special: the posterior has the same form as the prior! These <strong>conjugate pairs</strong> enable efficient Bayesian inference. Many common distributions belong to the <strong>exponential family</strong>, which has nice theoretical properties.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Conjugate priors give closed-form posteriors - no complex integration needed! The exponential family unifies many distributions and has deep connections to sufficient statistics, maximum entropy, and variational inference. Understanding these concepts makes Bayesian ML much more tractable!</p>
+                </div>
+
+                <h3>Common Distributions</h3>
+
+                <div class="definition-box">
+                    <div class="label">Distribution</div>
+                    <div class="title">Bernoulli Distribution</div>
+                    <p>Models binary outcomes (success/failure, 0/1):</p>
+                    <div class="math-display">
+                        $$p(x | \mu) = \mu^x(1-\mu)^{1-x}, \quad x \in \{0, 1\}$$
+                    </div>
+                    <p>Mean: Î¼, Variance: Î¼(1-Î¼)</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Distribution</div>
+                    <div class="title">Binomial Distribution</div>
+                    <p>Number of successes in N Bernoulli trials:</p>
+                    <div class="math-display">
+                        $$p(m | N, \mu) = \binom{N}{m}\mu^m(1-\mu)^{N-m}$$
+                    </div>
+                    <p>Mean: NÎ¼, Variance: NÎ¼(1-Î¼)</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Distribution</div>
+                    <div class="title">Beta Distribution</div>
+                    <p>Distribution over probabilities Î¼ âˆˆ [0,1]:</p>
+                    <div class="math-display">
+                        $$p(\mu | \alpha, \beta) = \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}$$
+                    </div>
+                    <p>The <strong>conjugate prior</strong> for Bernoulli/Binomial likelihoods!</p>
+                </div>
+
+                <!-- Interactive: Beta-Binomial -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Beta-Binomial Conjugacy</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See how the Beta prior updates with Binomial data:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Prior Î±:</label>
+                            <input type="number" id="betaAlpha" value="2" min="0.5" max="10" step="0.5" onchange="updateBetaDemo()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Prior Î²:</label>
+                            <input type="number" id="betaBeta" value="2" min="0.5" max="10" step="0.5" onchange="updateBetaDemo()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Successes:</label>
+                            <input type="number" id="betaSucc" value="7" min="0" max="20" step="1" onchange="updateBetaDemo()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Failures:</label>
+                            <input type="number" id="betaFail" value="3" min="0" max="20" step="1" onchange="updateBetaDemo()">
+                        </div>
+                    </div>
+                    <canvas id="betaCanvas" class="viz-canvas" width="500" height="250"></canvas>
+                    <div class="demo-result">
+                        <p><strong>Prior:</strong> Beta(<span id="priorAlphaDisp">2</span>, <span id="priorBetaDisp">2</span>) ←’ Mean = <span id="priorMean">0.50</span></p>
+                        <p><strong>Posterior:</strong> Beta(<span id="postAlphaDisp">9</span>, <span id="postBetaDisp">5</span>) ←’ Mean = <span id="postMean">0.64</span></p>
+                        <p style="color: var(--text-secondary);">Posterior = Prior × Likelihood (up to normalization)</p>
+                    </div>
+                </div>
+
+                <h3>Conjugate Pairs</h3>
+                <table class="dist-table">
+                    <tr>
+                        <th>Likelihood</th>
+                        <th>Conjugate Prior</th>
+                        <th>Use Case</th>
+                    </tr>
+                    <tr>
+                        <td>Bernoulli/Binomial</td>
+                        <td>Beta</td>
+                        <td>Binary outcomes, click rates</td>
+                    </tr>
+                    <tr>
+                        <td>Gaussian (known var)</td>
+                        <td>Gaussian</td>
+                        <td>Continuous measurements</td>
+                    </tr>
+                    <tr>
+                        <td>Gaussian (unknown var)</td>
+                        <td>Inverse-Gamma</td>
+                        <td>Variance estimation</td>
+                    </tr>
+                    <tr>
+                        <td>Multinomial</td>
+                        <td>Dirichlet</td>
+                        <td>Category counts, topic models</td>
+                    </tr>
+                    <tr>
+                        <td>Poisson</td>
+                        <td>Gamma</td>
+                        <td>Count data, event rates</td>
+                    </tr>
+                </table>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Conjugacy</div>
+                    <p class="quiz-question">If we have a Beta(3,3) prior and observe 5 heads and 2 tails, what is the posterior?</p>
+                    <div class="quiz-options" id="quiz6">
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">A) Beta(5, 2)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, true)">B) Beta(8, 5)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">C) Beta(3, 3)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">D) Beta(15, 6)</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+
+                <div class="realworld-box">
+                    <div class="label">Real-World Application</div>
+                    <p><strong>A/B Testing:</strong> When comparing two website variants, we model click-through rates with Beta-Binomial. The Beta prior represents our belief before the test, and after collecting data, the posterior tells us which variant is better with quantified uncertainty!</p>
+                </div>
+            </section>
+
+            <!-- Section 6.7: Change of Variables -->
+            <section class="section" id="section-6-7">
+                <div class="section-header">
+                    <span class="section-number">6.7</span>
+                    <h2>Change of Variables</h2>
+                </div>
+
+                <p>When we transform a random variable, how does its distribution change? The <strong>change of variables formula</strong> tells us exactly how to compute the new PDF, involving the Jacobian determinant from Chapter 5.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Change of variables is fundamental to normalizing flows, the reparameterization trick in VAEs, and probability integral transform. It connects vector calculus to probability theory - when you transform variables, the Jacobian measures how probability "stretches" or "compresses"!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Theorem</div>
+                    <div class="title">Change of Variables Formula</div>
+                    <p>If X has PDF f<sub>X</sub>(x) and Y = g(X) where g is invertible and differentiable:</p>
+                    <div class="math-display">
+                        $$f_Y(y) = f_X(g^{-1}(y)) \cdot \left|\frac{dg^{-1}}{dy}\right|$$
+                    </div>
+                    <p>For multivariate case with transformation y = g(x):</p>
+                    <div class="math-display">
+                        $$f_Y(\mathbf{y}) = f_X(g^{-1}(\mathbf{y})) \cdot \left|\det\left(\frac{\partial g^{-1}}{\partial \mathbf{y}}\right)\right|$$
+                    </div>
+                    <p>The Jacobian determinant accounts for how the transformation stretches/compresses volume.</p>
+                </div>
+
+                <div class="example-box">
+                    <div class="label">Example: Log-Normal Distribution</div>
+                    <p>If X ~ N(Î¼, ÏƒÂ²), what is the distribution of Y = e<sup>X</sup>?</p>
+                    <p>Using change of variables with g(x) = e<sup>x</sup> and g<sup>-1</sup>(y) = ln(y):</p>
+                    <div class="math-display">
+                        $$f_Y(y) = \frac{1}{y\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(\ln y - \mu)^2}{2\sigma^2}\right), \quad y > 0$$
+                    </div>
+                    <p>This is the <strong>log-normal distribution</strong> - common for modeling positive quantities like prices and sizes!</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Key Application</div>
+                    <div class="title">Reparameterization Trick</div>
+                    <p>To sample z ~ N(Î¼, ÏƒÂ²), we can instead:</p>
+                    <ol>
+                        <li>Sample Îµ ~ N(0, 1)</li>
+                        <li>Compute z = Î¼ + ÏƒÎµ</li>
+                    </ol>
+                    <p>This makes z differentiable with respect to Î¼ and Ïƒ - crucial for training VAEs with gradient descent!</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Change of Variables</div>
+                    <p class="quiz-question">In the change of variables formula, why do we need the absolute value of the Jacobian determinant?</p>
+                    <div class="quiz-options" id="quiz7">
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">A) To ensure the transformation is invertible</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, true)">B) Because probability density must be non-negative</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">C) To make the integral easier to compute</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">D) To normalize the distribution</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz7-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Generative Models Lab</div>
+                    <p>In <strong>Deep Generative Models</strong>, you'll implement normalizing flows that use change of variables to transform simple distributions into complex ones. You'll also implement VAEs with the reparameterization trick - seeing how these probability concepts enable powerful generative AI!</p>
+                </div>
+            </section>
+
+            <!-- Summary Section -->
+            <section class="section" id="summary">
+                <div class="section-header">
+                    <span class="section-number">🐍"</span>
+                    <h2>Chapter Summary</h2>
+                </div>
+
+                <div class="key-concepts">
+                    <div class="concept-card">
+                        <div class="icon">🐍Â </div>
+                        <h5>Random Variable</h5>
+                        <p>Function mapping outcomes to quantities of interest</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">📊</div>
+                        <h5>PMF vs PDF</h5>
+                        <p>Discrete probabilities vs continuous densities</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🔍„</div>
+                        <h5>Bayes' Theorem</h5>
+                        <p>Posterior âˆ Likelihood × Prior</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">📈</div>
+                        <h5>Mean & Variance</h5>
+                        <p>Center and spread of a distribution</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🐍""Ã‚</div>
+                        <h5>Gaussian</h5>
+                        <p>Fully characterized by Î¼ and Î£</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🔍”</div>
+                        <h5>Conjugacy</h5>
+                        <p>Prior and posterior same family</p>
+                    </div>
+                </div>
+
+                <div class="ml-box">
+                    <div class="label">Key ML Takeaways</div>
+                    <ul>
+                        <li><strong>Sum rule</strong> marginalizes out unwanted variables</li>
+                        <li><strong>Product rule</strong> factors joints into conditionals</li>
+                        <li><strong>Bayes' theorem</strong> updates beliefs with data</li>
+                        <li><strong>Gaussians</strong> are closed under marginalization, conditioning, and linear transforms</li>
+                        <li><strong>Conjugate priors</strong> give closed-form posteriors</li>
+                        <li><strong>Change of variables</strong> uses Jacobian to transform distributions</li>
+                    </ul>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Your Next Steps with Quanskill</div>
+                    <p>🎯Â° <strong>Congratulations!</strong> You now have the probability foundation for modern machine learning. Here's your Quanskill path:</p>
+                    <ul>
+                        <li><strong>Chapter 7</strong>: Optimization - put probability and calculus together!</li>
+                        <li><strong>Chapter 8</strong>: Machine Learning foundations</li>
+                        <li><strong>Quanskill Project</strong>: Implement Naive Bayes classifier and Bayesian linear regression!</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Ready to apply probabilistic thinking?</strong> Join Quanskill's hands-on bootcamps where you'll build Bayesian classifiers, implement Gaussian processes, and create generative models!</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer style="text-align: center; padding: 3rem 0; color: var(--text-secondary); font-size: 0.9rem;">
+                <p><strong>Quanskill</strong> - Making ML Education Accessible</p>
+                <p style="margin-top: 1rem; font-size: 0.8rem;">© 2024 Quanskill. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Render LaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+
+            // Initialize demos
+            updateDistDemo();
+            updateBayes();
+            updateCorrDemo();
+            updateGaussDemo();
+            updateBetaDemo();
+
+            // Initialize section visibility
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => observer.observe(section));
+
+            updateProgress();
+        });
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Update active navigation link and progress
+        window.addEventListener('scroll', function() {
+            updateActiveNav();
+            updateProgress();
+        });
+
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function updateProgress() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        }
+
+        // Quiz functionality
+        function checkQuiz(quizId, element, isCorrect) {
+            const options = document.querySelectorAll(`#${quizId} .quiz-option`);
+            const feedback = document.getElementById(`${quizId}-feedback`);
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.innerHTML = 'âœ… Correct! Great understanding!';
+                feedback.className = 'quiz-feedback show correct';
+            } else {
+                element.classList.add('incorrect');
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.innerHTML = 'âŒ Not quite. The correct answer is highlighted above.';
+                feedback.className = 'quiz-feedback show incorrect';
+            }
+        }
+
+        // Distribution Demo
+        function updateDistDemo() {
+            const type = document.getElementById('distType').value;
+            const param = parseFloat(document.getElementById('distParam').value);
+            
+            const canvas = document.getElementById('distCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const margin = 40;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(width - margin, height - margin);
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(margin, margin);
+            ctx.stroke();
+            
+            if (type === 'discrete') {
+                // Binomial with n=10
+                const n = 10;
+                const p = param;
+                const maxProb = 0.35;
+                
+                ctx.fillStyle = '#0b2fa0';
+                for (let k = 0; k <= n; k++) {
+                    const prob = binomialPMF(k, n, p);
+                    const x = margin + (k / n) * plotWidth;
+                    const barHeight = (prob / maxProb) * plotHeight;
+                    ctx.fillRect(x - 10, height - margin - barHeight, 20, barHeight);
+                }
+                
+                document.getElementById('distInfo').innerHTML = 
+                    `<strong>Binomial(n=10, p=${p.toFixed(1)})</strong><br>` +
+                    `Mean = ${(n * p).toFixed(1)}, Variance = ${(n * p * (1-p)).toFixed(2)}`;
+            } else {
+                // Gaussian
+                const mu = 0;
+                const sigma = 0.5 + param;
+                
+                ctx.strokeStyle = '#0b2fa0';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                for (let i = 0; i <= plotWidth; i++) {
+                    const x = -4 + (i / plotWidth) * 8;
+                    const y = gaussianPDF(x, mu, sigma);
+                    const px = margin + i;
+                    const py = height - margin - (y / 1.0) * plotHeight;
+                    
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+                
+                // Fill area
+                ctx.fillStyle = 'rgba(11, 47, 160, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(margin, height - margin);
+                for (let i = 0; i <= plotWidth; i++) {
+                    const x = -4 + (i / plotWidth) * 8;
+                    const y = gaussianPDF(x, mu, sigma);
+                    const px = margin + i;
+                    const py = height - margin - (y / 1.0) * plotHeight;
+                    ctx.lineTo(px, py);
+                }
+                ctx.lineTo(width - margin, height - margin);
+                ctx.closePath();
+                ctx.fill();
+                
+                document.getElementById('distInfo').innerHTML = 
+                    `<strong>Gaussian(Î¼=0, Ïƒ=${sigma.toFixed(2)})</strong><br>` +
+                    `Note: PDF can exceed 1 (currently max â‰ˆ ${(1/(sigma * Math.sqrt(2*Math.PI))).toFixed(2)})`;
+            }
+        }
+
+        function binomialPMF(k, n, p) {
+            return binomialCoeff(n, k) * Math.pow(p, k) * Math.pow(1-p, n-k);
+        }
+
+        function binomialCoeff(n, k) {
+            if (k > n) return 0;
+            if (k === 0 || k === n) return 1;
+            let result = 1;
+            for (let i = 0; i < k; i++) {
+                result = result * (n - i) / (i + 1);
+            }
+            return result;
+        }
+
+        function gaussianPDF(x, mu, sigma) {
+            return (1 / (sigma * Math.sqrt(2 * Math.PI))) * 
+                   Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+        }
+
+        // Bayes Demo
+        function updateBayes() {
+            const prior = parseFloat(document.getElementById('prior').value);
+            const sensitivity = parseFloat(document.getElementById('sensitivity').value);
+            const falsePos = parseFloat(document.getElementById('falsepos').value);
+            
+            // P(D|+) = P(+|D)P(D) / [P(+|D)P(D) + P(+|Â¬D)P(Â¬D)]
+            const numerator = sensitivity * prior;
+            const denominator = numerator + falsePos * (1 - prior);
+            const posterior = numerator / denominator;
+            
+            document.getElementById('priorDisplay').textContent = (prior * 100).toFixed(1) + '%';
+            document.getElementById('posteriorDisplay').textContent = (posterior * 100).toFixed(1) + '%';
+            
+            const ratio = posterior / prior;
+            document.getElementById('bayesExplanation').textContent = 
+                `The positive test increased disease probability by ${ratio.toFixed(1)}x. ` +
+                `Even with a good test, rare diseases often have low posterior probability!`;
+        }
+
+        // Correlation Demo
+        function updateCorrDemo() {
+            const rho = parseFloat(document.getElementById('corrSlider').value);
+            document.getElementById('corrValue').textContent = rho.toFixed(2);
+            
+            const canvas = document.getElementById('corrCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 40;
+            
+            // Draw axes
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.stroke();
+            
+            // Generate correlated points
+            ctx.fillStyle = 'rgba(11, 47, 160, 0.5)';
+            const n = 100;
+            for (let i = 0; i < n; i++) {
+                // Box-Muller for uncorrelated Gaussians
+                const u1 = Math.random();
+                const u2 = Math.random();
+                const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+                const z2 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
+                
+                // Create correlation
+                const x = z1;
+                const y = rho * z1 + Math.sqrt(1 - rho*rho) * z2;
+                
+                const px = cx + x * scale;
+                const py = cy - y * scale;
+                
+                ctx.beginPath();
+                ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Interpretation
+            let interp = '';
+            if (Math.abs(rho) < 0.3) interp = 'Weak or no linear relationship';
+            else if (Math.abs(rho) < 0.7) interp = 'Moderate linear relationship';
+            else interp = 'Strong linear relationship';
+            if (rho < 0) interp += ' (negative)';
+            else if (rho > 0) interp += ' (positive)';
+            
+            document.getElementById('corrInterpretation').textContent = interp;
+        }
+
+        // Gaussian Demo
+        function updateGaussDemo() {
+            const mu = parseFloat(document.getElementById('gaussMean').value);
+            const sigma = parseFloat(document.getElementById('gaussStd').value);
+            
+            document.getElementById('gaussMuDisplay').textContent = mu.toFixed(1);
+            document.getElementById('gaussSigmaDisplay').textContent = sigma.toFixed(1);
+            document.getElementById('gauss68').textContent = `${(mu - sigma).toFixed(2)}, ${(mu + sigma).toFixed(2)}`;
+            document.getElementById('gauss95').textContent = `${(mu - 1.96*sigma).toFixed(2)}, ${(mu + 1.96*sigma).toFixed(2)}`;
+            
+            const canvas = document.getElementById('gaussCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const margin = 40;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(width - margin, height - margin);
+            ctx.stroke();
+            
+            // X range
+            const xMin = -5;
+            const xMax = 5;
+            
+            // Find max PDF value for scaling
+            const maxPDF = gaussianPDF(mu, mu, sigma);
+            
+            // Fill 95% region
+            ctx.fillStyle = 'rgba(255, 144, 0, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(margin + ((mu - 1.96*sigma - xMin) / (xMax - xMin)) * plotWidth, height - margin);
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = xMin + (i / plotWidth) * (xMax - xMin);
+                if (x >= mu - 1.96*sigma && x <= mu + 1.96*sigma) {
+                    const y = gaussianPDF(x, mu, sigma);
+                    const px = margin + i;
+                    const py = height - margin - (y / (maxPDF * 1.2)) * plotHeight;
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.lineTo(margin + ((mu + 1.96*sigma - xMin) / (xMax - xMin)) * plotWidth, height - margin);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Fill 68% region
+            ctx.fillStyle = 'rgba(11, 47, 160, 0.3)';
+            ctx.beginPath();
+            ctx.moveTo(margin + ((mu - sigma - xMin) / (xMax - xMin)) * plotWidth, height - margin);
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = xMin + (i / plotWidth) * (xMax - xMin);
+                if (x >= mu - sigma && x <= mu + sigma) {
+                    const y = gaussianPDF(x, mu, sigma);
+                    const px = margin + i;
+                    const py = height - margin - (y / (maxPDF * 1.2)) * plotHeight;
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.lineTo(margin + ((mu + sigma - xMin) / (xMax - xMin)) * plotWidth, height - margin);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw PDF curve
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = xMin + (i / plotWidth) * (xMax - xMin);
+                const y = gaussianPDF(x, mu, sigma);
+                const px = margin + i;
+                const py = height - margin - (y / (maxPDF * 1.2)) * plotHeight;
+                
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            
+            // Draw mean line
+            ctx.strokeStyle = '#ff9000';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            const muX = margin + ((mu - xMin) / (xMax - xMin)) * plotWidth;
+            ctx.beginPath();
+            ctx.moveTo(muX, height - margin);
+            ctx.lineTo(muX, margin);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Beta Distribution Demo
+        function updateBetaDemo() {
+            const alpha = parseFloat(document.getElementById('betaAlpha').value);
+            const beta = parseFloat(document.getElementById('betaBeta').value);
+            const succ = parseInt(document.getElementById('betaSucc').value);
+            const fail = parseInt(document.getElementById('betaFail').value);
+            
+            const postAlpha = alpha + succ;
+            const postBeta = beta + fail;
+            
+            document.getElementById('priorAlphaDisp').textContent = alpha.toFixed(1);
+            document.getElementById('priorBetaDisp').textContent = beta.toFixed(1);
+            document.getElementById('priorMean').textContent = (alpha / (alpha + beta)).toFixed(2);
+            document.getElementById('postAlphaDisp').textContent = postAlpha.toFixed(1);
+            document.getElementById('postBetaDisp').textContent = postBeta.toFixed(1);
+            document.getElementById('postMean').textContent = (postAlpha / (postAlpha + postBeta)).toFixed(2);
+            
+            const canvas = document.getElementById('betaCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const margin = 40;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(width - margin, height - margin);
+            ctx.stroke();
+            
+            // Find max for scaling
+            let maxVal = 0;
+            for (let i = 1; i < 100; i++) {
+                const x = i / 100;
+                maxVal = Math.max(maxVal, betaPDF(x, alpha, beta), betaPDF(x, postAlpha, postBeta));
+            }
+            
+            // Draw prior
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            for (let i = 1; i < plotWidth; i++) {
+                const x = i / plotWidth;
+                const y = betaPDF(x, alpha, beta);
+                const px = margin + i;
+                const py = height - margin - (y / (maxVal * 1.2)) * plotHeight;
+                if (i === 1) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw posterior
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 1; i < plotWidth; i++) {
+                const x = i / plotWidth;
+                const y = betaPDF(x, postAlpha, postBeta);
+                const px = margin + i;
+                const py = height - margin - (y / (maxVal * 1.2)) * plotHeight;
+                if (i === 1) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            
+            // Fill posterior
+            ctx.fillStyle = 'rgba(11, 47, 160, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(margin, height - margin);
+            for (let i = 1; i < plotWidth; i++) {
+                const x = i / plotWidth;
+                const y = betaPDF(x, postAlpha, postBeta);
+                const px = margin + i;
+                const py = height - margin - (y / (maxVal * 1.2)) * plotHeight;
+                ctx.lineTo(px, py);
+            }
+            ctx.lineTo(width - margin, height - margin);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Legend
+            ctx.font = '12px Space Grotesk';
+            ctx.fillStyle = '#999';
+            ctx.fillText('Prior', margin + 10, margin + 15);
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillText('Posterior', margin + 10, margin + 30);
+        }
+
+        function betaPDF(x, a, b) {
+            if (x <= 0 || x >= 1) return 0;
+            // Use log to avoid overflow
+            const logB = logGamma(a) + logGamma(b) - logGamma(a + b);
+            return Math.exp((a - 1) * Math.log(x) + (b - 1) * Math.log(1 - x) - logB);
+        }
+
+        function logGamma(x) {
+            // Stirling approximation for log gamma
+            if (x < 0.5) {
+                return Math.log(Math.PI / Math.sin(Math.PI * x)) - logGamma(1 - x);
+            }
+            x -= 1;
+            const g = 7;
+            const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+                       771.32342877765313, -176.61502916214059, 12.507343278686905,
+                       -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+            let sum = c[0];
+            for (let i = 1; i < g + 2; i++) {
+                sum += c[i] / (x + i);
+            }
+            const t = x + g + 0.5;
+            return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(sum);
+        }
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
