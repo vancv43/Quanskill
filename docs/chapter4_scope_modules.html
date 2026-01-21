@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Variable Scope & Modules | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --scope-color: #8b5cf6;
+            --module-color: #06b6d4;
+            --random-color: #ec4899;
+            --math-color: #f59e0b;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📦';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 80px;
+            opacity: 0.15;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card.scope .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.module .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.random .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .concept-card.math .icon { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-number.scope { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.module { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.random { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .section-number.math { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .scope-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border-left: 4px solid var(--scope-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .scope-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--scope-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scope-box .label::before { content: '🔍’'; }
+
+        .module-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
+            border-left: 4px solid var(--module-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .module-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--module-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .module-box .label::before { content: '📦'; }
+
+        .random-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%);
+            border-left: 4px solid var(--random-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .random-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--random-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .random-box .label::before { content: '📝Ž²'; }
+
+        .math-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.03) 100%);
+            border-left: 4px solid var(--math-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .math-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--math-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .math-box .label::before { content: '🔍¢'; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🌍'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .code-output { color: #86efac; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .scope-diagram {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .scope-diagram-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .scope-layers {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .scope-layer {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .scope-global {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px solid var(--math-color);
+            width: 90%;
+            padding: 1.5rem;
+        }
+
+        .scope-enclosing {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 2px solid var(--module-color);
+            width: 70%;
+            margin-top: -0.5rem;
+            padding: 1.5rem;
+        }
+
+        .scope-local {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 2px solid var(--scope-color);
+            width: 50%;
+            margin-top: -0.5rem;
+            padding: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        /* Floating back button - moved to RIGHT side */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+
+        .syntax-box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--quanskill-orange);
+        }
+
+        .syntax-box .syntax-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange);
+            margin-bottom: 0.75rem;
+        }
+
+        .syntax-box code {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        .summary-box {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            margin-top: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item::before {
+            content: '🐍';
+            background: var(--quanskill-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .import-styles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .import-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .import-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: var(--module-color);
+        }
+
+        .import-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--module-color);
+        }
+
+        .import-card code {
+            display: block;
+            margin: 0.5rem 0;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .import-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 15px;
+                left: auto;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 4 Â· Scope & Modules</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Variable Scope</div>
+            <a href="#section-4-1" class="nav-link">Local Variables</a>
+            <a href="#section-4-2" class="nav-link">Global Variables</a>
+            <a href="#section-4-3" class="nav-link">LEGB Rule</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Modules</div>
+            <a href="#section-4-4" class="nav-link">Creating Modules</a>
+            <a href="#section-4-5" class="nav-link">Importing Modules</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Built-in Modules</div>
+            <a href="#section-4-6" class="nav-link">random Module</a>
+            <a href="#section-4-7" class="nav-link">math Module</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 4</span>
+                <h1>Variable Scope & Modules</h1>
+                <p class="hero-subtitle">
+                    Understand where variables live and how to organize code into reusable modules. Master the random and math modules essential for data science simulations and calculations.
+                </p>
+                <div class="hero-quote">
+                    "Well-organized code is like a well-organized toolbox: every tool has its place, and you always know where to find what you need."
+                    <br><br>- <strong>Quanskill Programming Philosophy</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts Overview -->
+        <div class="key-concepts">
+            <div class="concept-card scope">
+                <div class="icon">🔍’</div>
+                <h5>Local Scope</h5>
+                <p>Variables inside functions</p>
+            </div>
+            <div class="concept-card scope">
+                <div class="icon">🌍</div>
+                <h5>Global Scope</h5>
+                <p>Variables everywhere</p>
+            </div>
+            <div class="concept-card module">
+                <div class="icon">📦</div>
+                <h5>Modules</h5>
+                <p>Organize & reuse code</p>
+            </div>
+            <div class="concept-card module">
+                <div class="icon">🔥</div>
+                <h5>Import</h5>
+                <p>Use external code</p>
+            </div>
+            <div class="concept-card random">
+                <div class="icon">📝Ž²</div>
+                <h5>random</h5>
+                <p>Generate random data</p>
+            </div>
+            <div class="concept-card math">
+                <div class="icon">🔍¢</div>
+                <h5>math</h5>
+                <p>Mathematical functions</p>
+            </div>
+        </div>
+
+        <!-- Section 4.1: Local Variables -->
+        <section class="section" id="section-4-1">
+            <div class="section-header">
+                <span class="section-number scope">4.1</span>
+                <h2>Local Variables</h2>
+            </div>
+
+            <p>
+                In Python, where you define a variable determines where you can use it. This concept is called <strong>variable scope</strong>. Understanding scope is crucial for writing bug-free, maintainable code.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Local Variable</span>
+                <p>A <strong>local variable</strong> is declared inside a function and can only be accessed within that function. It's created when the function is called and destroyed when the function completes. Local variables are invisible to code outside the function.</p>
+            </div>
+
+            <pre><code><span class="code-keyword">def</span> <span class="code-function">calculate_sum</span>(a, b):
+    <span class="code-comment"># 'result' is a LOCAL variable</span>
+    result = a + b
+    <span class="code-function">print</span>(<span class="code-string">f"Inside function: result = {result}"</span>)
+    <span class="code-keyword">return</span> result
+
+<span class="code-comment"># Call the function</span>
+calculate_sum(<span class="code-number">10</span>, <span class="code-number">20</span>)
+
+<span class="code-comment"># This will cause an ERROR!</span>
+<span class="code-comment"># print(result)  # NameError: name 'result' is not defined</span>
+
+<span class="code-comment"># Output: Inside function: result = 30</span></code></pre>
+
+            <h3>Why Local Variables Exist Outside Functions Fails</h3>
+
+            <p>Think of a function as a private room. Local variables exist only inside that room. Once you leave (the function ends), everything in the room disappears:</p>
+
+            <pre><code><span class="code-keyword">def</span> <span class="code-function">greet</span>(name):
+    message = <span class="code-string">f"Hello, {name}!"</span>  <span class="code-comment"># local variable</span>
+    <span class="code-function">print</span>(message)
+
+greet(<span class="code-string">"Alice"</span>)      <span class="code-comment"># Works: Hello, Alice!</span>
+<span class="code-function">print</span>(message)      <span class="code-comment"># ERROR: 'message' doesn't exist here!</span></code></pre>
+
+            <div class="scope-box">
+                <span class="label">Advantages of Local Variables</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Encapsulation:</strong> Variables are protected from accidental modification</li>
+                    <li><strong>No Name Conflicts:</strong> Two functions can use the same variable name safely</li>
+                    <li><strong>Memory Efficient:</strong> Variables are deleted after function completes</li>
+                    <li><strong>Easier Debugging:</strong> Problems are isolated to specific functions</li>
+                </ul>
+            </div>
+
+            <pre><code><span class="code-comment"># Same variable name 'x' in different functions - NO conflict!</span>
+<span class="code-keyword">def</span> <span class="code-function">func_a</span>():
+    x = <span class="code-number">100</span>  <span class="code-comment"># local to func_a</span>
+    <span class="code-function">print</span>(<span class="code-string">f"func_a: x = {x}"</span>)
+
+<span class="code-keyword">def</span> <span class="code-function">func_b</span>():
+    x = <span class="code-number">200</span>  <span class="code-comment"># local to func_b</span>
+    <span class="code-function">print</span>(<span class="code-string">f"func_b: x = {x}"</span>)
+
+func_a()  <span class="code-comment"># Output: func_a: x = 100</span>
+func_b()  <span class="code-comment"># Output: func_b: x = 200</span></code></pre>
+        </section>
+
+        <!-- Section 4.2: Global Variables -->
+        <section class="section" id="section-4-2">
+            <div class="section-header">
+                <span class="section-number scope">4.2</span>
+                <h2>Global Variables</h2>
+            </div>
+
+            <p>
+                <strong>Global variables</strong> are defined outside of all functions and are accessible from anywhere in your program. They exist for the entire lifetime of the program.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Global Variable</span>
+                <p>A <strong>global variable</strong> is declared outside any function at the module level. It can be accessed (read) from anywhere in the program. To modify a global variable inside a function, you must use the <code>global</code> keyword.</p>
+            </div>
+
+            <pre><code><span class="code-comment"># Global variable - defined outside any function</span>
+company_name = <span class="code-string">"Quanskill Analytics"</span>
+
+<span class="code-keyword">def</span> <span class="code-function">print_company</span>():
+    <span class="code-comment"># Can READ global variables directly</span>
+    <span class="code-function">print</span>(<span class="code-string">f"Company: {company_name}"</span>)
+
+<span class="code-keyword">def</span> <span class="code-function">print_greeting</span>(name):
+    <span class="code-function">print</span>(<span class="code-string">f"Welcome to {company_name}, {name}!"</span>)
+
+print_company()           <span class="code-comment"># Company: Quanskill Analytics</span>
+print_greeting(<span class="code-string">"Alice"</span>)  <span class="code-comment"># Welcome to Quanskill Analytics, Alice!</span></code></pre>
+
+            <h3>The global Keyword</h3>
+
+            <p>To <strong>modify</strong> a global variable inside a function, you must declare it with the <code>global</code> keyword:</p>
+
+            <pre><code>counter = <span class="code-number">0</span>  <span class="code-comment"># Global variable</span>
+
+<span class="code-keyword">def</span> <span class="code-function">increment</span>():
+    <span class="code-keyword">global</span> counter  <span class="code-comment"># Tell Python we want the GLOBAL counter</span>
+    counter += <span class="code-number">1</span>
+    <span class="code-function">print</span>(<span class="code-string">f"Counter is now: {counter}"</span>)
+
+<span class="code-function">print</span>(<span class="code-string">f"Initial: {counter}"</span>)  <span class="code-comment"># Initial: 0</span>
+increment()                      <span class="code-comment"># Counter is now: 1</span>
+increment()                      <span class="code-comment"># Counter is now: 2</span>
+<span class="code-function">print</span>(<span class="code-string">f"Final: {counter}"</span>)    <span class="code-comment"># Final: 2</span></code></pre>
+
+            <div class="note-box">
+                <span class="label">âš  Without the global Keyword</span>
+                <p>Without <code>global</code>, Python creates a NEW local variable instead of modifying the global one:</p>
+                <pre style="margin-bottom: 0;"><code>x = <span class="code-number">100</span>  <span class="code-comment"># Global</span>
+
+<span class="code-keyword">def</span> <span class="code-function">change_x</span>():
+    x = <span class="code-number">999</span>  <span class="code-comment"># This creates a NEW local variable!</span>
+    <span class="code-function">print</span>(<span class="code-string">f"Inside: x = {x}"</span>)
+
+change_x()               <span class="code-comment"># Inside: x = 999</span>
+<span class="code-function">print</span>(<span class="code-string">f"Outside: x = {x}"</span>)  <span class="code-comment"># Outside: x = 100 (unchanged!)</span></code></pre>
+            </div>
+
+            <h3>Local vs Global: Comparison</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Local Variable</th>
+                        <th>Global Variable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Defined</strong></td><td>Inside a function</td><td>Outside all functions</td></tr>
+                    <tr><td><strong>Scope</strong></td><td>Only within the function</td><td>Entire program</td></tr>
+                    <tr><td><strong>Lifetime</strong></td><td>Function execution only</td><td>Program lifetime</td></tr>
+                    <tr><td><strong>Modification</strong></td><td>Direct</td><td>Requires <code>global</code> keyword</td></tr>
+                    <tr><td><strong>Best For</strong></td><td>Temporary calculations</td><td>Shared constants/config</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 4.3: LEGB Rule -->
+        <section class="section" id="section-4-3">
+            <div class="section-header">
+                <span class="section-number scope">4.3</span>
+                <h2>The LEGB Rule</h2>
+            </div>
+
+            <p>
+                When Python encounters a variable name, it searches for it in a specific order called the <strong>LEGB rule</strong>. Understanding this helps you predict which variable Python will use.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">LEGB Scope Resolution</span>
+                <p>Python searches for variables in this order:</p>
+                <ol style="margin-bottom: 0;">
+                    <li><strong>L</strong>ocal - Inside the current function</li>
+                    <li><strong>E</strong>nclosing - In outer/enclosing functions (for nested functions)</li>
+                    <li><strong>G</strong>lobal - At the module level (outside all functions)</li>
+                    <li><strong>B</strong>uilt-in - Python's built-in names (print, len, etc.)</li>
+                </ol>
+            </div>
+
+            <div class="scope-diagram">
+                <div class="scope-diagram-title">LEGB Scope Hierarchy</div>
+                <div class="scope-layers">
+                    <div class="scope-layer scope-global">
+                        🌍 <strong>Global Scope</strong> (Module level)
+                        <div class="scope-layer scope-enclosing">
+                            📦 <strong>Enclosing Scope</strong> (Outer function)
+                            <div class="scope-layer scope-local">
+                                🔍’ <strong>Local Scope</strong> (Inner function)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">Python searches from inside out: Local ←’ Enclosing ←’ Global ←’ Built-in</p>
+            </div>
+
+            <pre><code><span class="code-comment"># LEGB Example</span>
+x = <span class="code-string">"global"</span>  <span class="code-comment"># Global scope</span>
+
+<span class="code-keyword">def</span> <span class="code-function">outer</span>():
+    x = <span class="code-string">"enclosing"</span>  <span class="code-comment"># Enclosing scope</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">inner</span>():
+        x = <span class="code-string">"local"</span>  <span class="code-comment"># Local scope</span>
+        <span class="code-function">print</span>(<span class="code-string">f"Inner sees: {x}"</span>)
+    
+    inner()
+    <span class="code-function">print</span>(<span class="code-string">f"Outer sees: {x}"</span>)
+
+outer()
+<span class="code-function">print</span>(<span class="code-string">f"Global sees: {x}"</span>)
+
+<span class="code-comment"># Output:</span>
+<span class="code-output"># Inner sees: local</span>
+<span class="code-output"># Outer sees: enclosing</span>
+<span class="code-output"># Global sees: global</span></code></pre>
+
+            <h3>The nonlocal Keyword</h3>
+
+            <p>In nested functions, use <code>nonlocal</code> to modify a variable from an enclosing (but not global) scope:</p>
+
+            <pre><code><span class="code-keyword">def</span> <span class="code-function">outer</span>():
+    count = <span class="code-number">0</span>  <span class="code-comment"># Enclosing scope</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">inner</span>():
+        <span class="code-keyword">nonlocal</span> count  <span class="code-comment"># Modify the enclosing variable</span>
+        count += <span class="code-number">1</span>
+        <span class="code-function">print</span>(<span class="code-string">f"Count: {count}"</span>)
+    
+    inner()  <span class="code-comment"># Count: 1</span>
+    inner()  <span class="code-comment"># Count: 2</span>
+    inner()  <span class="code-comment"># Count: 3</span>
+
+outer()</code></pre>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What does this code print?<br><code>x = 10<br>def f(): x = 20<br>f()<br>print(x)</code></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">10</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">20</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Error</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">None</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Without the <code>global</code> keyword, <code>x = 20</code> creates a new local variable inside the function. The global <code>x</code> remains 10.</div>
+                <div class="quiz-feedback incorrect">Not quite. Without <code>global</code>, the assignment creates a local variable, leaving global x unchanged.</div>
+            </div>
+        </section>
+
+        <!-- Section 4.4: Creating Modules -->
+        <section class="section" id="section-4-4">
+            <div class="section-header">
+                <span class="section-number module">4.4</span>
+                <h2>Creating Python Modules</h2>
+            </div>
+
+            <p>
+                As your programs grow, organizing code becomes essential. A <strong>module</strong> is simply a Python file (<code>.py</code>) containing functions, classes, and variables that you can reuse across multiple programs.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Module</span>
+                <p>A <strong>module</strong> is a file containing Python code (functions, classes, variables) that can be imported and used in other Python programs. Modules help organize code, promote reusability, and prevent code duplication.</p>
+            </div>
+
+            <h3>Creating Your Own Module</h3>
+
+            <p>Create a file called <code>calculator.py</code>:</p>
+
+            <pre><code><span class="code-comment"># calculator.py - Our custom module</span>
+
+<span class="code-keyword">def</span> <span class="code-function">add</span>(a, b):
+    <span class="code-string">"""Return the sum of two numbers."""</span>
+    <span class="code-keyword">return</span> a + b
+
+<span class="code-keyword">def</span> <span class="code-function">subtract</span>(a, b):
+    <span class="code-string">"""Return the difference of two numbers."""</span>
+    <span class="code-keyword">return</span> a - b
+
+<span class="code-keyword">def</span> <span class="code-function">multiply</span>(a, b):
+    <span class="code-string">"""Return the product of two numbers."""</span>
+    <span class="code-keyword">return</span> a * b
+
+<span class="code-keyword">def</span> <span class="code-function">divide</span>(a, b):
+    <span class="code-string">"""Return the quotient of two numbers."""</span>
+    <span class="code-keyword">if</span> b == <span class="code-number">0</span>:
+        <span class="code-keyword">return</span> <span class="code-string">"Error: Division by zero"</span>
+    <span class="code-keyword">return</span> a / b
+
+<span class="code-comment"># Module-level constant</span>
+PI = <span class="code-number">3.14159</span></code></pre>
+
+            <div class="module-box">
+                <span class="label">Benefits of Using Modules</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Reusability:</strong> Write once, use in many programs</li>
+                    <li><strong>Organization:</strong> Group related functions together</li>
+                    <li><strong>Maintainability:</strong> Update code in one place</li>
+                    <li><strong>Namespace Management:</strong> Avoid naming conflicts</li>
+                    <li><strong>Collaboration:</strong> Different team members can work on different modules</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 4.5: Importing Modules -->
+        <section class="section" id="section-4-5">
+            <div class="section-header">
+                <span class="section-number module">4.5</span>
+                <h2>Importing Modules</h2>
+            </div>
+
+            <p>
+                Python provides several ways to import modules. Each method has its use cases depending on what you need from the module.
+            </p>
+
+            <div class="import-styles">
+                <div class="import-card">
+                    <h5>1. Import Entire Module</h5>
+                    <code>import calculator</code>
+                    <p class="desc">Access with: <code>calculator.add(5, 3)</code></p>
+                </div>
+                <div class="import-card">
+                    <h5>2. Import with Alias</h5>
+                    <code>import calculator as calc</code>
+                    <p class="desc">Access with: <code>calc.add(5, 3)</code></p>
+                </div>
+                <div class="import-card">
+                    <h5>3. Import Specific Functions</h5>
+                    <code>from calculator import add, multiply</code>
+                    <p class="desc">Access directly: <code>add(5, 3)</code></p>
+                </div>
+                <div class="import-card">
+                    <h5>4. Import Everything</h5>
+                    <code>from calculator import *</code>
+                    <p class="desc">Access all: <code>add(5, 3)</code> âš  Not recommended</p>
+                </div>
+            </div>
+
+            <h3>Examples in Practice</h3>
+
+            <pre><code><span class="code-comment"># Method 1: Import entire module</span>
+<span class="code-keyword">import</span> calculator
+
+result = calculator.add(<span class="code-number">10</span>, <span class="code-number">5</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Sum: {result}"</span>)  <span class="code-comment"># Sum: 15</span>
+
+<span class="code-comment"># Method 2: Import with alias (shorter name)</span>
+<span class="code-keyword">import</span> calculator <span class="code-keyword">as</span> calc
+
+result = calc.multiply(<span class="code-number">4</span>, <span class="code-number">7</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Product: {result}"</span>)  <span class="code-comment"># Product: 28</span>
+
+<span class="code-comment"># Method 3: Import specific functions</span>
+<span class="code-keyword">from</span> calculator <span class="code-keyword">import</span> add, subtract
+
+<span class="code-function">print</span>(add(<span class="code-number">100</span>, <span class="code-number">50</span>))       <span class="code-comment"># 150</span>
+<span class="code-function">print</span>(subtract(<span class="code-number">100</span>, <span class="code-number">50</span>))  <span class="code-comment"># 50</span></code></pre>
+
+            <div class="note-box">
+                <span class="label">Best Practice</span>
+                <p>Avoid <code>from module import *</code> because:</p>
+                <ul style="margin-bottom: 0;">
+                    <li>It can cause naming conflicts with your variables</li>
+                    <li>It makes code harder to read (unclear where functions come from)</li>
+                    <li>It imports everything, even what you don't need</li>
+                </ul>
+                <p style="margin-top: 0.5rem; margin-bottom: 0;"><strong>Preferred:</strong> <code>import module</code> or <code>from module import specific_function</code></p>
+            </div>
+        </section>
+
+        <!-- Section 4.6: random Module -->
+        <section class="section" id="section-4-6">
+            <div class="section-header">
+                <span class="section-number random">4.6</span>
+                <h2>The random Module</h2>
+            </div>
+
+            <p>
+                The <code>random</code> module generates pseudo-random numbers - essential for simulations, games, sampling, and data science applications like Monte Carlo methods.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Data Science Applications</span>
+                <p>The random module is used for: simulating experiments, shuffling data for train/test splits, bootstrapping, Monte Carlo simulations, generating synthetic datasets, and random sampling from populations.</p>
+            </div>
+
+            <h3>Core random Functions</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>randint(a, b)</code></td><td>Random integer from a to b (inclusive)</td><td><code>randint(1, 6)</code> ←’ dice roll</td></tr>
+                    <tr><td><code>random()</code></td><td>Random float from 0.0 to 1.0</td><td><code>random()</code> ←’ 0.7234...</td></tr>
+                    <tr><td><code>uniform(a, b)</code></td><td>Random float in range [a, b]</td><td><code>uniform(1.5, 5.5)</code></td></tr>
+                    <tr><td><code>choice(seq)</code></td><td>Random element from sequence</td><td><code>choice(['a','b','c'])</code></td></tr>
+                    <tr><td><code>shuffle(list)</code></td><td>Shuffle list in-place</td><td><code>shuffle(deck)</code></td></tr>
+                    <tr><td><code>sample(seq, k)</code></td><td>k unique random elements</td><td><code>sample(data, 5)</code></td></tr>
+                    <tr><td><code>randrange(start, stop, step)</code></td><td>Random from range</td><td><code>randrange(0, 100, 5)</code></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Practical Examples</h3>
+
+            <pre><code><span class="code-keyword">import</span> random
+
+<span class="code-comment"># Roll a dice</span>
+dice = random.randint(<span class="code-number">1</span>, <span class="code-number">6</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Dice roll: {dice}"</span>)
+
+<span class="code-comment"># Random choice from a list</span>
+colors = [<span class="code-string">'red'</span>, <span class="code-string">'green'</span>, <span class="code-string">'blue'</span>, <span class="code-string">'yellow'</span>]
+selected = random.choice(colors)
+<span class="code-function">print</span>(<span class="code-string">f"Selected color: {selected}"</span>)
+
+<span class="code-comment"># Shuffle a deck of cards</span>
+cards = [<span class="code-string">'A'</span>, <span class="code-string">'2'</span>, <span class="code-string">'3'</span>, <span class="code-string">'4'</span>, <span class="code-string">'5'</span>, <span class="code-string">'6'</span>, <span class="code-string">'7'</span>, <span class="code-string">'8'</span>, <span class="code-string">'9'</span>, <span class="code-string">'10'</span>, <span class="code-string">'J'</span>, <span class="code-string">'Q'</span>, <span class="code-string">'K'</span>]
+random.shuffle(cards)
+<span class="code-function">print</span>(<span class="code-string">f"Shuffled: {cards[:5]}..."</span>)
+
+<span class="code-comment"># Random sample (no duplicates)</span>
+population = <span class="code-function">list</span>(<span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">101</span>))
+sample = random.sample(population, <span class="code-number">5</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Random sample: {sample}"</span>)</code></pre>
+
+            <div class="random-box">
+                <span class="label">Data Science: Train/Test Split</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-keyword">import</span> random
+
+<span class="code-comment"># Simulating a simple train/test split</span>
+data = <span class="code-function">list</span>(<span class="code-function">range</span>(<span class="code-number">100</span>))  <span class="code-comment"># 100 data points</span>
+random.shuffle(data)
+
+split_point = <span class="code-function">int</span>(<span class="code-function">len</span>(data) * <span class="code-number">0.8</span>)  <span class="code-comment"># 80% training</span>
+train_data = data[:split_point]
+test_data = data[split_point:]
+
+<span class="code-function">print</span>(<span class="code-string">f"Training samples: {len(train_data)}"</span>)  <span class="code-comment"># 80</span>
+<span class="code-function">print</span>(<span class="code-string">f"Testing samples: {len(test_data)}"</span>)    <span class="code-comment"># 20</span></code></pre>
+            </div>
+
+            <h4>Setting a Seed for Reproducibility</h4>
+
+            <pre><code><span class="code-keyword">import</span> random
+
+<span class="code-comment"># Set seed for reproducible results</span>
+random.seed(<span class="code-number">42</span>)
+
+<span class="code-function">print</span>(random.randint(<span class="code-number">1</span>, <span class="code-number">100</span>))  <span class="code-comment"># Always: 82</span>
+<span class="code-function">print</span>(random.randint(<span class="code-number">1</span>, <span class="code-number">100</span>))  <span class="code-comment"># Always: 15</span>
+
+<span class="code-comment"># Reset seed to get same sequence</span>
+random.seed(<span class="code-number">42</span>)
+<span class="code-function">print</span>(random.randint(<span class="code-number">1</span>, <span class="code-number">100</span>))  <span class="code-comment"># Again: 82</span></code></pre>
+        </section>
+
+        <!-- Section 4.7: math Module -->
+        <section class="section" id="section-4-7">
+            <div class="section-header">
+                <span class="section-number math">4.7</span>
+                <h2>The math Module</h2>
+            </div>
+
+            <p>
+                The <code>math</code> module provides mathematical functions for scientific computing, including trigonometry, logarithms, factorials, and mathematical constants.
+            </p>
+
+            <h3>Mathematical Constants</h3>
+
+            <pre><code><span class="code-keyword">import</span> math
+
+<span class="code-function">print</span>(<span class="code-string">f"Ï€ (pi): {math.pi}"</span>)      <span class="code-comment"># 3.141592653589793</span>
+<span class="code-function">print</span>(<span class="code-string">f"e (Euler): {math.e}"</span>)    <span class="code-comment"># 2.718281828459045</span>
+<span class="code-function">print</span>(<span class="code-string">f"Ï„ (tau): {math.tau}"</span>)    <span class="code-comment"># 6.283185307179586</span>
+<span class="code-function">print</span>(<span class="code-string">f"âˆž (inf): {math.inf}"</span>)    <span class="code-comment"># inf</span></code></pre>
+
+            <h3>Numeric Functions</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>ceil(x)</code></td><td>Round up to nearest integer</td><td><code>ceil(4.2)</code> ←’ 5</td></tr>
+                    <tr><td><code>floor(x)</code></td><td>Round down to nearest integer</td><td><code>floor(4.9)</code> ←’ 4</td></tr>
+                    <tr><td><code>trunc(x)</code></td><td>Truncate decimal part</td><td><code>trunc(-4.9)</code> ←’ -4</td></tr>
+                    <tr><td><code>fabs(x)</code></td><td>Absolute value (as float)</td><td><code>fabs(-5.5)</code> ←’ 5.5</td></tr>
+                    <tr><td><code>factorial(n)</code></td><td>n! (n factorial)</td><td><code>factorial(5)</code> ←’ 120</td></tr>
+                    <tr><td><code>gcd(a, b)</code></td><td>Greatest common divisor</td><td><code>gcd(48, 18)</code> ←’ 6</td></tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-keyword">import</span> math
+
+<span class="code-comment"># Rounding functions</span>
+<span class="code-function">print</span>(math.ceil(<span class="code-number">4.2</span>))   <span class="code-comment"># 5</span>
+<span class="code-function">print</span>(math.floor(<span class="code-number">4.9</span>))  <span class="code-comment"># 4</span>
+
+<span class="code-comment"># Factorial</span>
+<span class="code-function">print</span>(math.factorial(<span class="code-number">5</span>))  <span class="code-comment"># 120 (5! = 5×4×3×2×1)</span>
+
+<span class="code-comment"># Greatest Common Divisor</span>
+<span class="code-function">print</span>(math.gcd(<span class="code-number">48</span>, <span class="code-number">18</span>))  <span class="code-comment"># 6</span></code></pre>
+
+            <h3>Power & Logarithmic Functions</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>sqrt(x)</code></td><td>Square root</td><td><code>sqrt(16)</code> ←’ 4.0</td></tr>
+                    <tr><td><code>pow(x, y)</code></td><td>x raised to power y</td><td><code>pow(2, 10)</code> ←’ 1024.0</td></tr>
+                    <tr><td><code>exp(x)</code></td><td>e raised to power x</td><td><code>exp(1)</code> ←’ 2.718...</td></tr>
+                    <tr><td><code>log(x)</code></td><td>Natural logarithm (base e)</td><td><code>log(math.e)</code> ←’ 1.0</td></tr>
+                    <tr><td><code>log10(x)</code></td><td>Logarithm base 10</td><td><code>log10(100)</code> ←’ 2.0</td></tr>
+                    <tr><td><code>log2(x)</code></td><td>Logarithm base 2</td><td><code>log2(8)</code> ←’ 3.0</td></tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-keyword">import</span> math
+
+<span class="code-comment"># Square root</span>
+<span class="code-function">print</span>(math.sqrt(<span class="code-number">144</span>))  <span class="code-comment"># 12.0</span>
+
+<span class="code-comment"># Powers</span>
+<span class="code-function">print</span>(math.pow(<span class="code-number">2</span>, <span class="code-number">8</span>))  <span class="code-comment"># 256.0</span>
+
+<span class="code-comment"># Logarithms</span>
+<span class="code-function">print</span>(math.log(<span class="code-number">100</span>))    <span class="code-comment"># 4.605... (natural log)</span>
+<span class="code-function">print</span>(math.log10(<span class="code-number">100</span>))  <span class="code-comment"># 2.0</span>
+<span class="code-function">print</span>(math.log2(<span class="code-number">8</span>))     <span class="code-comment"># 3.0</span></code></pre>
+
+            <h3>Trigonometric Functions</h3>
+
+            <pre><code><span class="code-keyword">import</span> math
+
+<span class="code-comment"># Trigonometry (angles in RADIANS)</span>
+angle = math.pi / <span class="code-number">4</span>  <span class="code-comment"># 45 degrees in radians</span>
+
+<span class="code-function">print</span>(<span class="code-string">f"sin(45Â°): {math.sin(angle):.4f}"</span>)  <span class="code-comment"># 0.7071</span>
+<span class="code-function">print</span>(<span class="code-string">f"cos(45Â°): {math.cos(angle):.4f}"</span>)  <span class="code-comment"># 0.7071</span>
+<span class="code-function">print</span>(<span class="code-string">f"tan(45Â°): {math.tan(angle):.4f}"</span>)  <span class="code-comment"># 1.0000</span>
+
+<span class="code-comment"># Convert degrees to radians and vice versa</span>
+<span class="code-function">print</span>(math.radians(<span class="code-number">180</span>))  <span class="code-comment"># 3.14159... (Ï€)</span>
+<span class="code-function">print</span>(math.degrees(math.pi))  <span class="code-comment"># 180.0</span></code></pre>
+
+            <div class="math-box">
+                <span class="label">Data Science Application: Distance Calculation</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-keyword">import</span> math
+
+<span class="code-keyword">def</span> <span class="code-function">euclidean_distance</span>(point1, point2):
+    <span class="code-string">"""Calculate distance between two points."""</span>
+    x1, y1 = point1
+    x2, y2 = point2
+    <span class="code-keyword">return</span> math.sqrt((x2 - x1)**<span class="code-number">2</span> + (y2 - y1)**<span class="code-number">2</span>)
+
+<span class="code-comment"># Calculate distance between two data points</span>
+point_a = (<span class="code-number">0</span>, <span class="code-number">0</span>)
+point_b = (<span class="code-number">3</span>, <span class="code-number">4</span>)
+
+distance = euclidean_distance(point_a, point_b)
+<span class="code-function">print</span>(<span class="code-string">f"Distance: {distance}"</span>)  <span class="code-comment"># Distance: 5.0</span></code></pre>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What is the output of <code>math.floor(-3.7)</code>?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">-3</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">-4</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">3</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">4</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! <code>floor()</code> rounds DOWN to the nearest integer. For negative numbers, -4 is less than -3.7, so floor(-3.7) = -4.</div>
+                <div class="quiz-feedback incorrect">Remember: floor() always rounds DOWN. For negatives, that means toward more negative numbers.</div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter 4 Review</h2>
+            </div>
+
+            <p>
+                You've learned how Python manages variable visibility through scope and how to organize code into reusable modules. These concepts are fundamental to writing professional, maintainable Python code.
+            </p>
+
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Local variables exist only inside functions</div>
+                    <div class="summary-item">Global variables accessible everywhere</div>
+                    <div class="summary-item">LEGB: Local ←’ Enclosing ←’ Global ←’ Built-in</div>
+                    <div class="summary-item">Modules are .py files with reusable code</div>
+                    <div class="summary-item">random for simulations and sampling</div>
+                    <div class="summary-item">math for scientific calculations</div>
+                </div>
+            </div>
+
+            <h3>Best Practices Summary</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>âœ… Do This</th>
+                        <th>âŒ Avoid This</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Variables</td>
+                        <td>Prefer local variables</td>
+                        <td>Overusing global variables</td>
+                    </tr>
+                    <tr>
+                        <td>Imports</td>
+                        <td><code>import module</code> or <code>from module import func</code></td>
+                        <td><code>from module import *</code></td>
+                    </tr>
+                    <tr>
+                        <td>Randomness</td>
+                        <td>Set <code>seed()</code> for reproducibility</td>
+                        <td>Non-reproducible experiments</td>
+                    </tr>
+                    <tr>
+                        <td>Math</td>
+                        <td>Use built-in math functions</td>
+                        <td>Reinventing sqrt, factorial, etc.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>What's Next?</h3>
+
+            <p>In <strong>Chapter 5</strong>, you'll dive into data science essentials:</p>
+
+            <ul>
+                <li><strong>NumPy:</strong> Powerful numerical arrays</li>
+                <li><strong>Pandas:</strong> Data manipulation with DataFrames</li>
+                <li><strong>Data Loading:</strong> Reading CSV, Excel, and other formats</li>
+                <li><strong>Basic Analysis:</strong> Statistics and data exploration</li>
+            </ul>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Build a Simple Statistics Module:</strong></p>
+                <ol>
+                    <li>Create a file <code>stats.py</code> with functions: <code>mean()</code>, <code>median()</code>, <code>mode()</code></li>
+                    <li>Add a function to calculate standard deviation using the <code>math</code> module</li>
+                    <li>Import your module in another file and test it</li>
+                    <li>Bonus: Add a function that generates random sample data and returns its statistics</li>
+                </ol>
+                <p>This exercise combines modules, math functions, and random sampling!</p>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

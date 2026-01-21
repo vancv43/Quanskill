@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Optimization | Mathematics for Machine Learning | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📈';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Definition Boxes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .definition-box .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Theorem/Remark Boxes */
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        /* ML Connection Boxes */
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before {
+            content: '📝¤“';
+        }
+
+        /* Quanskill Training Box */
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before {
+            content: '🎓';
+        }
+
+        /* Real World Example Boxes */
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before {
+            content: '🎯';
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before {
+            content: 'â–¸';
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Quiz Box */
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before {
+            content: '🧠';
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Math Display */
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+        }
+
+        .katex-display {
+            margin: 1rem 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .interactive-demo h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interactive-demo h4::before {
+            content: 'âš¡';
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .demo-input label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .demo-input input, .demo-input select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            width: 120px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .demo-input input:focus, .demo-input select:focus {
+            outline: none;
+            border-color: var(--quanskill-blue);
+        }
+
+        .demo-btn {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(11, 47, 160, 0.3);
+        }
+
+        .demo-btn.secondary {
+            background: var(--gradient-orange);
+        }
+
+        .demo-result {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Key Concepts Summary */
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Visualization canvas */
+        .viz-canvas {
+            width: 100%;
+            height: 350px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .progress-bar {
+                left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+            }
+
+            body {
+                font-size: 16px;
+            }
+        }
+
+        /* Scroll animations */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Algorithm box */
+        .algorithm-box {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .algorithm-box .title {
+            color: var(--quanskill-orange);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .algorithm-box .line {
+            margin: 0.25rem 0;
+            padding-left: 1rem;
+        }
+
+        .algorithm-box .keyword {
+            color: #ff79c6;
+        }
+
+        .algorithm-box .comment {
+            color: #6272a4;
+        }
+
+        .algorithm-box .var {
+            color: #8be9fd;
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(11, 47, 160, 0.02);
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 50px; border-radius: 8px;"></a>
+                <span>Quanskill</span>
+            </div>
+            <button class="nav-toggle" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Chapter 7</div>
+            <div class="chapter-title">Continuous Optimization</div>
+        </div>
+        <nav class="nav-section">
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#section-7-1" class="nav-link">Gradient Descent</a>
+            <a href="#section-7-1-1" class="nav-link" style="padding-left: 2rem;">Step-size</a>
+            <a href="#section-7-1-2" class="nav-link" style="padding-left: 2rem;">Momentum</a>
+            <a href="#section-7-1-3" class="nav-link" style="padding-left: 2rem;">Stochastic GD</a>
+            <a href="#section-7-2" class="nav-link">Constrained Optimization</a>
+            <a href="#section-7-3" class="nav-link">Convex Optimization</a>
+            <a href="#section-7-3-1" class="nav-link" style="padding-left: 2rem;">Linear Programming</a>
+            <a href="#section-7-3-2" class="nav-link" style="padding-left: 2rem;">Quadratic Programming</a>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero" id="intro">
+                <div class="hero-content">
+                    <span class="hero-badge">Quanskill ML Foundations</span>
+                    <h1>Continuous Optimization</h1>
+                    <p>The engine that powers machine learning. Every ML model learns by finding the best parameters through optimization - minimizing loss, maximizing likelihood, or finding the perfect balance between fit and complexity.</p>
+                </div>
+            </section>
+
+            <!-- Key Concepts Overview -->
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">â¬‡</div>
+                    <h5>Gradient Descent</h5>
+                    <p>Follow the negative gradient to find minimum</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🐍Æ’</div>
+                    <h5>Momentum</h5>
+                    <p>Accelerate convergence with velocity</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🐍Â </div>
+                    <h5>Stochastic GD</h5>
+                    <p>Scale to massive datasets with mini-batches</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">🐍"</div>
+                    <h5>Convex Optimization</h5>
+                    <p>Guaranteed global optimum</p>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Your Quanskill Learning Path</div>
+                <p>Optimization is how machines learn! When you train a neural network, fit a regression model, or tune any ML algorithm, you're running an optimization algorithm. At Quanskill, you'll implement gradient descent from scratch, understand why Adam works, and master the art of training deep networks!</p>
+            </div>
+
+            <!-- Section 7.1: Optimization Using Gradient Descent -->
+            <section class="section" id="section-7-1">
+                <div class="section-header">
+                    <span class="section-number">7.1</span>
+                    <h2>Optimization Using Gradient Descent</h2>
+                </div>
+
+                <p>We want to find the minimum of a function f(x) where f: â„<sup>d</sup> ←’ â„. Gradient descent is a <strong>first-order optimization algorithm</strong> that takes steps proportional to the negative gradient of the function at the current point.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Every time you train a neural network, you're running gradient descent! The "learning" in machine learning is really just optimization - finding the weights that minimize the loss function. Understanding gradient descent deeply is essential for debugging training, choosing hyperparameters, and designing new algorithms.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Algorithm</div>
+                    <div class="title">Gradient Descent Update Rule</div>
+                    <p>Starting from initial guess x<sub>0</sub>, iterate:</p>
+                    <div class="math-display">
+                        $$\mathbf{x}_{i+1} = \mathbf{x}_i - \gamma_i (\nabla f(\mathbf{x}_i))^\top$$
+                    </div>
+                    <p>where Î³<sub>i</sub> â‰¥ 0 is the <strong>step-size</strong> (learning rate). The sequence f(x<sub>0</sub>) â‰¥ f(x<sub>1</sub>) â‰¥ ... converges to a local minimum.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Intuition</div>
+                    <p>Think of a ball rolling down a hill. The gradient points "uphill" (direction of steepest ascent), so we move in the <em>negative</em> gradient direction to go downhill. The ball eventually settles in a valley (local minimum).</p>
+                </div>
+
+                <!-- Interactive: Gradient Descent Visualization -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Gradient Descent on 2D Surface</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Watch gradient descent find the minimum of f(x,y) = xÂ² + 5yÂ²:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Learning Rate Î³:</label>
+                            <input type="range" id="gdLR" min="0.01" max="0.25" step="0.01" value="0.1" oninput="updateGDDemo()">
+                        </div>
+                        <div class="demo-input">
+                            <label>Start X:</label>
+                            <input type="number" id="gdStartX" value="4" min="-5" max="5" step="0.5">
+                        </div>
+                        <div class="demo-input">
+                            <label>Start Y:</label>
+                            <input type="number" id="gdStartY" value="3" min="-5" max="5" step="0.5">
+                        </div>
+                        <button class="demo-btn" onclick="runGradientDescent()">Run GD</button>
+                        <button class="demo-btn secondary" onclick="resetGDDemo()">Reset</button>
+                    </div>
+                    <canvas id="gdCanvas" class="viz-canvas" width="600" height="350"></canvas>
+                    <div class="demo-result">
+                        <p><strong>Learning Rate:</strong> Î³ = <span id="gdLRDisplay">0.10</span></p>
+                        <p><strong>Current Position:</strong> (<span id="gdPosX">4.00</span>, <span id="gdPosY">3.00</span>)</p>
+                        <p><strong>Function Value:</strong> f(x,y) = <span id="gdFuncVal">61.00</span></p>
+                        <p><strong>Iterations:</strong> <span id="gdIter">0</span></p>
+                    </div>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Gradient Direction</div>
+                    <p class="quiz-question">Why do we move in the NEGATIVE gradient direction?</p>
+                    <div class="quiz-options" id="quiz1">
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">A) The gradient always points to the minimum</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, true)">B) The gradient points uphill, so negative gradient goes downhill</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">C) It's just a convention, either direction works</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">D) The gradient is always negative at minimums</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+            </section>
+
+            <!-- Section 7.1.1: Step-size -->
+            <section class="section" id="section-7-1-1">
+                <div class="section-header">
+                    <span class="section-number">7.1.1</span>
+                    <h2>Step-size (Learning Rate)</h2>
+                </div>
+
+                <p>Choosing the right step-size Î³ is crucial for gradient descent. Too small and convergence is painfully slow. Too large and the algorithm may overshoot, oscillate, or even diverge!</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>The learning rate is often the most important hyperparameter to tune! Learning rate schedules (decay, warmup, cyclical) and adaptive methods (Adam, RMSprop) are all about finding the right step-size. Get this wrong and your model won't train properly.</p>
+                </div>
+
+                <!-- Interactive: Learning Rate Effect -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Effect of Learning Rate</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See what happens with different learning rates on f(x) = xÂ²:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Learning Rate:</label>
+                            <select id="lrSelect" onchange="runLRDemo()">
+                                <option value="0.05">Î³ = 0.05 (Too Small)</option>
+                                <option value="0.3" selected>Î³ = 0.3 (Good)</option>
+                                <option value="0.9">Î³ = 0.9 (Too Large)</option>
+                                <option value="1.1">Î³ = 1.1 (Diverging!)</option>
+                            </select>
+                        </div>
+                        <button class="demo-btn" onclick="runLRDemo()">Run</button>
+                    </div>
+                    <canvas id="lrCanvas" class="viz-canvas" width="600" height="300"></canvas>
+                    <div class="demo-result" id="lrResult">
+                        <p>Select a learning rate and click Run to see the effect.</p>
+                    </div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Adaptive Step-size Heuristics</div>
+                    <ul>
+                        <li><strong>If f(x) increases after a step:</strong> Step-size was too large ←’ undo step, decrease Î³</li>
+                        <li><strong>If f(x) decreases:</strong> Step could have been larger ←’ try increasing Î³</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">This "undo" heuristic guarantees monotonic convergence.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Learning Rate</div>
+                    <p class="quiz-question">For f(x) = xÂ², what happens when learning rate Î³ > 1?</p>
+                    <div class="quiz-options" id="quiz2">
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">A) Faster convergence to minimum</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">B) Slower but stable convergence</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, true)">C) Oscillation and divergence (|x| grows)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">D) Convergence to a different minimum</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+            </section>
+
+            <!-- Section 7.1.2: Momentum -->
+            <section class="section" id="section-7-1-2">
+                <div class="section-header">
+                    <span class="section-number">7.1.2</span>
+                    <h2>Gradient Descent with Momentum</h2>
+                </div>
+
+                <p>Standard gradient descent can be slow in "long, thin valleys" where it zigzags between the walls. <strong>Momentum</strong> adds a "velocity" term that remembers previous gradients, smoothing out oscillations and accelerating convergence.</p>
+
+                <div class="definition-box">
+                    <div class="label">Algorithm</div>
+                    <div class="title">Gradient Descent with Momentum</div>
+                    <div class="math-display">
+                        $$\mathbf{x}_{i+1} = \mathbf{x}_i - \gamma_i (\nabla f(\mathbf{x}_i))^\top + \alpha \Delta \mathbf{x}_i$$
+                    </div>
+                    <div class="math-display">
+                        $$\Delta \mathbf{x}_i = \mathbf{x}_i - \mathbf{x}_{i-1} = \alpha \Delta \mathbf{x}_{i-1} - \gamma_{i-1} (\nabla f(\mathbf{x}_{i-1}))^\top$$
+                    </div>
+                    <p>where Î± âˆˆ [0, 1] is the <strong>momentum coefficient</strong>. Common values: Î± = 0.9 or 0.99.</p>
+                </div>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Momentum is used in virtually every deep learning optimizer! It helps escape shallow local minima, dampens oscillations in ill-conditioned problems, and speeds up training. SGD with momentum is still competitive with fancier methods like Adam on many problems.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Heavy Ball Analogy</div>
+                    <p>Imagine a heavy ball rolling down a surface. Due to its mass, it resists sudden direction changes and builds up speed in consistent directions. This is exactly what momentum does - it accumulates velocity in directions of persistent gradient.</p>
+                </div>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>Method</th>
+                        <th>Update Rule</th>
+                        <th>Pros</th>
+                        <th>Cons</th>
+                    </tr>
+                    <tr>
+                        <td>Vanilla GD</td>
+                        <td>x ← x - Î³âˆ‡f</td>
+                        <td>Simple, predictable</td>
+                        <td>Slow in narrow valleys</td>
+                    </tr>
+                    <tr>
+                        <td>Momentum</td>
+                        <td>x ← x - Î³âˆ‡f + Î±Î£"x</td>
+                        <td>Faster, smoother</td>
+                        <td>Extra hyperparameter</td>
+                    </tr>
+                    <tr>
+                        <td>Nesterov</td>
+                        <td>Look-ahead gradient</td>
+                        <td>Better convergence</td>
+                        <td>Slightly more complex</td>
+                    </tr>
+                </table>
+
+                <div class="realworld-box">
+                    <div class="label">Real-World Application</div>
+                    <p><strong>Training Deep Networks:</strong> Without momentum, training ResNets and Transformers would take much longer. The momentum term helps navigate the complex, high-dimensional loss landscapes of modern neural networks efficiently.</p>
+                </div>
+            </section>
+
+            <!-- Section 7.1.3: SGD -->
+            <section class="section" id="section-7-1-3">
+                <div class="section-header">
+                    <span class="section-number">7.1.3</span>
+                    <h2>Stochastic Gradient Descent</h2>
+                </div>
+
+                <p>Computing the full gradient over millions of training examples is expensive! <strong>Stochastic Gradient Descent (SGD)</strong> uses a random subset (mini-batch) to approximate the gradient, trading precision for speed.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>SGD is the workhorse of modern deep learning! It enables training on datasets too large to fit in memory, provides implicit regularization through noise, and often finds better minima than full-batch GD. Every major deep learning breakthrough uses some form of SGD.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Setup</div>
+                    <div class="title">Sum-of-Losses Objective</div>
+                    <p>In ML, we often minimize a sum over training examples:</p>
+                    <div class="math-display">
+                        $$\mathcal{L}(\boldsymbol{\theta}) = \sum_{n=1}^{N} L_n(\boldsymbol{\theta})$$
+                    </div>
+                    <p>Full gradient: âˆ‡L = Î£<sub>n</sub> âˆ‡L<sub>n</sub> requires computing N gradients!</p>
+                </div>
+
+                <div class="algorithm-box">
+                    <div class="title">Stochastic Gradient Descent</div>
+                    <div class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</div>
+                    <div class="line">    <span class="comment"># Shuffle training data</span></div>
+                    <div class="line">    shuffle(data)</div>
+                    <div class="line">    <span class="keyword">for</span> mini_batch <span class="keyword">in</span> get_batches(data, batch_size):</div>
+                    <div class="line">        <span class="comment"># Compute gradient on mini-batch</span></div>
+                    <div class="line">        <span class="var">grad</span> = compute_gradient(mini_batch, Î¸)</div>
+                    <div class="line">        <span class="comment"># Update parameters</span></div>
+                    <div class="line">        Î¸ = Î¸ - Î³ * <span class="var">grad</span></div>
+                </div>
+
+                <h3>Mini-batch Size Trade-offs</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Batch Size</th>
+                        <th>Gradient Quality</th>
+                        <th>Speed per Update</th>
+                        <th>Generalization</th>
+                    </tr>
+                    <tr>
+                        <td>Full batch (N)</td>
+                        <td>Exact</td>
+                        <td>Slow</td>
+                        <td>May overfit</td>
+                    </tr>
+                    <tr>
+                        <td>Large (256-4096)</td>
+                        <td>Low variance</td>
+                        <td>GPU efficient</td>
+                        <td>Good</td>
+                    </tr>
+                    <tr>
+                        <td>Small (16-64)</td>
+                        <td>High variance</td>
+                        <td>Fast per step</td>
+                        <td>Often better!</td>
+                    </tr>
+                    <tr>
+                        <td>Single (1)</td>
+                        <td>Very noisy</td>
+                        <td>Fastest per step</td>
+                        <td>Can escape local min</td>
+                    </tr>
+                </table>
+
+                <div class="theorem-box">
+                    <div class="label">Key Insight</div>
+                    <p>The noise in SGD is actually helpful! It provides <strong>implicit regularization</strong>, helping the model generalize better. The gradient only needs to be an <em>unbiased estimate</em> of the true gradient for SGD to converge.</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: SGD</div>
+                    <p class="quiz-question">Why might smaller batch sizes lead to better generalization?</p>
+                    <div class="quiz-options" id="quiz3">
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">A) They compute gradients faster</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, true)">B) The noise helps escape sharp local minima that generalize poorly</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">C) They use less memory so models can be larger</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">D) The gradients are more accurate</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Deep Learning Optimization Lab</div>
+                    <p>In <strong>Deep Learning Foundations</strong>, you'll implement SGD, momentum, and Adam from scratch. You'll experiment with learning rate schedules, understand why batch size matters, and learn to diagnose training problems through loss curves!</p>
+                </div>
+            </section>
+
+            <!-- Section 7.2: Constrained Optimization -->
+            <section class="section" id="section-7-2">
+                <div class="section-header">
+                    <span class="section-number">7.2</span>
+                    <h2>Constrained Optimization & Lagrange Multipliers</h2>
+                </div>
+
+                <p>Often we need to minimize a function subject to constraints. <strong>Lagrange multipliers</strong> convert a constrained problem into an unconstrained one by adding penalty terms for violating constraints.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Constrained optimization appears everywhere in ML: SVMs maximize margin subject to classification constraints, regularization can be viewed as constrained optimization, and many fairness constraints are inequality constraints. Understanding Lagrangians is essential!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Problem</div>
+                    <div class="title">Constrained Optimization</div>
+                    <div class="math-display">
+                        $$\min_{\mathbf{x}} f(\mathbf{x}) \quad \text{subject to} \quad g_i(\mathbf{x}) \leq 0 \quad \forall i = 1, \ldots, m$$
+                    </div>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Lagrangian</div>
+                    <p>Associate a <strong>Lagrange multiplier</strong> Î»<sub>i</sub> â‰¥ 0 with each constraint:</p>
+                    <div class="math-display">
+                        $$\mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \sum_{i=1}^{m} \lambda_i g_i(\mathbf{x}) = f(\mathbf{x}) + \boldsymbol{\lambda}^\top \mathbf{g}(\mathbf{x})$$
+                    </div>
+                    <p>The Lagrangian "relaxes" the hard constraints into soft penalties.</p>
+                </div>
+
+                <h3>Duality</h3>
+                <p>The <strong>primal problem</strong> minimizes over x with constraints. The <strong>dual problem</strong> maximizes over Î»:</p>
+
+                <div class="theorem-box">
+                    <div class="label">Weak Duality</div>
+                    <div class="math-display">
+                        $$\min_{\mathbf{x}} \max_{\boldsymbol{\lambda} \geq 0} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) \geq \max_{\boldsymbol{\lambda} \geq 0} \min_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda})$$
+                    </div>
+                    <p>The primal optimal value is always â‰¥ the dual optimal value. For convex problems, we get <strong>strong duality</strong>: they're equal!</p>
+                </div>
+
+                <div class="example-box">
+                    <div class="label">Example: Box Constraints</div>
+                    <p>Minimize f(x<sub>1</sub>, x<sub>2</sub>) = (x<sub>1</sub>-2)Â² + (x<sub>2</sub>-2)Â² subject to -1 â‰¤ x<sub>1</sub>, x<sub>2</sub> â‰¤ 1.</p>
+                    <p>Unconstrained minimum is at (2, 2), but constraints force the solution to the corner (1, 1).</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Lagrange Multipliers</div>
+                    <p class="quiz-question">What must be true about Lagrange multipliers Î»<sub>i</sub> for inequality constraints g<sub>i</sub>(x) â‰¤ 0?</p>
+                    <div class="quiz-options" id="quiz4">
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">A) They can be any real number</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, true)">B) They must be non-negative (Î»<sub>i</sub> â‰¥ 0)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">C) They must be positive (Î»<sub>i</sub> > 0)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">D) They must equal zero</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+            </section>
+
+            <!-- Section 7.3: Convex Optimization -->
+            <section class="section" id="section-7-3">
+                <div class="section-header">
+                    <span class="section-number">7.3</span>
+                    <h2>Convex Optimization</h2>
+                </div>
+
+                <p>When f(x) is convex and constraints define a convex set, we have a <strong>convex optimization problem</strong>. The magic: <em>every local minimum is a global minimum!</em> This guarantees we find the best solution.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Many ML problems are carefully designed to be convex: linear regression, logistic regression, SVMs, and LASSO. For these, we're guaranteed to find the optimal solution! Understanding convexity helps you recognize when you have this guarantee and when you don't (like in deep learning).</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Convex Set</div>
+                    <p>A set C is <strong>convex</strong> if for any x, y âˆˆ C and any Î¸ âˆˆ [0, 1]:</p>
+                    <div class="math-display">
+                        $$\theta \mathbf{x} + (1-\theta)\mathbf{y} \in C$$
+                    </div>
+                    <p>Intuition: A straight line between any two points in the set stays inside the set.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Convex Function</div>
+                    <p>A function f is <strong>convex</strong> if for any x, y and any Î¸ âˆˆ [0, 1]:</p>
+                    <div class="math-display">
+                        $$f(\theta \mathbf{x} + (1-\theta)\mathbf{y}) \leq \theta f(\mathbf{x}) + (1-\theta) f(\mathbf{y})$$
+                    </div>
+                    <p>Intuition: A straight line between any two points on the graph lies <em>above</em> the function.</p>
+                </div>
+
+                <!-- Interactive: Convex vs Non-Convex -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Convex vs Non-Convex Functions</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See the difference between convex and non-convex functions:</p>
+                    <div class="demo-controls">
+                        <div class="demo-input">
+                            <label>Function:</label>
+                            <select id="convexSelect" onchange="updateConvexDemo()">
+                                <option value="convex">f(x) = xÂ² (Convex)</option>
+                                <option value="nonconvex">f(x) = xâ´ - 2xÂ² (Non-Convex)</option>
+                                <option value="abs">f(x) = |x| (Convex, non-smooth)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <canvas id="convexCanvas" class="viz-canvas" width="600" height="300"></canvas>
+                    <div class="demo-result" id="convexResult">
+                        <p><strong>Convex:</strong> Any local minimum is a global minimum. Gradient descent is guaranteed to find the best solution.</p>
+                    </div>
+                </div>
+
+                <h3>Properties of Convex Functions</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>First-order condition</td>
+                        <td>f(y) â‰¥ f(x) + âˆ‡f(x)áµ€(y - x) - function lies above its tangent</td>
+                    </tr>
+                    <tr>
+                        <td>Second-order condition</td>
+                        <td>âˆ‡Â²f(x) âª° 0 - Hessian is positive semidefinite</td>
+                    </tr>
+                    <tr>
+                        <td>Local = Global</td>
+                        <td>Every local minimum is a global minimum</td>
+                    </tr>
+                    <tr>
+                        <td>Preserved under sum</td>
+                        <td>Î±f + Î²g is convex if f, g convex and Î±, Î² â‰¥ 0</td>
+                    </tr>
+                </table>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Convexity</div>
+                    <p class="quiz-question">Which of these functions is NOT convex?</p>
+                    <div class="quiz-options" id="quiz5">
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">A) f(x) = xÂ²</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">B) f(x) = |x|</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, true)">C) f(x) = sin(x)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">D) f(x) = eË£</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+            </section>
+
+            <!-- Section 7.3.1: Linear Programming -->
+            <section class="section" id="section-7-3-1">
+                <div class="section-header">
+                    <span class="section-number">7.3.1</span>
+                    <h2>Linear Programming</h2>
+                </div>
+
+                <p>When both the objective and constraints are <strong>linear</strong>, we have a <strong>linear program</strong>. These are among the most widely used optimization problems in industry!</p>
+
+                <div class="definition-box">
+                    <div class="label">Standard Form</div>
+                    <div class="title">Linear Program</div>
+                    <div class="math-display">
+                        $$\min_{\mathbf{x} \in \mathbb{R}^d} \mathbf{c}^\top \mathbf{x} \quad \text{subject to} \quad A\mathbf{x} \leq \mathbf{b}$$
+                    </div>
+                    <p>where A âˆˆ â„<sup>m×d</sup> and b âˆˆ â„<sup>m</sup>. The feasible region is a polyhedron.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Key Property</div>
+                    <p>The optimal solution of a linear program always occurs at a <strong>vertex</strong> (corner) of the feasible polyhedron. This makes LP's computationally tractable - we only need to check a finite number of vertices!</p>
+                </div>
+
+                <div class="realworld-box">
+                    <div class="label">Real-World Applications</div>
+                    <ul>
+                        <li><strong>Supply Chain:</strong> Minimize shipping costs subject to demand constraints</li>
+                        <li><strong>Resource Allocation:</strong> Maximize profit subject to resource limits</li>
+                        <li><strong>Scheduling:</strong> Minimize total time subject to precedence constraints</li>
+                        <li><strong>Portfolio Optimization:</strong> Maximize return subject to risk constraints</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 7.3.2: Quadratic Programming -->
+            <section class="section" id="section-7-3-2">
+                <div class="section-header">
+                    <span class="section-number">7.3.2</span>
+                    <h2>Quadratic Programming</h2>
+                </div>
+
+                <p>When the objective is <strong>quadratic</strong> (but convex!) and constraints are linear, we have a <strong>quadratic program</strong>. This includes many important ML algorithms!</p>
+
+                <div class="definition-box">
+                    <div class="label">Standard Form</div>
+                    <div class="title">Quadratic Program</div>
+                    <div class="math-display">
+                        $$\min_{\mathbf{x} \in \mathbb{R}^d} \frac{1}{2}\mathbf{x}^\top Q\mathbf{x} + \mathbf{c}^\top \mathbf{x} \quad \text{subject to} \quad A\mathbf{x} \leq \mathbf{b}$$
+                    </div>
+                    <p>where Q âˆˆ â„<sup>d×d</sup> is symmetric positive definite (ensures convexity).</p>
+                </div>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Support Vector Machines (SVMs) are solved as quadratic programs! The SVM dual problem is a QP with box constraints. Many regularized regression problems are also QPs. Understanding QP gives you insight into why SVMs work.</p>
+                </div>
+
+                <div class="example-box">
+                    <div class="label">Example: SVM as a QP</div>
+                    <p>The SVM primal problem:</p>
+                    <div class="math-display">
+                        $$\min_{\mathbf{w}} \frac{1}{2}\|\mathbf{w}\|^2 \quad \text{subject to} \quad y_n(\mathbf{w}^\top \mathbf{x}_n + b) \geq 1$$
+                    </div>
+                    <p>This is a quadratic objective (Â½||w||Â²) with linear constraints!</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: LP vs QP</div>
+                    <p class="quiz-question">What makes a quadratic program different from a linear program?</p>
+                    <div class="quiz-options" id="quiz6">
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">A) QPs have quadratic constraints</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, true)">B) QPs have a quadratic objective function</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">C) QPs have more variables</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">D) QPs are always non-convex</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill SVM & Kernel Methods Lab</div>
+                    <p>In <strong>Classical Machine Learning</strong>, you'll derive the SVM dual, implement kernel trick, and solve the QP using SMO algorithm. You'll understand why SVMs were the go-to method before deep learning and where they still excel today!</p>
+                </div>
+            </section>
+
+            <!-- Summary Section -->
+            <section class="section" id="summary">
+                <div class="section-header">
+                    <span class="section-number">🐍"</span>
+                    <h2>Chapter Summary</h2>
+                </div>
+
+                <div class="key-concepts">
+                    <div class="concept-card">
+                        <div class="icon">â¬‡</div>
+                        <h5>Gradient Descent</h5>
+                        <p>x ← x - Î³âˆ‡f(x)</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🐍Æ’</div>
+                        <h5>Momentum</h5>
+                        <p>Add velocity term Î±Î£"x</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🐍Â </div>
+                        <h5>SGD</h5>
+                        <p>Mini-batch gradient estimates</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">âš—</div>
+                        <h5>Lagrangian</h5>
+                        <p>L = f(x) + Î»áµ€g(x)</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🐍"</div>
+                        <h5>Convex</h5>
+                        <p>Local min = Global min</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">📊</div>
+                        <h5>LP/QP</h5>
+                        <p>Efficient special cases</p>
+                    </div>
+                </div>
+
+                <div class="ml-box">
+                    <div class="label">Key ML Takeaways</div>
+                    <ul>
+                        <li><strong>Learning rate</strong> is the most important hyperparameter to tune</li>
+                        <li><strong>Momentum</strong> accelerates training by smoothing gradients</li>
+                        <li><strong>SGD</strong> scales to massive datasets and provides regularization</li>
+                        <li><strong>Convex problems</strong> (linear/logistic regression, SVM) have guaranteed solutions</li>
+                        <li><strong>Deep learning</strong> is non-convex - we find good but not globally optimal solutions</li>
+                        <li><strong>Lagrange multipliers</strong> are key to understanding regularization and SVMs</li>
+                    </ul>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Your Next Steps with Quanskill</div>
+                    <p>🎯Â° <strong>Congratulations!</strong> You now understand the optimization foundations of machine learning. Here's your Quanskill path:</p>
+                    <ul>
+                        <li><strong>Chapter 8</strong>: When Models Meet Data - put everything together!</li>
+                        <li><strong>Quanskill Project</strong>: Implement SGD with momentum and learning rate decay</li>
+                        <li><strong>Advanced</strong>: Explore Adam, RMSprop, and second-order methods</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Ready to train models?</strong> Join Quanskill's hands-on bootcamps where you'll implement optimizers from scratch, diagnose training issues, and master the art of hyperparameter tuning!</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer style="text-align: center; padding: 3rem 0; color: var(--text-secondary); font-size: 0.9rem;">
+                <p><strong>Quanskill</strong> - Making ML Education Accessible</p>
+                <p style="margin-top: 1rem; font-size: 0.8rem;">© 2024 Quanskill. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Render LaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+
+            // Initialize demos
+            initGDDemo();
+            runLRDemo();
+            updateConvexDemo();
+
+            // Initialize section visibility
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => observer.observe(section));
+
+            updateProgress();
+        });
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Update active navigation link and progress
+        window.addEventListener('scroll', function() {
+            updateActiveNav();
+            updateProgress();
+        });
+
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function updateProgress() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        }
+
+        // Quiz functionality
+        function checkQuiz(quizId, element, isCorrect) {
+            const options = document.querySelectorAll(`#${quizId} .quiz-option`);
+            const feedback = document.getElementById(`${quizId}-feedback`);
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.innerHTML = 'âœ… Correct! Great understanding!';
+                feedback.className = 'quiz-feedback show correct';
+            } else {
+                element.classList.add('incorrect');
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.innerHTML = 'âŒ Not quite. The correct answer is highlighted above.';
+                feedback.className = 'quiz-feedback show incorrect';
+            }
+        }
+
+        // Gradient Descent Demo
+        let gdState = { x: 4, y: 3, path: [], running: false };
+
+        function initGDDemo() {
+            gdState = { x: 4, y: 3, path: [[4, 3]], running: false };
+            drawGDSurface();
+        }
+
+        function drawGDSurface() {
+            const canvas = document.getElementById('gdCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw contours of f(x,y) = xÂ² + 5yÂ²
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 30;
+            
+            // Draw contour lines
+            const levels = [1, 5, 10, 20, 40, 80, 120];
+            levels.forEach(level => {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(11, 47, 160, ${0.3 - level/500})`;
+                ctx.lineWidth = 1;
+                
+                for (let theta = 0; theta <= 2 * Math.PI + 0.1; theta += 0.05) {
+                    // xÂ² + 5yÂ² = level => parametric: x = sqrt(level)*cos, y = sqrt(level/5)*sin
+                    const x = Math.sqrt(level) * Math.cos(theta);
+                    const y = Math.sqrt(level / 5) * Math.sin(theta);
+                    const px = cx + x * scale;
+                    const py = cy - y * scale;
+                    
+                    if (theta === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+            });
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.stroke();
+            
+            // Draw path
+            if (gdState.path.length > 1) {
+                ctx.strokeStyle = '#ff9000';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                gdState.path.forEach((pt, i) => {
+                    const px = cx + pt[0] * scale;
+                    const py = cy - pt[1] * scale;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                });
+                ctx.stroke();
+                
+                // Draw points
+                gdState.path.forEach((pt, i) => {
+                    const px = cx + pt[0] * scale;
+                    const py = cy - pt[1] * scale;
+                    ctx.beginPath();
+                    ctx.fillStyle = i === gdState.path.length - 1 ? '#ff9000' : 'rgba(255, 144, 0, 0.5)';
+                    ctx.arc(px, py, i === gdState.path.length - 1 ? 6 : 3, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+            
+            // Draw current position
+            const px = cx + gdState.x * scale;
+            const py = cy - gdState.y * scale;
+            ctx.beginPath();
+            ctx.fillStyle = '#0b2fa0';
+            ctx.arc(px, py, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw minimum marker
+            ctx.beginPath();
+            ctx.fillStyle = '#10b981';
+            ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Labels
+            ctx.font = '12px Space Grotesk';
+            ctx.fillStyle = '#666';
+            ctx.fillText('x', width - 20, cy - 10);
+            ctx.fillText('y', cx + 10, 20);
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('min', cx + 10, cy + 20);
+        }
+
+        function updateGDDemo() {
+            document.getElementById('gdLRDisplay').textContent = 
+                parseFloat(document.getElementById('gdLR').value).toFixed(2);
+        }
+
+        function runGradientDescent() {
+            if (gdState.running) return;
+            gdState.running = true;
+            
+            const lr = parseFloat(document.getElementById('gdLR').value);
+            gdState.x = parseFloat(document.getElementById('gdStartX').value);
+            gdState.y = parseFloat(document.getElementById('gdStartY').value);
+            gdState.path = [[gdState.x, gdState.y]];
+            
+            let iter = 0;
+            const maxIter = 50;
+            
+            function step() {
+                // f(x,y) = xÂ² + 5yÂ²
+                // âˆ‡f = [2x, 10y]
+                const gradX = 2 * gdState.x;
+                const gradY = 10 * gdState.y;
+                
+                gdState.x -= lr * gradX;
+                gdState.y -= lr * gradY;
+                gdState.path.push([gdState.x, gdState.y]);
+                iter++;
+                
+                // Update display
+                document.getElementById('gdPosX').textContent = gdState.x.toFixed(2);
+                document.getElementById('gdPosY').textContent = gdState.y.toFixed(2);
+                document.getElementById('gdFuncVal').textContent = 
+                    (gdState.x * gdState.x + 5 * gdState.y * gdState.y).toFixed(2);
+                document.getElementById('gdIter').textContent = iter;
+                
+                drawGDSurface();
+                
+                const fVal = gdState.x * gdState.x + 5 * gdState.y * gdState.y;
+                if (iter < maxIter && fVal > 0.01 && Math.abs(gdState.x) < 10 && Math.abs(gdState.y) < 10) {
+                    setTimeout(step, 100);
+                } else {
+                    gdState.running = false;
+                }
+            }
+            
+            step();
+        }
+
+        function resetGDDemo() {
+            gdState.running = false;
+            gdState.x = parseFloat(document.getElementById('gdStartX').value);
+            gdState.y = parseFloat(document.getElementById('gdStartY').value);
+            gdState.path = [[gdState.x, gdState.y]];
+            
+            document.getElementById('gdPosX').textContent = gdState.x.toFixed(2);
+            document.getElementById('gdPosY').textContent = gdState.y.toFixed(2);
+            document.getElementById('gdFuncVal').textContent = 
+                (gdState.x * gdState.x + 5 * gdState.y * gdState.y).toFixed(2);
+            document.getElementById('gdIter').textContent = '0';
+            
+            drawGDSurface();
+        }
+
+        // Learning Rate Demo
+        function runLRDemo() {
+            const lr = parseFloat(document.getElementById('lrSelect').value);
+            const canvas = document.getElementById('lrCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const margin = 50;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(width - margin, height - margin);
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(margin, margin);
+            ctx.stroke();
+            
+            // Draw f(x) = xÂ²
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -5 + (i / plotWidth) * 10;
+                const y = x * x;
+                const px = margin + i;
+                const py = height - margin - (y / 25) * plotHeight;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, Math.max(margin, py));
+            }
+            ctx.stroke();
+            
+            // Simulate gradient descent
+            let x = 4;
+            const path = [x];
+            const maxIter = 20;
+            
+            for (let i = 0; i < maxIter; i++) {
+                const grad = 2 * x;
+                x = x - lr * grad;
+                path.push(x);
+                if (Math.abs(x) > 10) break;
+            }
+            
+            // Draw path
+            ctx.strokeStyle = '#ff9000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            path.forEach((x, i) => {
+                const px = margin + ((x + 5) / 10) * plotWidth;
+                const py = height - margin - (x * x / 25) * plotHeight;
+                if (i === 0) ctx.moveTo(px, Math.max(margin, py));
+                else ctx.lineTo(px, Math.max(margin, Math.min(height - margin, py)));
+            });
+            ctx.stroke();
+            
+            // Draw points
+            path.forEach((x, i) => {
+                if (Math.abs(x) <= 5) {
+                    const px = margin + ((x + 5) / 10) * plotWidth;
+                    const py = height - margin - (x * x / 25) * plotHeight;
+                    ctx.beginPath();
+                    ctx.fillStyle = i === path.length - 1 ? '#ff9000' : 'rgba(255, 144, 0, 0.5)';
+                    ctx.arc(px, Math.max(margin, py), i === path.length - 1 ? 6 : 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // Result text
+            let resultText = '';
+            const finalX = path[path.length - 1];
+            if (lr < 0.1) {
+                resultText = `<strong>Too Small (Î³ = ${lr}):</strong> Convergence is very slow. After ${path.length - 1} steps, x = ${finalX.toFixed(3)}`;
+            } else if (lr <= 0.5) {
+                resultText = `<strong>Good (Î³ = ${lr}):</strong> Steady convergence to minimum. After ${path.length - 1} steps, x = ${finalX.toFixed(3)}`;
+            } else if (lr < 1) {
+                resultText = `<strong>Large (Î³ = ${lr}):</strong> Oscillating but still converging. After ${path.length - 1} steps, x = ${finalX.toFixed(3)}`;
+            } else {
+                resultText = `<strong>Diverging! (Î³ = ${lr}):</strong> |x| is growing! The gradient update overshoots. x = ${finalX.toFixed(1)}`;
+            }
+            document.getElementById('lrResult').innerHTML = `<p>${resultText}</p>`;
+        }
+
+        // Convex Demo
+        function updateConvexDemo() {
+            const type = document.getElementById('convexSelect').value;
+            const canvas = document.getElementById('convexCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const margin = 50;
+            const plotWidth = width - 2 * margin;
+            const plotHeight = height - 2 * margin;
+            const cx = width / 2;
+            const cy = height - margin;
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin, cy);
+            ctx.lineTo(width - margin, cy);
+            ctx.moveTo(cx, margin);
+            ctx.lineTo(cx, height - margin);
+            ctx.stroke();
+            
+            let func, minPoints, resultText;
+            
+            if (type === 'convex') {
+                func = x => x * x;
+                minPoints = [[0, 0]];
+                resultText = '<strong>Convex:</strong> f(x) = xÂ² has a single global minimum at x = 0. The chord between any two points lies above the curve.';
+            } else if (type === 'nonconvex') {
+                func = x => x * x * x * x - 2 * x * x;
+                minPoints = [[-1, -1], [1, -1]];
+                resultText = '<strong>Non-Convex:</strong> f(x) = xâ´ - 2xÂ² has TWO local minima at x = Â±1 and a local maximum at x = 0. Gradient descent may get stuck!';
+            } else {
+                func = x => Math.abs(x);
+                minPoints = [[0, 0]];
+                resultText = '<strong>Convex but Non-smooth:</strong> f(x) = |x| is convex but not differentiable at x = 0. Subgradient methods are needed.';
+            }
+            
+            // Find y range
+            let yMin = Infinity, yMax = -Infinity;
+            for (let x = -2.5; x <= 2.5; x += 0.1) {
+                const y = func(x);
+                yMin = Math.min(yMin, y);
+                yMax = Math.max(yMax, y);
+            }
+            const yRange = yMax - yMin || 1;
+            
+            // Draw function
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i <= plotWidth; i++) {
+                const x = -2.5 + (i / plotWidth) * 5;
+                const y = func(x);
+                const px = margin + i;
+                const py = cy - margin - ((y - yMin) / yRange) * (plotHeight - margin);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            
+            // Draw chord for convexity illustration
+            if (type === 'convex' || type === 'abs') {
+                const x1 = -1.5, x2 = 1.5;
+                const y1 = func(x1), y2 = func(x2);
+                const px1 = margin + ((x1 + 2.5) / 5) * plotWidth;
+                const px2 = margin + ((x2 + 2.5) / 5) * plotWidth;
+                const py1 = cy - margin - ((y1 - yMin) / yRange) * (plotHeight - margin);
+                const py2 = cy - margin - ((y2 - yMin) / yRange) * (plotHeight - margin);
+                
+                ctx.strokeStyle = '#ff9000';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(px1, py1);
+                ctx.lineTo(px2, py2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Endpoints
+                ctx.fillStyle = '#ff9000';
+                ctx.beginPath();
+                ctx.arc(px1, py1, 5, 0, Math.PI * 2);
+                ctx.arc(px2, py2, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw minima
+            minPoints.forEach(pt => {
+                const px = margin + ((pt[0] + 2.5) / 5) * plotWidth;
+                const py = cy - margin - ((pt[1] - yMin) / yRange) * (plotHeight - margin);
+                ctx.beginPath();
+                ctx.fillStyle = '#10b981';
+                ctx.arc(px, py, 8, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            document.getElementById('convexResult').innerHTML = `<p>${resultText}</p>`;
+        }
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

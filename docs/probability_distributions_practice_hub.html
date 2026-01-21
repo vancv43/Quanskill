@@ -1,0 +1,2607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Probability & Distributions Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="text"] {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 140px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 280px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 60px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 6 Â· Probability & Distributions</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Probability Basics</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Sample Space</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: PMF Property</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Expected Value</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Variance</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Product Rule</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Bernoulli</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Gaussian PDF</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Bayes' Theorem</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Conditional Prob</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Covariance</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Independence</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Gaussian Params</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Sum Rule</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Beta Distribution</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Binomial</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Correlation</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Conjugate Prior</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Gaussian Conditional</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Exponential Family</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: KL Divergence</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Change of Variables</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Posterior Update</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Mixture Models</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Probability & Distributions Mastery</h1>
+                <p class="hero-subtitle">
+                    Master the mathematical language of uncertainty with 25 questions and 15 interactive labs covering probability rules, distributions, Bayes' theorem, and Gaussian models.
+                </p>
+                <div class="hero-quote">
+                    "Probability is the language of uncertainty - every ML model speaks it fluently."
+                    <br><small>- Quanskill Learning Path</small>
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Probability Rules</span>
+                    <span class="topic-tag">Bayes' Theorem</span>
+                    <span class="topic-tag">Gaussian</span>
+                    <span class="topic-tag">Bernoulli/Binomial</span>
+                    <span class="topic-tag">Beta Distribution</span>
+                    <span class="topic-tag">Conjugate Priors</span>
+                    <span class="topic-tag">Exponential Family</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover core probability concepts powering Bayesian inference and probabilistic machine learning.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Why Probability matters:</strong> Every ML model quantifies uncertainty. From Bayesian neural networks to reinforcement learning, probability is the foundation of intelligent decision-making under uncertainty.</p>
+            </div>
+
+            <!-- Lab 1: Discrete Probability Calculator -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Discrete Probability Calculator</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>P(A)</label>
+                        <input type="number" id="pA" value="0.3" step="0.1" min="0" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>P(B)</label>
+                        <input type="number" id="pB" value="0.4" step="0.1" min="0" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>P(Aâˆ©B)</label>
+                        <input type="number" id="pAB" value="0.1" step="0.05" min="0" max="1">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcProbRules()">Compute</button>
+                </div>
+                <div class="demo-output" id="probOutput">Click "Compute" for probability rules...</div>
+            </div>
+
+            <!-- Lab 2: Bayes' Theorem Calculator -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Bayes' Theorem Calculator</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>P(Disease) Prior</label>
+                        <input type="number" id="prior" value="0.01" step="0.01" min="0" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>P(+|Disease)</label>
+                        <input type="number" id="sensitivity" value="0.95" step="0.05" min="0" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>P(+|Healthy)</label>
+                        <input type="number" id="falsePos" value="0.05" step="0.01" min="0" max="1">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcBayes()">Compute Posterior</button>
+                </div>
+                <div class="demo-output" id="bayesOutput">Click "Compute Posterior" for Bayes' theorem...</div>
+            </div>
+
+            <!-- Lab 3: Bernoulli Distribution -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Bernoulli Distribution Visualizer</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Î¼ (success prob)</label>
+                        <input type="number" id="bernMu" value="0.6" step="0.1" min="0" max="1">
+                    </div>
+                    <button class="btn btn-primary" onclick="vizBernoulli()">Visualize</button>
+                </div>
+                <canvas id="bernCanvas" class="demo-canvas" style="height:150px"></canvas>
+                <div class="demo-output" id="bernOutput">Click "Visualize" for Bernoulli distribution...</div>
+            </div>
+
+            <!-- Lab 4: Binomial Distribution -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Binomial Distribution Visualizer</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>n (trials)</label>
+                        <input type="number" id="binN" value="10" step="1" min="1" max="50">
+                    </div>
+                    <div class="control-group">
+                        <label>Î¼ (success prob)</label>
+                        <input type="number" id="binMu" value="0.5" step="0.1" min="0" max="1">
+                    </div>
+                    <button class="btn btn-orange" onclick="vizBinomial()">Visualize</button>
+                </div>
+                <canvas id="binCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="binOutput">Click "Visualize" for Binomial distribution...</div>
+            </div>
+
+            <!-- Lab 5: Gaussian Distribution 1D -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Gaussian Distribution (1D)</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Î¼ (mean)</label>
+                        <input type="number" id="gaussMu" value="0" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>ÏƒÂ² (variance)</label>
+                        <input type="number" id="gaussVar" value="1" step="0.5" min="0.1">
+                    </div>
+                    <button class="btn btn-primary" onclick="vizGaussian1D()">Visualize</button>
+                </div>
+                <canvas id="gaussCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="gaussOutput">Click "Visualize" for Gaussian distribution...</div>
+            </div>
+
+            <!-- Lab 6: Beta Distribution -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Beta Distribution Visualizer</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Î±</label>
+                        <input type="number" id="betaAlpha" value="2" step="0.5" min="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>Î²</label>
+                        <input type="number" id="betaBeta" value="5" step="0.5" min="0.1">
+                    </div>
+                    <button class="btn btn-orange" onclick="vizBeta()">Visualize</button>
+                </div>
+                <canvas id="betaCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="betaOutput">Click "Visualize" for Beta distribution...</div>
+            </div>
+
+            <!-- Lab 7: Expected Value Calculator -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Expected Value & Variance Calculator</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Values (comma-sep)</label>
+                        <input type="text" id="evValues" value="1,2,3,4,5,6" style="width:150px">
+                    </div>
+                    <div class="control-group">
+                        <label>Probs (comma-sep)</label>
+                        <input type="text" id="evProbs" value="1/6,1/6,1/6,1/6,1/6,1/6" style="width:180px">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcExpectedValue()">Compute</button>
+                </div>
+                <div class="demo-output" id="evOutput">Click "Compute" for expected value and variance...</div>
+            </div>
+
+            <!-- Lab 8: Covariance Calculator -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Covariance & Correlation Calculator</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>X values</label>
+                        <input type="text" id="covX" value="1,2,3,4,5" style="width:120px">
+                    </div>
+                    <div class="control-group">
+                        <label>Y values</label>
+                        <input type="text" id="covY" value="2,4,5,4,5" style="width:120px">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcCovariance()">Compute</button>
+                </div>
+                <div class="demo-output" id="covOutput">Click "Compute" for covariance and correlation...</div>
+            </div>
+
+            <!-- Lab 9: Conditional Probability -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Conditional Probability Table</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>P(X=0,Y=0)</label>
+                        <input type="number" id="p00" value="0.1" step="0.05" min="0" max="1" style="width:80px">
+                    </div>
+                    <div class="control-group">
+                        <label>P(X=0,Y=1)</label>
+                        <input type="number" id="p01" value="0.2" step="0.05" min="0" max="1" style="width:80px">
+                    </div>
+                    <div class="control-group">
+                        <label>P(X=1,Y=0)</label>
+                        <input type="number" id="p10" value="0.3" step="0.05" min="0" max="1" style="width:80px">
+                    </div>
+                    <div class="control-group">
+                        <label>P(X=1,Y=1)</label>
+                        <input type="number" id="p11" value="0.4" step="0.05" min="0" max="1" style="width:80px">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcConditional()">Compute</button>
+                </div>
+                <div class="demo-output" id="condOutput">Click "Compute" for marginal and conditional distributions...</div>
+            </div>
+
+            <!-- Lab 10: Beta-Bernoulli Conjugate Update -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Beta-Bernoulli Conjugate Update</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Prior Î±</label>
+                        <input type="number" id="priorAlpha" value="2" step="1" min="1">
+                    </div>
+                    <div class="control-group">
+                        <label>Prior Î²</label>
+                        <input type="number" id="priorBeta" value="2" step="1" min="1">
+                    </div>
+                    <div class="control-group">
+                        <label>Successes</label>
+                        <input type="number" id="successes" value="7" step="1" min="0">
+                    </div>
+                    <div class="control-group">
+                        <label>Failures</label>
+                        <input type="number" id="failures" value="3" step="1" min="0">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcConjugate()">Update</button>
+                </div>
+                <canvas id="conjCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="conjOutput">Click "Update" for Bayesian posterior update...</div>
+            </div>
+
+            <!-- Lab 11: Gaussian Sampling -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Gaussian Sampling Visualizer</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Î¼</label>
+                        <input type="number" id="sampMu" value="0" step="1">
+                    </div>
+                    <div class="control-group">
+                        <label>Ïƒ</label>
+                        <input type="number" id="sampSigma" value="2" step="0.5" min="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label>N samples</label>
+                        <input type="number" id="sampN" value="100" step="50" min="10" max="1000">
+                    </div>
+                    <button class="btn btn-primary" onclick="vizSampling()">Sample</button>
+                </div>
+                <canvas id="sampCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="sampOutput">Click "Sample" to draw from Gaussian...</div>
+            </div>
+
+            <!-- Lab 12: Independence Checker -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Independence Checker</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>P(A)</label>
+                        <input type="number" id="indA" value="0.5" step="0.1" min="0" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>P(B)</label>
+                        <input type="number" id="indB" value="0.4" step="0.1" min="0" max="1">
+                    </div>
+                    <div class="control-group">
+                        <label>P(Aâˆ©B)</label>
+                        <input type="number" id="indAB" value="0.2" step="0.05" min="0" max="1">
+                    </div>
+                    <button class="btn btn-orange" onclick="checkIndependence()">Check</button>
+                </div>
+                <div class="demo-output" id="indOutput">Click "Check" to verify independence...</div>
+            </div>
+
+            <!-- Lab 13: Likelihood Calculator -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Likelihood Function Calculator</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Data (0/1)</label>
+                        <input type="text" id="likData" value="1,1,0,1,0,1,1,1" style="width:150px">
+                    </div>
+                    <div class="control-group">
+                        <label>Î¸ (param)</label>
+                        <input type="number" id="likTheta" value="0.7" step="0.1" min="0.01" max="0.99">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcLikelihood()">Compute</button>
+                </div>
+                <div class="demo-output" id="likOutput">Click "Compute" for likelihood...</div>
+            </div>
+
+            <!-- Lab 14: Central Limit Theorem -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Central Limit Theorem Demo</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Distribution</label>
+                        <select id="cltDist">
+                            <option value="uniform">Uniform [0,1]</option>
+                            <option value="exponential">Exponential</option>
+                            <option value="bernoulli">Bernoulli(0.3)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Sample size n</label>
+                        <select id="cltN">
+                            <option value="1">1</option>
+                            <option value="5">5</option>
+                            <option value="30" selected>30</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="demoCLT()">Simulate</button>
+                </div>
+                <canvas id="cltCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="cltOutput">Click "Simulate" for CLT demonstration...</div>
+            </div>
+
+            <!-- Lab 15: Maximum Likelihood Estimation -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Maximum Likelihood Estimation</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Data points</label>
+                        <input type="text" id="mleData" value="2.1,1.8,2.5,2.2,1.9,2.3" style="width:180px">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcMLE()">Estimate Î¼, ÏƒÂ²</button>
+                </div>
+                <canvas id="mleCanvas" class="demo-canvas" style="height:200px"></canvas>
+                <div class="demo-output" id="mleOutput">Click "Estimate" for MLE of Gaussian parameters...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: BaySoft Analytics Platform</span>
+                <p>You're building a probabilistic analytics platform at <strong>BaySoft Technologies</strong>. Understanding probability fundamentals is essential for modeling uncertainty in user behavior and making data-driven predictions.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A probability P(A) must satisfy:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) 0 â‰¤ P(A) â‰¤ 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) -1 â‰¤ P(A) â‰¤ 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) P(A) > 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) P(A) can be any real number</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The sample space Î© of rolling a fair 6-sided die is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) {1, 2, 3, 4, 5, 6}</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) {1, 2, 3}</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) [0, 6]</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) {even, odd}</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">For a valid probability mass function (PMF), the sum over all outcomes equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) The number of outcomes</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) Can be any positive number</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> A fair die: X âˆˆ {1,2,3,4,5,6} each with probability 1/6
+                </div>
+                <div class="quiz-question">The expected value E[X] is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) 3.5</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) 4</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) 6</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The variance V[X] measures:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) The spread/dispersion of X around its mean</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) The average value of X</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) The most likely value of X</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) The range of X</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The product rule states: p(x, y) = </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) p(x|y) Â· p(y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) p(x) + p(y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) p(x) Â· p(y) always</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) p(x) / p(y)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A Bernoulli distribution models:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) A single binary outcome (success/failure)</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) Continuous values on [0,1]</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) Count data</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) Time until an event</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A univariate Gaussian distribution is fully specified by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) Mean (Î¼) and variance (ÏƒÂ²)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) Mean only</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) Variance only</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) Mode and median</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: DataStream Recommendation Engine</span>
+                <p>You're developing probabilistic models at <strong>DataStream AI</strong> for personalized recommendations. Bayes' theorem and probabilistic inference power the core prediction engine.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Bayes' theorem states: p(Î¸|x) = </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) p(x|Î¸)p(Î¸) / p(x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) p(x|Î¸) + p(Î¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) p(x) Â· p(Î¸)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) p(Î¸) / p(x|Î¸)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Given:</strong> P(A) = 0.4, P(B) = 0.5, P(Aâˆ©B) = 0.2
+                </div>
+                <div class="quiz-question">P(A|B) equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) 0.4 (= 0.2/0.5)</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) 0.5</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) 0.2</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) 0.8</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Cov[X, Y] = E[XY] - E[X]E[Y]. If X and Y are independent, Cov[X,Y] = </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) E[X]E[Y]</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) V[X] + V[Y]</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Two random variables X and Y are independent if and only if:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) p(x, y) = p(x)p(y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) p(x|y) = p(y|x)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) E[XY] = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) Cov[X,Y] = 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">For a multivariate Gaussian $\mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ in $\mathbb{R}^D$, $\boldsymbol{\Sigma}$ is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) A D×D positive definite covariance matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) A D-dimensional vector</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) A scalar variance</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) Any D×D matrix</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The sum rule (marginalization) states: p(x) = </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) âˆ« p(x, y) dy (sum over y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) p(x|y) + p(y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) p(x, y) / p(y)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) p(x) Â· p(y)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Beta distribution Beta(Î±, Î²) is defined on the interval:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) [0, 1]</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) (-âˆž, âˆž)</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) [0, âˆž)</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) {0, 1}</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Binomial:</strong> n=10 trials, Î¼=0.3 success probability
+                </div>
+                <div class="quiz-question">The expected number of successes E[X] is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) 3 (= nÎ¼)</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) 0.3</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) 10</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) 7</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Correlation Ï(X,Y) is covariance normalized by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) âˆš(V[X]Â·V[Y]) (product of standard deviations)</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) V[X] + V[Y]</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) E[X]Â·E[Y]</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) max(V[X], V[Y])</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Applications (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: NeuralBay Research Lab</span>
+                <p>You're at <strong>NeuralBay Research</strong> developing Bayesian deep learning models. Conjugate priors, exponential families, and probabilistic inference are essential for uncertainty quantification in AI systems.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>Bayesian Inference:</strong> Agents update beliefs from observations</li>
+                    <li><strong>Posterior Updates:</strong> Learning from experience over time</li>
+                    <li><strong>Uncertainty Quantification:</strong> Know when to explore vs exploit</li>
+                    <li><strong>Probabilistic Planning:</strong> Decision-making under uncertainty</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The conjugate prior for the Bernoulli/Binomial likelihood is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) Beta distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) Gaussian distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) Poisson distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) Uniform distribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">For a joint Gaussian p(x,y), the conditional p(x|y) is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Also Gaussian with updated mean and covariance</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) Not necessarily Gaussian</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) Uniform</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) Same as p(x)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The exponential family form is p(x|Î¸) âˆ exp(Î¸áµ€Ï†(x)). The function Ï†(x) represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) Sufficient statistics</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Natural parameters</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Log partition function</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Prior distribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">KL divergence D_KL(p||q) measures:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) Information lost when q approximates p (asymmetric)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) Euclidean distance between distributions</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) Symmetric distance (same as D_KL(q||p))</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) Correlation between p and q</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Change of Variables:</strong> Y = g(X) where g is invertible
+                </div>
+                <div class="quiz-question">The PDF of Y involves multiplying by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) |det(dgâ»Â¹/dy)| (absolute Jacobian determinant)</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) g(x) directly</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) Nothing extra needed</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) The variance of X</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Beta-Bernoulli:</strong> Prior Beta(Î±,Î²), observe h successes in N trials
+                </div>
+                <div class="quiz-question">The posterior is Beta(Î±', Î²') where:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) Î±' = Î± + h, Î²' = Î² + (N-h)</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) Î±' = Î± Â· h, Î²' = Î² Â· (N-h)</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) Î±' = h, Î²' = N-h</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) Î±' = Î± + N, Î²' = Î² + N</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In a Gaussian Mixture Model (GMM), the mixing weights must:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Be non-negative and sum to 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) All be equal</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Be greater than 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Sum to the number of components</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An agent maintains belief p(state) over environment states
+                </div>
+                <div class="quiz-question">When the agent receives observation o, belief update uses:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Bayes' rule: p(state|o) âˆ p(o|state)p(state)</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Direct replacement: p(state) = o</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Addition: p(state) + p(o)</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) No update needed</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Bayesian ML Track:</strong> Apply probabilistic inference in practice</li>
+                    <li><strong>Agentic AI Bootcamp:</strong> Build agents that reason under uncertainty</li>
+                    <li><strong>Generative Models:</strong> VAEs, GANs, and diffusion models</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "Probability is always between 0 and 1 inclusive: 0 â‰¤ P(A) â‰¤ 1",
+            2: "The sample space contains all possible outcomes: {1,2,3,4,5,6} for a die",
+            3: "A valid PMF must sum to 1: Î£p(x) = 1",
+            4: "E[X] = (1+2+3+4+5+6)/6 = 21/6 = 3.5",
+            5: "Variance measures the expected squared deviation from the mean: V[X] = E[(X-Î¼)Â²]",
+            6: "Product rule: p(x,y) = p(x|y)p(y) = p(y|x)p(x)",
+            7: "Bernoulli models a single binary trial with probability Î¼ of success",
+            8: "A Gaussian N(Î¼,ÏƒÂ²) is fully characterized by its mean Î¼ and variance ÏƒÂ²",
+            9: "Bayes' theorem: posterior = likelihood × prior / evidence",
+            10: "P(A|B) = P(Aâˆ©B)/P(B) = 0.2/0.5 = 0.4",
+            11: "If X,Y independent: E[XY] = E[X]E[Y], so Cov[X,Y] = 0",
+            12: "Independence definition: p(x,y) = p(x)p(y) for all x,y",
+            13: "Multivariate Gaussian covariance Î£ is a D×D positive definite matrix",
+            14: "Sum rule (marginalization): p(x) = âˆ«p(x,y)dy",
+            15: "Beta(Î±,Î²) is defined on [0,1], making it ideal for modeling probabilities",
+            16: "Binomial mean: E[X] = nÎ¼ = 10 × 0.3 = 3",
+            17: "Correlation Ï = Cov[X,Y]/(Ïƒ_X Â· Ïƒ_Y) normalizes to [-1,1]",
+            18: "Beta is conjugate to Bernoulli/Binomial: prior and posterior are both Beta",
+            19: "Conditional of joint Gaussian is also Gaussian (closure property)",
+            20: "Ï†(x) are sufficient statistics that capture all information about Î¸ from data",
+            21: "KL divergence is asymmetric and measures information loss in approximation",
+            22: "Change of variables requires the Jacobian determinant for volume correction",
+            23: "Conjugate update: Î±' = Î± + successes, Î²' = Î² + failures",
+            24: "GMM weights are probabilities: non-negative and sum to 1",
+            25: "Bayesian belief update: posterior âˆ likelihood × prior (Bayes' rule)"
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Lab 1: Probability Rules
+        function calcProbRules() {
+            const pA = parseFloat(document.getElementById('pA').value);
+            const pB = parseFloat(document.getElementById('pB').value);
+            const pAB = parseFloat(document.getElementById('pAB').value);
+            
+            const pAorB = pA + pB - pAB;
+            const pAgivenB = pAB / pB;
+            const pBgivenA = pAB / pA;
+            const independent = Math.abs(pAB - pA * pB) < 0.001;
+            
+            document.getElementById('probOutput').innerHTML = 
+`Given:
+  P(A) = ${pA}
+  P(B) = ${pB}
+  P(Aâˆ©B) = ${pAB}
+
+Sum Rule (Union):
+  P(AâˆªB) = P(A) + P(B) - P(Aâˆ©B) = ${pAorB.toFixed(4)}
+
+Conditional Probabilities:
+  P(A|B) = P(Aâˆ©B)/P(B) = ${pAB}/${pB} = ${pAgivenB.toFixed(4)}
+  P(B|A) = P(Aâˆ©B)/P(A) = ${pAB}/${pA} = ${pBgivenA.toFixed(4)}
+
+Independence Check:
+  P(A)Â·P(B) = ${(pA*pB).toFixed(4)}
+  P(Aâˆ©B) = ${pAB}
+  ${independent ? 'âœ“ A and B are INDEPENDENT' : 'âœ— A and B are DEPENDENT'}`;
+        }
+
+        // Lab 2: Bayes' Theorem
+        function calcBayes() {
+            const prior = parseFloat(document.getElementById('prior').value);
+            const sensitivity = parseFloat(document.getElementById('sensitivity').value);
+            const falsePos = parseFloat(document.getElementById('falsePos').value);
+            
+            // P(Disease|+) = P(+|Disease)P(Disease) / P(+)
+            // P(+) = P(+|Disease)P(Disease) + P(+|Healthy)P(Healthy)
+            const pPositive = sensitivity * prior + falsePos * (1 - prior);
+            const posterior = (sensitivity * prior) / pPositive;
+            
+            document.getElementById('bayesOutput').innerHTML = 
+`Bayes' Theorem: P(Disease|+) = P(+|Disease)Â·P(Disease) / P(+)
+
+Given:
+  P(Disease) = ${prior} (prior/prevalence)
+  P(+|Disease) = ${sensitivity} (sensitivity/true positive rate)
+  P(+|Healthy) = ${falsePos} (false positive rate)
+
+Step 1: Calculate P(+) (total probability of positive test)
+  P(+) = P(+|Disease)Â·P(Disease) + P(+|Healthy)Â·P(Healthy)
+       = ${sensitivity}×${prior} + ${falsePos}×${1-prior}
+       = ${pPositive.toFixed(6)}
+
+Step 2: Apply Bayes' theorem
+  P(Disease|+) = (${sensitivity} × ${prior}) / ${pPositive.toFixed(6)}
+               = ${posterior.toFixed(4)} = ${(posterior*100).toFixed(2)}%
+
+Even with a positive test, probability of disease is only ${(posterior*100).toFixed(1)}%!
+This illustrates the base rate fallacy.`;
+        }
+
+        // Lab 3: Bernoulli
+        const bernCanvas = document.getElementById('bernCanvas');
+        const bernCtx = bernCanvas.getContext('2d');
+
+        function vizBernoulli() {
+            const mu = parseFloat(document.getElementById('bernMu').value);
+            
+            const w = bernCanvas.width = bernCanvas.offsetWidth;
+            const h = bernCanvas.height = bernCanvas.offsetHeight;
+            bernCtx.clearRect(0,0,w,h);
+            
+            const barWidth = 80;
+            const maxHeight = h - 60;
+            
+            // Draw P(X=0)
+            bernCtx.fillStyle = '#0b2fa0';
+            const h0 = (1 - mu) * maxHeight;
+            bernCtx.fillRect(w/3 - barWidth/2, h - 40 - h0, barWidth, h0);
+            
+            // Draw P(X=1)
+            bernCtx.fillStyle = '#ff9000';
+            const h1 = mu * maxHeight;
+            bernCtx.fillRect(2*w/3 - barWidth/2, h - 40 - h1, barWidth, h1);
+            
+            // Labels
+            bernCtx.fillStyle = '#333';
+            bernCtx.font = '14px Space Grotesk';
+            bernCtx.textAlign = 'center';
+            bernCtx.fillText('X = 0', w/3, h - 20);
+            bernCtx.fillText('X = 1', 2*w/3, h - 20);
+            bernCtx.fillText(`P = ${(1-mu).toFixed(2)}`, w/3, h - 45 - h0);
+            bernCtx.fillText(`P = ${mu.toFixed(2)}`, 2*w/3, h - 45 - h1);
+            
+            document.getElementById('bernOutput').innerHTML = 
+`Bernoulli Distribution: X ~ Bernoulli(Î¼)
+  Î¼ = ${mu}
+
+  P(X = 0) = 1 - Î¼ = ${(1-mu).toFixed(4)}
+  P(X = 1) = Î¼ = ${mu.toFixed(4)}
+
+  E[X] = Î¼ = ${mu.toFixed(4)}
+  V[X] = Î¼(1-Î¼) = ${(mu*(1-mu)).toFixed(4)}`;
+        }
+
+        // Lab 4: Binomial
+        const binCanvas = document.getElementById('binCanvas');
+        const binCtx = binCanvas.getContext('2d');
+
+        function vizBinomial() {
+            const n = parseInt(document.getElementById('binN').value);
+            const mu = parseFloat(document.getElementById('binMu').value);
+            
+            const w = binCanvas.width = binCanvas.offsetWidth;
+            const h = binCanvas.height = binCanvas.offsetHeight;
+            binCtx.clearRect(0,0,w,h);
+            
+            // Calculate binomial probabilities
+            function binomCoeff(n, k) {
+                if (k > n) return 0;
+                let result = 1;
+                for (let i = 0; i < k; i++) {
+                    result *= (n - i) / (i + 1);
+                }
+                return result;
+            }
+            
+            const probs = [];
+            let maxProb = 0;
+            for (let k = 0; k <= n; k++) {
+                const p = binomCoeff(n, k) * Math.pow(mu, k) * Math.pow(1-mu, n-k);
+                probs.push(p);
+                if (p > maxProb) maxProb = p;
+            }
+            
+            // Draw bars
+            const barWidth = Math.min(30, (w - 100) / (n + 1));
+            const startX = (w - barWidth * (n + 1)) / 2;
+            const maxHeight = h - 80;
+            
+            binCtx.fillStyle = '#0b2fa0';
+            for (let k = 0; k <= n; k++) {
+                const barH = (probs[k] / maxProb) * maxHeight;
+                binCtx.fillRect(startX + k * barWidth + 2, h - 50 - barH, barWidth - 4, barH);
+            }
+            
+            // X-axis labels (every few)
+            binCtx.fillStyle = '#333';
+            binCtx.font = '11px JetBrains Mono';
+            binCtx.textAlign = 'center';
+            const step = n <= 15 ? 1 : Math.ceil(n / 10);
+            for (let k = 0; k <= n; k += step) {
+                binCtx.fillText(k.toString(), startX + k * barWidth + barWidth/2, h - 35);
+            }
+            
+            const mean = n * mu;
+            const variance = n * mu * (1 - mu);
+            
+            document.getElementById('binOutput').innerHTML = 
+`Binomial Distribution: X ~ Binomial(n=${n}, Î¼=${mu})
+
+  P(X=k) = C(n,k) Â· Î¼áµ€ Â· (1-Î¼)â¿â»áµ€
+
+  E[X] = nÎ¼ = ${mean.toFixed(2)}
+  V[X] = nÎ¼(1-Î¼) = ${variance.toFixed(2)}
+  Ïƒ[X] = ${Math.sqrt(variance).toFixed(2)}
+
+Most likely value: k = ${probs.indexOf(Math.max(...probs))}`;
+        }
+
+        // Lab 5: Gaussian 1D
+        const gaussCanvas = document.getElementById('gaussCanvas');
+        const gaussCtx = gaussCanvas.getContext('2d');
+
+        function vizGaussian1D() {
+            const mu = parseFloat(document.getElementById('gaussMu').value);
+            const variance = parseFloat(document.getElementById('gaussVar').value);
+            const sigma = Math.sqrt(variance);
+            
+            const w = gaussCanvas.width = gaussCanvas.offsetWidth;
+            const h = gaussCanvas.height = gaussCanvas.offsetHeight;
+            gaussCtx.clearRect(0,0,w,h);
+            
+            // Gaussian PDF
+            const gaussPdf = (x) => (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+            
+            // Find max for scaling
+            const maxPdf = gaussPdf(mu);
+            
+            // Draw axes
+            gaussCtx.strokeStyle = '#94a3b8';
+            gaussCtx.lineWidth = 1;
+            gaussCtx.beginPath();
+            gaussCtx.moveTo(50, h - 40);
+            gaussCtx.lineTo(w - 20, h - 40);
+            gaussCtx.stroke();
+            
+            // Draw PDF
+            const xMin = mu - 4 * sigma;
+            const xMax = mu + 4 * sigma;
+            const scaleX = (w - 70) / (xMax - xMin);
+            const scaleY = (h - 80) / maxPdf;
+            
+            gaussCtx.strokeStyle = '#0b2fa0';
+            gaussCtx.lineWidth = 2;
+            gaussCtx.beginPath();
+            for (let px = 50; px < w - 20; px++) {
+                const x = xMin + (px - 50) / scaleX;
+                const y = gaussPdf(x);
+                const py = h - 40 - y * scaleY;
+                if (px === 50) gaussCtx.moveTo(px, py);
+                else gaussCtx.lineTo(px, py);
+            }
+            gaussCtx.stroke();
+            
+            // Mark mean
+            const muPx = 50 + (mu - xMin) * scaleX;
+            gaussCtx.strokeStyle = '#ff9000';
+            gaussCtx.setLineDash([5, 5]);
+            gaussCtx.beginPath();
+            gaussCtx.moveTo(muPx, h - 40);
+            gaussCtx.lineTo(muPx, h - 40 - maxPdf * scaleY);
+            gaussCtx.stroke();
+            gaussCtx.setLineDash([]);
+            
+            // Labels
+            gaussCtx.fillStyle = '#333';
+            gaussCtx.font = '12px Space Grotesk';
+            gaussCtx.textAlign = 'center';
+            gaussCtx.fillText(`Î¼=${mu}`, muPx, h - 25);
+            
+            document.getElementById('gaussOutput').innerHTML = 
+`Gaussian Distribution: X ~ N(Î¼=${mu}, ÏƒÂ²=${variance})
+
+  PDF: p(x) = (1/âˆš(2Ï€ÏƒÂ²)) Â· exp(-(x-Î¼)Â²/(2ÏƒÂ²))
+
+  Mean: E[X] = Î¼ = ${mu}
+  Variance: V[X] = ÏƒÂ² = ${variance}
+  Std Dev: Ïƒ = ${sigma.toFixed(4)}
+
+  68% of values within [${(mu-sigma).toFixed(2)}, ${(mu+sigma).toFixed(2)}] (Î¼Â±Ïƒ)
+  95% of values within [${(mu-2*sigma).toFixed(2)}, ${(mu+2*sigma).toFixed(2)}] (Î¼Â±2Ïƒ)`;
+        }
+
+        // Lab 6: Beta Distribution
+        const betaCanvas = document.getElementById('betaCanvas');
+        const betaCtx = betaCanvas.getContext('2d');
+
+        function vizBeta() {
+            const alpha = parseFloat(document.getElementById('betaAlpha').value);
+            const beta = parseFloat(document.getElementById('betaBeta').value);
+            
+            const w = betaCanvas.width = betaCanvas.offsetWidth;
+            const h = betaCanvas.height = betaCanvas.offsetHeight;
+            betaCtx.clearRect(0,0,w,h);
+            
+            // Beta PDF (approximate using gamma function)
+            function gammaLn(z) {
+                const c = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+                         -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+                let x = z;
+                let y = z;
+                let tmp = x + 5.5;
+                tmp -= (x + 0.5) * Math.log(tmp);
+                let ser = 1.000000000190015;
+                for (let j = 0; j < 6; j++) ser += c[j] / ++y;
+                return -tmp + Math.log(2.5066282746310005 * ser / x);
+            }
+            
+            function betaPdf(x, a, b) {
+                if (x <= 0 || x >= 1) return 0;
+                const lnB = gammaLn(a) + gammaLn(b) - gammaLn(a + b);
+                return Math.exp((a - 1) * Math.log(x) + (b - 1) * Math.log(1 - x) - lnB);
+            }
+            
+            // Find max for scaling
+            let maxPdf = 0;
+            for (let i = 1; i < 100; i++) {
+                const x = i / 100;
+                const p = betaPdf(x, alpha, beta);
+                if (p > maxPdf) maxPdf = p;
+            }
+            maxPdf = Math.min(maxPdf, 10); // Cap for visualization
+            
+            // Draw axes
+            betaCtx.strokeStyle = '#94a3b8';
+            betaCtx.lineWidth = 1;
+            betaCtx.beginPath();
+            betaCtx.moveTo(50, h - 40);
+            betaCtx.lineTo(w - 20, h - 40);
+            betaCtx.stroke();
+            
+            // Draw PDF
+            const scaleX = w - 70;
+            const scaleY = (h - 80) / maxPdf;
+            
+            betaCtx.strokeStyle = '#7c3aed';
+            betaCtx.lineWidth = 2;
+            betaCtx.beginPath();
+            for (let i = 1; i < 100; i++) {
+                const x = i / 100;
+                const px = 50 + x * scaleX;
+                const y = Math.min(betaPdf(x, alpha, beta), maxPdf);
+                const py = h - 40 - y * scaleY;
+                if (i === 1) betaCtx.moveTo(px, py);
+                else betaCtx.lineTo(px, py);
+            }
+            betaCtx.stroke();
+            
+            // Labels
+            betaCtx.fillStyle = '#333';
+            betaCtx.font = '12px Space Grotesk';
+            betaCtx.textAlign = 'center';
+            betaCtx.fillText('0', 50, h - 25);
+            betaCtx.fillText('1', w - 20, h - 25);
+            
+            const mean = alpha / (alpha + beta);
+            const variance = (alpha * beta) / ((alpha + beta) ** 2 * (alpha + beta + 1));
+            
+            document.getElementById('betaOutput').innerHTML = 
+`Beta Distribution: Î¼ ~ Beta(Î±=${alpha}, Î²=${beta})
+
+  Defined on [0, 1] - ideal for modeling probabilities!
+
+  E[Î¼] = Î±/(Î±+Î²) = ${mean.toFixed(4)}
+  V[Î¼] = Î±Î²/((Î±+Î²)Â²(Î±+Î²+1)) = ${variance.toFixed(6)}
+
+Special cases:
+  Î±=Î²=1: Uniform distribution
+  Î±=Î²>1: Symmetric, peaked at 0.5
+  Î±>Î²: Skewed toward 1
+  Î²>Î±: Skewed toward 0`;
+        }
+
+        // Lab 7: Expected Value
+        function calcExpectedValue() {
+            const valuesStr = document.getElementById('evValues').value;
+            const probsStr = document.getElementById('evProbs').value;
+            
+            const values = valuesStr.split(',').map(v => parseFloat(v.trim()));
+            const probs = probsStr.split(',').map(p => {
+                p = p.trim();
+                if (p.includes('/')) {
+                    const [num, den] = p.split('/');
+                    return parseFloat(num) / parseFloat(den);
+                }
+                return parseFloat(p);
+            });
+            
+            if (values.length !== probs.length) {
+                document.getElementById('evOutput').innerHTML = 'Error: Number of values must match number of probabilities';
+                return;
+            }
+            
+            const sumProbs = probs.reduce((a, b) => a + b, 0);
+            const mean = values.reduce((sum, v, i) => sum + v * probs[i], 0);
+            const meanSq = values.reduce((sum, v, i) => sum + v * v * probs[i], 0);
+            const variance = meanSq - mean * mean;
+            
+            document.getElementById('evOutput').innerHTML = 
+`Values: [${values.join(', ')}]
+Probabilities: [${probs.map(p => p.toFixed(4)).join(', ')}]
+
+Sum of probabilities: ${sumProbs.toFixed(4)} ${Math.abs(sumProbs - 1) < 0.001 ? 'âœ“' : '(should be 1!)'}
+
+Expected Value:
+  E[X] = Î£ xáµ€Â¢Â·p(xáµ€Â¢) = ${mean.toFixed(4)}
+
+Variance:
+  E[XÂ²] = ${meanSq.toFixed(4)}
+  V[X] = E[XÂ²] - (E[X])Â² = ${variance.toFixed(4)}
+  Ïƒ[X] = âˆšV[X] = ${Math.sqrt(variance).toFixed(4)}`;
+        }
+
+        // Lab 8: Covariance
+        function calcCovariance() {
+            const xStr = document.getElementById('covX').value;
+            const yStr = document.getElementById('covY').value;
+            
+            const x = xStr.split(',').map(v => parseFloat(v.trim()));
+            const y = yStr.split(',').map(v => parseFloat(v.trim()));
+            
+            if (x.length !== y.length) {
+                document.getElementById('covOutput').innerHTML = 'Error: X and Y must have same length';
+                return;
+            }
+            
+            const n = x.length;
+            const meanX = x.reduce((a, b) => a + b, 0) / n;
+            const meanY = y.reduce((a, b) => a + b, 0) / n;
+            
+            let cov = 0, varX = 0, varY = 0;
+            for (let i = 0; i < n; i++) {
+                cov += (x[i] - meanX) * (y[i] - meanY);
+                varX += (x[i] - meanX) ** 2;
+                varY += (y[i] - meanY) ** 2;
+            }
+            cov /= n;
+            varX /= n;
+            varY /= n;
+            
+            const corr = cov / Math.sqrt(varX * varY);
+            
+            document.getElementById('covOutput').innerHTML = 
+`X: [${x.join(', ')}]
+Y: [${y.join(', ')}]
+n = ${n}
+
+Means:
+  E[X] = ${meanX.toFixed(4)}
+  E[Y] = ${meanY.toFixed(4)}
+
+Variances:
+  V[X] = ${varX.toFixed(4)}, Ïƒ[X] = ${Math.sqrt(varX).toFixed(4)}
+  V[Y] = ${varY.toFixed(4)}, Ïƒ[Y] = ${Math.sqrt(varY).toFixed(4)}
+
+Covariance:
+  Cov[X,Y] = E[(X-Î¼â‚")(Y-Î¼áµ€Â§)] = ${cov.toFixed(4)}
+
+Correlation:
+  Ï(X,Y) = Cov[X,Y]/(ÏÆ’â‚"Ïƒáµ€Â§) = ${corr.toFixed(4)}
+  ${corr > 0.5 ? 'Strong positive' : corr > 0 ? 'Weak positive' : corr > -0.5 ? 'Weak negative' : 'Strong negative'} correlation`;
+        }
+
+        // Lab 9: Conditional Probability
+        function calcConditional() {
+            const p00 = parseFloat(document.getElementById('p00').value);
+            const p01 = parseFloat(document.getElementById('p01').value);
+            const p10 = parseFloat(document.getElementById('p10').value);
+            const p11 = parseFloat(document.getElementById('p11').value);
+            
+            const total = p00 + p01 + p10 + p11;
+            const pX0 = p00 + p01;
+            const pX1 = p10 + p11;
+            const pY0 = p00 + p10;
+            const pY1 = p01 + p11;
+            
+            document.getElementById('condOutput').innerHTML = 
+`Joint Distribution P(X,Y):
+        Y=0     Y=1
+  X=0   ${p00.toFixed(2)}    ${p01.toFixed(2)}    | P(X=0) = ${pX0.toFixed(2)}
+  X=1   ${p10.toFixed(2)}    ${p11.toFixed(2)}    | P(X=1) = ${pX1.toFixed(2)}
+        ----    ----
+P(Y)    ${pY0.toFixed(2)}    ${pY1.toFixed(2)}    Total = ${total.toFixed(2)}
+
+Marginal Distributions (Sum Rule):
+  P(X=0) = ${pX0.toFixed(4)}, P(X=1) = ${pX1.toFixed(4)}
+  P(Y=0) = ${pY0.toFixed(4)}, P(Y=1) = ${pY1.toFixed(4)}
+
+Conditional Distributions:
+  P(X=0|Y=0) = ${(p00/pY0).toFixed(4)}, P(X=1|Y=0) = ${(p10/pY0).toFixed(4)}
+  P(X=0|Y=1) = ${(p01/pY1).toFixed(4)}, P(X=1|Y=1) = ${(p11/pY1).toFixed(4)}
+  P(Y=0|X=0) = ${(p00/pX0).toFixed(4)}, P(Y=1|X=0) = ${(p01/pX0).toFixed(4)}
+  P(Y=0|X=1) = ${(p10/pX1).toFixed(4)}, P(Y=1|X=1) = ${(p11/pX1).toFixed(4)}`;
+        }
+
+        // Lab 10: Beta-Bernoulli Conjugate
+        const conjCanvas = document.getElementById('conjCanvas');
+        const conjCtx = conjCanvas.getContext('2d');
+
+        function calcConjugate() {
+            const alpha = parseFloat(document.getElementById('priorAlpha').value);
+            const beta = parseFloat(document.getElementById('priorBeta').value);
+            const h = parseInt(document.getElementById('successes').value);
+            const f = parseInt(document.getElementById('failures').value);
+            
+            const alphaPrime = alpha + h;
+            const betaPrime = beta + f;
+            
+            // Draw both distributions
+            const w = conjCanvas.width = conjCanvas.offsetWidth;
+            const ht = conjCanvas.height = conjCanvas.offsetHeight;
+            conjCtx.clearRect(0,0,w,ht);
+            
+            function gammaLn(z) {
+                const c = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+                         -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+                let x = z, y = z;
+                let tmp = x + 5.5;
+                tmp -= (x + 0.5) * Math.log(tmp);
+                let ser = 1.000000000190015;
+                for (let j = 0; j < 6; j++) ser += c[j] / ++y;
+                return -tmp + Math.log(2.5066282746310005 * ser / x);
+            }
+            
+            function betaPdf(x, a, b) {
+                if (x <= 0 || x >= 1) return 0;
+                const lnB = gammaLn(a) + gammaLn(b) - gammaLn(a + b);
+                return Math.exp((a - 1) * Math.log(x) + (b - 1) * Math.log(1 - x) - lnB);
+            }
+            
+            let maxPdf = 0;
+            for (let i = 1; i < 100; i++) {
+                const x = i / 100;
+                maxPdf = Math.max(maxPdf, betaPdf(x, alpha, beta), betaPdf(x, alphaPrime, betaPrime));
+            }
+            maxPdf = Math.min(maxPdf, 10);
+            
+            const scaleX = w - 70;
+            const scaleY = (ht - 80) / maxPdf;
+            
+            // Prior
+            conjCtx.strokeStyle = '#0b2fa0';
+            conjCtx.lineWidth = 2;
+            conjCtx.beginPath();
+            for (let i = 1; i < 100; i++) {
+                const x = i / 100;
+                const px = 50 + x * scaleX;
+                const y = Math.min(betaPdf(x, alpha, beta), maxPdf);
+                const py = ht - 40 - y * scaleY;
+                if (i === 1) conjCtx.moveTo(px, py);
+                else conjCtx.lineTo(px, py);
+            }
+            conjCtx.stroke();
+            
+            // Posterior
+            conjCtx.strokeStyle = '#ff9000';
+            conjCtx.lineWidth = 2;
+            conjCtx.beginPath();
+            for (let i = 1; i < 100; i++) {
+                const x = i / 100;
+                const px = 50 + x * scaleX;
+                const y = Math.min(betaPdf(x, alphaPrime, betaPrime), maxPdf);
+                const py = ht - 40 - y * scaleY;
+                if (i === 1) conjCtx.moveTo(px, py);
+                else conjCtx.lineTo(px, py);
+            }
+            conjCtx.stroke();
+            
+            // Legend
+            conjCtx.fillStyle = '#0b2fa0';
+            conjCtx.fillRect(w - 120, 20, 15, 15);
+            conjCtx.fillStyle = '#ff9000';
+            conjCtx.fillRect(w - 120, 40, 15, 15);
+            conjCtx.fillStyle = '#333';
+            conjCtx.font = '12px Space Grotesk';
+            conjCtx.textAlign = 'left';
+            conjCtx.fillText('Prior', w - 100, 32);
+            conjCtx.fillText('Posterior', w - 100, 52);
+            
+            const priorMean = alpha / (alpha + beta);
+            const postMean = alphaPrime / (alphaPrime + betaPrime);
+            const mle = h / (h + f);
+            
+            document.getElementById('conjOutput').innerHTML = 
+`Beta-Bernoulli Conjugate Update
+
+Prior: Beta(Î±=${alpha}, Î²=${beta})
+  E[Î¼] = ${priorMean.toFixed(4)}
+
+Data: ${h} successes, ${f} failures (N=${h+f})
+  MLE: Î¼_MLE = ${h}/${h+f} = ${mle.toFixed(4)}
+
+Posterior: Beta(Î±'=${alphaPrime}, Î²'=${betaPrime})
+  Î±' = Î± + h = ${alpha} + ${h} = ${alphaPrime}
+  Î²' = Î² + (N-h) = ${beta} + ${f} = ${betaPrime}
+  E[Î¼|data] = ${postMean.toFixed(4)}
+
+Posterior mean is between prior mean and MLE!`;
+        }
+
+        // Lab 11: Gaussian Sampling
+        const sampCanvas = document.getElementById('sampCanvas');
+        const sampCtx = sampCanvas.getContext('2d');
+
+        function vizSampling() {
+            const mu = parseFloat(document.getElementById('sampMu').value);
+            const sigma = parseFloat(document.getElementById('sampSigma').value);
+            const n = parseInt(document.getElementById('sampN').value);
+            
+            // Box-Muller transform for Gaussian samples
+            function randn() {
+                let u1 = Math.random(), u2 = Math.random();
+                return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            }
+            
+            const samples = [];
+            for (let i = 0; i < n; i++) {
+                samples.push(mu + sigma * randn());
+            }
+            
+            // Compute sample statistics
+            const sampleMean = samples.reduce((a, b) => a + b, 0) / n;
+            const sampleVar = samples.reduce((s, x) => s + (x - sampleMean) ** 2, 0) / n;
+            
+            // Draw histogram
+            const w = sampCanvas.width = sampCanvas.offsetWidth;
+            const h = sampCanvas.height = sampCanvas.offsetHeight;
+            sampCtx.clearRect(0,0,w,h);
+            
+            const bins = 20;
+            const minX = mu - 4 * sigma;
+            const maxX = mu + 4 * sigma;
+            const binWidth = (maxX - minX) / bins;
+            const counts = new Array(bins).fill(0);
+            
+            samples.forEach(x => {
+                const bin = Math.floor((x - minX) / binWidth);
+                if (bin >= 0 && bin < bins) counts[bin]++;
+            });
+            
+            const maxCount = Math.max(...counts);
+            const barW = (w - 70) / bins;
+            const scaleY = (h - 80) / maxCount;
+            
+            sampCtx.fillStyle = '#0b2fa0';
+            for (let i = 0; i < bins; i++) {
+                const barH = counts[i] * scaleY;
+                sampCtx.fillRect(50 + i * barW + 1, h - 40 - barH, barW - 2, barH);
+            }
+            
+            // Draw theoretical PDF
+            const gaussPdf = (x) => (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+            const scale = maxCount * binWidth;
+            
+            sampCtx.strokeStyle = '#ff9000';
+            sampCtx.lineWidth = 2;
+            sampCtx.beginPath();
+            for (let px = 50; px < w - 20; px++) {
+                const x = minX + (px - 50) / (w - 70) * (maxX - minX);
+                const y = gaussPdf(x) * scale * scaleY;
+                const py = h - 40 - y;
+                if (px === 50) sampCtx.moveTo(px, py);
+                else sampCtx.lineTo(px, py);
+            }
+            sampCtx.stroke();
+            
+            document.getElementById('sampOutput').innerHTML = 
+`Generated ${n} samples from N(Î¼=${mu}, Ïƒ=${sigma})
+
+Sample Statistics:
+  Sample mean: ${sampleMean.toFixed(4)} (true: ${mu})
+  Sample std: ${Math.sqrt(sampleVar).toFixed(4)} (true: ${sigma})
+
+Blue bars: histogram of samples
+Orange line: true Gaussian PDF`;
+        }
+
+        // Lab 12: Independence Checker
+        function checkIndependence() {
+            const pA = parseFloat(document.getElementById('indA').value);
+            const pB = parseFloat(document.getElementById('indB').value);
+            const pAB = parseFloat(document.getElementById('indAB').value);
+            
+            const product = pA * pB;
+            const diff = Math.abs(pAB - product);
+            const independent = diff < 0.001;
+            
+            document.getElementById('indOutput').innerHTML = 
+`Independence Check: A âŠ¥âŠ¥ B iff P(Aâˆ©B) = P(A)Â·P(B)
+
+Given:
+  P(A) = ${pA}
+  P(B) = ${pB}
+  P(Aâˆ©B) = ${pAB}
+
+Check:
+  P(A)Â·P(B) = ${pA} × ${pB} = ${product.toFixed(4)}
+  P(Aâˆ©B) = ${pAB}
+  |Difference| = ${diff.toFixed(6)}
+
+Result: ${independent ? 'âœ“ A and B are INDEPENDENT' : 'âœ— A and B are DEPENDENT'}
+
+${!independent ? `Note: If independent, P(Aâˆ©B) should be ${product.toFixed(4)}` : ''}`;
+        }
+
+        // Lab 13: Likelihood
+        function calcLikelihood() {
+            const dataStr = document.getElementById('likData').value;
+            const theta = parseFloat(document.getElementById('likTheta').value);
+            
+            const data = dataStr.split(',').map(v => parseInt(v.trim()));
+            const n = data.length;
+            const successes = data.filter(x => x === 1).length;
+            const failures = n - successes;
+            
+            const likelihood = Math.pow(theta, successes) * Math.pow(1 - theta, failures);
+            const logLik = successes * Math.log(theta) + failures * Math.log(1 - theta);
+            const mle = successes / n;
+            
+            document.getElementById('likOutput').innerHTML = 
+`Data: [${data.join(', ')}]
+n = ${n}, successes = ${successes}, failures = ${failures}
+
+Bernoulli Likelihood: L(Î¸|data) = Î¸Ê°(1-Î¸)â¿â»â°
+
+At Î¸ = ${theta}:
+  L(${theta}) = ${theta}^${successes} × ${(1-theta).toFixed(2)}^${failures}
+             = ${likelihood.toExponential(4)}
+  
+  log L(${theta}) = ${logLik.toFixed(4)}
+
+Maximum Likelihood Estimate:
+  Î¸_MLE = h/n = ${successes}/${n} = ${mle.toFixed(4)}
+  
+  L(Î¸_MLE) = ${Math.pow(mle, successes) * Math.pow(1-mle, failures).toExponential(4)}`;
+        }
+
+        // Lab 14: Central Limit Theorem
+        const cltCanvas = document.getElementById('cltCanvas');
+        const cltCtx = cltCanvas.getContext('2d');
+
+        function demoCLT() {
+            const dist = document.getElementById('cltDist').value;
+            const n = parseInt(document.getElementById('cltN').value);
+            
+            // Generate sample means
+            const numMeans = 1000;
+            const means = [];
+            
+            function sampleOne() {
+                if (dist === 'uniform') return Math.random();
+                if (dist === 'exponential') return -Math.log(Math.random());
+                if (dist === 'bernoulli') return Math.random() < 0.3 ? 1 : 0;
+            }
+            
+            for (let i = 0; i < numMeans; i++) {
+                let sum = 0;
+                for (let j = 0; j < n; j++) sum += sampleOne();
+                means.push(sum / n);
+            }
+            
+            // Draw histogram
+            const w = cltCanvas.width = cltCanvas.offsetWidth;
+            const h = cltCanvas.height = cltCanvas.offsetHeight;
+            cltCtx.clearRect(0,0,w,h);
+            
+            const minX = Math.min(...means);
+            const maxX = Math.max(...means);
+            const bins = 30;
+            const binWidth = (maxX - minX) / bins;
+            const counts = new Array(bins).fill(0);
+            
+            means.forEach(x => {
+                const bin = Math.floor((x - minX) / binWidth);
+                if (bin >= 0 && bin < bins) counts[bin]++;
+            });
+            
+            const maxCount = Math.max(...counts);
+            const barW = (w - 70) / bins;
+            const scaleY = (h - 80) / maxCount;
+            
+            cltCtx.fillStyle = '#7c3aed';
+            for (let i = 0; i < bins; i++) {
+                const barH = counts[i] * scaleY;
+                cltCtx.fillRect(50 + i * barW + 1, h - 40 - barH, barW - 2, barH);
+            }
+            
+            const sampleMean = means.reduce((a, b) => a + b, 0) / numMeans;
+            const sampleStd = Math.sqrt(means.reduce((s, x) => s + (x - sampleMean) ** 2, 0) / numMeans);
+            
+            document.getElementById('cltOutput').innerHTML = 
+`Central Limit Theorem Demonstration
+
+Distribution: ${dist}
+Sample size n: ${n}
+Number of sample means: ${numMeans}
+
+Sample mean of means: ${sampleMean.toFixed(4)}
+Sample std of means: ${sampleStd.toFixed(4)}
+
+CLT says: As n ←’ âˆž, the distribution of sample means
+approaches N(Î¼, ÏƒÂ²/n) regardless of original distribution!
+
+${n >= 30 ? 'âœ“ With n='+n+', the histogram looks approximately Gaussian!' : 'âš  Try n=30 or higher for better Gaussian approximation'}`;
+        }
+
+        // Lab 15: MLE
+        const mleCanvas = document.getElementById('mleCanvas');
+        const mleCtx = mleCanvas.getContext('2d');
+
+        function calcMLE() {
+            const dataStr = document.getElementById('mleData').value;
+            const data = dataStr.split(',').map(v => parseFloat(v.trim()));
+            const n = data.length;
+            
+            // MLE for Gaussian: Î¼ = sample mean, ÏƒÂ² = sample variance
+            const muMLE = data.reduce((a, b) => a + b, 0) / n;
+            const varMLE = data.reduce((s, x) => s + (x - muMLE) ** 2, 0) / n;
+            const sigmaMLE = Math.sqrt(varMLE);
+            
+            // Draw
+            const w = mleCanvas.width = mleCanvas.offsetWidth;
+            const h = mleCanvas.height = mleCanvas.offsetHeight;
+            mleCtx.clearRect(0,0,w,h);
+            
+            const minX = muMLE - 4 * sigmaMLE;
+            const maxX = muMLE + 4 * sigmaMLE;
+            const scaleX = (w - 70) / (maxX - minX);
+            
+            // PDF
+            const gaussPdf = (x) => (1 / (sigmaMLE * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - muMLE) / sigmaMLE, 2));
+            const maxPdf = gaussPdf(muMLE);
+            const scaleY = (h - 80) / maxPdf;
+            
+            mleCtx.strokeStyle = '#0b2fa0';
+            mleCtx.lineWidth = 2;
+            mleCtx.beginPath();
+            for (let px = 50; px < w - 20; px++) {
+                const x = minX + (px - 50) / scaleX;
+                const y = gaussPdf(x);
+                const py = h - 40 - y * scaleY;
+                if (px === 50) mleCtx.moveTo(px, py);
+                else mleCtx.lineTo(px, py);
+            }
+            mleCtx.stroke();
+            
+            // Data points
+            mleCtx.fillStyle = '#ff9000';
+            data.forEach(x => {
+                const px = 50 + (x - minX) * scaleX;
+                mleCtx.beginPath();
+                mleCtx.arc(px, h - 40, 5, 0, Math.PI * 2);
+                mleCtx.fill();
+            });
+            
+            document.getElementById('mleOutput').innerHTML = 
+`Maximum Likelihood Estimation for Gaussian
+
+Data: [${data.join(', ')}]
+n = ${n}
+
+MLE Estimates:
+  Î¼_MLE = (1/n)Î£xáµ€Â¢ = ${muMLE.toFixed(4)}
+  ÏƒÂ²_MLE = (1/n)Î£(xáµ€Â¢-Î¼)Â² = ${varMLE.toFixed(4)}
+  Ïƒ_MLE = ${sigmaMLE.toFixed(4)}
+
+The MLE maximizes L(Î¼,ÏƒÂ²|data) = âˆáµ€Â¢ N(xáµ€Â¢|Î¼,ÏƒÂ²)
+
+Orange dots: data points
+Blue curve: fitted Gaussian N(${muMLE.toFixed(2)}, ${varMLE.toFixed(2)})`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

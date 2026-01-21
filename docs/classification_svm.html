@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 12: Classification with SVMs | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 850px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before { content: '📝¤“'; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before { content: 'â–¸'; color: var(--quanskill-orange); }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🎯'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--code-bg);
+            border-radius: 8px;
+        }
+
+        .katex-display { margin: 1rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="range"] {
+            width: 150px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--quanskill-blue);
+            cursor: pointer;
+        }
+
+        .control-group button {
+            padding: 0.5rem 1rem;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .control-group button:hover { background: var(--quanskill-blue-dark); }
+
+        .demo-canvas {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-item {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .result-item .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .result-item .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .result-item .label::before { content: none; }
+
+        .algorithm-box {
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .algorithm-box h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-orange);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .algorithm-box ol { margin-left: 1.5rem; }
+
+        .algorithm-box li {
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 12 Â· Classification</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Core Concepts</div>
+            <a href="#section-12-1" class="nav-link">Separating Hyperplanes</a>
+            <a href="#section-12-2" class="nav-link">The Margin</a>
+            <a href="#section-12-3" class="nav-link">Soft Margin SVM</a>
+            <a href="#section-12-4" class="nav-link">Kernel Trick</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 12</span>
+                <h1>Classification with Support Vector Machines</h1>
+                <p class="hero-subtitle">
+                    Master the geometric approach to classification. Find the optimal hyperplane that maximizes the margin between classes using SVMs.
+                </p>
+                <div class="hero-quote">
+                    "The SVM doesn't just find any boundary - it finds the one with the widest safety margin, making it robust to new data."
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts -->
+        <div class="key-concepts">
+            <div class="concept-card">
+                <div class="icon">🐍"</div>
+                <h5>Hyperplanes</h5>
+                <p>Linear decision boundaries in feature space</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">←”</div>
+                <h5>Maximum Margin</h5>
+                <p>Widest gap between classes</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🐍"Å’Ã‚</div>
+                <h5>Support Vectors</h5>
+                <p>Critical points that define the boundary</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🔍§</div>
+                <h5>Soft Margin</h5>
+                <p>Allow some misclassifications</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">🔍®</div>
+                <h5>Kernel Trick</h5>
+                <p>Nonlinear boundaries via feature maps</p>
+            </div>
+            <div class="concept-card">
+                <div class="icon">âš—</div>
+                <h5>Dual Problem</h5>
+                <p>Optimization via Lagrange multipliers</p>
+            </div>
+        </div>
+
+        <!-- Section 12.1: Separating Hyperplanes -->
+        <section class="section" id="section-12-1">
+            <div class="section-header">
+                <span class="section-number">12.1</span>
+                <h2>Separating Hyperplanes</h2>
+            </div>
+
+            <p>
+                In <strong>binary classification</strong>, we have data points $\mathbf{x}_n \in \mathbb{R}^D$ with labels $y_n \in \{+1, -1\}$. Our goal: find a function that correctly predicts labels for new data.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Linear Classifier</span>
+                <p>A linear classifier is defined by a hyperplane:</p>
+                <div class="math-display">
+                    $$f(\mathbf{x}) = \langle \mathbf{w}, \mathbf{x} \rangle + b = \mathbf{w}^\top \mathbf{x} + b$$
+                </div>
+                <p>where $\mathbf{w} \in \mathbb{R}^D$ is the <strong>normal vector</strong> (perpendicular to the hyperplane) and $b \in \mathbb{R}$ is the <strong>bias</strong> (intercept).</p>
+                <p>Classification rule: predict $+1$ if $f(\mathbf{x}) \geq 0$, else predict $-1$.</p>
+            </div>
+
+            <p>
+                The hyperplane $\{\mathbf{x} : f(\mathbf{x}) = 0\}$ separates the feature space into two half-spaces - one for each class.
+            </p>
+
+            <!-- Interactive SVM Demo -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h4>Interactive: Linear Classification</h4>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Separation: <span id="sepVal">2.0</span></label>
+                        <input type="range" id="sepSlider" min="50" max="400" value="200">
+                    </div>
+                    <div class="control-group">
+                        <label>Noise: <span id="noiseVal">0.5</span></label>
+                        <input type="range" id="noiseSlider" min="0" max="100" value="50">
+                    </div>
+                    <div class="control-group">
+                        <button id="newDataBtn">Generate New Data</button>
+                    </div>
+                </div>
+                <canvas id="svmCanvas" class="demo-canvas"></canvas>
+                <div class="demo-results">
+                    <div class="result-item">
+                        <div class="value" id="margin">-</div>
+                        <div class="label">Margin</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="svCount">-</div>
+                        <div class="label">Support Vectors</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="value" id="accuracy">-</div>
+                        <div class="label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Correct Classification Condition</h3>
+            <p>For a training example $(\mathbf{x}_n, y_n)$ to be correctly classified:</p>
+            <div class="math-display">
+                $$y_n \cdot f(\mathbf{x}_n) = y_n(\mathbf{w}^\top \mathbf{x}_n + b) > 0$$
+            </div>
+            <p>This elegant form works because:</p>
+            <ul>
+                <li>If $y_n = +1$ and $f(\mathbf{x}_n) > 0$ ←’ product is positive âœ“</li>
+                <li>If $y_n = -1$ and $f(\mathbf{x}_n) < 0$ ←’ product is positive âœ“</li>
+                <li>Misclassification ←’ product is negative âœ—</li>
+            </ul>
+        </section>
+
+        <!-- Section 12.2: The Margin -->
+        <section class="section" id="section-12-2">
+            <div class="section-header">
+                <span class="section-number">12.2</span>
+                <h2>The Margin</h2>
+            </div>
+
+            <p>
+                For linearly separable data, <strong>infinitely many</strong> hyperplanes can separate the classes. The SVM chooses the one that <strong>maximizes the margin</strong> - the distance to the closest training points.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Margin</span>
+                <p>The margin is the perpendicular distance from the hyperplane to the nearest training point(s):</p>
+                <div class="math-display">
+                    $$\text{margin} = \frac{1}{\|\mathbf{w}\|}$$
+                </div>
+                <p>(when normalized so the closest points satisfy $|f(\mathbf{x})| = 1$)</p>
+            </div>
+
+            <h3>Maximum Margin Optimization</h3>
+            <p>The SVM finds the hyperplane by solving:</p>
+            <div class="math-display">
+                $$\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 \quad \text{subject to} \quad y_n(\mathbf{w}^\top \mathbf{x}_n + b) \geq 1, \; \forall n$$
+            </div>
+
+            <div class="note-box">
+                <span class="label">Why Maximize Margin?</span>
+                <p>A larger margin provides better <strong>generalization</strong> - the classifier is more robust to noise and new data. Intuitively, it leaves more "breathing room" around the decision boundary.</p>
+            </div>
+
+            <h3>Support Vectors</h3>
+            <p>
+                The <strong>support vectors</strong> are the training points that lie exactly on the margin boundaries ($y_n f(\mathbf{x}_n) = 1$). They "support" the hyperplane:
+            </p>
+            <ul>
+                <li>Only support vectors matter - other points could be removed without changing the solution</li>
+                <li>The optimal $\mathbf{w}$ is a linear combination of support vectors</li>
+                <li>Typically only a small fraction of training data are support vectors</li>
+            </ul>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">If we double the magnitude of $\mathbf{w}$ (and adjust $b$ accordingly), what happens to the margin?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Doubles</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Halves</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Stays the same</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Becomes zero</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! The margin is $1/\|\mathbf{w}\|$, so doubling $\|\mathbf{w}\|$ halves the margin. This is why we minimize $\|\mathbf{w}\|^2$ to maximize the margin.</div>
+                <div class="quiz-feedback incorrect">Not quite. Remember: margin = $1/\|\mathbf{w}\|$. Think about what happens when the denominator doubles.</div>
+            </div>
+        </section>
+
+        <!-- Section 12.3: Soft Margin SVM -->
+        <section class="section" id="section-12-3">
+            <div class="section-header">
+                <span class="section-number">12.3</span>
+                <h2>Soft Margin SVM</h2>
+            </div>
+
+            <p>
+                Real data is rarely perfectly linearly separable. The <strong>soft margin SVM</strong> allows some points to violate the margin constraints, using <strong>slack variables</strong>.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Soft Margin Formulation</span>
+                <div class="math-display">
+                    $$\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|^2 + C \sum_{n=1}^{N} \xi_n$$
+                </div>
+                <p>subject to:</p>
+                <div class="math-display">
+                    $$y_n(\mathbf{w}^\top \mathbf{x}_n + b) \geq 1 - \xi_n, \quad \xi_n \geq 0$$
+                </div>
+                <p>where $\xi_n$ are slack variables and $C > 0$ is the regularization parameter.</p>
+            </div>
+
+            <h3>Interpreting the Slack Variables</h3>
+            <ul>
+                <li>$\xi_n = 0$: Point is correctly classified and outside margin</li>
+                <li>$0 < \xi_n < 1$: Point is correctly classified but inside margin</li>
+                <li>$\xi_n \geq 1$: Point is misclassified</li>
+            </ul>
+
+            <h3>The C Parameter</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>C Value</th>
+                        <th>Effect</th>
+                        <th>Trade-off</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Large C</td>
+                        <td>Penalize violations heavily</td>
+                        <td>Smaller margin, fewer errors on training data</td>
+                    </tr>
+                    <tr>
+                        <td>Small C</td>
+                        <td>Allow more violations</td>
+                        <td>Larger margin, more tolerant of outliers</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="ml-box">
+                <span class="label">Why This Matters in ML</span>
+                <p>The C parameter controls the <strong>bias-variance trade-off</strong>:</p>
+                <ul>
+                    <li><strong>Large C:</strong> Low bias, high variance (risk of overfitting)</li>
+                    <li><strong>Small C:</strong> High bias, low variance (risk of underfitting)</li>
+                </ul>
+                <p>Use cross-validation to find the optimal C!</p>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">A point with $\xi_n = 0.3$ is:</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Misclassified</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Correctly classified but inside the margin</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Correctly classified and outside the margin</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">A support vector on the margin</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Since $0 < \xi_n < 1$, the point is on the correct side of the hyperplane but violates the margin constraint (it's too close to the boundary).</div>
+                <div class="quiz-feedback incorrect">Not quite. Think about what $\xi_n$ values mean: 0 = outside margin, between 0-1 = inside margin but correct side, â‰¥1 = misclassified.</div>
+            </div>
+        </section>
+
+        <!-- Section 12.4: Kernel Trick -->
+        <section class="section" id="section-12-4">
+            <div class="section-header">
+                <span class="section-number">12.4</span>
+                <h2>The Kernel Trick</h2>
+            </div>
+
+            <p>
+                What if data isn't linearly separable in the original space? Map it to a higher-dimensional space where it becomes separable!
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Feature Map</span>
+                <p>A feature map $\phi: \mathbb{R}^D \to \mathbb{R}^M$ transforms data into a higher-dimensional space:</p>
+                <div class="math-display">
+                    $$\mathbf{x} \mapsto \phi(\mathbf{x})$$
+                </div>
+                <p>Then we find a linear separator in the $\phi$-space:</p>
+                <div class="math-display">
+                    $$f(\mathbf{x}) = \mathbf{w}^\top \phi(\mathbf{x}) + b$$
+                </div>
+            </div>
+
+            <h3>The Kernel Trick</h3>
+            <p>
+                Computing $\phi(\mathbf{x})$ explicitly can be expensive (or impossible if $M = \infty$). The <strong>kernel trick</strong> avoids this by computing inner products directly:
+            </p>
+            <div class="math-display">
+                $$k(\mathbf{x}_i, \mathbf{x}_j) = \langle \phi(\mathbf{x}_i), \phi(\mathbf{x}_j) \rangle$$
+            </div>
+
+            <h3>Popular Kernels</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Kernel</th>
+                        <th>Formula</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear</td>
+                        <td>$k(\mathbf{x}, \mathbf{x}') = \mathbf{x}^\top \mathbf{x}'$</td>
+                        <td>Linearly separable data</td>
+                    </tr>
+                    <tr>
+                        <td>Polynomial</td>
+                        <td>$k(\mathbf{x}, \mathbf{x}') = (\mathbf{x}^\top \mathbf{x}' + c)^d$</td>
+                        <td>Polynomial decision boundaries</td>
+                    </tr>
+                    <tr>
+                        <td>RBF (Gaussian)</td>
+                        <td>$k(\mathbf{x}, \mathbf{x}') = \exp(-\gamma\|\mathbf{x} - \mathbf{x}'\|^2)$</td>
+                        <td>Complex, nonlinear boundaries</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <span class="label">Example: XOR Problem</span>
+                <p>The XOR pattern (points at (0,0), (1,1) are class +1; points at (0,1), (1,0) are class -1) is not linearly separable in 2D.</p>
+                <p>But with the polynomial kernel $k(\mathbf{x}, \mathbf{x}') = (\mathbf{x}^\top \mathbf{x}')^2$, the implicit feature map includes the term $x_1 x_2$, which makes the problem separable!</p>
+            </div>
+
+            <div class="realworld-box">
+                <span class="label">Real-World Applications</span>
+                <ul>
+                    <li><strong>Image classification:</strong> Histogram intersection kernels</li>
+                    <li><strong>Text classification:</strong> String kernels for spam detection</li>
+                    <li><strong>Bioinformatics:</strong> Sequence kernels for protein classification</li>
+                    <li><strong>Handwriting recognition:</strong> RBF kernels for digit classification</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter Summary</h2>
+            </div>
+
+            <h3>Key Equations</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Formula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear Classifier</td>
+                        <td>$f(\mathbf{x}) = \mathbf{w}^\top \mathbf{x} + b$</td>
+                    </tr>
+                    <tr>
+                        <td>Margin</td>
+                        <td>$\frac{1}{\|\mathbf{w}\|}$</td>
+                    </tr>
+                    <tr>
+                        <td>Hard Margin SVM</td>
+                        <td>$\min \frac{1}{2}\|\mathbf{w}\|^2$ s.t. $y_n(\mathbf{w}^\top\mathbf{x}_n + b) \geq 1$</td>
+                    </tr>
+                    <tr>
+                        <td>Soft Margin SVM</td>
+                        <td>$\min \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_n \xi_n$</td>
+                    </tr>
+                    <tr>
+                        <td>Kernel</td>
+                        <td>$k(\mathbf{x}, \mathbf{x}') = \langle\phi(\mathbf{x}), \phi(\mathbf{x}')\rangle$</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Core Concepts Recap</h3>
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">1âƒ£</div>
+                    <h5>Hyperplane</h5>
+                    <p>Linear decision boundary $\mathbf{w}^\top\mathbf{x} + b = 0$</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">2âƒ£</div>
+                    <h5>Maximum Margin</h5>
+                    <p>Find the widest "street" between classes</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">3âƒ£</div>
+                    <h5>Support Vectors</h5>
+                    <p>Points on the margin that define the boundary</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">4âƒ£</div>
+                    <h5>Kernels</h5>
+                    <p>Enable nonlinear boundaries via the kernel trick</p>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Congratulations!</strong> You've completed the ML foundations from Mathematics for Machine Learning!</p>
+                <p><strong>What You've Learned:</strong></p>
+                <ul>
+                    <li>Ch 8: ML Models and Data</li>
+                    <li>Ch 9: Linear Regression</li>
+                    <li>Ch 10: Dimensionality Reduction (PCA)</li>
+                    <li>Ch 11: Density Estimation (GMM)</li>
+                    <li>Ch 12: Classification (SVM)</li>
+                </ul>
+                <p><strong>Practice Projects:</strong></p>
+                <ul>
+                    <li>Implement SVM from scratch using quadratic programming</li>
+                    <li>Compare linear vs RBF kernels on real datasets</li>
+                    <li>Tune C parameter using cross-validation</li>
+                    <li>Visualize decision boundaries in 2D</li>
+                </ul>
+            </div>
+        </section>
+        </div>
+    </main>
+
+    <script>
+        // Initialize KaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+        });
+
+        function checkQuiz(element, isCorrect) {
+            const quizBox = element.closest('.quiz-box');
+            const options = quizBox.querySelectorAll('.quiz-option');
+            const feedbacks = quizBox.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedbacks[0].classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                feedbacks[1].classList.add('show');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        const sections = document.querySelectorAll('.section, .hero');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // ========== SVM Demo ==========
+        const svmCanvas = document.getElementById('svmCanvas');
+        const svmCtx = svmCanvas.getContext('2d');
+        
+        let positivePoints = [];
+        let negativePoints = [];
+        let svmW = [0, 0];
+        let svmB = 0;
+
+        function generateData() {
+            positivePoints = [];
+            negativePoints = [];
+            
+            const sep = parseInt(document.getElementById('sepSlider').value) / 100;
+            const noise = parseInt(document.getElementById('noiseSlider').value) / 100;
+            
+            // Generate positive class (right side)
+            for (let i = 0; i < 25; i++) {
+                positivePoints.push([
+                    sep + (Math.random() - 0.5) * noise * 3,
+                    (Math.random() - 0.5) * 3
+                ]);
+            }
+            
+            // Generate negative class (left side)
+            for (let i = 0; i < 25; i++) {
+                negativePoints.push([
+                    -sep + (Math.random() - 0.5) * noise * 3,
+                    (Math.random() - 0.5) * 3
+                ]);
+            }
+        }
+
+        function trainSVM() {
+            // Simple perceptron-style training for visualization
+            // In practice, you'd use quadratic programming
+            const allPoints = [
+                ...positivePoints.map(p => ({x: p, y: 1})),
+                ...negativePoints.map(p => ({x: p, y: -1}))
+            ];
+            
+            let w = [1, 0];
+            let b = 0;
+            const lr = 0.01;
+            
+            for (let iter = 0; iter < 1000; iter++) {
+                for (const point of allPoints) {
+                    const margin = point.y * (w[0] * point.x[0] + w[1] * point.x[1] + b);
+                    if (margin < 1) {
+                        w[0] += lr * (point.y * point.x[0] - 0.01 * w[0]);
+                        w[1] += lr * (point.y * point.x[1] - 0.01 * w[1]);
+                        b += lr * point.y;
+                    } else {
+                        w[0] -= lr * 0.01 * w[0];
+                        w[1] -= lr * 0.01 * w[1];
+                    }
+                }
+            }
+            
+            svmW = w;
+            svmB = b;
+        }
+
+        function drawSVM() {
+            const width = svmCanvas.width = svmCanvas.offsetWidth;
+            const height = svmCanvas.height = svmCanvas.offsetHeight;
+            
+            svmCtx.clearRect(0, 0, width, height);
+            
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 60;
+            
+            const scaleX = x => centerX + x * scale;
+            const scaleY = y => centerY - y * scale;
+            
+            // Draw grid
+            svmCtx.strokeStyle = '#e8eaf6';
+            svmCtx.lineWidth = 1;
+            for (let i = -5; i <= 5; i++) {
+                svmCtx.beginPath();
+                svmCtx.moveTo(scaleX(i), 0);
+                svmCtx.lineTo(scaleX(i), height);
+                svmCtx.stroke();
+                svmCtx.beginPath();
+                svmCtx.moveTo(0, scaleY(i));
+                svmCtx.lineTo(width, scaleY(i));
+                svmCtx.stroke();
+            }
+            
+            // Draw axes
+            svmCtx.strokeStyle = '#c0c0c0';
+            svmCtx.lineWidth = 2;
+            svmCtx.beginPath();
+            svmCtx.moveTo(0, centerY);
+            svmCtx.lineTo(width, centerY);
+            svmCtx.moveTo(centerX, 0);
+            svmCtx.lineTo(centerX, height);
+            svmCtx.stroke();
+            
+            // Train and draw decision boundary
+            trainSVM();
+            
+            const wNorm = Math.sqrt(svmW[0]*svmW[0] + svmW[1]*svmW[1]);
+            
+            if (wNorm > 0.001) {
+                // Draw margin lines
+                const drawLine = (offset, style, lineWidth) => {
+                    svmCtx.strokeStyle = style;
+                    svmCtx.lineWidth = lineWidth;
+                    svmCtx.beginPath();
+                    
+                    // Line: wÂ·x + b + offset = 0
+                    // For each x, y = -(w[0]*x + b + offset) / w[1]
+                    if (Math.abs(svmW[1]) > 0.001) {
+                        for (let px = 0; px <= width; px++) {
+                            const x = (px - centerX) / scale;
+                            const y = -(svmW[0] * x + svmB + offset) / svmW[1];
+                            const py = scaleY(y);
+                            if (px === 0) svmCtx.moveTo(px, py);
+                            else svmCtx.lineTo(px, py);
+                        }
+                    } else {
+                        const x = -(svmB + offset) / svmW[0];
+                        svmCtx.moveTo(scaleX(x), 0);
+                        svmCtx.lineTo(scaleX(x), height);
+                    }
+                    svmCtx.stroke();
+                };
+                
+                // Margin lines (dashed)
+                svmCtx.setLineDash([5, 5]);
+                drawLine(1, 'rgba(11, 47, 160, 0.3)', 2);
+                drawLine(-1, 'rgba(11, 47, 160, 0.3)', 2);
+                svmCtx.setLineDash([]);
+                
+                // Decision boundary
+                drawLine(0, '#0b2fa0', 3);
+                
+                // Fill margin region
+                svmCtx.fillStyle = 'rgba(11, 47, 160, 0.05)';
+                svmCtx.beginPath();
+                if (Math.abs(svmW[1]) > 0.001) {
+                    for (let px = 0; px <= width; px++) {
+                        const x = (px - centerX) / scale;
+                        const y1 = -(svmW[0] * x + svmB + 1) / svmW[1];
+                        if (px === 0) svmCtx.moveTo(px, scaleY(y1));
+                        else svmCtx.lineTo(px, scaleY(y1));
+                    }
+                    for (let px = width; px >= 0; px--) {
+                        const x = (px - centerX) / scale;
+                        const y2 = -(svmW[0] * x + svmB - 1) / svmW[1];
+                        svmCtx.lineTo(px, scaleY(y2));
+                    }
+                }
+                svmCtx.closePath();
+                svmCtx.fill();
+            }
+            
+            // Count support vectors and accuracy
+            let svCount = 0;
+            let correct = 0;
+            
+            // Draw positive points
+            positivePoints.forEach(p => {
+                const margin = svmW[0] * p[0] + svmW[1] * p[1] + svmB;
+                const isSV = Math.abs(margin - 1) < 0.3;
+                if (isSV) svCount++;
+                if (margin > 0) correct++;
+                
+                svmCtx.fillStyle = isSV ? '#ff9000' : '#10b981';
+                svmCtx.strokeStyle = isSV ? '#e68200' : '#059669';
+                svmCtx.lineWidth = isSV ? 3 : 2;
+                svmCtx.beginPath();
+                svmCtx.arc(scaleX(p[0]), scaleY(p[1]), isSV ? 10 : 7, 0, Math.PI * 2);
+                svmCtx.fill();
+                svmCtx.stroke();
+            });
+            
+            // Draw negative points
+            negativePoints.forEach(p => {
+                const margin = svmW[0] * p[0] + svmW[1] * p[1] + svmB;
+                const isSV = Math.abs(margin + 1) < 0.3;
+                if (isSV) svCount++;
+                if (margin < 0) correct++;
+                
+                svmCtx.fillStyle = isSV ? '#ff9000' : '#ef4444';
+                svmCtx.strokeStyle = isSV ? '#e68200' : '#dc2626';
+                svmCtx.lineWidth = isSV ? 3 : 2;
+                svmCtx.beginPath();
+                svmCtx.arc(scaleX(p[0]), scaleY(p[1]), isSV ? 10 : 7, 0, Math.PI * 2);
+                svmCtx.fill();
+                svmCtx.stroke();
+            });
+            
+            // Update stats
+            const marginVal = wNorm > 0 ? (2 / wNorm).toFixed(2) : '-';
+            document.getElementById('margin').textContent = marginVal;
+            document.getElementById('svCount').textContent = svCount;
+            document.getElementById('accuracy').textContent = ((correct / 50) * 100).toFixed(0) + '%';
+        }
+
+        // Event listeners
+        document.getElementById('sepSlider').addEventListener('input', function() {
+            document.getElementById('sepVal').textContent = (this.value / 100).toFixed(1);
+            generateData();
+            drawSVM();
+        });
+        
+        document.getElementById('noiseSlider').addEventListener('input', function() {
+            document.getElementById('noiseVal').textContent = (this.value / 100).toFixed(1);
+            generateData();
+            drawSVM();
+        });
+        
+        document.getElementById('newDataBtn').addEventListener('click', function() {
+            generateData();
+            drawSVM();
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            generateData();
+            drawSVM();
+        });
+        
+        window.addEventListener('resize', drawSVM);
+    </script>
+</body>
+</html>

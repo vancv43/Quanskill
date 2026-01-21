@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: File Handling & Exceptions | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --file-color: #10b981;
+            --read-color: #06b6d4;
+            --write-color: #8b5cf6;
+            --exception-color: #ef4444;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📝‚';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 80px;
+            opacity: 0.15;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card.file .icon { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .concept-card.read .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.write .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.exception .icon { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-number.file { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .section-number.read { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.write { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.exception { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .file-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--file-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .file-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--file-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-box .label::before { content: '🐍"'; }
+
+        .read-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
+            border-left: 4px solid var(--read-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .read-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--read-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .read-box .label::before { content: '📝–'; }
+
+        .write-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border-left: 4px solid var(--write-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .write-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--write-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .write-box .label::before { content: 'âœ“'; }
+
+        .exception-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.03) 100%);
+            border-left: 4px solid var(--exception-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .exception-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--exception-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .exception-box .label::before { content: 'âš '; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🌍'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .code-output { color: #86efac; }
+        .code-error { color: #fca5a5; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        /* Floating back button - RIGHT side */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+
+        .syntax-box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--quanskill-orange);
+        }
+
+        .syntax-box .syntax-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange);
+            margin-bottom: 0.75rem;
+        }
+
+        .syntax-box code {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        .summary-box {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            margin-top: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item::before {
+            content: '🐍';
+            background: var(--quanskill-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .mode-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .mode-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .mode-card.read { border-color: var(--read-color); }
+        .mode-card.write { border-color: var(--write-color); }
+        .mode-card.append { border-color: var(--file-color); }
+
+        .mode-card h5 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .mode-card.read h5 { color: var(--read-color); }
+        .mode-card.write h5 { color: var(--write-color); }
+        .mode-card.append h5 { color: var(--file-color); }
+
+        .mode-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .exception-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .exception-type-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+
+        .exception-type-card:hover {
+            border-color: var(--exception-color);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.1);
+        }
+
+        .exception-type-card h5 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--exception-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .exception-type-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .flow-diagram {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .flow-diagram-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .flow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .flow-step.open { border-color: var(--file-color); color: var(--file-color); }
+        .flow-step.process { border-color: var(--read-color); color: var(--read-color); }
+        .flow-step.close { border-color: var(--write-color); color: var(--write-color); }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--quanskill-orange);
+        }
+
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 15px;
+                left: auto;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 6 Â· Files & Exceptions</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">File Handling</div>
+            <a href="#section-6-1" class="nav-link">Opening Files</a>
+            <a href="#section-6-2" class="nav-link">Reading Files</a>
+            <a href="#section-6-3" class="nav-link">Writing Files</a>
+            <a href="#section-6-4" class="nav-link">Context Managers</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Exception Handling</div>
+            <a href="#section-6-5" class="nav-link">try/except Blocks</a>
+            <a href="#section-6-6" class="nav-link">Exception Types</a>
+            <a href="#section-6-7" class="nav-link">finally & else</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 6</span>
+                <h1>File Handling & Exceptions</h1>
+                <p class="hero-subtitle">
+                    Learn to read and write files, work with data persistence, and build robust programs that gracefully handle errors. These skills are essential for any data science workflow.
+                </p>
+                <div class="hero-quote">
+                    "A robust program doesn't just work - it fails gracefully. Exception handling is the difference between a crash and a helpful error message."
+                    <br><br>- <strong>Quanskill Programming Philosophy</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts Overview -->
+        <div class="key-concepts">
+            <div class="concept-card file">
+                <div class="icon">🐍"</div>
+                <h5>open()</h5>
+                <p>Open files for reading/writing</p>
+            </div>
+            <div class="concept-card read">
+                <div class="icon">📝–</div>
+                <h5>Read Modes</h5>
+                <p>read(), readline(), readlines()</p>
+            </div>
+            <div class="concept-card write">
+                <div class="icon">âœ“</div>
+                <h5>Write Modes</h5>
+                <p>write(), writelines()</p>
+            </div>
+            <div class="concept-card file">
+                <div class="icon">🐍"</div>
+                <h5>with Statement</h5>
+                <p>Auto-close files safely</p>
+            </div>
+            <div class="concept-card exception">
+                <div class="icon">âš </div>
+                <h5>try/except</h5>
+                <p>Catch and handle errors</p>
+            </div>
+            <div class="concept-card exception">
+                <div class="icon">🛡️</div>
+                <h5>finally</h5>
+                <p>Always execute cleanup</p>
+            </div>
+        </div>
+
+        <!-- Section 6.1: Opening Files -->
+        <section class="section" id="section-6-1">
+            <div class="section-header">
+                <span class="section-number file">6.1</span>
+                <h2>Opening Files</h2>
+            </div>
+
+            <p>
+                Python's built-in <code>open()</code> function is the gateway to file operations. It returns a file object that you can use to read, write, or manipulate file contents.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">The open() Function</span>
+                <p>The <code>open()</code> function opens a file and returns a file object. It takes a file path and a mode string that determines how the file will be accessed (read, write, append, etc.).</p>
+            </div>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Basic Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code>file_object = <span class="code-function">open</span>(filename, mode=<span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+
+<span class="code-comment"># filename: path to the file (relative or absolute)</span>
+<span class="code-comment"># mode: how to open the file (default: "r" for read)</span>
+<span class="code-comment"># encoding: character encoding (recommended: "utf-8")</span></code></pre>
+            </div>
+
+            <h3>File Modes</h3>
+
+            <div class="mode-cards">
+                <div class="mode-card read">
+                    <h5>"r"</h5>
+                    <p class="desc">Read only (default)</p>
+                </div>
+                <div class="mode-card write">
+                    <h5>"w"</h5>
+                    <p class="desc">Write (overwrites!)</p>
+                </div>
+                <div class="mode-card append">
+                    <h5>"a"</h5>
+                    <p class="desc">Append to end</p>
+                </div>
+                <div class="mode-card read">
+                    <h5>"r+"</h5>
+                    <p class="desc">Read and write</p>
+                </div>
+                <div class="mode-card write">
+                    <h5>"x"</h5>
+                    <p class="desc">Create new (fails if exists)</p>
+                </div>
+                <div class="mode-card read">
+                    <h5>"rb"</h5>
+                    <p class="desc">Read binary</p>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Description</th>
+                        <th>File Must Exist?</th>
+                        <th>Creates File?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>"r"</code></td><td>Read only</td><td>Yes</td><td>No</td></tr>
+                    <tr><td><code>"w"</code></td><td>Write (overwrites existing content)</td><td>No</td><td>Yes</td></tr>
+                    <tr><td><code>"a"</code></td><td>Append to end of file</td><td>No</td><td>Yes</td></tr>
+                    <tr><td><code>"x"</code></td><td>Exclusive create (fails if exists)</td><td>No</td><td>Yes</td></tr>
+                    <tr><td><code>"r+"</code></td><td>Read and write</td><td>Yes</td><td>No</td></tr>
+                    <tr><td><code>"b"</code></td><td>Binary mode (add to other modes)</td><td>-</td><td>-</td></tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-comment"># Open a file for reading</span>
+f = <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+
+<span class="code-comment"># Always close when done!</span>
+f.close()
+
+<span class="code-comment"># Open for writing (creates file or overwrites)</span>
+f = <span class="code-function">open</span>(<span class="code-string">"output.txt"</span>, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>)
+f.close()
+
+<span class="code-comment"># Open for appending (adds to end)</span>
+f = <span class="code-function">open</span>(<span class="code-string">"log.txt"</span>, <span class="code-string">"a"</span>, encoding=<span class="code-string">"utf-8"</span>)
+f.close()</code></pre>
+
+            <div class="note-box">
+                <span class="label">âš  Always Specify Encoding</span>
+                <p>The default encoding varies by operating system. For consistent behavior, always specify <code>encoding="utf-8"</code> when opening text files. This prevents issues when sharing code across different platforms.</p>
+            </div>
+        </section>
+
+        <!-- Section 6.2: Reading Files -->
+        <section class="section" id="section-6-2">
+            <div class="section-header">
+                <span class="section-number read">6.2</span>
+                <h2>Reading Files</h2>
+            </div>
+
+            <p>
+                Python provides multiple methods to read file contents, depending on whether you need the entire file, one line, or all lines as a list.
+            </p>
+
+            <h3>Reading Methods</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Returns</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>read()</code></td><td>Entire file as one string</td><td>Small files</td></tr>
+                    <tr><td><code>read(n)</code></td><td>First n characters</td><td>Reading in chunks</td></tr>
+                    <tr><td><code>readline()</code></td><td>One line at a time</td><td>Processing line by line</td></tr>
+                    <tr><td><code>readlines()</code></td><td>List of all lines</td><td>When you need all lines</td></tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-comment"># Method 1: read() - entire file as string</span>
+f = <span class="code-function">open</span>(<span class="code-string">"poem.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+content = f.read()
+<span class="code-function">print</span>(content)
+f.close()
+
+<span class="code-comment"># Method 2: read(n) - first n characters</span>
+f = <span class="code-function">open</span>(<span class="code-string">"poem.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+first_10 = f.read(<span class="code-number">10</span>)  <span class="code-comment"># Read first 10 characters</span>
+<span class="code-function">print</span>(first_10)
+f.close()
+
+<span class="code-comment"># Method 3: readline() - one line at a time</span>
+f = <span class="code-function">open</span>(<span class="code-string">"poem.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+line1 = f.readline()  <span class="code-comment"># First line</span>
+line2 = f.readline()  <span class="code-comment"># Second line</span>
+f.close()
+
+<span class="code-comment"># Method 4: readlines() - list of all lines</span>
+f = <span class="code-function">open</span>(<span class="code-string">"poem.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+lines = f.readlines()  <span class="code-comment"># ['line1\n', 'line2\n', ...]</span>
+f.close()</code></pre>
+
+            <h3>Iterating Over Lines</h3>
+
+            <p>The most memory-efficient way to process a file line by line is to iterate directly over the file object:</p>
+
+            <pre><code><span class="code-comment"># Best practice: iterate directly over file</span>
+f = <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+<span class="code-keyword">for</span> line <span class="code-keyword">in</span> f:
+    <span class="code-function">print</span>(line.strip())  <span class="code-comment"># strip() removes \n</span>
+f.close()
+
+<span class="code-comment"># Clean way using list comprehension</span>
+f = <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+clean_lines = [line.strip() <span class="code-keyword">for</span> line <span class="code-keyword">in</span> f]
+f.close()
+<span class="code-function">print</span>(clean_lines)  <span class="code-comment"># List without newline characters</span></code></pre>
+
+            <div class="read-box">
+                <span class="label">Data Science Example: Reading CSV Manually</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Reading a simple CSV file</span>
+f = <span class="code-function">open</span>(<span class="code-string">"students.csv"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>)
+
+<span class="code-comment"># Skip header</span>
+header = f.readline().strip().split(<span class="code-string">","</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Columns: {header}"</span>)
+
+<span class="code-comment"># Process data rows</span>
+<span class="code-keyword">for</span> line <span class="code-keyword">in</span> f:
+    name, age, grade = line.strip().split(<span class="code-string">","</span>)
+    <span class="code-function">print</span>(<span class="code-string">f"{name} is {age} years old with grade {grade}"</span>)
+
+f.close()</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 6.3: Writing Files -->
+        <section class="section" id="section-6-3">
+            <div class="section-header">
+                <span class="section-number write">6.3</span>
+                <h2>Writing Files</h2>
+            </div>
+
+            <p>
+                Writing to files allows you to save data, generate reports, and create output for other programs. Be careful with <code>"w"</code> mode - it will overwrite existing content!
+            </p>
+
+            <h3>Writing Methods</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>write(string)</code></td><td>Write a string to file</td><td><code>f.write("Hello")</code></td></tr>
+                    <tr><td><code>writelines(list)</code></td><td>Write list of strings</td><td><code>f.writelines(lines)</code></td></tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-comment"># Writing with "w" mode (creates/overwrites)</span>
+f = <span class="code-function">open</span>(<span class="code-string">"output.txt"</span>, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>)
+f.write(<span class="code-string">"Hello, World!\n"</span>)
+f.write(<span class="code-string">"Welcome to Python.\n"</span>)
+f.close()
+
+<span class="code-comment"># Writing multiple lines with writelines()</span>
+lines = [<span class="code-string">"Line 1\n"</span>, <span class="code-string">"Line 2\n"</span>, <span class="code-string">"Line 3\n"</span>]
+f = <span class="code-function">open</span>(<span class="code-string">"output.txt"</span>, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>)
+f.writelines(lines)
+f.close()
+
+<span class="code-comment"># Appending with "a" mode (adds to end)</span>
+f = <span class="code-function">open</span>(<span class="code-string">"log.txt"</span>, <span class="code-string">"a"</span>, encoding=<span class="code-string">"utf-8"</span>)
+f.write(<span class="code-string">"New log entry\n"</span>)
+f.close()</code></pre>
+
+            <div class="note-box">
+                <span class="label">âš  Important: write() Doesn't Add Newlines</span>
+                <p>Unlike <code>print()</code>, the <code>write()</code> method does not automatically add newline characters. You must include <code>\n</code> explicitly if you want line breaks.</p>
+            </div>
+
+            <div class="write-box">
+                <span class="label">Data Science Example: Saving Results</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Save analysis results to file</span>
+results = {
+    <span class="code-string">"mean"</span>: <span class="code-number">85.5</span>,
+    <span class="code-string">"median"</span>: <span class="code-number">88.0</span>,
+    <span class="code-string">"std_dev"</span>: <span class="code-number">12.3</span>
+}
+
+f = <span class="code-function">open</span>(<span class="code-string">"analysis_report.txt"</span>, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>)
+f.write(<span class="code-string">"=== Analysis Report ===\n\n"</span>)
+<span class="code-keyword">for</span> metric, value <span class="code-keyword">in</span> results.items():
+    f.write(<span class="code-string">f"{metric}: {value}\n"</span>)
+f.write(<span class="code-string">"\nReport generated successfully."</span>)
+f.close()</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 6.4: Context Managers -->
+        <section class="section" id="section-6-4">
+            <div class="section-header">
+                <span class="section-number file">6.4</span>
+                <h2>The with Statement (Context Managers)</h2>
+            </div>
+
+            <p>
+                The <code>with</code> statement is the <strong>recommended way</strong> to work with files. It automatically closes the file when you're done, even if an error occurs.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Context Manager</span>
+                <p>A <strong>context manager</strong> handles setup and cleanup automatically. When you use <code>with open()</code>, Python guarantees the file will be closed when the block ends, preventing resource leaks and data corruption.</p>
+            </div>
+
+            <div class="flow-diagram">
+                <div class="flow-diagram-title">File Handling Flow</div>
+                <div class="flow-steps">
+                    <div class="flow-step open">📝‚ Open File</div>
+                    <div class="flow-arrow">←’</div>
+                    <div class="flow-step process">🐍" Read/Write</div>
+                    <div class="flow-arrow">←’</div>
+                    <div class="flow-step close">🔍’ Close File</div>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">The <code>with</code> statement handles Open and Close automatically!</p>
+            </div>
+
+            <pre><code><span class="code-comment"># âœ… RECOMMENDED: Using 'with' statement</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> f:
+    content = f.read()
+    <span class="code-function">print</span>(content)
+<span class="code-comment"># File is automatically closed here!</span>
+
+<span class="code-comment"># Reading lines with 'with'</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> f:
+    lines = [line.strip() <span class="code-keyword">for</span> line <span class="code-keyword">in</span> f]
+
+<span class="code-comment"># Writing with 'with'</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"output.txt"</span>, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> f:
+    f.write(<span class="code-string">"Hello, World!\n"</span>)
+    f.write(<span class="code-string">"Goodbye!\n"</span>)
+<span class="code-comment"># File is automatically closed and saved!</span></code></pre>
+
+            <h3>Multiple Files</h3>
+
+            <pre><code><span class="code-comment"># Working with multiple files simultaneously</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"input.txt"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> infile, <span class="code-function">open</span>(<span class="code-string">"output.txt"</span>, <span class="code-string">"w"</span>) <span class="code-keyword">as</span> outfile:
+    <span class="code-keyword">for</span> line <span class="code-keyword">in</span> infile:
+        <span class="code-comment"># Process and write each line</span>
+        processed = line.upper()
+        outfile.write(processed)
+<span class="code-comment"># Both files closed automatically!</span></code></pre>
+
+            <div class="file-box">
+                <span class="label">Why Use with?</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Automatic Cleanup:</strong> File is closed even if an error occurs</li>
+                    <li><strong>Cleaner Code:</strong> No need for explicit <code>close()</code> calls</li>
+                    <li><strong>Prevents Bugs:</strong> Avoids forgetting to close files</li>
+                    <li><strong>Resource Safety:</strong> Prevents file handle leaks</li>
+                </ul>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What happens if you forget to close a file?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Nothing, Python handles it</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Data may not be saved; resources may leak</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The program crashes immediately</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The file gets deleted</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Unclosed files can cause data loss (write buffers not flushed) and resource leaks. Always use <code>with</code> to prevent this!</div>
+                <div class="quiz-feedback incorrect">Not quite. Forgetting to close files can cause data not being saved and system resources not being released.</div>
+            </div>
+        </section>
+
+        <!-- Section 6.5: try/except Blocks -->
+        <section class="section" id="section-6-5">
+            <div class="section-header">
+                <span class="section-number exception">6.5</span>
+                <h2>Exception Handling with try/except</h2>
+            </div>
+
+            <p>
+                Errors happen. Files may not exist, data may be corrupt, or users may enter invalid input. <strong>Exception handling</strong> lets your program respond gracefully instead of crashing.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">What is an Exception?</span>
+                <p>An <strong>exception</strong> is an error that occurs during program execution. Without handling, exceptions crash your program. The <code>try/except</code> block lets you catch exceptions and respond appropriately.</p>
+            </div>
+
+            <div class="syntax-box">
+                <div class="syntax-title">try/except Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">try</span>:
+    <span class="code-comment"># Code that might raise an exception</span>
+    risky_operation()
+<span class="code-keyword">except</span> ExceptionType:
+    <span class="code-comment"># Code to handle the exception</span>
+    handle_error()</code></pre>
+            </div>
+
+            <pre><code><span class="code-comment"># Without exception handling - CRASH!</span>
+<span class="code-comment"># result = 10 / 0  # ZeroDivisionError!</span>
+
+<span class="code-comment"># With exception handling - graceful recovery</span>
+<span class="code-keyword">try</span>:
+    result = <span class="code-number">10</span> / <span class="code-number">0</span>
+<span class="code-keyword">except</span> ZeroDivisionError:
+    <span class="code-function">print</span>(<span class="code-string">"Error: Cannot divide by zero!"</span>)
+    result = <span class="code-number">0</span>
+
+<span class="code-function">print</span>(<span class="code-string">f"Result: {result}"</span>)  <span class="code-comment"># Program continues!</span></code></pre>
+
+            <h3>File Operations with Exception Handling</h3>
+
+            <pre><code><span class="code-comment"># Safe file reading</span>
+<span class="code-keyword">try</span>:
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>) <span class="code-keyword">as</span> f:
+        content = f.read()
+        <span class="code-function">print</span>(content)
+<span class="code-keyword">except</span> FileNotFoundError:
+    <span class="code-function">print</span>(<span class="code-string">"Error: File not found!"</span>)
+<span class="code-keyword">except</span> PermissionError:
+    <span class="code-function">print</span>(<span class="code-string">"Error: No permission to read file!"</span>)</code></pre>
+
+            <h3>Catching Multiple Exceptions</h3>
+
+            <pre><code><span class="code-comment"># Method 1: Multiple except blocks</span>
+<span class="code-keyword">try</span>:
+    value = <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"Enter a number: "</span>))
+    result = <span class="code-number">100</span> / value
+<span class="code-keyword">except</span> ValueError:
+    <span class="code-function">print</span>(<span class="code-string">"Invalid input! Please enter a number."</span>)
+<span class="code-keyword">except</span> ZeroDivisionError:
+    <span class="code-function">print</span>(<span class="code-string">"Cannot divide by zero!"</span>)
+
+<span class="code-comment"># Method 2: Tuple of exception types</span>
+<span class="code-keyword">try</span>:
+    value = <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"Enter a number: "</span>))
+    result = <span class="code-number">100</span> / value
+<span class="code-keyword">except</span> (ValueError, ZeroDivisionError) <span class="code-keyword">as</span> e:
+    <span class="code-function">print</span>(<span class="code-string">f"Error occurred: {e}"</span>)</code></pre>
+
+            <div class="exception-box">
+                <span class="label">Getting Error Details</span>
+                <p>Use <code>as e</code> to capture the exception object and access its message:</p>
+                <pre style="margin-bottom: 0;"><code><span class="code-keyword">try</span>:
+    <span class="code-function">int</span>(<span class="code-string">"hello"</span>)
+<span class="code-keyword">except</span> ValueError <span class="code-keyword">as</span> e:
+    <span class="code-function">print</span>(<span class="code-string">f"Error: {e}"</span>)
+<span class="code-comment"># Output: Error: invalid literal for int() with base 10: 'hello'</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 6.6: Exception Types -->
+        <section class="section" id="section-6-6">
+            <div class="section-header">
+                <span class="section-number exception">6.6</span>
+                <h2>Common Exception Types</h2>
+            </div>
+
+            <p>
+                Python has many built-in exception types. Knowing the common ones helps you write more specific error handling.
+            </p>
+
+            <div class="exception-types">
+                <div class="exception-type-card">
+                    <h5>FileNotFoundError</h5>
+                    <p class="desc">File doesn't exist</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>ValueError</h5>
+                    <p class="desc">Wrong value type (e.g., int("abc"))</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>TypeError</h5>
+                    <p class="desc">Wrong data type for operation</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>ZeroDivisionError</h5>
+                    <p class="desc">Division by zero</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>IndexError</h5>
+                    <p class="desc">List index out of range</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>KeyError</h5>
+                    <p class="desc">Dictionary key not found</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>PermissionError</h5>
+                    <p class="desc">No file access permission</p>
+                </div>
+                <div class="exception-type-card">
+                    <h5>AttributeError</h5>
+                    <p class="desc">Object has no attribute</p>
+                </div>
+            </div>
+
+            <pre><code><span class="code-comment"># Examples of common exceptions</span>
+
+<span class="code-comment"># ValueError</span>
+<span class="code-keyword">try</span>:
+    num = <span class="code-function">int</span>(<span class="code-string">"hello"</span>)
+<span class="code-keyword">except</span> ValueError:
+    <span class="code-function">print</span>(<span class="code-string">"Cannot convert 'hello' to integer"</span>)
+
+<span class="code-comment"># IndexError</span>
+<span class="code-keyword">try</span>:
+    items = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>]
+    <span class="code-function">print</span>(items[<span class="code-number">10</span>])
+<span class="code-keyword">except</span> IndexError:
+    <span class="code-function">print</span>(<span class="code-string">"Index out of range!"</span>)
+
+<span class="code-comment"># KeyError</span>
+<span class="code-keyword">try</span>:
+    data = {<span class="code-string">"name"</span>: <span class="code-string">"Alice"</span>}
+    <span class="code-function">print</span>(data[<span class="code-string">"age"</span>])
+<span class="code-keyword">except</span> KeyError:
+    <span class="code-function">print</span>(<span class="code-string">"Key 'age' not found in dictionary"</span>)</code></pre>
+
+            <div class="realworld-box">
+                <span class="label">Data Science: Safe Data Conversion</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-keyword">def</span> <span class="code-function">safe_float</span>(value):
+    <span class="code-string">"""Convert to float, return None if invalid."""</span>
+    <span class="code-keyword">try</span>:
+        <span class="code-keyword">return</span> <span class="code-function">float</span>(value)
+    <span class="code-keyword">except</span> (ValueError, TypeError):
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+
+<span class="code-comment"># Process messy data</span>
+raw_data = [<span class="code-string">"42.5"</span>, <span class="code-string">"N/A"</span>, <span class="code-string">"31.2"</span>, <span class="code-string">""</span>, <span class="code-string">"28.9"</span>]
+clean_data = [safe_float(x) <span class="code-keyword">for</span> x <span class="code-keyword">in</span> raw_data]
+<span class="code-function">print</span>(clean_data)  <span class="code-comment"># [42.5, None, 31.2, None, 28.9]</span>
+
+<span class="code-comment"># Filter out None values</span>
+valid_data = [x <span class="code-keyword">for</span> x <span class="code-keyword">in</span> clean_data <span class="code-keyword">if</span> x <span class="code-keyword">is not</span> <span class="code-keyword">None</span>]
+<span class="code-function">print</span>(valid_data)  <span class="code-comment"># [42.5, 31.2, 28.9]</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 6.7: finally & else -->
+        <section class="section" id="section-6-7">
+            <div class="section-header">
+                <span class="section-number exception">6.7</span>
+                <h2>finally and else Clauses</h2>
+            </div>
+
+            <p>
+                The <code>finally</code> and <code>else</code> clauses give you more control over exception handling flow.
+            </p>
+
+            <h3>The finally Clause</h3>
+
+            <p><code>finally</code> runs <strong>always</strong> - whether an exception occurred or not. Use it for cleanup code that must execute.</p>
+
+            <pre><code><span class="code-keyword">try</span>:
+    f = <span class="code-function">open</span>(<span class="code-string">"data.txt"</span>, <span class="code-string">"r"</span>)
+    content = f.read()
+    <span class="code-function">print</span>(content)
+<span class="code-keyword">except</span> FileNotFoundError:
+    <span class="code-function">print</span>(<span class="code-string">"File not found!"</span>)
+<span class="code-keyword">finally</span>:
+    <span class="code-function">print</span>(<span class="code-string">"Cleanup: Closing resources..."</span>)
+    <span class="code-comment"># This ALWAYS runs, error or not</span>
+    <span class="code-keyword">if</span> <span class="code-string">'f'</span> <span class="code-keyword">in</span> <span class="code-function">dir</span>():
+        f.close()</code></pre>
+
+            <h3>The else Clause</h3>
+
+            <p><code>else</code> runs only if <strong>no exception</strong> occurred in the try block:</p>
+
+            <pre><code><span class="code-keyword">try</span>:
+    num = <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"Enter a number: "</span>))
+<span class="code-keyword">except</span> ValueError:
+    <span class="code-function">print</span>(<span class="code-string">"That's not a valid number!"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-comment"># Only runs if no exception</span>
+    <span class="code-function">print</span>(<span class="code-string">f"You entered: {num}"</span>)
+    <span class="code-function">print</span>(<span class="code-string">f"Doubled: {num * 2}"</span>)</code></pre>
+
+            <h3>Complete Structure</h3>
+
+            <pre><code><span class="code-keyword">try</span>:
+    <span class="code-comment"># Risky operation</span>
+    result = perform_operation()
+<span class="code-keyword">except</span> SomeError:
+    <span class="code-comment"># Handle specific error</span>
+    handle_error()
+<span class="code-keyword">else</span>:
+    <span class="code-comment"># Success! No exceptions raised</span>
+    process_result(result)
+<span class="code-keyword">finally</span>:
+    <span class="code-comment"># Always runs - cleanup</span>
+    cleanup()</code></pre>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Clause</th>
+                        <th>When It Runs</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>try</code></td>
+                        <td>Always (first)</td>
+                        <td>Code that might raise exception</td>
+                    </tr>
+                    <tr>
+                        <td><code>except</code></td>
+                        <td>Only if exception occurs</td>
+                        <td>Error handling</td>
+                    </tr>
+                    <tr>
+                        <td><code>else</code></td>
+                        <td>Only if NO exception</td>
+                        <td>Success-only code</td>
+                    </tr>
+                    <tr>
+                        <td><code>finally</code></td>
+                        <td>Always (last)</td>
+                        <td>Cleanup (close files, connections)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">In what order do the clauses execute if NO exception occurs?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">try ←’ except ←’ finally</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">try ←’ else ←’ finally</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">try ←’ finally ←’ else</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">try only</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! When no exception occurs: try runs, except is skipped, else runs, then finally runs.</div>
+                <div class="quiz-feedback incorrect">Remember: else only runs if there's NO exception; finally always runs last.</div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter 6 Review</h2>
+            </div>
+
+            <p>
+                You've learned essential skills for working with files and handling errors - critical capabilities for any data science project that reads, processes, and saves data.
+            </p>
+
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">open() with modes: r, w, a, x</div>
+                    <div class="summary-item">read(), readline(), readlines()</div>
+                    <div class="summary-item">write() and writelines()</div>
+                    <div class="summary-item">Always use 'with' for file handling</div>
+                    <div class="summary-item">try/except catches exceptions</div>
+                    <div class="summary-item">finally always runs for cleanup</div>
+                </div>
+            </div>
+
+            <h3>Best Practices Summary</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Do âœ…</th>
+                        <th>Don't âŒ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Use <code>with open()</code></td>
+                        <td>Forget to close files</td>
+                    </tr>
+                    <tr>
+                        <td>Specify <code>encoding="utf-8"</code></td>
+                        <td>Rely on default encoding</td>
+                    </tr>
+                    <tr>
+                        <td>Catch specific exceptions</td>
+                        <td>Use bare <code>except:</code></td>
+                    </tr>
+                    <tr>
+                        <td>Use <code>finally</code> for cleanup</td>
+                        <td>Leave resources open on error</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>What's Next?</h3>
+
+            <p>In <strong>Chapter 7</strong>, you'll explore Object-Oriented Programming:</p>
+
+            <ul>
+                <li><strong>Classes and Objects:</strong> Creating custom data types</li>
+                <li><strong>Attributes and Methods:</strong> Data and behavior together</li>
+                <li><strong>Inheritance:</strong> Building on existing classes</li>
+                <li><strong>Encapsulation:</strong> Protecting data</li>
+            </ul>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Build a Data Logger:</strong></p>
+                <ol>
+                    <li>Create a program that reads numbers from a file (one per line)</li>
+                    <li>Calculate mean, min, max</li>
+                    <li>Handle errors gracefully (file not found, invalid data)</li>
+                    <li>Write results to an output file</li>
+                    <li>Use <code>with</code> statements and proper exception handling</li>
+                </ol>
+                <p>This exercise combines file I/O, exception handling, and data processing!</p>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

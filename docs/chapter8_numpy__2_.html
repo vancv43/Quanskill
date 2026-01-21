@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: NumPy Fundamentals | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-orange: #ff9000;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --array-color: #8b5cf6;
+            --index-color: #06b6d4;
+            --ops-color: #ec4899;
+            --stats-color: #10b981;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.8; font-size: 17px; }
+        .header { background: var(--gradient-blue); color: white; padding: 1rem 2rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .header-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .sidebar { position: fixed; left: 0; top: 60px; bottom: 0; width: 300px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; padding: 1.5rem 0; z-index: 900; transition: transform 0.3s; }
+        .sidebar-header { padding: 0 1.5rem 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+        .logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--quanskill-blue); }
+        .chapter-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); }
+        .nav-section { padding: 0.5rem 1.5rem; }
+        .nav-section-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); padding: 0.5rem 1rem; font-weight: 600; }
+        .nav-link { display: block; padding: 0.6rem 1rem; color: var(--text-secondary); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; border-radius: 8px; margin-bottom: 0.25rem; transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+        .nav-link.active { background: rgba(11, 47, 160, 0.1); color: var(--quanskill-blue); border-left-color: var(--quanskill-orange); font-weight: 500; }
+        .main-content { margin-left: 300px; padding: 80px 2rem 4rem; max-width: calc(100% - 300px); }
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+        .hero { background: var(--gradient-blue); color: white; padding: 4rem 3rem; border-radius: 20px; margin-bottom: 3rem; position: relative; overflow: hidden; }
+        .hero::after { content: '🔍¢'; position: absolute; bottom: 20px; right: 40px; font-size: 80px; opacity: 0.15; font-family: 'JetBrains Mono', monospace; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-badge { display: inline-block; background: var(--quanskill-orange); padding: 0.35rem 1rem; border-radius: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.15rem; opacity: 0.9; max-width: 600px; }
+        .hero-quote { margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-left: 4px solid var(--quanskill-orange); border-radius: 0 12px 12px 0; font-style: italic; }
+        .key-concepts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .concept-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; transition: transform 0.2s; }
+        .concept-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .concept-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; font-size: 1.25rem; }
+        .concept-card.array .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.index .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.ops .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .concept-card.stats .icon { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .concept-card h5 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .concept-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0; }
+        .section { background: var(--bg-card); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
+        .section-number { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: white; padding: 0.5rem 1rem; border-radius: 8px; white-space: nowrap; }
+        .section-number.array { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.index { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.ops { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .section-number.stats { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 600; color: var(--quanskill-blue); }
+        .section h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 600; margin: 2rem 0 1rem; }
+        .section p { margin-bottom: 1.25rem; }
+        .definition-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%); border-left: 4px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .definition-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: block; }
+        .note-box { background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%); border-left: 4px solid var(--quanskill-orange); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .note-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #e68200; margin-bottom: 0.75rem; display: block; }
+        .stats-box { background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%); border-left: 4px solid var(--stats-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .stats-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--stats-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-box .label::before { content: '📈'; }
+        .index-box { background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%); border-left: 4px solid var(--index-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .index-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--index-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .index-box .label::before { content: '🔍¢'; }
+        .ops-box { background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%); border-left: 4px solid var(--ops-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .ops-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--ops-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .ops-box .label::before { content: 'âš¡'; }
+        .quanskill-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%); border: 2px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; position: relative; }
+        .quanskill-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-orange); border-radius: 12px 12px 0 0; }
+        .quanskill-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quanskill-box .label::before { content: '🎓'; }
+        code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: var(--quanskill-blue); }
+        pre { background: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.6; }
+        pre code { background: transparent; padding: 0; color: #e2e8f0; }
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .data-table, .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .data-table th, .comparison-table th { background: var(--code-bg); font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--quanskill-blue); padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid var(--border-color); }
+        .data-table td, .comparison-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .data-table tr:hover td, .comparison-table tr:hover td { background: rgba(11, 47, 160, 0.02); }
+        .quiz-box { background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px dashed var(--quanskill-orange); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; }
+        .quiz-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: #e68200; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quiz-box .label::before { content: '🧠'; }
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .quiz-option { padding: 0.75rem 1rem; background: white; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; }
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        .quiz-feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+        .summary-box { background: var(--gradient-blue); color: white; padding: 2rem; border-radius: 16px; margin: 2rem 0; }
+        .summary-box h3 { font-family: 'Space Grotesk', sans-serif; color: white; margin-top: 0; }
+        .summary-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .summary-item { display: flex; align-items: center; gap: 0.5rem; }
+        .summary-item::before { content: '🐍'; background: var(--quanskill-orange); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+        .array-visual { background: var(--code-bg); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center; }
+        .array-visual-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--quanskill-blue); margin-bottom: 1rem; }
+        .array-1d { display: inline-flex; gap: 4px; margin: 0.5rem 0; }
+        .array-cell { width: 45px; height: 45px; background: white; border: 2px solid var(--array-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+        .array-cell.highlight { background: var(--array-color); color: white; }
+        .array-2d-wrapper { display: inline-flex; flex-direction: column; gap: 4px; }
+        .array-index { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .creation-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .creation-card { background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 1rem; transition: all 0.3s; }
+        .creation-card:hover { border-color: var(--array-color); box-shadow: 0 4px 16px rgba(139, 92, 246, 0.15); }
+        .creation-card h5 { font-family: 'JetBrains Mono', monospace; color: var(--array-color); margin-bottom: 0.5rem; }
+        .creation-card .desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .creation-card code { display: block; background: #1e293b; color: #e2e8f0; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; }
+        .floating-back-btn { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-blue); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; text-decoration: none !important; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.85rem; z-index: 9999; box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .floating-back-btn:hover { transform: translateY(-2px); background: var(--gradient-orange); }
+        .progress-bar { position: fixed; top: 60px; left: 300px; right: 0; height: 3px; background: var(--border-color); z-index: 800; }
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+        .mobile-menu-btn { display: none; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--quanskill-blue); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 1.25rem; }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn { top: auto; bottom: 20px; right: 15px; padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 8 Â· NumPy</div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Array Basics</div>
+            <a href="#section-8-1" class="nav-link">The ndarray</a>
+            <a href="#section-8-2" class="nav-link">Creating Arrays</a>
+            <a href="#section-8-3" class="nav-link">Data Types</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Indexing</div>
+            <a href="#section-8-4" class="nav-link">Indexing & Slicing</a>
+            <a href="#section-8-5" class="nav-link">Boolean Indexing</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Operations</div>
+            <a href="#section-8-6" class="nav-link">Vectorization</a>
+            <a href="#section-8-7" class="nav-link">Broadcasting</a>
+            <a href="#section-8-8" class="nav-link">Aggregations</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Summary</a>
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 8</span>
+                <h1>NumPy Fundamentals</h1>
+                <p class="hero-subtitle">Master NumPy - the foundation of scientific computing in Python. Learn to work with powerful multidimensional arrays.</p>
+                <div class="hero-quote">"NumPy is the backbone of data science in Python. Understanding arrays is essential for everything that follows."<br><br>- <strong>Quanskill Data Science Philosophy</strong></div>
+            </div>
+        </section>
+
+        <!-- Key Concepts -->
+        <div class="key-concepts">
+            <div class="concept-card array"><div class="icon">📊</div><h5>ndarray</h5><p>N-dimensional arrays</p></div>
+            <div class="concept-card index"><div class="icon">🔍¢</div><h5>Indexing</h5><p>Access elements</p></div>
+            <div class="concept-card ops"><div class="icon">âš¡</div><h5>Vectorization</h5><p>Fast operations</p></div>
+            <div class="concept-card stats"><div class="icon">📈</div><h5>Broadcasting</h5><p>Different shapes</p></div>
+            <div class="concept-card array"><div class="icon">📝§®</div><h5>Aggregations</h5><p>sum, mean, std</p></div>
+            <div class="concept-card index"><div class="icon">âœ‚</div><h5>Slicing</h5><p>Extract subarrays</p></div>
+        </div>
+
+        <!-- Section 8.1: The ndarray -->
+        <section class="section" id="section-8-1">
+            <div class="section-header"><span class="section-number array">8.1</span><h2>The NumPy ndarray</h2></div>
+            <p>NumPy's core is the <strong>ndarray</strong> (N-dimensional array) - a fast, flexible container for large datasets.</p>
+            <div class="definition-box">
+                <span class="label">What is NumPy?</span>
+                <p><strong>NumPy</strong> (Numerical Python) provides high-performance multidimensional arrays that are up to 50x faster than Python lists for numerical operations.</p>
+            </div>
+            <pre><code><span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+<span class="code-comment"># Create array from list</span>
+arr = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>])
+<span class="code-function">print</span>(arr.shape)  <span class="code-comment"># (5,)</span>
+<span class="code-function">print</span>(arr.dtype)  <span class="code-comment"># int64</span>
+<span class="code-function">print</span>(arr.ndim)   <span class="code-comment"># 1</span>
+
+<span class="code-comment"># 2D array (matrix)</span>
+arr2d = np.array([[<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>], [<span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>], [<span class="code-number">7</span>, <span class="code-number">8</span>, <span class="code-number">9</span>]])
+<span class="code-function">print</span>(arr2d.shape)  <span class="code-comment"># (3, 3)</span></code></pre>
+            <div class="array-visual">
+                <div class="array-visual-title">1D Array Visualization</div>
+                <div class="array-1d">
+                    <div class="array-cell">1</div><div class="array-cell">2</div><div class="array-cell">3</div><div class="array-cell">4</div><div class="array-cell">5</div>
+                </div>
+                <div class="array-index">[0] [1] [2] [3] [4]</div>
+            </div>
+        </section>
+
+        <!-- Section 8.2: Creating Arrays -->
+        <section class="section" id="section-8-2">
+            <div class="section-header"><span class="section-number array">8.2</span><h2>Creating Arrays</h2></div>
+            <p>NumPy provides many functions to create arrays with specific values, shapes, or patterns.</p>
+            <div class="creation-cards">
+                <div class="creation-card"><h5>np.zeros()</h5><p class="desc">Array of zeros</p><code>np.zeros((3, 4))</code></div>
+                <div class="creation-card"><h5>np.ones()</h5><p class="desc">Array of ones</p><code>np.ones((2, 3))</code></div>
+                <div class="creation-card"><h5>np.arange()</h5><p class="desc">Range of values</p><code>np.arange(0, 10, 2)</code></div>
+                <div class="creation-card"><h5>np.linspace()</h5><p class="desc">Evenly spaced</p><code>np.linspace(0, 1, 5)</code></div>
+                <div class="creation-card"><h5>np.eye()</h5><p class="desc">Identity matrix</p><code>np.eye(3)</code></div>
+                <div class="creation-card"><h5>np.random.rand()</h5><p class="desc">Random [0, 1)</p><code>np.random.rand(2, 3)</code></div>
+            </div>
+            <pre><code>zeros = np.<span class="code-function">zeros</span>((<span class="code-number">3</span>, <span class="code-number">4</span>))     <span class="code-comment"># 3×4 array of 0s</span>
+ones = np.<span class="code-function">ones</span>((<span class="code-number">2</span>, <span class="code-number">3</span>))       <span class="code-comment"># 2×3 array of 1s</span>
+arr = np.<span class="code-function">arange</span>(<span class="code-number">0</span>, <span class="code-number">10</span>, <span class="code-number">2</span>)    <span class="code-comment"># [0 2 4 6 8]</span>
+arr = np.<span class="code-function">linspace</span>(<span class="code-number">0</span>, <span class="code-number">1</span>, <span class="code-number">5</span>)   <span class="code-comment"># [0. 0.25 0.5 0.75 1.]</span>
+
+<span class="code-comment"># Reshape arrays</span>
+arr = np.<span class="code-function">arange</span>(<span class="code-number">12</span>).<span class="code-function">reshape</span>((<span class="code-number">3</span>, <span class="code-number">4</span>))</code></pre>
+        </section>
+
+        <!-- Section 8.3: Data Types -->
+        <section class="section" id="section-8-3">
+            <div class="section-header"><span class="section-number array">8.3</span><h2>Data Types (dtype)</h2></div>
+            <p>Every NumPy array has a <code>dtype</code> that specifies the type of elements it contains.</p>
+            <table class="data-table">
+                <thead><tr><th>dtype</th><th>Description</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td><code>int32, int64</code></td><td>Integers</td><td>-5, 0, 42</td></tr>
+                    <tr><td><code>float32, float64</code></td><td>Floating point</td><td>3.14, -0.5</td></tr>
+                    <tr><td><code>bool</code></td><td>Boolean</td><td>True, False</td></tr>
+                    <tr><td><code>complex64</code></td><td>Complex numbers</td><td>1+2j</td></tr>
+                </tbody>
+            </table>
+            <pre><code>arr = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>], dtype=np.float32)
+<span class="code-function">print</span>(arr.dtype)  <span class="code-comment"># float32</span>
+
+<span class="code-comment"># Convert with astype()</span>
+arr_int = arr.<span class="code-function">astype</span>(np.int64)</code></pre>
+        </section>
+
+        <!-- Section 8.4: Indexing & Slicing -->
+        <section class="section" id="section-8-4">
+            <div class="section-header"><span class="section-number index">8.4</span><h2>Indexing & Slicing</h2></div>
+            <p>Indexing NumPy arrays is similar to Python lists, with powerful extensions for multidimensional data.</p>
+            <pre><code>arr = np.array([<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>, <span class="code-number">40</span>, <span class="code-number">50</span>])
+
+<span class="code-comment"># Basic indexing</span>
+<span class="code-function">print</span>(arr[<span class="code-number">0</span>])    <span class="code-comment"># 10</span>
+<span class="code-function">print</span>(arr[-<span class="code-number">1</span>])   <span class="code-comment"># 50</span>
+<span class="code-function">print</span>(arr[<span class="code-number">1</span>:<span class="code-number">4</span>])  <span class="code-comment"># [20 30 40]</span>
+
+<span class="code-comment"># 2D indexing</span>
+arr2d = np.array([[<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>], [<span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>], [<span class="code-number">7</span>, <span class="code-number">8</span>, <span class="code-number">9</span>]])
+<span class="code-function">print</span>(arr2d[<span class="code-number">1</span>, <span class="code-number">2</span>])    <span class="code-comment"># 6</span>
+<span class="code-function">print</span>(arr2d[<span class="code-number">0</span>])       <span class="code-comment"># [1 2 3] (first row)</span>
+<span class="code-function">print</span>(arr2d[:, <span class="code-number">0</span>])    <span class="code-comment"># [1 4 7] (first column)</span>
+<span class="code-function">print</span>(arr2d[:<span class="code-number">2</span>, <span class="code-number">1</span>:])  <span class="code-comment"># [[2 3] [5 6]]</span></code></pre>
+            <div class="note-box">
+                <span class="label">âš  Views vs Copies</span>
+                <p>NumPy slices are <strong>views</strong>, not copies! Changes affect the original array. Use <code>.copy()</code> for independent copies.</p>
+            </div>
+        </section>
+
+        <!-- Section 8.5: Boolean Indexing -->
+        <section class="section" id="section-8-5">
+            <div class="section-header"><span class="section-number index">8.5</span><h2>Boolean Indexing</h2></div>
+            <p>Boolean indexing uses True/False arrays to filter data based on conditions.</p>
+            <pre><code>arr = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>, <span class="code-number">7</span>, <span class="code-number">8</span>, <span class="code-number">9</span>, <span class="code-number">10</span>])
+
+<span class="code-comment"># Filter with conditions</span>
+<span class="code-function">print</span>(arr[arr > <span class="code-number">5</span>])   <span class="code-comment"># [6 7 8 9 10]</span>
+<span class="code-function">print</span>(arr[(arr > <span class="code-number">3</span>) & (arr < <span class="code-number">8</span>)])  <span class="code-comment"># [4 5 6 7]</span>
+<span class="code-function">print</span>(arr[arr % <span class="code-number">2</span> == <span class="code-number">0</span>])  <span class="code-comment"># [2 4 6 8 10]</span></code></pre>
+            <div class="index-box">
+                <span class="label">Data Science Example</span>
+<pre style="margin-bottom: 0;"><code>scores = np.array([<span class="code-number">85</span>, <span class="code-number">92</span>, <span class="code-number">78</span>, <span class="code-number">95</span>, <span class="code-number">67</span>])
+names = np.array([<span class="code-string">'Alice'</span>, <span class="code-string">'Bob'</span>, <span class="code-string">'Carol'</span>, <span class="code-string">'Dave'</span>, <span class="code-string">'Eve'</span>])
+<span class="code-function">print</span>(names[scores >= <span class="code-number">90</span>])  <span class="code-comment"># ['Bob' 'Dave']</span></code></pre>
+            </div>
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What does <code>arr[arr > 0]</code> return for <code>arr = np.array([-2, 0, 3, -1, 5])</code>?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">[-2, 0, 3, -1, 5]</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">[3, 5]</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">[True, False, True, False, True]</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Boolean indexing selects only elements where condition is True.</div>
+                <div class="quiz-feedback incorrect">Boolean indexing returns elements where condition is True.</div>
+            </div>
+        </section>
+
+        <!-- Section 8.6: Vectorization -->
+        <section class="section" id="section-8-6">
+            <div class="section-header"><span class="section-number ops">8.6</span><h2>Vectorized Operations</h2></div>
+            <p><strong>Vectorization</strong> means performing operations on entire arrays without explicit loops. This is NumPy's superpower!</p>
+            <div class="definition-box">
+                <span class="label">Why Vectorization?</span>
+                <p>Vectorized operations are <strong>10-100x faster</strong> than Python loops because they run in optimized C code.</p>
+            </div>
+            <pre><code>arr = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>])
+<span class="code-function">print</span>(arr + <span class="code-number">10</span>)   <span class="code-comment"># [11 12 13 14 15]</span>
+<span class="code-function">print</span>(arr * <span class="code-number">2</span>)    <span class="code-comment"># [ 2  4  6  8 10]</span>
+<span class="code-function">print</span>(arr ** <span class="code-number">2</span>)   <span class="code-comment"># [ 1  4  9 16 25]</span>
+
+<span class="code-comment"># Array-to-array operations</span>
+a = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>])
+b = np.array([<span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>])
+<span class="code-function">print</span>(a + b)  <span class="code-comment"># [5 7 9]</span>
+<span class="code-function">print</span>(a * b)  <span class="code-comment"># [ 4 10 18]</span>
+
+<span class="code-comment"># Universal functions (ufuncs)</span>
+<span class="code-function">print</span>(np.<span class="code-function">sqrt</span>(arr))  <span class="code-comment"># [1. 1.41 1.73 2. 2.24]</span></code></pre>
+            <div class="ops-box">
+                <span class="label">Speed Comparison</span>
+<pre style="margin-bottom: 0;"><code><span class="code-comment"># Python loop (SLOW)</span>
+result = [x * <span class="code-number">2</span> <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1000000</span>)]
+
+<span class="code-comment"># NumPy (FAST - ~100x faster!)</span>
+result = np.<span class="code-function">arange</span>(<span class="code-number">1000000</span>) * <span class="code-number">2</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 8.7: Broadcasting -->
+        <section class="section" id="section-8-7">
+            <div class="section-header"><span class="section-number ops">8.7</span><h2>Broadcasting</h2></div>
+            <p><strong>Broadcasting</strong> allows NumPy to perform operations on arrays of different shapes by automatically "stretching" smaller arrays.</p>
+            <div class="definition-box">
+                <span class="label">Broadcasting Rule</span>
+                <p>Arrays are compatible if, for each dimension (right to left), sizes are equal or one is 1.</p>
+            </div>
+            <pre><code><span class="code-comment"># Scalar broadcast to array</span>
+arr = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>])
+<span class="code-function">print</span>(arr * <span class="code-number">10</span>)  <span class="code-comment"># [10 20 30]</span>
+
+<span class="code-comment"># 1D broadcast to 2D</span>
+arr2d = np.array([[<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>], [<span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>]])
+row = np.array([<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>])
+<span class="code-function">print</span>(arr2d + row)
+<span class="code-comment"># [[11 22 33]
+#  [14 25 36]]</span></code></pre>
+            <div class="array-visual">
+                <div class="array-visual-title">Broadcasting: arr2d + row</div>
+                <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 1rem;">
+                    <div class="array-2d-wrapper">
+                        <div class="array-1d"><div class="array-cell">1</div><div class="array-cell">2</div><div class="array-cell">3</div></div>
+                        <div class="array-1d"><div class="array-cell">4</div><div class="array-cell">5</div><div class="array-cell">6</div></div>
+                    </div>
+                    <span style="font-size: 1.5rem;">+</span>
+                    <div class="array-1d" style="background: rgba(236, 72, 153, 0.1); padding: 0.5rem; border-radius: 8px;">
+                        <div class="array-cell" style="border-color: var(--ops-color);">10</div>
+                        <div class="array-cell" style="border-color: var(--ops-color);">20</div>
+                        <div class="array-cell" style="border-color: var(--ops-color);">30</div>
+                    </div>
+                    <span style="font-size: 1.5rem;">=</span>
+                    <div class="array-2d-wrapper">
+                        <div class="array-1d"><div class="array-cell highlight">11</div><div class="array-cell highlight">22</div><div class="array-cell highlight">33</div></div>
+                        <div class="array-1d"><div class="array-cell highlight">14</div><div class="array-cell highlight">25</div><div class="array-cell highlight">36</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8.8: Aggregations -->
+        <section class="section" id="section-8-8">
+            <div class="section-header"><span class="section-number stats">8.8</span><h2>Aggregations & Statistics</h2></div>
+            <p>NumPy provides fast aggregation functions to compute statistics across arrays.</p>
+            <table class="data-table">
+                <thead><tr><th>Function</th><th>Description</th><th>NaN-Safe</th></tr></thead>
+                <tbody>
+                    <tr><td><code>np.sum()</code></td><td>Sum of elements</td><td><code>np.nansum()</code></td></tr>
+                    <tr><td><code>np.mean()</code></td><td>Arithmetic mean</td><td><code>np.nanmean()</code></td></tr>
+                    <tr><td><code>np.std()</code></td><td>Standard deviation</td><td><code>np.nanstd()</code></td></tr>
+                    <tr><td><code>np.min(), np.max()</code></td><td>Min/Max values</td><td><code>np.nanmin()</code></td></tr>
+                    <tr><td><code>np.argmin(), np.argmax()</code></td><td>Index of min/max</td><td><code>np.nanargmin()</code></td></tr>
+                </tbody>
+            </table>
+            <pre><code>arr = np.array([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>])
+<span class="code-function">print</span>(arr.<span class="code-function">sum</span>())   <span class="code-comment"># 15</span>
+<span class="code-function">print</span>(arr.<span class="code-function">mean</span>())  <span class="code-comment"># 3.0</span>
+<span class="code-function">print</span>(arr.<span class="code-function">std</span>())   <span class="code-comment"># 1.41...</span>
+
+<span class="code-comment"># Aggregate along axes</span>
+arr2d = np.array([[<span class="code-number">1</span>,<span class="code-number">2</span>,<span class="code-number">3</span>],[<span class="code-number">4</span>,<span class="code-number">5</span>,<span class="code-number">6</span>],[<span class="code-number">7</span>,<span class="code-number">8</span>,<span class="code-number">9</span>]])
+<span class="code-function">print</span>(arr2d.<span class="code-function">sum</span>(axis=<span class="code-number">0</span>))  <span class="code-comment"># [12 15 18] (column sums)</span>
+<span class="code-function">print</span>(arr2d.<span class="code-function">sum</span>(axis=<span class="code-number">1</span>))  <span class="code-comment"># [ 6 15 24] (row sums)</span></code></pre>
+            <div class="stats-box">
+                <span class="label">Data Science Example</span>
+<pre style="margin-bottom: 0;"><code><span class="code-comment"># Exam scores: 3 students, 3 exams</span>
+scores = np.array([[<span class="code-number">85</span>,<span class="code-number">90</span>,<span class="code-number">88</span>],[<span class="code-number">72</span>,<span class="code-number">78</span>,<span class="code-number">80</span>],[<span class="code-number">95</span>,<span class="code-number">92</span>,<span class="code-number">98</span>]])
+<span class="code-function">print</span>(<span class="code-string">f"Student averages: {scores.mean(axis=1)}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Exam averages: {scores.mean(axis=0)}"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Class average: {scores.mean():.2f}"</span>)</code></pre>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header"><span class="section-number" style="background: var(--gradient-orange);">Summary</span><h2>Chapter 8 Review</h2></div>
+            <p>You've learned the fundamentals of NumPy - essential for data science and scientific computing in Python.</p>
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">ndarray is NumPy's core data structure</div>
+                    <div class="summary-item">Use zeros(), ones(), arange(), linspace()</div>
+                    <div class="summary-item">dtype determines element types</div>
+                    <div class="summary-item">Indexing: arr[row, col] for 2D</div>
+                    <div class="summary-item">Slices are views, not copies</div>
+                    <div class="summary-item">Vectorization avoids slow loops</div>
+                    <div class="summary-item">Broadcasting stretches dimensions</div>
+                    <div class="summary-item">Aggregations: sum, mean, std, etc.</div>
+                </div>
+            </div>
+            <h3>Essential Functions</h3>
+            <table class="comparison-table">
+                <thead><tr><th>Category</th><th>Functions</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Creation</strong></td><td><code>array, zeros, ones, arange, linspace, eye</code></td></tr>
+                    <tr><td><strong>Shape</strong></td><td><code>reshape, flatten, ravel, transpose, T</code></td></tr>
+                    <tr><td><strong>Math</strong></td><td><code>+, -, *, /, **, sqrt, exp, log, sin, cos</code></td></tr>
+                    <tr><td><strong>Stats</strong></td><td><code>sum, mean, std, var, min, max, median</code></td></tr>
+                </tbody>
+            </table>
+            <h3>What's Next?</h3>
+            <p>In <strong>Chapter 9</strong>, you'll learn Pandas for data manipulation: Series, DataFrame, data loading, cleaning, and GroupBy operations.</p>
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Stock Analysis with NumPy:</strong></p>
+                <ol>
+                    <li>Create a 2D array of daily stock prices (5 stocks × 30 days)</li>
+                    <li>Calculate the average price for each stock</li>
+                    <li>Find the day with the highest total value</li>
+                    <li>Calculate daily returns and identify positive return days</li>
+                </ol>
+            </div>
+        </section>
+
+        </div>
+    </main>
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressFill').style.width = (winScroll / height) * 100 + '%';
+        });
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 100) current = section.getAttribute('id'); });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

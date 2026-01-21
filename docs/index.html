@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Engineer Foundation | Quanskill - Python and Mathematics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.8; font-size: 17px; }
+        .header { background: var(--gradient-blue); color: white; padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3); }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .header-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: white; text-decoration: none; }
+        .header-logo img { height: 40px; border-radius: 8px; }
+        .assessment-link { background: var(--quanskill-orange); color: white; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; transition: all 0.3s ease; }
+        .assessment-link:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 144, 0, 0.4); }
+        .hero { background: var(--gradient-blue); color: white; padding: 4rem 2rem; text-align: center; position: relative; }
+        .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: var(--gradient-orange); }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: 3rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero h1 span { color: var(--quanskill-orange); }
+        .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 700px; margin: 0 auto 2rem; }
+        .hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+        .hero-stat { text-align: center; }
+        .hero-stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; display: block; color: var(--quanskill-orange); }
+        .hero-stat-label { font-size: 0.9rem; opacity: 0.85; }
+        .main { max-width: 1400px; margin: 0 auto; padding: 3rem 2rem; }
+        
+        /* Track Cards */
+        .tracks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-bottom: 2rem; }
+        .track-card { background: var(--bg-card); border-radius: 16px; box-shadow: 0 4px 20px rgba(11, 47, 160, 0.08); overflow: hidden; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; }
+        .track-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(11, 47, 160, 0.15); border-color: var(--quanskill-blue); }
+        .track-card.math:hover { border-color: var(--ml-accent); }
+        .track-header { padding: 2rem; background: linear-gradient(135deg, rgba(11, 47, 160, 0.03) 0%, rgba(26, 79, 208, 0.06) 100%); border-bottom: 3px solid var(--quanskill-blue); }
+        .track-card.math .track-header { background: linear-gradient(135deg, rgba(124, 58, 237, 0.03) 0%, rgba(124, 58, 237, 0.06) 100%); border-bottom-color: var(--ml-accent); }
+        .track-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; background: var(--gradient-blue); color: white; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+        .track-card.math .track-icon { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); }
+        .track-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--quanskill-blue); margin-bottom: 0.5rem; }
+        .track-card.math .track-title { color: var(--ml-accent); }
+        .track-description { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1rem; }
+        .track-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--text-secondary); }
+        
+        /* Track Modules with Scrollbar */
+        .track-modules { 
+            padding: 1.5rem 2rem 2rem; 
+            height: 420px; 
+            overflow-y: auto; 
+            flex: 1;
+        }
+        .track-modules::-webkit-scrollbar { width: 8px; }
+        .track-modules::-webkit-scrollbar-track { background: var(--bg-primary); border-radius: 4px; }
+        .track-modules::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--quanskill-blue) 0%, var(--quanskill-blue-light) 100%); border-radius: 4px; }
+        .track-modules::-webkit-scrollbar-thumb:hover { background: var(--quanskill-blue-dark); }
+        .track-card.math .track-modules::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #7c3aed 0%, #a78bfa 100%); }
+        .track-card.math .track-modules::-webkit-scrollbar-thumb:hover { background: #6d28d9; }
+        
+        .module-group { margin-bottom: 1.5rem; }
+        .module-group:last-child { margin-bottom: 0; }
+        .module-group-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color); }
+        .module-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .module-item { display: flex; align-items: center; gap: 1rem; padding: 0.875rem 1rem; background: var(--bg-primary); border-radius: 10px; transition: all 0.2s ease; border: 1px solid transparent; }
+        .module-item:hover { background: var(--bg-card); border-color: var(--border-color); transform: translateX(4px); }
+        .module-num { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; background: var(--gradient-blue); color: white; }
+        .track-card.math .module-num { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); }
+        .module-info { flex: 1; min-width: 0; }
+        .module-info h4 { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.15rem; }
+        .module-info p { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .module-links { display: flex; gap: 0.4rem; flex-shrink: 0; }
+        .module-link { padding: 0.35rem 0.7rem; border-radius: 5px; font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; }
+        .module-link.theory { background: var(--quanskill-blue); color: white; }
+        .module-link.theory:hover { background: var(--quanskill-blue-dark); }
+        .module-link.lab { background: var(--quanskill-orange); color: white; }
+        .module-link.lab:hover { background: var(--quanskill-orange-dark); }
+        
+        /* Roadmap Section */
+        .roadmap-section { background: var(--bg-card); border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 20px rgba(11, 47, 160, 0.08); margin-bottom: 2rem; }
+        .roadmap-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; color: var(--quanskill-blue); text-align: center; margin-bottom: 0.5rem; }
+        .roadmap-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; }
+        .roadmap { display: flex; justify-content: space-between; position: relative; padding: 1.5rem 0; }
+        .roadmap::before { content: ''; position: absolute; top: 50%; left: 8%; right: 8%; height: 4px; background: linear-gradient(90deg, var(--quanskill-blue) 0%, var(--ml-accent) 50%, var(--quanskill-orange) 100%); border-radius: 2px; transform: translateY(-50%); }
+        .roadmap-step { text-align: center; position: relative; z-index: 1; flex: 1; }
+        .roadmap-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-card); border: 3px solid var(--quanskill-blue); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; margin: 0 auto 0.75rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); font-family: 'Space Grotesk', sans-serif; }
+        .roadmap-step:nth-child(2) .roadmap-icon { border-color: var(--quanskill-blue-light); }
+        .roadmap-step:nth-child(3) .roadmap-icon { border-color: var(--ml-accent); }
+        .roadmap-step:nth-child(4) .roadmap-icon { border-color: #a78bfa; }
+        .roadmap-step:nth-child(5) .roadmap-icon { border-color: var(--quanskill-orange); }
+        .roadmap-step-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.2rem; }
+        .roadmap-step-desc { font-size: 0.8rem; color: var(--text-secondary); }
+        
+        /* CTA Banners - Unified Style */
+        .cta-banner { 
+            background: var(--gradient-blue); 
+            border-radius: 16px; 
+            padding: 2rem 2.5rem; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 2rem; 
+            position: relative; 
+            overflow: hidden; 
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.25);
+        }
+        .cta-banner::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            right: 0; 
+            width: 300px; 
+            height: 100%; 
+            background: var(--gradient-orange); 
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%); 
+            opacity: 0.9; 
+        }
+        .cta-content { position: relative; z-index: 1; flex: 1; }
+        .cta-content h2 { 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 1.5rem; 
+            margin-bottom: 0.5rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+        }
+        .cta-content h2 .badge { 
+            background: white; 
+            color: var(--quanskill-blue); 
+            padding: 0.25rem 0.7rem; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+        }
+        .cta-content p { opacity: 0.9; font-size: 1rem; }
+        .cta-btn { 
+            position: relative; 
+            z-index: 1; 
+            background: white; 
+            color: var(--quanskill-blue); 
+            padding: 1rem 2rem; 
+            border-radius: 50px; 
+            text-decoration: none; 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            transition: all 0.3s ease; 
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .cta-btn:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); }
+        
+        /* Expert Section */
+        .expert-section { 
+            background: var(--bg-card); 
+            border-radius: 16px; 
+            padding: 2.5rem; 
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.08); 
+            margin-top: 1rem;
+            display: flex; 
+            align-items: center; 
+            gap: 2.5rem; 
+        }
+        .expert-image { 
+            width: 160px; 
+            height: 160px; 
+            border-radius: 16px; 
+            object-fit: cover; 
+            flex-shrink: 0; 
+            box-shadow: 0 8px 25px rgba(11, 47, 160, 0.15); 
+            border: 4px solid var(--quanskill-blue); 
+        }
+        .expert-content { flex: 1; }
+        .expert-label { 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            color: var(--quanskill-orange); 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+        }
+        .expert-label::before { content: ''; width: 24px; height: 3px; background: var(--gradient-orange); border-radius: 2px; }
+        .expert-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--quanskill-blue); margin-bottom: 0.5rem; }
+        .expert-title { font-size: 1rem; color: var(--ml-accent); font-weight: 600; margin-bottom: 0.75rem; font-family: 'Space Grotesk', sans-serif; }
+        .expert-bio { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1rem; }
+        .expert-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .expert-tag { 
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%); 
+            color: var(--quanskill-blue); 
+            padding: 0.4rem 0.9rem; 
+            border-radius: 20px; 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 0.8rem; 
+            font-weight: 500; 
+        }
+        .expert-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            background: var(--gradient-blue); 
+            color: white; 
+            padding: 0.7rem 1.4rem; 
+            border-radius: 25px; 
+            text-decoration: none; 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            transition: all 0.3s ease; 
+        }
+        .expert-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(11, 47, 160, 0.3); }
+        
+        .footer { background: var(--text-primary); color: white; padding: 2rem; text-align: center; margin-top: 3rem; }
+        .footer p { opacity: 0.7; font-size: 0.9rem; }
+        
+        /* Responsive */
+        @media (max-width: 1000px) { 
+            .tracks-grid { grid-template-columns: 1fr; } 
+            .hero h1 { font-size: 2.2rem; } 
+            .cta-banner { flex-direction: column; text-align: center; padding: 2rem; } 
+            .cta-banner::before { display: none; }
+            .roadmap { flex-direction: column; gap: 1.5rem; align-items: center; }
+            .roadmap::before { display: none; }
+            .expert-section { flex-direction: column; text-align: center; } 
+            .expert-label { justify-content: center; } 
+            .expert-tags { justify-content: center; } 
+        }
+        @media (max-width: 600px) { 
+            .header { padding: 0.75rem 1rem; } 
+            .header-logo { font-size: 1.2rem; } 
+            .header-logo img { height: 32px; } 
+            .assessment-link { padding: 0.5rem 1rem; font-size: 0.85rem; } 
+            .hero { padding: 2.5rem 1rem; } 
+            .hero h1 { font-size: 1.8rem; } 
+            .main { padding: 2rem 1rem; } 
+            .module-links { flex-direction: column; gap: 0.3rem; } 
+            .module-item { flex-wrap: wrap; } 
+            .module-info { width: 100%; } 
+            .expert-image { width: 120px; height: 120px; }
+            .track-modules { height: 350px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="Logo_for_Print.jpg" alt="Quanskill">
+            </a>
+            <a href="jupyter_lab_practice__15_.html" class="assessment-link">Start Coding</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>AI Engineer <span>Foundation</span></h1>
+        <p>Master Python programming and the mathematical foundations that power modern AI and Machine Learning</p>
+        <div class="hero-stats">
+            <div class="hero-stat"><span class="hero-stat-value">23</span><span class="hero-stat-label">Theory Modules</span></div>
+            <div class="hero-stat"><span class="hero-stat-value">22</span><span class="hero-stat-label">Practice Labs</span></div>
+            <div class="hero-stat"><span class="hero-stat-value">100+</span><span class="hero-stat-label">Hours of Content</span></div>
+        </div>
+    </section>
+
+    <main class="main">
+        <section class="roadmap-section">
+            <h2 class="roadmap-title">Recommended Learning Path</h2>
+            <p class="roadmap-subtitle">Follow this roadmap for the most effective learning experience</p>
+            <div class="roadmap">
+                <div class="roadmap-step"><div class="roadmap-icon">1</div><h4 class="roadmap-step-title">Python Basics</h4><p class="roadmap-step-desc">Ch. 1-4</p></div>
+                <div class="roadmap-step"><div class="roadmap-icon">2</div><h4 class="roadmap-step-title">Linear Algebra</h4><p class="roadmap-step-desc">Math Ch. 2-4</p></div>
+                <div class="roadmap-step"><div class="roadmap-icon">3</div><h4 class="roadmap-step-title">NumPy and Pandas</h4><p class="roadmap-step-desc">Python Ch. 8-9</p></div>
+                <div class="roadmap-step"><div class="roadmap-icon">4</div><h4 class="roadmap-step-title">Calculus and Prob</h4><p class="roadmap-step-desc">Math Ch. 5-7</p></div>
+                <div class="roadmap-step"><div class="roadmap-icon">5</div><h4 class="roadmap-step-title">ML Algorithms</h4><p class="roadmap-step-desc">Math Ch. 8-12</p></div>
+            </div>
+        </section>
+
+        <div class="tracks-grid">
+            <!-- PYTHON TRACK -->
+            <div class="track-card python">
+                <div class="track-header">
+                    <div class="track-icon">PY</div>
+                    <h3 class="track-title">Python for Data Science</h3>
+                    <p class="track-description">From basic syntax to advanced data analysis with NumPy, Pandas, and visualization.</p>
+                    <div class="track-meta"><span>11 Chapters</span><span>50+ Hours</span><span>11 Labs</span></div>
+                </div>
+                <div class="track-modules">
+                    <div class="module-group">
+                        <div class="module-group-title">Foundations</div>
+                        <div class="module-list">
+                            <div class="module-item"><span class="module-num">1</span><div class="module-info"><h4>Python Basics</h4><p>Variables, data types, operators</p></div><div class="module-links"><a href="chapter1_python_basics.html" class="module-link theory">Theory</a><a href="chapter1_python_lab__2_.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">2</span><div class="module-info"><h4>Collections</h4><p>Lists, tuples, dictionaries, sets</p></div><div class="module-links"><a href="chapter2_collections.html" class="module-link theory">Theory</a><a href="chapter2_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">3</span><div class="module-info"><h4>Control Flow</h4><p>Conditionals, loops, comprehensions</p></div><div class="module-links"><a href="chapter3_control_flow.html" class="module-link theory">Theory</a><a href="chapter3_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">4</span><div class="module-info"><h4>Functions and Modules</h4><p>Scope, decorators, packages</p></div><div class="module-links"><a href="chapter4_scope_modules.html" class="module-link theory">Theory</a><a href="chapter4_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">5</span><div class="module-info"><h4>Strings and Text</h4><p>String manipulation, regex</p></div><div class="module-links"><a href="chapter5_strings.html" class="module-link theory">Theory</a><a href="chapter5_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">6</span><div class="module-info"><h4>Files and Exceptions</h4><p>File I/O, error handling</p></div><div class="module-links"><a href="chapter6_files_exceptions.html" class="module-link theory">Theory</a><a href="chapter6_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">7</span><div class="module-info"><h4>Object-Oriented Programming</h4><p>Classes, inheritance</p></div><div class="module-links"><a href="chapter7_oop.html" class="module-link theory">Theory</a><a href="chapter7_python_lab.html" class="module-link lab">Lab</a></div></div>
+                        </div>
+                    </div>
+                    <div class="module-group">
+                        <div class="module-group-title">Data Science</div>
+                        <div class="module-list">
+                            <div class="module-item"><span class="module-num">8</span><div class="module-info"><h4>NumPy Foundations</h4><p>Arrays, vectorization</p></div><div class="module-links"><a href="chapter8_numpy__2_.html" class="module-link theory">Theory</a><a href="chapter8_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">9</span><div class="module-info"><h4>Pandas Essentials</h4><p>DataFrames, data manipulation</p></div><div class="module-links"><a href="chapter9_pandas.html" class="module-link theory">Theory</a><a href="chapter9_python_lab.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">10</span><div class="module-info"><h4>Data Visualization</h4><p>Matplotlib, Seaborn</p></div><div class="module-links"><a href="chapter10_visualization.html" class="module-link theory">Theory</a><a href="chapter10_python_lab__2_.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">11</span><div class="module-info"><h4>Capstone Project</h4><p>End-to-end project</p></div><div class="module-links"><a href="chapter11_project.html" class="module-link theory">Theory</a><a href="chapter11_python_lab.html" class="module-link lab">Lab</a></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MATHEMATICS TRACK -->
+            <div class="track-card math">
+                <div class="track-header">
+                    <div class="track-icon">ML</div>
+                    <h3 class="track-title">Mathematics for AI</h3>
+                    <p class="track-description">Essential math concepts: linear algebra, calculus, probability, and optimization.</p>
+                    <div class="track-meta"><span>12 Chapters</span><span>60+ Hours</span><span>11 Labs</span></div>
+                </div>
+                <div class="track-modules">
+                    <div class="module-group">
+                        <div class="module-group-title">Foundations</div>
+                        <div class="module-list">
+                            <div class="module-item"><span class="module-num">1</span><div class="module-info"><h4>Introduction and Welcome</h4><p>Course overview</p></div><div class="module-links"><a href="chapter1_welcome_hub__1_.html" class="module-link theory">Theory</a></div></div>
+                            <div class="module-item"><span class="module-num">2</span><div class="module-info"><h4>Linear Algebra</h4><p>Vectors, matrices, mappings</p></div><div class="module-links"><a href="linear-algebra-chapter2__3_.html" class="module-link theory">Theory</a><a href="linear_algebra_practice_hub__1_.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">3</span><div class="module-info"><h4>Analytic Geometry</h4><p>Norms, inner products</p></div><div class="module-links"><a href="chapter3_analytic_geometry.html" class="module-link theory">Theory</a><a href="chapter3_analytic_geometry_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">4</span><div class="module-info"><h4>Matrix Decompositions</h4><p>Eigenvalues, SVD</p></div><div class="module-links"><a href="matrix-decompositions-chapter4.html" class="module-link theory">Theory</a><a href="matrix_decomposition_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                        </div>
+                    </div>
+                    <div class="module-group">
+                        <div class="module-group-title">Calculus and Optimization</div>
+                        <div class="module-list">
+                            <div class="module-item"><span class="module-num">5</span><div class="module-info"><h4>Vector Calculus</h4><p>Gradients, Jacobians</p></div><div class="module-links"><a href="vector-calculus-chapter5.html" class="module-link theory">Theory</a><a href="vector_calculus_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">6</span><div class="module-info"><h4>Probability and Distributions</h4><p>Random variables</p></div><div class="module-links"><a href="probability-distributions-chapter6.html" class="module-link theory">Theory</a><a href="probability_distributions_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">7</span><div class="module-info"><h4>Continuous Optimization</h4><p>Gradient descent</p></div><div class="module-links"><a href="continuous-optimization-chapter7.html" class="module-link theory">Theory</a><a href="continuous_optimization_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                        </div>
+                    </div>
+                    <div class="module-group">
+                        <div class="module-group-title">Machine Learning</div>
+                        <div class="module-list">
+                            <div class="module-item"><span class="module-num">8</span><div class="module-info"><h4>When Models Meet Data</h4><p>Empirical risk</p></div><div class="module-links"><a href="ml_models_data__2_.html" class="module-link theory">Theory</a><a href="when_models_meet_data_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">9</span><div class="module-info"><h4>Linear Regression</h4><p>Least squares</p></div><div class="module-links"><a href="linear_regression.html" class="module-link theory">Theory</a><a href="linear_regression_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">10</span><div class="module-info"><h4>Dimensionality Reduction</h4><p>PCA, features</p></div><div class="module-links"><a href="dimensionality_reduction.html" class="module-link theory">Theory</a><a href="pca_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">11</span><div class="module-info"><h4>Density Estimation</h4><p>GMM, EM algorithm</p></div><div class="module-links"><a href="density_estimation.html" class="module-link theory">Theory</a><a href="gmm_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                            <div class="module-item"><span class="module-num">12</span><div class="module-info"><h4>Classification (SVM)</h4><p>Support vectors</p></div><div class="module-links"><a href="classification_svm.html" class="module-link theory">Theory</a><a href="svm_practice_hub.html" class="module-link lab">Lab</a></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Python Challenge Arena CTA -->
+        <section class="cta-banner">
+            <div class="cta-content">
+                <h2>🐍 Python Challenge Arena <span class="badge">NEW</span></h2>
+                <p>250 hands-on exercises across 14 topics with online compiler - from basics to advanced OOP!</p>
+            </div>
+            <a href="jupyter_lab_practice__15_.html" class="cta-btn">Start Coding</a>
+        </section>
+
+        <!-- Assessment CTA -->
+        <section class="cta-banner">
+            <div class="cta-content">
+                <h2>📝 Ready to Test Your Knowledge?</h2>
+                <p>Complete the comprehensive final assessment covering both Python and Mathematics</p>
+            </div>
+            <a href="final_appraisal.html" class="cta-btn">Start Assessment</a>
+        </section>
+
+        <!-- Expert Section -->
+        <section class="expert-section">
+            <img src="expert_hoang_dang.webp" alt="HoÃ ng Äáº·ng - Expert Instructor" class="expert-image">
+            <div class="expert-content">
+                <div class="expert-label">Meet Your Instructor</div>
+                <h3 class="expert-name">HoÃ ng Äáº·ng</h3>
+                <p class="expert-title">Python & Machine Learning Expert</p>
+                <p class="expert-bio">
+                    A seasoned technology professional with deep expertise in Python programming and Machine Learning. 
+                    Specializing in transforming complex AI concepts into accessible, practical knowledge through 
+                    hands-on training and real-world projects. Committed to making AI education inclusive and impactful 
+                    for learners at all levels.
+                </p>
+                <div class="expert-tags">
+                    <span class="expert-tag">Python</span>
+                    <span class="expert-tag">Machine Learning</span>
+                    <span class="expert-tag">Data Science</span>
+                    <span class="expert-tag">AI/ML Engineering</span>
+                </div>
+                <a href="https://www.quanskill.com/experts/35b9fca4-c988-4932-81a1-98e9963bcba6" class="expert-link" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    View Full Profile
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2024 Quanskill. All rights reserved. | AI Engineer Foundation Program</p>
+    </footer>
+</body>
+</html>

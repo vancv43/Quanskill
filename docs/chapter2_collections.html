@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Python Collections & Data Structures | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --python-accent: #3776ab;
+            --data-science-accent: #7c3aed;
+            --list-color: #10b981;
+            --tuple-color: #f59e0b;
+            --dict-color: #3b82f6;
+            --set-color: #ec4899;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📦';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 80px;
+            opacity: 0.15;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card.list-card .icon { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .concept-card.tuple-card .icon { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+        .concept-card.dict-card .icon { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); }
+        .concept-card.set-card .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-number.list { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .section-number.tuple { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+        .section-number.dict { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); }
+        .section-number.set { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .list-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--list-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .list-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--list-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .list-box .label::before { content: '📝‹'; }
+
+        .tuple-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.03) 100%);
+            border-left: 4px solid var(--tuple-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .tuple-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--tuple-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tuple-box .label::before { content: '🔍’'; }
+
+        .dict-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.03) 100%);
+            border-left: 4px solid var(--dict-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .dict-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--dict-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dict-box .label::before { content: '📝—‚'; }
+
+        .set-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%);
+            border-left: 4px solid var(--set-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .set-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--set-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .set-box .label::before { content: '🎯'; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before { content: 'â–¸'; color: var(--quanskill-orange); }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🌍'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .code-output { color: #86efac; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .visual-diagram {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .collection-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .visual-item {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .visual-bracket {
+            font-size: 2rem;
+            color: var(--quanskill-blue);
+            font-weight: 300;
+        }
+
+        .visual-index {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+
+        .collection-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .collection-type {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .collection-type:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .collection-type.list { border-color: var(--list-color); }
+        .collection-type.tuple { border-color: var(--tuple-color); }
+        .collection-type.dict { border-color: var(--dict-color); }
+        .collection-type.set { border-color: var(--set-color); }
+
+        .collection-type .symbol {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .collection-type h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .collection-type .syntax {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: var(--code-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .collection-type .feature {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .summary-box {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            margin-top: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item::before {
+            content: '🐍';
+            background: var(--quanskill-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 2 Â· Collections</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#comparison" class="nav-link">Collection Types</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Core Concepts</div>
+            <a href="#section-2-1" class="nav-link">Lists</a>
+            <a href="#section-2-2" class="nav-link">Tuples</a>
+            <a href="#section-2-3" class="nav-link">Dictionaries</a>
+            <a href="#section-2-4" class="nav-link">Sets</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 2</span>
+                <h1>Python Collections & Data Structures</h1>
+                <p class="hero-subtitle">
+                    Master Python's powerful built-in collection types - Lists, Tuples, Dictionaries, and Sets. These data structures are the backbone of data manipulation in data science.
+                </p>
+                <div class="hero-quote">
+                    "The right data structure can make the difference between a program that runs in seconds and one that runs in hours. Choose wisely!"
+                    <br><br>- <strong>Quanskill Data Science Principle</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collection Types Overview -->
+        <section class="section" id="comparison">
+            <div class="section-header">
+                <span class="section-number">Overview</span>
+                <h2>Python Collection Types at a Glance</h2>
+            </div>
+
+            <p>
+                Python provides four fundamental collection data types, each designed for specific use cases. Understanding when to use each type is essential for writing efficient, readable code.
+            </p>
+
+            <div class="collection-comparison">
+                <div class="collection-type list">
+                    <div class="symbol">📝‹</div>
+                    <h5>List</h5>
+                    <span class="syntax">[1, 2, 3]</span>
+                    <p class="feature">Ordered â€¢ Mutable â€¢ Allows Duplicates</p>
+                </div>
+                <div class="collection-type tuple">
+                    <div class="symbol">🔍’</div>
+                    <h5>Tuple</h5>
+                    <span class="syntax">(1, 2, 3)</span>
+                    <p class="feature">Ordered â€¢ Immutable â€¢ Allows Duplicates</p>
+                </div>
+                <div class="collection-type dict">
+                    <div class="symbol">📝—‚</div>
+                    <h5>Dictionary</h5>
+                    <span class="syntax">{"a": 1}</span>
+                    <p class="feature">Key-Value â€¢ Mutable â€¢ No Duplicate Keys</p>
+                </div>
+                <div class="collection-type set">
+                    <div class="symbol">🎯</div>
+                    <h5>Set</h5>
+                    <span class="syntax">{1, 2, 3}</span>
+                    <p class="feature">Unordered â€¢ Mutable â€¢ No Duplicates</p>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>List</th>
+                        <th>Tuple</th>
+                        <th>Dictionary</th>
+                        <th>Set</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ordered</strong></td>
+                        <td>âœ… Yes</td>
+                        <td>âœ… Yes</td>
+                        <td>âœ… Yes (3.7+)</td>
+                        <td>âŒ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mutable</strong></td>
+                        <td>âœ… Yes</td>
+                        <td>âŒ No</td>
+                        <td>âœ… Yes</td>
+                        <td>âœ… Yes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duplicates</strong></td>
+                        <td>âœ… Allowed</td>
+                        <td>âœ… Allowed</td>
+                        <td>âŒ Keys unique</td>
+                        <td>âŒ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Indexing</strong></td>
+                        <td>âœ… Yes</td>
+                        <td>âœ… Yes</td>
+                        <td>By key</td>
+                        <td>âŒ No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Data Science Insight</span>
+                <p>In data science, these collections are used everywhere:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Lists:</strong> Store sequences of data points, feature values, or results</li>
+                    <li><strong>Tuples:</strong> Return multiple values from functions, store coordinates</li>
+                    <li><strong>Dictionaries:</strong> Map feature names to values, store JSON data, create lookup tables</li>
+                    <li><strong>Sets:</strong> Find unique values, perform set operations on categories</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 2.1: Lists -->
+        <section class="section" id="section-2-1">
+            <div class="section-header">
+                <span class="section-number list">2.1</span>
+                <h2>Python Lists</h2>
+            </div>
+
+            <p>
+                Lists are one of the most versatile and commonly used data structures in Python. They are <strong>ordered collections</strong> that can hold items of any data type, and they're <strong>mutable</strong> - meaning you can modify them after creation.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: List</span>
+                <p>A <strong>list</strong> is a collection of objects separated by commas and enclosed in square brackets <code>[]</code>. Lists are mutable, ordered, and allow duplicate elements. They can contain items of different data types including numbers, strings, and even other lists.</p>
+            </div>
+
+            <h3>Creating Lists</h3>
+
+            <pre><code><span class="code-comment"># Creating lists in Python</span>
+
+<span class="code-comment"># Empty list</span>
+empty_list = []
+
+<span class="code-comment"># List with elements</span>
+fruits = [<span class="code-string">'apple'</span>, <span class="code-string">'banana'</span>, <span class="code-string">'cherry'</span>]
+
+<span class="code-comment"># Mixed data types (heterogeneous)</span>
+person = [<span class="code-string">'John'</span>, <span class="code-number">25</span>, <span class="code-string">'Engineer'</span>, <span class="code-number">75000.50</span>]
+
+<span class="code-comment"># Nested list</span>
+matrix = [[<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>], [<span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>], [<span class="code-number">7</span>, <span class="code-number">8</span>, <span class="code-number">9</span>]]
+
+<span class="code-function">print</span>(fruits)   <span class="code-comment"># ['apple', 'banana', 'cherry']</span></code></pre>
+
+            <h3>Accessing List Elements</h3>
+
+            <div class="visual-diagram">
+                <p><strong>List Indexing Visualization</strong></p>
+                <div class="collection-visual">
+                    <span class="visual-bracket">[</span>
+                    <div class="visual-item">'apple'<span class="visual-index">index 0</span></div>
+                    <div class="visual-item">'banana'<span class="visual-index">index 1</span></div>
+                    <div class="visual-item">'cherry'<span class="visual-index">index 2</span></div>
+                    <span class="visual-bracket">]</span>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">
+                    Negative indexing: -1 = last, -2 = second last, etc.
+                </p>
+            </div>
+
+            <pre><code>fruits = [<span class="code-string">'apple'</span>, <span class="code-string">'banana'</span>, <span class="code-string">'cherry'</span>, <span class="code-string">'date'</span>]
+
+<span class="code-comment"># Positive indexing</span>
+<span class="code-function">print</span>(fruits[<span class="code-number">0</span>])     <span class="code-comment"># 'apple' (first element)</span>
+<span class="code-function">print</span>(fruits[<span class="code-number">2</span>])     <span class="code-comment"># 'cherry' (third element)</span>
+
+<span class="code-comment"># Negative indexing</span>
+<span class="code-function">print</span>(fruits[<span class="code-number">-1</span>])    <span class="code-comment"># 'date' (last element)</span>
+<span class="code-function">print</span>(fruits[<span class="code-number">-2</span>])    <span class="code-comment"># 'cherry' (second to last)</span>
+
+<span class="code-comment"># Slicing</span>
+<span class="code-function">print</span>(fruits[<span class="code-number">1</span>:<span class="code-number">3</span>])   <span class="code-comment"># ['banana', 'cherry']</span>
+<span class="code-function">print</span>(fruits[:<span class="code-number">2</span>])    <span class="code-comment"># ['apple', 'banana']</span>
+<span class="code-function">print</span>(fruits[<span class="code-number">2</span>:])    <span class="code-comment"># ['cherry', 'date']</span></code></pre>
+
+            <h3>List Operations</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Syntax</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Concatenation</td>
+                        <td><code>list1 + list2</code></td>
+                        <td>Joins two lists together</td>
+                    </tr>
+                    <tr>
+                        <td>Repetition</td>
+                        <td><code>list * n</code></td>
+                        <td>Repeats list n times</td>
+                    </tr>
+                    <tr>
+                        <td>Membership</td>
+                        <td><code>x in list</code></td>
+                        <td>Checks if x exists in list</td>
+                    </tr>
+                    <tr>
+                        <td>Length</td>
+                        <td><code>len(list)</code></td>
+                        <td>Returns number of elements</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Common List Methods</h3>
+
+            <pre><code>numbers = [<span class="code-number">3</span>, <span class="code-number">1</span>, <span class="code-number">4</span>, <span class="code-number">1</span>, <span class="code-number">5</span>]
+
+<span class="code-comment"># Adding elements</span>
+numbers.<span class="code-function">append</span>(<span class="code-number">9</span>)       <span class="code-comment"># Add to end: [3, 1, 4, 1, 5, 9]</span>
+numbers.<span class="code-function">insert</span>(<span class="code-number">0</span>, <span class="code-number">2</span>)   <span class="code-comment"># Insert at index: [2, 3, 1, 4, 1, 5, 9]</span>
+numbers.<span class="code-function">extend</span>([<span class="code-number">6</span>, <span class="code-number">7</span>]) <span class="code-comment"># Add multiple: [2, 3, 1, 4, 1, 5, 9, 6, 7]</span>
+
+<span class="code-comment"># Removing elements</span>
+numbers.<span class="code-function">remove</span>(<span class="code-number">1</span>)      <span class="code-comment"># Remove first occurrence of 1</span>
+numbers.<span class="code-function">pop</span>()          <span class="code-comment"># Remove and return last element</span>
+numbers.<span class="code-function">pop</span>(<span class="code-number">0</span>)         <span class="code-comment"># Remove and return element at index</span>
+
+<span class="code-comment"># Sorting and reversing</span>
+numbers.<span class="code-function">sort</span>()         <span class="code-comment"># Sort in ascending order</span>
+numbers.<span class="code-function">reverse</span>()      <span class="code-comment"># Reverse the list</span>
+
+<span class="code-comment"># Other useful methods</span>
+count = numbers.<span class="code-function">count</span>(<span class="code-number">1</span>)   <span class="code-comment"># Count occurrences</span>
+idx = numbers.<span class="code-function">index</span>(<span class="code-number">4</span>)     <span class="code-comment"># Find index of element</span></code></pre>
+
+            <div class="list-box">
+                <span class="label">List Comprehension</span>
+                <p>List comprehension provides a concise way to create lists. It's a powerful feature frequently used in data science:</p>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Traditional approach</span>
+squares = []
+<span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">10</span>):
+    squares.<span class="code-function">append</span>(x ** <span class="code-number">2</span>)
+
+<span class="code-comment"># List comprehension (same result, one line!)</span>
+squares = [x ** <span class="code-number">2</span> <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">10</span>)]
+<span class="code-comment"># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
+
+<span class="code-comment"># With condition</span>
+evens = [x <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">20</span>) <span class="code-keyword">if</span> x % <span class="code-number">2</span> == <span class="code-number">0</span>]
+<span class="code-comment"># [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]</span></code></pre>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What is the output of: <code>['a', 'b', 'c'][1:3]</code></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">['a', 'b']</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">['b', 'c']</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">['a', 'b', 'c']</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">['b']</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Slicing [1:3] returns elements from index 1 up to (but not including) index 3.</div>
+                <div class="quiz-feedback incorrect">Not quite. Remember: slicing [start:end] includes start but excludes end.</div>
+            </div>
+        </section>
+
+        <!-- Section 2.2: Tuples -->
+        <section class="section" id="section-2-2">
+            <div class="section-header">
+                <span class="section-number tuple">2.2</span>
+                <h2>Python Tuples</h2>
+            </div>
+
+            <p>
+                Tuples are similar to lists but with one crucial difference: they are <strong>immutable</strong>. Once created, you cannot modify their contents. This makes them perfect for data that should not change.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Tuple</span>
+                <p>A <strong>tuple</strong> is an ordered, immutable collection of objects enclosed in parentheses <code>()</code>. Tuples can contain elements of different types and allow duplicates. They're often used to represent fixed collections of related data.</p>
+            </div>
+
+            <h3>Creating Tuples</h3>
+
+            <pre><code><span class="code-comment"># Creating tuples</span>
+
+<span class="code-comment"># Empty tuple</span>
+empty_tuple = ()
+
+<span class="code-comment"># Tuple with elements</span>
+coordinates = (<span class="code-number">10</span>, <span class="code-number">20</span>)
+
+<span class="code-comment"># Mixed types</span>
+person = (<span class="code-string">'Alice'</span>, <span class="code-number">30</span>, <span class="code-string">'Data Scientist'</span>)
+
+<span class="code-comment"># Single element tuple (note the comma!)</span>
+single = (<span class="code-number">42</span>,)  <span class="code-comment"># Without comma, it's just an integer</span>
+
+<span class="code-comment"># Tuple packing (parentheses optional)</span>
+rgb = <span class="code-number">255</span>, <span class="code-number">128</span>, <span class="code-number">0</span>
+
+<span class="code-function">print</span>(person)  <span class="code-comment"># ('Alice', 30, 'Data Scientist')</span></code></pre>
+
+            <h3>Tuple vs List: Key Differences</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Tuple</th>
+                        <th>List</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Syntax</strong></td>
+                        <td><code>(1, 2, 3)</code></td>
+                        <td><code>[1, 2, 3]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mutability</strong></td>
+                        <td>Immutable (cannot change)</td>
+                        <td>Mutable (can change)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance</strong></td>
+                        <td>Faster iteration</td>
+                        <td>Slower iteration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>Less memory</td>
+                        <td>More memory</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use as Dict Key</strong></td>
+                        <td>âœ… Yes (hashable)</td>
+                        <td>âŒ No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Tuple Operations</h3>
+
+            <pre><code>nums = (<span class="code-number">5</span>, <span class="code-number">8</span>, <span class="code-number">7</span>, <span class="code-number">2</span>, <span class="code-number">9</span>)
+
+<span class="code-comment"># Accessing elements (same as lists)</span>
+<span class="code-function">print</span>(nums[<span class="code-number">0</span>])      <span class="code-comment"># 5</span>
+<span class="code-function">print</span>(nums[<span class="code-number">-1</span>])     <span class="code-comment"># 9</span>
+<span class="code-function">print</span>(nums[<span class="code-number">1</span>:<span class="code-number">4</span>])    <span class="code-comment"># (8, 7, 2)</span>
+
+<span class="code-comment"># Tuple functions</span>
+<span class="code-function">print</span>(<span class="code-function">len</span>(nums))    <span class="code-comment"># 5</span>
+<span class="code-function">print</span>(<span class="code-function">max</span>(nums))    <span class="code-comment"># 9</span>
+<span class="code-function">print</span>(<span class="code-function">min</span>(nums))    <span class="code-comment"># 2</span>
+<span class="code-function">print</span>(<span class="code-function">sum</span>(nums))    <span class="code-comment"># 31</span>
+
+<span class="code-comment"># Tuple methods</span>
+<span class="code-function">print</span>(nums.<span class="code-function">count</span>(<span class="code-number">7</span>))   <span class="code-comment"># 1 (count occurrences)</span>
+<span class="code-function">print</span>(nums.<span class="code-function">index</span>(<span class="code-number">8</span>))   <span class="code-comment"># 1 (find index)</span>
+
+<span class="code-comment"># Tuple unpacking</span>
+x, y, z = (<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>)
+<span class="code-function">print</span>(x, y, z)      <span class="code-comment"># 10 20 30</span></code></pre>
+
+            <div class="tuple-box">
+                <span class="label">Why Use Tuples?</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Data Integrity:</strong> Prevents accidental modification of data</li>
+                    <li><strong>Dictionary Keys:</strong> Can be used as keys (lists cannot)</li>
+                    <li><strong>Multiple Return Values:</strong> Functions often return tuples</li>
+                    <li><strong>Performance:</strong> Slightly faster than lists for iteration</li>
+                    <li><strong>Semantic Meaning:</strong> Indicates data should not change</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <span class="label">Real-World Example: Returning Multiple Values</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-keyword">def</span> <span class="code-function">get_statistics</span>(data):
+    <span class="code-string">"""Return min, max, and average of a list."""</span>
+    <span class="code-keyword">return</span> <span class="code-function">min</span>(data), <span class="code-function">max</span>(data), <span class="code-function">sum</span>(data) / <span class="code-function">len</span>(data)
+
+<span class="code-comment"># Use tuple unpacking to receive values</span>
+scores = [<span class="code-number">85</span>, <span class="code-number">92</span>, <span class="code-number">78</span>, <span class="code-number">95</span>, <span class="code-number">88</span>]
+minimum, maximum, average = get_statistics(scores)
+
+<span class="code-function">print</span>(<span class="code-string">f"Min: {minimum}, Max: {maximum}, Avg: {average:.1f}"</span>)
+<span class="code-comment"># Min: 78, Max: 95, Avg: 87.6</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Section 2.3: Dictionaries -->
+        <section class="section" id="section-2-3">
+            <div class="section-header">
+                <span class="section-number dict">2.3</span>
+                <h2>Python Dictionaries</h2>
+            </div>
+
+            <p>
+                Dictionaries are one of Python's most powerful data structures. They store data in <strong>key-value pairs</strong>, allowing for fast lookups by key. In data science, dictionaries are essential for working with structured data like JSON.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Dictionary</span>
+                <p>A <strong>dictionary</strong> is an unordered collection of key-value pairs enclosed in curly braces <code>{}</code>. Keys must be unique and immutable (strings, numbers, tuples), while values can be of any type. Dictionaries provide O(1) average time complexity for lookups.</p>
+            </div>
+
+            <h3>Creating Dictionaries</h3>
+
+            <pre><code><span class="code-comment"># Creating dictionaries</span>
+
+<span class="code-comment"># Empty dictionary</span>
+empty_dict = {}
+
+<span class="code-comment"># Dictionary with key-value pairs</span>
+student = {
+    <span class="code-string">"name"</span>: <span class="code-string">"Alice"</span>,
+    <span class="code-string">"age"</span>: <span class="code-number">22</span>,
+    <span class="code-string">"course"</span>: <span class="code-string">"Data Science"</span>,
+    <span class="code-string">"gpa"</span>: <span class="code-number">3.8</span>
+}
+
+<span class="code-comment"># Dictionary with dict() constructor</span>
+country_capitals = <span class="code-function">dict</span>(
+    Germany=<span class="code-string">"Berlin"</span>,
+    France=<span class="code-string">"Paris"</span>,
+    Japan=<span class="code-string">"Tokyo"</span>
+)
+
+<span class="code-function">print</span>(student)
+<span class="code-comment"># {'name': 'Alice', 'age': 22, 'course': 'Data Science', 'gpa': 3.8}</span></code></pre>
+
+            <h3>Accessing Dictionary Elements</h3>
+
+            <pre><code>student = {<span class="code-string">"name"</span>: <span class="code-string">"Alice"</span>, <span class="code-string">"age"</span>: <span class="code-number">22</span>, <span class="code-string">"course"</span>: <span class="code-string">"Data Science"</span>}
+
+<span class="code-comment"># Access by key</span>
+<span class="code-function">print</span>(student[<span class="code-string">"name"</span>])      <span class="code-comment"># Alice</span>
+<span class="code-function">print</span>(student[<span class="code-string">"age"</span>])       <span class="code-comment"># 22</span>
+
+<span class="code-comment"># Using get() method (safer - returns None if key missing)</span>
+<span class="code-function">print</span>(student.<span class="code-function">get</span>(<span class="code-string">"gpa"</span>))        <span class="code-comment"># None</span>
+<span class="code-function">print</span>(student.<span class="code-function">get</span>(<span class="code-string">"gpa"</span>, <span class="code-number">0.0</span>))   <span class="code-comment"># 0.0 (default value)</span>
+
+<span class="code-comment"># Get all keys, values, items</span>
+<span class="code-function">print</span>(student.<span class="code-function">keys</span>())    <span class="code-comment"># dict_keys(['name', 'age', 'course'])</span>
+<span class="code-function">print</span>(student.<span class="code-function">values</span>())  <span class="code-comment"># dict_values(['Alice', 22, 'Data Science'])</span>
+<span class="code-function">print</span>(student.<span class="code-function">items</span>())   <span class="code-comment"># dict_items([('name', 'Alice'), ...])</span></code></pre>
+
+            <h3>Modifying Dictionaries</h3>
+
+            <pre><code>student = {<span class="code-string">"name"</span>: <span class="code-string">"Alice"</span>, <span class="code-string">"age"</span>: <span class="code-number">22</span>}
+
+<span class="code-comment"># Adding/Updating elements</span>
+student[<span class="code-string">"course"</span>] = <span class="code-string">"Data Science"</span>   <span class="code-comment"># Add new key</span>
+student[<span class="code-string">"age"</span>] = <span class="code-number">23</span>                  <span class="code-comment"># Update existing key</span>
+
+<span class="code-comment"># Update with another dictionary</span>
+student.<span class="code-function">update</span>({<span class="code-string">"gpa"</span>: <span class="code-number">3.8</span>, <span class="code-string">"year"</span>: <span class="code-number">3</span>})
+
+<span class="code-comment"># Removing elements</span>
+<span class="code-keyword">del</span> student[<span class="code-string">"year"</span>]           <span class="code-comment"># Delete by key</span>
+gpa = student.<span class="code-function">pop</span>(<span class="code-string">"gpa"</span>)       <span class="code-comment"># Remove and return value</span>
+student.<span class="code-function">clear</span>()                <span class="code-comment"># Remove all elements</span></code></pre>
+
+            <div class="dict-box">
+                <span class="label">Nested Dictionaries</span>
+                <p>Dictionaries can contain other dictionaries, creating complex hierarchical data structures:</p>
+                <pre style="margin-bottom: 0;"><code>company = {
+    <span class="code-string">"employees"</span>: {
+        <span class="code-string">"E001"</span>: {<span class="code-string">"name"</span>: <span class="code-string">"Alice"</span>, <span class="code-string">"dept"</span>: <span class="code-string">"Engineering"</span>},
+        <span class="code-string">"E002"</span>: {<span class="code-string">"name"</span>: <span class="code-string">"Bob"</span>, <span class="code-string">"dept"</span>: <span class="code-string">"Marketing"</span>}
+    },
+    <span class="code-string">"location"</span>: <span class="code-string">"San Francisco"</span>
+}
+
+<span class="code-comment"># Access nested data</span>
+<span class="code-function">print</span>(company[<span class="code-string">"employees"</span>][<span class="code-string">"E001"</span>][<span class="code-string">"name"</span>])  <span class="code-comment"># Alice</span></code></pre>
+            </div>
+
+            <h3>Dictionary Comprehension</h3>
+
+            <pre><code><span class="code-comment"># Create a dictionary of squares</span>
+squares = {x: x**<span class="code-number">2</span> <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">6</span>)}
+<span class="code-comment"># {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}</span>
+
+<span class="code-comment"># Convert two lists to dictionary</span>
+keys = [<span class="code-string">'a'</span>, <span class="code-string">'b'</span>, <span class="code-string">'c'</span>]
+values = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>]
+result = {k: v <span class="code-keyword">for</span> k, v <span class="code-keyword">in</span> <span class="code-function">zip</span>(keys, values)}
+<span class="code-comment"># {'a': 1, 'b': 2, 'c': 3}</span></code></pre>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What happens if you try to access a non-existent key with <code>dict["missing_key"]</code>?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Returns None</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Raises KeyError</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Returns 0</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Returns empty string</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Using bracket notation raises KeyError if the key doesn't exist. Use .get() method for safe access.</div>
+                <div class="quiz-feedback incorrect">Not quite. Direct bracket access raises KeyError. Use dict.get("key") to safely return None or a default.</div>
+            </div>
+        </section>
+
+        <!-- Section 2.4: Sets -->
+        <section class="section" id="section-2-4">
+            <div class="section-header">
+                <span class="section-number set">2.4</span>
+                <h2>Python Sets</h2>
+            </div>
+
+            <p>
+                Sets are unordered collections of <strong>unique elements</strong>. They're incredibly useful for removing duplicates, membership testing, and mathematical set operations like union, intersection, and difference.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Definition: Set</span>
+                <p>A <strong>set</strong> is an unordered collection of unique, immutable elements enclosed in curly braces <code>{}</code>. Sets are mutable (you can add/remove elements), but the elements themselves must be immutable. Sets don't support indexing or slicing.</p>
+            </div>
+
+            <h3>Creating Sets</h3>
+
+            <pre><code><span class="code-comment"># Creating sets</span>
+
+<span class="code-comment"># Set with elements</span>
+fruits = {<span class="code-string">'apple'</span>, <span class="code-string">'banana'</span>, <span class="code-string">'cherry'</span>}
+
+<span class="code-comment"># Empty set (NOT {}! That's a dict)</span>
+empty_set = <span class="code-function">set</span>()
+
+<span class="code-comment"># Set from list (removes duplicates!)</span>
+numbers = <span class="code-function">set</span>([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">3</span>, <span class="code-number">3</span>])
+<span class="code-function">print</span>(numbers)  <span class="code-comment"># {1, 2, 3}</span>
+
+<span class="code-comment"># Duplicates are automatically removed</span>
+colors = {<span class="code-string">'red'</span>, <span class="code-string">'blue'</span>, <span class="code-string">'red'</span>, <span class="code-string">'green'</span>}
+<span class="code-function">print</span>(colors)   <span class="code-comment"># {'red', 'blue', 'green'}</span></code></pre>
+
+            <h3>Set Operations</h3>
+
+            <div class="visual-diagram">
+                <p><strong>Set Operations Visualization</strong></p>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                    A = {1, 2, 3, 4} &nbsp;&nbsp; B = {3, 4, 5, 6}
+                </p>
+                <table class="comparison-table" style="max-width: 500px; margin: 1rem auto;">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Syntax</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Union</td>
+                            <td><code>A | B</code></td>
+                            <td>{1, 2, 3, 4, 5, 6}</td>
+                        </tr>
+                        <tr>
+                            <td>Intersection</td>
+                            <td><code>A & B</code></td>
+                            <td>{3, 4}</td>
+                        </tr>
+                        <tr>
+                            <td>Difference</td>
+                            <td><code>A - B</code></td>
+                            <td>{1, 2}</td>
+                        </tr>
+                        <tr>
+                            <td>Symmetric Diff</td>
+                            <td><code>A ^ B</code></td>
+                            <td>{1, 2, 5, 6}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <pre><code>A = {<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>}
+B = {<span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>}
+
+<span class="code-comment"># Set operations</span>
+<span class="code-function">print</span>(A | B)        <span class="code-comment"># Union: {1, 2, 3, 4, 5, 6}</span>
+<span class="code-function">print</span>(A & B)        <span class="code-comment"># Intersection: {3, 4}</span>
+<span class="code-function">print</span>(A - B)        <span class="code-comment"># Difference: {1, 2}</span>
+<span class="code-function">print</span>(A ^ B)        <span class="code-comment"># Symmetric difference: {1, 2, 5, 6}</span>
+
+<span class="code-comment"># Method alternatives</span>
+<span class="code-function">print</span>(A.<span class="code-function">union</span>(B))
+<span class="code-function">print</span>(A.<span class="code-function">intersection</span>(B))
+<span class="code-function">print</span>(A.<span class="code-function">difference</span>(B))</code></pre>
+
+            <h3>Set Methods</h3>
+
+            <pre><code>colors = {<span class="code-string">'red'</span>, <span class="code-string">'green'</span>, <span class="code-string">'blue'</span>}
+
+<span class="code-comment"># Adding elements</span>
+colors.<span class="code-function">add</span>(<span class="code-string">'yellow'</span>)          <span class="code-comment"># Add single element</span>
+colors.<span class="code-function">update</span>([<span class="code-string">'purple'</span>, <span class="code-string">'orange'</span>])  <span class="code-comment"># Add multiple</span>
+
+<span class="code-comment"># Removing elements</span>
+colors.<span class="code-function">remove</span>(<span class="code-string">'red'</span>)         <span class="code-comment"># Raises KeyError if not found</span>
+colors.<span class="code-function">discard</span>(<span class="code-string">'pink'</span>)       <span class="code-comment"># No error if not found</span>
+colors.<span class="code-function">pop</span>()                 <span class="code-comment"># Remove arbitrary element</span>
+
+<span class="code-comment"># Membership testing (very fast!)</span>
+<span class="code-function">print</span>(<span class="code-string">'blue'</span> <span class="code-keyword">in</span> colors)    <span class="code-comment"># True</span></code></pre>
+
+            <div class="set-box">
+                <span class="label">Data Science Use Cases for Sets</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Finding unique values:</strong> <code>unique_categories = set(df['category'])</code></li>
+                    <li><strong>Removing duplicates:</strong> <code>unique_ids = list(set(user_ids))</code></li>
+                    <li><strong>Finding common elements:</strong> <code>common_users = set(list_a) & set(list_b)</code></li>
+                    <li><strong>Fast membership testing:</strong> <code>if item in valid_items_set:</code></li>
+                </ul>
+            </div>
+
+            <div class="realworld-box">
+                <span class="label">Performance Tip</span>
+                <p>Membership testing in sets is <strong>O(1)</strong> (constant time), while in lists it's <strong>O(n)</strong> (linear time). For large datasets, convert lists to sets for faster lookups:</p>
+                <pre style="margin-bottom: 0;"><code><span class="code-comment"># Slow: O(n) for each check</span>
+valid_ids = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, ..., <span class="code-number">1000000</span>]
+<span class="code-keyword">if</span> user_id <span class="code-keyword">in</span> valid_ids:  <span class="code-comment"># Slow!</span>
+
+<span class="code-comment"># Fast: O(1) for each check</span>
+valid_ids_set = <span class="code-function">set</span>(valid_ids)
+<span class="code-keyword">if</span> user_id <span class="code-keyword">in</span> valid_ids_set:  <span class="code-comment"># Fast!</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter 2 Review</h2>
+            </div>
+
+            <p>
+                Congratulations! You've mastered Python's four fundamental collection types. These data structures will be your constant companions throughout your data science journey.
+            </p>
+
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Lists: Ordered, mutable, indexed sequences</div>
+                    <div class="summary-item">Tuples: Ordered, immutable, for fixed data</div>
+                    <div class="summary-item">Dictionaries: Key-value pairs, fast lookups</div>
+                    <div class="summary-item">Sets: Unique elements, set operations</div>
+                    <div class="summary-item">List comprehensions for concise code</div>
+                    <div class="summary-item">Sets for O(1) membership testing</div>
+                </div>
+            </div>
+
+            <h3>When to Use Each Collection</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Use Case</th>
+                        <th>Best Collection</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Store sequence of items that may change</td>
+                        <td><strong>List</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Return multiple values from function</td>
+                        <td><strong>Tuple</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Map names to values (lookup table)</td>
+                        <td><strong>Dictionary</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Remove duplicates or check membership</td>
+                        <td><strong>Set</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Store coordinates or RGB values</td>
+                        <td><strong>Tuple</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Parse JSON data</td>
+                        <td><strong>Dictionary</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>What's Next?</h3>
+
+            <p>In <strong>Chapter 3</strong>, you'll learn to control program flow with:</p>
+
+            <ul>
+                <li><strong>Conditional Statements:</strong> if, elif, else for decision making</li>
+                <li><strong>Loops:</strong> for and while for iteration</li>
+                <li><strong>Functions:</strong> Creating reusable code blocks</li>
+                <li><strong>Lambda Functions:</strong> Anonymous functions for quick operations</li>
+            </ul>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Try This:</strong> Create a program that:</p>
+                <ol>
+                    <li>Creates a list of 10 random exam scores (use any numbers)</li>
+                    <li>Uses a dictionary to store the min, max, and average</li>
+                    <li>Creates a set of unique score ranges (A, B, C, D, F)</li>
+                    <li>Returns results as a tuple</li>
+                </ol>
+                <p>This exercise combines all four collection types in a realistic data science scenario!</p>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close sidebar on mobile
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

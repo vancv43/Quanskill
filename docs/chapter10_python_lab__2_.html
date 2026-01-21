@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Data Aggregation & GroupBy Lab | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .xp-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link.completed {
+            color: var(--success);
+        }
+
+        .nav-link.completed::after {
+            content: 'Ã¢Å“"';
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: 'Ã°Å¸ÂÂ¼';
+            position: absolute;
+            bottom: 20px; right: 40px;
+            font-size: 80px;
+            opacity: 0.2;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .lab-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .lab-card:hover {
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .lab-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .lab-title-group { display: flex; align-items: center; gap: 1rem; }
+
+        .lab-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .lab-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .lab-xp {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--quanskill-orange);
+            background: rgba(255, 144, 0, 0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        .lab-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .code-editor {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .code-editor-header {
+            background: #0f172a;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-editor-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .code-editor-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-editor-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-editor-dot.red { background: #ef4444; }
+        .code-editor-dot.yellow { background: #eab308; }
+        .code-editor-dot.green { background: #22c55e; }
+
+        .code-input {
+            width: 100%;
+            min-height: 150px;
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            padding: 1rem;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .code-input:focus { outline: none; }
+
+        .code-input::placeholder { color: #64748b; }
+
+        .code-output {
+            background: #0f172a;
+            border-top: 1px solid #334155;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #a5f3fc;
+            min-height: 80px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .code-output.error { color: #fca5a5; }
+        .code-output.success { color: #86efac; }
+
+        .btn-run {
+            background: var(--gradient-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 144, 0, 0.4);
+        }
+
+        .btn-run:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-check {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.4);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .hint-box {
+            background: rgba(255, 144, 0, 0.08);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .hint-box .hint-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hint-box .hint-label::before { content: 'Ã°Å¸'Â¡'; }
+
+        .task-box {
+            background: rgba(11, 47, 160, 0.05);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .task-box .task-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-box .task-label::before { content: 'Ã°Å¸Å½Â¯'; }
+
+        .feedback-box {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .feedback-box.show { display: block; animation: slideIn 0.3s ease; }
+
+        .feedback-box.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .feedback-box.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+
+        .feedback-box.partial {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--warning);
+            color: var(--warning);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 2000;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .achievement-popup .emoji { font-size: 4rem; margin-bottom: 1rem; }
+
+        .achievement-popup h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-popup .xp-earned {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.show { display: block; }
+
+        .concept-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(26, 79, 208, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .concept-box h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-box h4::before { content: 'Ã°Å¸ÂÂ¼'; }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .mcq-option {
+            padding: 1rem 1.25rem;
+            background: var(--code-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .mcq-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .mcq-option.selected {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.1);
+        }
+
+        .mcq-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .mcq-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .back-btn {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .header-stats { display: none; }
+            .mcq-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="emoji">🎉</div>
+        <h3>Lab Completed!</h3>
+        <p class="xp-earned">+<span id="xpEarned">50</span> XP</p>
+        <button class="btn-run" onclick="closeAchievement()" style="margin-top: 1rem;">Continue</button>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">Ã¢ËœÂ°</button>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span>Ã°Å¸"Â¥ Streak:</span>
+                    <span class="stat-value" id="streakCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Ã¢Â­Â XP:</span>
+                    <span class="stat-value" id="totalXP">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Ã¢Å“â€¦ Completed:</span>
+                    <span class="stat-value"><span id="completedLabs">0</span>/10</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 10 Ã‚Â· GroupBy Lab</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarXP">0 XP</div>
+            <div class="score-label">Total Experience</div>
+            <div class="xp-bar">
+                <div class="xp-fill" id="xpFill" style="width: 0%"></div>
+            </div>
+            <div class="score-label" style="margin-top: 0.25rem; font-size: 0.7rem;">Level <span id="currentLevel">1</span></div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">GroupBy Basics</div>
+            <div class="nav-link active" onclick="scrollToLab('lab1')" id="nav-lab1">
+                <span>Lab 1: GroupBy Intro</span>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab2')" id="nav-lab2">
+                <span>Lab 2: Single Aggregation</span>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab3')" id="nav-lab3">
+                <span>Lab 3: Multiple Columns</span>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Advanced Aggregation</div>
+            <div class="nav-link" onclick="scrollToLab('lab4')" id="nav-lab4">
+                <span>Lab 4: The agg() Method</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab5')" id="nav-lab5">
+                <span>Lab 5: Named Agg</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab6')" id="nav-lab6">
+                <span>Lab 6: Transform</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Data Summarization</div>
+            <div class="nav-link" onclick="scrollToLab('lab7')" id="nav-lab7">
+                <span>Lab 7: Pivot Tables</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab8')" id="nav-lab8">
+                <span>Lab 8: Cross-Tabulation</span>
+                <span class="difficulty-badge difficulty-medium">Medium</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Challenge</div>
+            <div class="nav-link" onclick="scrollToLab('lab9')" id="nav-lab9">
+                <span>Lab 9: Mini Project</span>
+                <span class="difficulty-badge difficulty-hard">Hard</span>
+            </div>
+            <div class="nav-link" onclick="scrollToLab('lab10')" id="nav-lab10">
+                <span>Lab 10: Quiz</span>
+                <span class="difficulty-badge difficulty-hard">Hard</span>
+            </div>
+        </div>
+    </nav>
+
+    <a href="javascript:history.back()" class="back-btn" title="Go Back">Ã¢â€ Â</a>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <span class="hero-badge">Ã°Å¸Â§Âª Interactive Lab</span>
+                    <h1>Data Aggregation & GroupBy Lab</h1>
+                    <p class="hero-subtitle">Master the split-apply-combine pattern! Learn to group, aggregate, and transform data with pandas like a pro.</p>
+                </div>
+            </section>
+
+            <!-- Concept Box -->
+            <div class="concept-box">
+                <h4>Split-Apply-Combine Pattern</h4>
+                <p>GroupBy operations follow three steps:</p>
+                <p><strong>1. Split:</strong> Divide data into groups based on keys</p>
+                <p><strong>2. Apply:</strong> Apply a function (aggregation, transformation, or filter) to each group</p>
+                <p><strong>3. Combine:</strong> Merge results into a new data structure</p>
+                <p style="margin-top: 0.5rem;"><code>df.groupby('column').aggregation_function()</code></p>
+            </div>
+
+            <!-- Lab 1: GroupBy Introduction -->
+            <div class="lab-card" id="lab1">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 1</span>
+                        <h2 class="lab-title">GroupBy Introduction</h2>
+                    </div>
+                    <span class="lab-xp">+50 XP</span>
+                </div>
+                
+                <p class="lab-description">The <code>groupby()</code> method splits your data into groups. Let's explore how it works!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Create a DataFrame with department and salary data. Group by department and examine the groups using <code>groups</code> attribute.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">groupby_intro.py</span>
+                    </div>
+                    <textarea class="code-input" id="code1" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'IT', 'Sales', 'IT', 'HR', 'HR'],
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],
+    'Salary': [50000, 60000, 55000, 65000, 45000, 48000]
+})
+
+print('Original DataFrame:')
+print(df)
+
+# Create a GroupBy object
+grouped = df.groupby('Dept')
+
+# Show the groups
+print('\nGroups:')
+print(grouped.groups)"></textarea>
+                    <div class="code-output" id="output1">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(1)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(1)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>The <code>.groups</code> attribute shows a dictionary where keys are group names and values are the indices belonging to each group.</p>
+                </div>
+
+                <div class="feedback-box" id="feedback1"></div>
+            </div>
+
+            <!-- Lab 2: Single Aggregation -->
+            <div class="lab-card" id="lab2">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 2</span>
+                        <h2 class="lab-title">Single Aggregation</h2>
+                    </div>
+                    <span class="lab-xp">+50 XP</span>
+                </div>
+                
+                <p class="lab-description">Apply aggregation functions like <code>mean()</code>, <code>sum()</code>, <code>count()</code> to grouped data.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Group the data by department and calculate the mean salary for each department.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">single_agg.py</span>
+                    </div>
+                    <textarea class="code-input" id="code2" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'IT', 'Sales', 'IT', 'HR', 'HR'],
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],
+    'Salary': [50000, 60000, 55000, 65000, 45000, 48000]
+})
+
+# Calculate mean salary by department
+mean_salary = df.groupby('Dept')['Salary'].mean()
+
+print('Mean Salary by Department:')
+print(mean_salary)"></textarea>
+                    <div class="code-output" id="output2">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(2)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(2)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>Common aggregations: <code>mean()</code>, <code>sum()</code>, <code>count()</code>, <code>min()</code>, <code>max()</code>, <code>std()</code></p>
+                </div>
+
+                <div class="feedback-box" id="feedback2"></div>
+            </div>
+
+            <!-- Lab 3: Grouping by Multiple Columns -->
+            <div class="lab-card" id="lab3">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 3</span>
+                        <h2 class="lab-title">Grouping by Multiple Columns</h2>
+                    </div>
+                    <span class="lab-xp">+75 XP</span>
+                </div>
+                
+                <p class="lab-description">You can group by multiple columns by passing a list to <code>groupby()</code>.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Group by both 'Dept' and 'Level', then calculate the mean salary for each combination.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">multi_group.py</span>
+                    </div>
+                    <textarea class="code-input" id="code3" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'Sales', 'IT', 'IT', 'Sales', 'IT'],
+    'Level': ['Junior', 'Senior', 'Junior', 'Senior', 'Senior', 'Junior'],
+    'Salary': [45000, 65000, 55000, 80000, 70000, 50000]
+})
+
+print('Original DataFrame:')
+print(df)
+
+# Group by multiple columns
+result = df.groupby(['Dept', 'Level'])['Salary'].mean()
+
+print('\nMean Salary by Dept and Level:')
+print(result)"></textarea>
+                    <div class="code-output" id="output3">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(3)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(3)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="feedback-box" id="feedback3"></div>
+            </div>
+
+            <!-- Lab 4: The agg() Method -->
+            <div class="lab-card" id="lab4">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 4</span>
+                        <h2 class="lab-title">The agg() Method</h2>
+                    </div>
+                    <span class="lab-xp">+75 XP</span>
+                </div>
+                
+                <p class="lab-description">The <code>agg()</code> method lets you apply multiple aggregation functions at once!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Use <code>agg()</code> to calculate mean, sum, and count of salaries by department in one go.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">agg_method.py</span>
+                    </div>
+                    <textarea class="code-input" id="code4" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'IT', 'Sales', 'IT', 'HR', 'HR'],
+    'Salary': [50000, 60000, 55000, 65000, 45000, 48000]
+})
+
+# Multiple aggregations with agg()
+result = df.groupby('Dept')['Salary'].agg(['mean', 'sum', 'count'])
+
+print('Multiple Aggregations:')
+print(result)"></textarea>
+                    <div class="code-output" id="output4">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(4)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(4)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>Pass a list of function names as strings: <code>agg(['mean', 'sum', 'count', 'min', 'max'])</code></p>
+                </div>
+
+                <div class="feedback-box" id="feedback4"></div>
+            </div>
+
+            <!-- Lab 5: Named Aggregations -->
+            <div class="lab-card" id="lab5">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 5</span>
+                        <h2 class="lab-title">Named Aggregations</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">Use named aggregations for cleaner column names in the result!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Use named aggregation to create columns 'avg_salary', 'total_salary', and 'employee_count'.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">named_agg.py</span>
+                    </div>
+                    <textarea class="code-input" id="code5" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'IT', 'Sales', 'IT', 'HR', 'HR'],
+    'Salary': [50000, 60000, 55000, 65000, 45000, 48000]
+})
+
+# Named aggregations
+result = df.groupby('Dept').agg(
+    avg_salary=('Salary', 'mean'),
+    total_salary=('Salary', 'sum'),
+    employee_count=('Salary', 'count')
+)
+
+print('Named Aggregations:')
+print(result)"></textarea>
+                    <div class="code-output" id="output5">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(5)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(5)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>Syntax: <code>new_col_name=('source_col', 'agg_func')</code></p>
+                </div>
+
+                <div class="feedback-box" id="feedback5"></div>
+            </div>
+
+            <!-- Lab 6: Transform -->
+            <div class="lab-card" id="lab6">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 6</span>
+                        <h2 class="lab-title">Transform</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">The <code>transform()</code> method returns data with the same shape as inputÃ¢â‚¬"great for normalization!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Normalize salaries within each department (subtract mean, divide by std).</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">transform.py</span>
+                    </div>
+                    <textarea class="code-input" id="code6" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'Sales', 'IT', 'IT'],
+    'Salary': [50000, 60000, 70000, 80000]
+})
+
+# Normalize within groups using transform
+df['normalized'] = df.groupby('Dept')['Salary'].transform(
+    lambda x: (x - x.mean()) / x.std()
+)
+
+print('DataFrame with Normalized Salaries:')
+print(df)"></textarea>
+                    <div class="code-output" id="output6">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(6)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(6)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>Transform returns the same number of rows as input. Use it to broadcast group statistics back to original rows.</p>
+                </div>
+
+                <div class="feedback-box" id="feedback6"></div>
+            </div>
+
+            <!-- Lab 7: Pivot Tables -->
+            <div class="lab-card" id="lab7">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 7</span>
+                        <h2 class="lab-title">Pivot Tables</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">Pivot tables reorganize data with rows and columns from different groupings!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Create a pivot table showing average salary with Dept as rows and Level as columns.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">pivot_table.py</span>
+                    </div>
+                    <textarea class="code-input" id="code7" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'Sales', 'IT', 'IT', 'Sales', 'IT'],
+    'Level': ['Junior', 'Senior', 'Junior', 'Senior', 'Senior', 'Junior'],
+    'Salary': [45000, 65000, 55000, 80000, 70000, 50000]
+})
+
+# Create pivot table
+pivot = pd.pivot_table(df, values='Salary', index='Dept', 
+                       columns='Level', aggfunc='mean')
+
+print('Pivot Table - Average Salary:')
+print(pivot)"></textarea>
+                    <div class="code-output" id="output7">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(7)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(7)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p><code>pivot_table(df, values='col', index='rows', columns='cols', aggfunc='mean')</code></p>
+                </div>
+
+                <div class="feedback-box" id="feedback7"></div>
+            </div>
+
+            <!-- Lab 8: Cross-Tabulation -->
+            <div class="lab-card" id="lab8">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 8</span>
+                        <h2 class="lab-title">Cross-Tabulation</h2>
+                    </div>
+                    <span class="lab-xp">+100 XP</span>
+                </div>
+                
+                <p class="lab-description">Cross-tabulation computes frequency tables for categorical data!</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Use <code>pd.crosstab()</code> to count employees by department and level.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">crosstab.py</span>
+                    </div>
+                    <textarea class="code-input" id="code8" placeholder="import pandas as pd
+
+df = pd.DataFrame({
+    'Dept': ['Sales', 'Sales', 'IT', 'IT', 'Sales', 'IT', 'HR', 'HR'],
+    'Level': ['Junior', 'Senior', 'Junior', 'Senior', 'Senior', 'Junior', 'Junior', 'Senior']
+})
+
+# Cross-tabulation
+ct = pd.crosstab(df['Dept'], df['Level'])
+
+print('Cross-Tabulation (Counts):')
+print(ct)
+
+# With margins (totals)
+ct_margins = pd.crosstab(df['Dept'], df['Level'], margins=True)
+print('\nWith Margins:')
+print(ct_margins)"></textarea>
+                    <div class="code-output" id="output8">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(8)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(8)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="hint-box">
+                    <div class="hint-label">Hint</div>
+                    <p>Add <code>margins=True</code> to include row and column totals!</p>
+                </div>
+
+                <div class="feedback-box" id="feedback8"></div>
+            </div>
+
+            <!-- Lab 9: Mini Project -->
+            <div class="lab-card" id="lab9">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 9</span>
+                        <h2 class="lab-title">Mini Project: Sales Analysis</h2>
+                    </div>
+                    <span class="lab-xp">+150 XP</span>
+                </div>
+                
+                <p class="lab-description">Put it all together! Analyze sales data using GroupBy operations.</p>
+                
+                <div class="task-box">
+                    <div class="task-label">Your Task</div>
+                    <p>Analyze sales data: group by region, calculate total revenue, average order size, and number of orders. Then find the region with highest revenue.</p>
+                </div>
+
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dots">
+                            <span class="code-editor-dot red"></span>
+                            <span class="code-editor-dot yellow"></span>
+                            <span class="code-editor-dot green"></span>
+                        </div>
+                        <span class="code-editor-title">sales_analysis.py</span>
+                    </div>
+                    <textarea class="code-input" id="code9" placeholder="import pandas as pd
+
+# Sales data
+df = pd.DataFrame({
+    'Region': ['North', 'South', 'North', 'East', 'South', 'East', 'North', 'South'],
+    'Product': ['A', 'B', 'B', 'A', 'A', 'B', 'A', 'B'],
+    'Revenue': [1200, 800, 1500, 900, 1100, 1300, 1000, 950]
+})
+
+print('Sales Data:')
+print(df)
+
+# Group by Region and calculate statistics
+summary = df.groupby('Region').agg(
+    total_revenue=('Revenue', 'sum'),
+    avg_order=('Revenue', 'mean'),
+    num_orders=('Revenue', 'count')
+)
+
+print('\nSales Summary by Region:')
+print(summary)
+
+# Find region with highest revenue
+best_region = summary['total_revenue'].idxmax()
+print(f'\nTop Region: {best_region}')"></textarea>
+                    <div class="code-output" id="output9">>>> Click "Run Code" to see output</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-run" onclick="runCode(9)">Ã¢"Â¶ Run Code</button>
+                    <button class="btn-check" onclick="checkLab(9)">Ã¢Å“" Check Answer</button>
+                </div>
+
+                <div class="feedback-box" id="feedback9"></div>
+            </div>
+
+            <!-- Lab 10: Quiz -->
+            <div class="lab-card" id="lab10">
+                <div class="lab-header">
+                    <div class="lab-title-group">
+                        <span class="lab-number">Lab 10</span>
+                        <h2 class="lab-title">Chapter 10 Quiz</h2>
+                    </div>
+                    <span class="lab-xp">+200 XP</span>
+                </div>
+                
+                <p class="lab-description">Test your knowledge! Answer all questions correctly to complete the chapter.</p>
+
+                <div class="task-box">
+                    <div class="task-label">Question 1</div>
+                    <p>What pattern does GroupBy follow?</p>
+                </div>
+                <div class="mcq-options" id="q1-options">
+                    <div class="mcq-option" onclick="selectMCQ(1, 0)">Map-Reduce-Filter</div>
+                    <div class="mcq-option" onclick="selectMCQ(1, 1)">Split-Apply-Combine</div>
+                    <div class="mcq-option" onclick="selectMCQ(1, 2)">Extract-Transform-Load</div>
+                    <div class="mcq-option" onclick="selectMCQ(1, 3)">Read-Process-Write</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 2</div>
+                    <p>What does <code>df.groupby('A')['B'].mean()</code> return?</p>
+                </div>
+                <div class="mcq-options" id="q2-options">
+                    <div class="mcq-option" onclick="selectMCQ(2, 0)">DataFrame</div>
+                    <div class="mcq-option" onclick="selectMCQ(2, 1)">Series</div>
+                    <div class="mcq-option" onclick="selectMCQ(2, 2)">GroupBy object</div>
+                    <div class="mcq-option" onclick="selectMCQ(2, 3)">List</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 3</div>
+                    <p>How do you apply multiple aggregations?</p>
+                </div>
+                <div class="mcq-options" id="q3-options">
+                    <div class="mcq-option" onclick="selectMCQ(3, 0)">Use multiple groupby() calls</div>
+                    <div class="mcq-option" onclick="selectMCQ(3, 1)">Use agg() with a list</div>
+                    <div class="mcq-option" onclick="selectMCQ(3, 2)">Use transform()</div>
+                    <div class="mcq-option" onclick="selectMCQ(3, 3)">Not possible</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 4</div>
+                    <p>What does <code>transform()</code> return?</p>
+                </div>
+                <div class="mcq-options" id="q4-options">
+                    <div class="mcq-option" onclick="selectMCQ(4, 0)">Aggregated values (fewer rows)</div>
+                    <div class="mcq-option" onclick="selectMCQ(4, 1)">Same shape as input</div>
+                    <div class="mcq-option" onclick="selectMCQ(4, 2)">GroupBy object</div>
+                    <div class="mcq-option" onclick="selectMCQ(4, 3)">Dictionary</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 5</div>
+                    <p>Which method creates frequency tables?</p>
+                </div>
+                <div class="mcq-options" id="q5-options">
+                    <div class="mcq-option" onclick="selectMCQ(5, 0)">pivot_table()</div>
+                    <div class="mcq-option" onclick="selectMCQ(5, 1)">crosstab()</div>
+                    <div class="mcq-option" onclick="selectMCQ(5, 2)">value_counts()</div>
+                    <div class="mcq-option" onclick="selectMCQ(5, 3)">freq_table()</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 6</div>
+                    <p>Group by multiple columns syntax?</p>
+                </div>
+                <div class="mcq-options" id="q6-options">
+                    <div class="mcq-option" onclick="selectMCQ(6, 0)">groupby('A', 'B')</div>
+                    <div class="mcq-option" onclick="selectMCQ(6, 1)">groupby(['A', 'B'])</div>
+                    <div class="mcq-option" onclick="selectMCQ(6, 2)">groupby('A').groupby('B')</div>
+                    <div class="mcq-option" onclick="selectMCQ(6, 3)">groupby(A, B)</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 7</div>
+                    <p>What does <code>as_index=False</code> do in groupby?</p>
+                </div>
+                <div class="mcq-options" id="q7-options">
+                    <div class="mcq-option" onclick="selectMCQ(7, 0)">Returns grouped keys as columns</div>
+                    <div class="mcq-option" onclick="selectMCQ(7, 1)">Removes the index</div>
+                    <div class="mcq-option" onclick="selectMCQ(7, 2)">Creates a MultiIndex</div>
+                    <div class="mcq-option" onclick="selectMCQ(7, 3)">Sorts by index</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 8</div>
+                    <p>Named aggregation syntax?</p>
+                </div>
+                <div class="mcq-options" id="q8-options">
+                    <div class="mcq-option" onclick="selectMCQ(8, 0)">agg(name='col', func='mean')</div>
+                    <div class="mcq-option" onclick="selectMCQ(8, 1)">agg(new_name=('col', 'func'))</div>
+                    <div class="mcq-option" onclick="selectMCQ(8, 2)">agg({'col': 'mean'})</div>
+                    <div class="mcq-option" onclick="selectMCQ(8, 3)">agg([('col', 'mean')])</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 9</div>
+                    <p>Default aggregation function in pivot_table()?</p>
+                </div>
+                <div class="mcq-options" id="q9-options">
+                    <div class="mcq-option" onclick="selectMCQ(9, 0)">sum</div>
+                    <div class="mcq-option" onclick="selectMCQ(9, 1)">mean</div>
+                    <div class="mcq-option" onclick="selectMCQ(9, 2)">count</div>
+                    <div class="mcq-option" onclick="selectMCQ(9, 3)">median</div>
+                </div>
+
+                <div class="task-box">
+                    <div class="task-label">Question 10</div>
+                    <p>To reset index after groupby, use:</p>
+                </div>
+                <div class="mcq-options" id="q10-options">
+                    <div class="mcq-option" onclick="selectMCQ(10, 0)">drop_index()</div>
+                    <div class="mcq-option" onclick="selectMCQ(10, 1)">reset_index()</div>
+                    <div class="mcq-option" onclick="selectMCQ(10, 2)">clear_index()</div>
+                    <div class="mcq-option" onclick="selectMCQ(10, 3)">flatten()</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-check" onclick="checkQuiz()">Ã¢Å“" Submit Quiz</button>
+                </div>
+
+                <div class="feedback-box" id="feedback10"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Game state
+        let totalXP = 0;
+        let completedLabs = new Set();
+        let streak = 0;
+        let quizAnswers = {};
+        const correctQuizAnswers = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 0, 8: 1, 9: 1, 10: 1};
+        const labXP = {1: 50, 2: 50, 3: 75, 4: 75, 5: 100, 6: 100, 7: 100, 8: 100, 9: 150, 10: 200};
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function scrollToLab(labId) {
+            document.getElementById(labId).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById('nav-' + labId).classList.add('active');
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalXP').textContent = totalXP;
+            document.getElementById('sidebarXP').textContent = totalXP + ' XP';
+            document.getElementById('completedLabs').textContent = completedLabs.size;
+            document.getElementById('streakCount').textContent = streak;
+            
+            const level = Math.floor(totalXP / 100) + 1;
+            const xpInLevel = totalXP % 100;
+            document.getElementById('currentLevel').textContent = level;
+            document.getElementById('xpFill').style.width = xpInLevel + '%';
+        }
+
+        function showFeedback(labNum, type, message) {
+            const feedback = document.getElementById('feedback' + labNum);
+            feedback.className = 'feedback-box show ' + type;
+            feedback.innerHTML = (type === 'success' ? '🎉 ' : type === 'error' ? 'Ã¢ÂÅ’ ' : 'Ã¢Å¡Â  ') + message;
+        }
+
+        function awardXP(labNum) {
+            if (!completedLabs.has(labNum)) {
+                completedLabs.add(labNum);
+                const xp = labXP[labNum];
+                totalXP += xp;
+                streak++;
+                updateStats();
+                
+                document.getElementById('nav-lab' + labNum).classList.add('completed');
+                
+                document.getElementById('xpEarned').textContent = xp;
+                document.getElementById('overlay').classList.add('show');
+                document.getElementById('achievementPopup').classList.add('show');
+            }
+        }
+
+        function closeAchievement() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('achievementPopup').classList.remove('show');
+        }
+
+        // Pandas simulation
+        function simulatePandas(code) {
+            const outputs = [];
+            
+            // Lab 1: GroupBy Intro
+            if (code.includes('groupby') && code.includes('groups')) {
+                outputs.push("Original DataFrame:");
+                outputs.push("   Dept     Name  Salary");
+                outputs.push("0  Sales    Alice   50000");
+                outputs.push("1     IT      Bob   60000");
+                outputs.push("2  Sales  Charlie   55000");
+                outputs.push("3     IT    Diana   65000");
+                outputs.push("4     HR      Eve   45000");
+                outputs.push("5     HR    Frank   48000");
+                outputs.push("");
+                outputs.push("Groups:");
+                outputs.push("{'HR': [4, 5], 'IT': [1, 3], 'Sales': [0, 2]}");
+            }
+            // Lab 2: Single Aggregation
+            else if (code.includes('mean()') && code.includes("groupby('Dept')")) {
+                outputs.push("Mean Salary by Department:");
+                outputs.push("Dept");
+                outputs.push("HR       46500.0");
+                outputs.push("IT       62500.0");
+                outputs.push("Sales    52500.0");
+                outputs.push("Name: Salary, dtype: float64");
+            }
+            // Lab 3: Multiple Columns
+            else if (code.includes("groupby(['Dept', 'Level'])")) {
+                outputs.push("Original DataFrame:");
+                outputs.push("    Dept   Level  Salary");
+                outputs.push("0  Sales  Junior   45000");
+                outputs.push("1  Sales  Senior   65000");
+                outputs.push("2     IT  Junior   55000");
+                outputs.push("3     IT  Senior   80000");
+                outputs.push("4  Sales  Senior   70000");
+                outputs.push("5     IT  Junior   50000");
+                outputs.push("");
+                outputs.push("Mean Salary by Dept and Level:");
+                outputs.push("Dept   Level");
+                outputs.push("IT     Junior    52500.0");
+                outputs.push("       Senior    80000.0");
+                outputs.push("Sales  Junior    45000.0");
+                outputs.push("       Senior    67500.0");
+                outputs.push("Name: Salary, dtype: float64");
+            }
+            // Lab 4: agg() Method
+            else if (code.includes("agg(['mean', 'sum', 'count'])")) {
+                outputs.push("Multiple Aggregations:");
+                outputs.push("          mean     sum  count");
+                outputs.push("Dept");
+                outputs.push("HR     46500.0   93000      2");
+                outputs.push("IT     62500.0  125000      2");
+                outputs.push("Sales  52500.0  105000      2");
+            }
+            // Lab 5: Named Aggregations
+            else if (code.includes('avg_salary') && code.includes('total_salary')) {
+                outputs.push("Named Aggregations:");
+                outputs.push("       avg_salary  total_salary  employee_count");
+                outputs.push("Dept");
+                outputs.push("HR        46500.0         93000               2");
+                outputs.push("IT        62500.0        125000               2");
+                outputs.push("Sales     52500.0        105000               2");
+            }
+            // Lab 6: Transform
+            else if (code.includes('transform') && code.includes('normalized')) {
+                outputs.push("DataFrame with Normalized Salaries:");
+                outputs.push("    Dept  Salary  normalized");
+                outputs.push("0  Sales   50000   -0.707107");
+                outputs.push("1  Sales   60000    0.707107");
+                outputs.push("2     IT   70000   -0.707107");
+                outputs.push("3     IT   80000    0.707107");
+            }
+            // Lab 7: Pivot Tables
+            else if (code.includes('pivot_table')) {
+                outputs.push("Pivot Table - Average Salary:");
+                outputs.push("Level   Junior    Senior");
+                outputs.push("Dept");
+                outputs.push("IT     52500.0   80000.0");
+                outputs.push("Sales  45000.0   67500.0");
+            }
+            // Lab 8: Cross-Tabulation
+            else if (code.includes('crosstab')) {
+                outputs.push("Cross-Tabulation (Counts):");
+                outputs.push("Level  Junior  Senior");
+                outputs.push("Dept");
+                outputs.push("HR          1       1");
+                outputs.push("IT          2       1");
+                outputs.push("Sales       1       2");
+                outputs.push("");
+                outputs.push("With Margins:");
+                outputs.push("Level  Junior  Senior  All");
+                outputs.push("Dept");
+                outputs.push("HR          1       1    2");
+                outputs.push("IT          2       1    3");
+                outputs.push("Sales       1       2    3");
+                outputs.push("All         4       4    8");
+            }
+            // Lab 9: Mini Project
+            else if (code.includes('Region') && code.includes('Revenue') && code.includes('idxmax')) {
+                outputs.push("Sales Data:");
+                outputs.push("  Region Product  Revenue");
+                outputs.push("0  North       A     1200");
+                outputs.push("1  South       B      800");
+                outputs.push("2  North       B     1500");
+                outputs.push("3   East       A      900");
+                outputs.push("4  South       A     1100");
+                outputs.push("5   East       B     1300");
+                outputs.push("6  North       A     1000");
+                outputs.push("7  South       B      950");
+                outputs.push("");
+                outputs.push("Sales Summary by Region:");
+                outputs.push("        total_revenue  avg_order  num_orders");
+                outputs.push("Region");
+                outputs.push("East             2200     1100.0           2");
+                outputs.push("North            3700     1233.3           3");
+                outputs.push("South            2850      950.0           3");
+                outputs.push("");
+                outputs.push("Top Region: North");
+            }
+            // Generic pandas output
+            else if (code.includes('print')) {
+                outputs.push(">>> Code executed successfully");
+            }
+            
+            return outputs.join('\n');
+        }
+
+        // Python code execution using Piston API (for syntax checking)
+        async function executePython(code) {
+            try {
+                const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        language: 'python',
+                        version: '3.10.0',
+                        files: [{
+                            content: code
+                        }]
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.run) {
+                    if (result.run.stderr && result.run.stderr.trim()) {
+                        return { success: false, output: result.run.stderr, hasError: true };
+                    }
+                    return { success: true, output: result.run.output || '', hasError: false };
+                } else {
+                    return { success: false, output: 'Error: Could not execute code', hasError: true };
+                }
+            } catch (e) {
+                // Network error - fall back to simulation only
+                return { success: true, output: '', hasError: false, networkError: true };
+            }
+        }
+
+        async function runCode(labNum) {
+            const code = document.getElementById('code' + labNum).value;
+            const outputEl = document.getElementById('output' + labNum);
+            
+            if (!code.trim()) {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = 'Please write some code first!';
+                return;
+            }
+            
+            outputEl.className = 'code-output';
+            outputEl.textContent = 'â³ Running code...';
+            
+            // First check with Piston for real Python errors
+            const pistonResult = await executePython(code);
+            
+            if (pistonResult.hasError) {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = pistonResult.output;
+                return;
+            }
+            
+            // Use simulation for specialized output
+            const simResult = simulatePandas(code);
+            
+            if (simResult.success) {
+                outputEl.className = 'code-output';
+                const pistonOut = (pistonResult.output || '').trim();
+                outputEl.textContent = pistonOut || simResult.output || '(No output)';
+            } else {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = simResult.output;
+            }
+        }
+
+        async function checkLab(labNum) {
+            const code = document.getElementById('code' + labNum).value;
+            const codeLower = code.toLowerCase();
+            const outputEl = document.getElementById('output' + labNum);
+            
+            outputEl.className = 'code-output';
+            outputEl.textContent = 'â³ Checking...';
+            
+            // First check with Piston for real Python errors
+            const pistonResult = await executePython(code);
+            
+            if (pistonResult.hasError) {
+                outputEl.className = 'code-output error';
+                outputEl.textContent = pistonResult.output;
+                showFeedback(labNum, 'error', 'Your code has errors. Please fix them and try again!');
+                streak = 0;
+                updateStats();
+                return;
+            }
+            
+            // Use simulation for display
+            const simResult = simulatePandas(code);
+            const pistonOut = (pistonResult.output || '').trim();
+            outputEl.className = 'code-output';
+            outputEl.textContent = pistonOut || simResult.output || '(No output)';
+            
+            let passed = false;
+            
+            switch(labNum) {
+                case 1:
+                    passed = code.includes('groupby') && code.includes('groups');
+                    break;
+                case 2:
+                    passed = code.includes('groupby') && code.includes('mean()');
+                    break;
+                case 3:
+                    passed = code.includes("groupby(['dept', 'level']") || code.includes('groupby(["dept", "level"]');
+                    break;
+                case 4:
+                    passed = code.includes('agg(') && code.includes('mean') && code.includes('sum') && code.includes('count');
+                    break;
+                case 5:
+                    passed = code.includes('avg_salary') && code.includes('total_salary') && code.includes('employee_count');
+                    break;
+                case 6:
+                    passed = code.includes('transform') && (code.includes('lambda') || code.includes('mean'));
+                    break;
+                case 7:
+                    passed = code.includes('pivot_table') && code.includes('index') && code.includes('columns');
+                    break;
+                case 8:
+                    passed = code.includes('crosstab');
+                    break;
+                case 9:
+                    passed = code.includes('groupby') && code.includes('agg') && code.includes('idxmax');
+                    break;
+            }
+            
+            if (passed) {
+                showFeedback(labNum, 'success', 'Excellent work! You completed this lab successfully!');
+                awardXP(labNum);
+            } else {
+                showFeedback(labNum, 'error', 'Not quite right. Check your code and try again!');
+                streak = 0;
+                updateStats();
+            }
+        }
+        function selectMCQ(question, answer) {
+            quizAnswers[question] = answer;
+            const options = document.querySelectorAll(`#q${question}-options .mcq-option`);
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === answer) opt.classList.add('selected');
+            });
+        }
+
+        function checkQuiz() {
+            let correct = 0;
+            
+            for (let q = 1; q <= 10; q++) {
+                const options = document.querySelectorAll(`#q${q}-options .mcq-option`);
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('correct', 'incorrect');
+                    if (idx === correctQuizAnswers[q]) {
+                        opt.classList.add('correct');
+                    } else if (quizAnswers[q] === idx) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (quizAnswers[q] === correctQuizAnswers[q]) {
+                    correct++;
+                }
+            }
+            
+            const percentage = (correct / 10) * 100;
+            
+            if (correct >= 8) {
+                showFeedback(10, 'success', `Excellent! You got ${correct}/10 correct (${percentage}%)! Ã°Å¸ÂÂ¼`);
+                awardXP(10);
+            } else if (correct >= 5) {
+                showFeedback(10, 'partial', `Good effort! You got ${correct}/10 correct (${percentage}%). Need 80% to pass. Review and try again!`);
+            } else {
+                showFeedback(10, 'error', `You got ${correct}/10 correct (${percentage}%). Review the material and try again!`);
+            }
+        }
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

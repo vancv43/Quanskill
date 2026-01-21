@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Matrix Decompositions Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 130px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 280px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 60px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .matrix-input { display: grid; gap: 0.25rem; margin: 0.5rem 0; }
+        .matrix-input .row { display: flex; gap: 0.25rem; }
+
+        .matrix-input input {
+            width: 50px;
+            padding: 0.4rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+        .btn-success { background: var(--gradient-success); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 4 Â· Matrix Decompositions</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Determinant 2×2</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Trace</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Eigenvalue Def</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Invertibility</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Triangular Det</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Eigen Equation</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Det Properties</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Characteristic Poly</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Eigenspace</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Diagonalization</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: SVD Structure</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Det 3×3</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Cholesky</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Eigendecomposition</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Singular Values</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Spectral Theorem</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Multiplicity</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: PCA Connection</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Low-Rank Approx</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: PageRank</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Neural Networks</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Image Compression</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Covariance</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Recommender SVD</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Matrix Decompositions Mastery</h1>
+                <p class="hero-subtitle">
+                    Master the "fundamental theorem of linear algebra" with 25 questions and 15 interactive labs covering determinants, eigenvalues, SVD, and their applications in Data Science and Agentic AI.
+                </p>
+                <div class="hero-quote">
+                    "SVD is the Swiss Army knife of matrix decompositions - it works on any matrix and reveals the fundamental structure of data."
+                    <br><small>- Quanskill Learning Path</small>
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Determinants</span>
+                    <span class="topic-tag">Eigenvalues</span>
+                    <span class="topic-tag">Eigenvectors</span>
+                    <span class="topic-tag">SVD</span>
+                    <span class="topic-tag">Cholesky</span>
+                    <span class="topic-tag">PCA</span>
+                    <span class="topic-tag">Agentic AI</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover the core matrix decomposition techniques used in modern AI systems.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Why Matrix Decompositions matter:</strong> SVD powers recommendation systems, PCA enables dimensionality reduction, and eigenanalysis is key to understanding neural network dynamics and Agentic AI decision-making.</p>
+            </div>
+
+            <!-- Lab 1: Determinant Calculator 2x2 -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>2×2 Determinant Calculator</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="det2_00" value="4">
+                                <input type="number" id="det2_01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="det2_10" value="1">
+                                <input type="number" id="det2_11" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcDet2x2()">Calculate</button>
+                </div>
+                <div class="demo-output" id="det2Output">Click "Calculate" for determinant...</div>
+            </div>
+
+            <!-- Lab 2: Determinant Calculator 3x3 -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>3×3 Determinant (Sarrus' Rule)</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (3×3)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="det3_00" value="1">
+                                <input type="number" id="det3_01" value="2">
+                                <input type="number" id="det3_02" value="3">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="det3_10" value="0">
+                                <input type="number" id="det3_11" value="1">
+                                <input type="number" id="det3_12" value="4">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="det3_20" value="5">
+                                <input type="number" id="det3_21" value="6">
+                                <input type="number" id="det3_22" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="calcDet3x3()">Calculate</button>
+                </div>
+                <div class="demo-output" id="det3Output">Click "Calculate" for 3×3 determinant...</div>
+            </div>
+
+            <!-- Lab 3: Trace Calculator -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Trace Calculator</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (3×3)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="tr_00" value="5">
+                                <input type="number" id="tr_01" value="1">
+                                <input type="number" id="tr_02" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="tr_10" value="0">
+                                <input type="number" id="tr_11" value="3">
+                                <input type="number" id="tr_12" value="1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="tr_20" value="1">
+                                <input type="number" id="tr_21" value="2">
+                                <input type="number" id="tr_22" value="7">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcTrace()">Calculate</button>
+                </div>
+                <div class="demo-output" id="traceOutput">Click "Calculate" for trace...</div>
+            </div>
+
+            <!-- Lab 4: Eigenvalue Calculator 2x2 -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Eigenvalue & Eigenvector Finder</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="eig_00" value="4">
+                                <input type="number" id="eig_01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="eig_10" value="1">
+                                <input type="number" id="eig_11" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="calcEigen()">Find Eigenvalues</button>
+                </div>
+                <canvas id="eigenCanvas" class="demo-canvas" style="height:200px"></canvas>
+                <div class="demo-output" id="eigenOutput">Click to compute eigenvalues & eigenvectors...</div>
+            </div>
+
+            <!-- Lab 5: Characteristic Polynomial -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Characteristic Polynomial</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="cp_00" value="5">
+                                <input type="number" id="cp_01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="cp_10" value="1">
+                                <input type="number" id="cp_11" value="4">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcCharPoly()">Compute</button>
+                </div>
+                <div class="demo-output" id="cpOutput">Click "Compute" for characteristic polynomial...</div>
+            </div>
+
+            <!-- Lab 6: Diagonalization Check -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Diagonalization Checker</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="diag_00" value="3">
+                                <input type="number" id="diag_01" value="1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="diag_10" value="0">
+                                <input type="number" id="diag_11" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="checkDiag()">Check</button>
+                </div>
+                <div class="demo-output" id="diagOutput">Click "Check" to test diagonalizability...</div>
+            </div>
+
+            <!-- Lab 7: SVD Calculator 2x2 -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>SVD Calculator (2×2)</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="svd_00" value="3">
+                                <input type="number" id="svd_01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="svd_10" value="2">
+                                <input type="number" id="svd_11" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcSVD()">Compute SVD</button>
+                </div>
+                <div class="demo-output" id="svdOutput">Click "Compute SVD" for A = UÎ£Váµ€...</div>
+            </div>
+
+            <!-- Lab 8: Matrix Power via Eigendecomposition -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Matrix Power (via Eigendecomposition)</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="pow_00" value="2">
+                                <input type="number" id="pow_01" value="1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="pow_10" value="1">
+                                <input type="number" id="pow_11" value="2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Power n</label>
+                        <input type="number" id="pow_n" value="5" min="1" max="10">
+                    </div>
+                    <button class="btn btn-orange" onclick="calcMatrixPower()">Compute Aâ¿</button>
+                </div>
+                <div class="demo-output" id="powOutput">Click "Compute Aâ¿" to see matrix power...</div>
+            </div>
+
+            <!-- Lab 9: Cholesky Decomposition -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Cholesky Decomposition (A = LLáµ€)</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>SPD Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="chol_00" value="4">
+                                <input type="number" id="chol_01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="chol_10" value="2">
+                                <input type="number" id="chol_11" value="5">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcCholesky()">Decompose</button>
+                </div>
+                <div class="demo-output" id="cholOutput">Click "Decompose" for Cholesky...</div>
+            </div>
+
+            <!-- Lab 10: Eigenvalue Visualization -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Eigenvalue Transformation Visualizer</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="eigviz_00" value="2" step="0.1">
+                                <input type="number" id="eigviz_01" value="1" step="0.1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="eigviz_10" value="1" step="0.1">
+                                <input type="number" id="eigviz_11" value="2" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="vizEigenTransform()">Visualize</button>
+                </div>
+                <canvas id="eigvizCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="eigvizOutput">Click "Visualize" to see transformation...</div>
+            </div>
+
+            <!-- Lab 11: Low-Rank Approximation -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Low-Rank Approximation (SVD)</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (3×3)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="lr_00" value="1">
+                                <input type="number" id="lr_01" value="2">
+                                <input type="number" id="lr_02" value="3">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="lr_10" value="4">
+                                <input type="number" id="lr_11" value="5">
+                                <input type="number" id="lr_12" value="6">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="lr_20" value="7">
+                                <input type="number" id="lr_21" value="8">
+                                <input type="number" id="lr_22" value="9">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Rank k</label>
+                        <select id="lr_k">
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcLowRank()">Approximate</button>
+                </div>
+                <div class="demo-output" id="lrOutput">Click "Approximate" for rank-k approximation...</div>
+            </div>
+
+            <!-- Lab 12: Trace-Determinant Relationship -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Trace-Determinant-Eigenvalue Relationship</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="td_00" value="5">
+                                <input type="number" id="td_01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="td_10" value="1">
+                                <input type="number" id="td_11" value="4">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="calcTDRelation()">Verify</button>
+                </div>
+                <div class="demo-output" id="tdOutput">Click "Verify" to check relationships...</div>
+            </div>
+
+            <!-- Lab 13: Spectral Norm -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Spectral Norm Calculator</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="sn_00" value="3">
+                                <input type="number" id="sn_01" value="1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="sn_10" value="2">
+                                <input type="number" id="sn_11" value="4">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcSpectralNorm()">Compute</button>
+                </div>
+                <div class="demo-output" id="snOutput">Click "Compute" for spectral norm...</div>
+            </div>
+
+            <!-- Lab 14: Matrix Condition Number -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Condition Number Calculator</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix A (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="cn_00" value="1">
+                                <input type="number" id="cn_01" value="0.99">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="cn_10" value="0.99">
+                                <input type="number" id="cn_11" value="1">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="calcCondition()">Compute</button>
+                </div>
+                <div class="demo-output" id="cnOutput">Click "Compute" for condition number...</div>
+            </div>
+
+            <!-- Lab 15: PageRank Simulator -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>PageRank Power Iteration</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Transition Matrix (3×3)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="pr_00" value="0" step="0.1">
+                                <input type="number" id="pr_01" value="0.5" step="0.1">
+                                <input type="number" id="pr_02" value="0.5" step="0.1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="pr_10" value="1" step="0.1">
+                                <input type="number" id="pr_11" value="0" step="0.1">
+                                <input type="number" id="pr_12" value="0" step="0.1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="pr_20" value="0" step="0.1">
+                                <input type="number" id="pr_21" value="0.5" step="0.1">
+                                <input type="number" id="pr_22" value="0.5" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Iterations</label>
+                        <input type="number" id="pr_iter" value="10" min="1" max="50">
+                    </div>
+                    <button class="btn btn-primary" onclick="calcPageRank()">Run</button>
+                </div>
+                <div class="demo-output" id="prOutput">Click "Run" for PageRank iteration...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: SaigonTech Analytics</span>
+                <p>You're building a data analytics platform for <strong>SaigonTech Solutions</strong>. Understanding matrix properties like determinants helps detect singular covariance matrices in statistical models and ensure numerical stability.</p>
+            </div>
+
+            <!-- Q1-Q8 -->
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> A covariance matrix is $\mathbf{A} = \begin{bmatrix} 4 & 2 \\ 2 & 3 \end{bmatrix}$
+                </div>
+                <div class="quiz-question">What is det($\mathbf{A}$)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) 8</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) 12</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) 14</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) 7</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> Same matrix $\mathbf{A} = \begin{bmatrix} 4 & 2 \\ 2 & 3 \end{bmatrix}$
+                </div>
+                <div class="quiz-question">What is trace($\mathbf{A}$)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) 6</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) 7</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) 8</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) 4</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">If $\mathbf{A}\mathbf{x} = \lambda\mathbf{x}$ for $\mathbf{x} \neq \mathbf{0}$, then:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) Î» is an eigenvalue and x is an eigenvector</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) x is the inverse of A</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) A must be the identity matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) Î» must equal 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">A square matrix A is invertible if and only if:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) det(A) â‰  0</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) det(A) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) trace(A) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) A is symmetric</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Scenario:</strong> Triangular matrix $\mathbf{T} = \begin{bmatrix} 2 & 1 & 3 \\ 0 & 4 & 5 \\ 0 & 0 & 3 \end{bmatrix}$
+                </div>
+                <div class="quiz-question">What is det($\mathbf{T}$)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) 24</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) 9</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) 18</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) 12</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">To find eigenvalues of A, we solve:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) det(A - Î»I) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) det(A + Î»I) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) trace(A - Î»I) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) A = Î»I</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">If det(A) = 3 and det(B) = 4, what is det(AB)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) 7</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) 12</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) -1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The characteristic polynomial of a 2×2 matrix has degree:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) 4</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) Depends on entries</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: VietChat Recommendation Engine</span>
+                <p>You're building a recommendation system for <strong>MekongSoft's VietChat</strong> using matrix factorization. SVD decomposes the user-item matrix to reveal latent features for personalized suggestions.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The eigenspace $E_\lambda$ of eigenvalue $\lambda$ is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) The null space of (A - Î»I)</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) The column space of A</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) The row space of A</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) A single vector</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">A matrix A is diagonalizable if and only if:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) It has n linearly independent eigenvectors</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) All eigenvalues are positive</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) det(A) â‰  0</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) A is symmetric</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>SVD:</strong> A = UÎ£Váµ€ for A âˆˆ â„áµ€Ã‚Â¿
+                </div>
+                <div class="quiz-question">What are the dimensions of U, Î£, V?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) U: m×m, Î£: m×n, V: n×n</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) U: m×n, Î£: n×n, V: n×m</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) U: n×n, Î£: n×m, V: m×m</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) All are m×n</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Sarrus' Rule:</strong> $\mathbf{A} = \begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{bmatrix}$
+                </div>
+                <div class="quiz-question">What is det($\mathbf{A}$)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) -1</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) 5</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Cholesky decomposition A = LLáµ€ requires A to be:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) Symmetric positive definite</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) Any square matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) Diagonal</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) Orthogonal</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">If A = PDPâ»Â¹ (eigendecomposition), what is AÂ³?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) PDÂ³Pâ»Â¹</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) PÂ³DÂ³Pâ»Â³</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) 3PDPâ»Â¹</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) PÂ³DPâ»Â¹</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Singular values of A are related to eigenvalues of:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) Aáµ€A (singular values = âˆšeigenvalues)</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) A itself</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) A + Aáµ€</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) Aâ»Â¹</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Spectral Theorem states that symmetric matrices have:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) Real eigenvalues and orthogonal eigenvectors</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) Complex eigenvalues only</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) No eigenvalues</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) det = 0</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">If eigenvalue Î»=2 appears twice in characteristic polynomial but has only 1 linearly independent eigenvector, then:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) Algebraic multiplicity = 2, geometric multiplicity = 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) Algebraic = geometric = 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) The matrix is diagonalizable</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) Î» must be complex</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Applications (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: HanoiAI Research Lab</span>
+                <p>You're working at <strong>HanoiAI Research</strong> on state-of-the-art AI systems. Matrix decompositions are essential for understanding neural network training dynamics, building agentic AI, and creating efficient recommendation systems.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>Eigenanalysis:</strong> Understanding stability of learned policies</li>
+                    <li><strong>SVD:</strong> Compressing neural network weights</li>
+                    <li><strong>PageRank:</strong> Ranking importance of states/actions</li>
+                    <li><strong>Spectral methods:</strong> Graph neural networks for agent communication</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In PCA, principal components are the eigenvectors of:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) The covariance matrix of the data</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) The data matrix itself</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) The inverse covariance matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) The identity matrix</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The best rank-k approximation of A (minimizing Frobenius norm) is obtained by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Keeping top k singular values in SVD</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) Keeping bottom k singular values</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) Random sampling</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) Zeroing diagonal entries</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">PageRank computes the principal eigenvector (Î»=1) of a stochastic matrix. This eigenvector represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) Stationary distribution (long-term page visit probability)</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) Shortest path between pages</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) Page loading time</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Number of links</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">In deep learning, if weight matrix W has condition number Îº(W) >> 1, this causes:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) Vanishing/exploding gradients (training instability)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) Faster convergence</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) Better generalization</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) Lower memory usage</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Image Compression:</strong> A 1000×1000 grayscale image is compressed using rank-50 SVD approximation.
+                </div>
+                <div class="quiz-question">What is the compression ratio (original/compressed storage)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) â‰ˆ 10:1</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) â‰ˆ 2:1</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) â‰ˆ 50:1</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) â‰ˆ 100:1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">If covariance matrix Î£ has eigenvalues [10, 1, 0.1], keeping the first 2 principal components captures what % of variance?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) â‰ˆ 99%</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) â‰ˆ 90%</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) â‰ˆ 50%</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) â‰ˆ 10%</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Recommender System:</strong> User-item matrix R â‰ˆ UVáµ€ with U (users×k), V (items×k).
+                </div>
+                <div class="quiz-question">The latent dimension k represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Hidden features (genres, styles, preferences)</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) Number of users</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Number of items</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Average rating</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An autonomous agent's policy is encoded as matrix P. Eigenanalysis reveals convergence behavior.
+                </div>
+                <div class="quiz-question">For stable learning, the spectral radius Ï(P) (largest |eigenvalue|) should satisfy:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Ï(P) â‰¤ 1 (eigenvalues bounded in unit circle)</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Ï(P) > 10</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Ï(P) = 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) Ï(P) = âˆž</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Data Science Track:</strong> Apply SVD in our recommender systems project</li>
+                    <li><strong>Agentic AI Bootcamp:</strong> Use eigenanalysis for policy optimization</li>
+                    <li><strong>Deep Learning:</strong> Understand weight initialization via spectral theory</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, // det = 4*3 - 2*2 = 8
+            2:1, // trace = 4+3 = 7
+            3:0, // eigenvalue/eigenvector definition
+            4:0, // det â‰  0
+            5:0, // 2*4*3 = 24
+            6:0, // det(A-Î»I) = 0
+            7:1, // det(AB) = det(A)*det(B) = 12
+            8:1, // degree = n = 2
+            9:0, // null space of (A-Î»I)
+            10:0, // n independent eigenvectors
+            11:0, // U:m×m, Î£:m×n, V:n×n
+            12:0, // 1(0-24) - 2(0-20) + 3(0-5) = -24+40-15 = 1
+            13:0, // SPD
+            14:0, // PDÂ³Pâ»Â¹
+            15:0, // Aáµ€A
+            16:0, // real eigenvalues, orthogonal eigenvectors
+            17:0, // algebraic=2, geometric=1
+            18:0, // covariance matrix
+            19:0, // top k singular values
+            20:0, // stationary distribution
+            21:0, // vanishing/exploding gradients
+            22:0, // 1M/(50*2000+50) â‰ˆ 10:1
+            23:0, // (10+1)/(10+1+0.1) â‰ˆ 99%
+            24:0, // hidden features
+            25:0  // Ï â‰¤ 1
+        };
+        
+        const explanations = {
+            1: "det(A) = 4×3 - 2×2 = 12 - 4 = 8",
+            2: "trace(A) = sum of diagonal = 4 + 3 = 7",
+            3: "This is the definition: Î» is eigenvalue, x is corresponding eigenvector",
+            4: "A is invertible âŸº det(A) â‰  0 âŸº no zero eigenvalues",
+            5: "For triangular matrices, det = product of diagonal: 2×4×3 = 24",
+            6: "Eigenvalues are roots of characteristic polynomial det(A-Î»I) = 0",
+            7: "det(AB) = det(A)Â·det(B) = 3×4 = 12",
+            8: "Characteristic polynomial of n×n matrix has degree n. For 2×2, degree = 2",
+            9: "Eigenspace EÎ» = {x : Ax = Î»x} = {x : (A-Î»I)x = 0} = ker(A-Î»I)",
+            10: "A is diagonalizable âŸº has n linearly independent eigenvectors",
+            11: "SVD: A(m×n) = U(m×m) × Î£(m×n) × Váµ€(n×n)",
+            12: "Using Sarrus or expansion: 1(0-24) - 2(0-20) + 3(0-5) = 1",
+            13: "Cholesky requires A to be symmetric positive definite (SPD)",
+            14: "Aâ¿ = (PDPâ»Â¹)â¿ = PDâ¿Pâ»Â¹ since Pâ»Â¹P = I cancels",
+            15: "Singular values Ïƒáµ€Â¢ = âˆšÎ»áµ€Â¢(Aáµ€A) = âˆšÎ»áµ€Â¢(AAáµ€)",
+            16: "Spectral Theorem: symmetric matrices have real eigenvalues and orthonormal eigenvectors",
+            17: "Algebraic = times in char. poly, geometric = dim(eigenspace). Here: 2 vs 1",
+            18: "PCA: eigenvectors of covariance matrix are principal components",
+            19: "Eckart-Young: best rank-k approximation keeps top k singular values",
+            20: "PageRank = principal eigenvector = stationary distribution",
+            21: "Large condition number ←’ ill-conditioned ←’ gradient issues",
+            22: "Original: 10â¶. Compressed: 50×1000 + 50 + 50×1000 â‰ˆ 10âµ. Ratio â‰ˆ 10:1",
+            23: "Variance captured = (10+1)/(10+1+0.1) = 11/11.1 â‰ˆ 99%",
+            24: "k latent dimensions represent hidden features like genres/preferences",
+            25: "Spectral radius â‰¤ 1 ensures bounded/stable iterations"
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        // Lab 1: 2x2 Determinant
+        function calcDet2x2() {
+            const a=+document.getElementById('det2_00').value, b=+document.getElementById('det2_01').value;
+            const c=+document.getElementById('det2_10').value, d=+document.getElementById('det2_11').value;
+            const det = a*d - b*c;
+            document.getElementById('det2Output').innerHTML = 
+`det(A) = aâ‚â‚Ã‚Â·aâ‚‚â‚‚ - aâ‚â‚â€šÃ‚Â·aâ‚â€šâ‚
+       = ${a}×${d} - ${b}×${c}
+       = ${a*d} - ${b*c}
+       = ${det}
+${det !== 0 ? 'âœ… Matrix is invertible' : 'âŒ Matrix is singular (not invertible)'}`;
+        }
+
+        // Lab 2: 3x3 Determinant (Sarrus)
+        function calcDet3x3() {
+            const a=+document.getElementById('det3_00').value, b=+document.getElementById('det3_01').value, c=+document.getElementById('det3_02').value;
+            const d=+document.getElementById('det3_10').value, e=+document.getElementById('det3_11').value, f=+document.getElementById('det3_12').value;
+            const g=+document.getElementById('det3_20').value, h=+document.getElementById('det3_21').value, i=+document.getElementById('det3_22').value;
+            const pos = a*e*i + b*f*g + c*d*h;
+            const neg = c*e*g + b*d*i + a*f*h;
+            const det = pos - neg;
+            document.getElementById('det3Output').innerHTML = 
+`Sarrus' Rule:
+Positive diagonals: ${a}×${e}×${i} + ${b}×${f}×${g} + ${c}×${d}×${h} = ${pos}
+Negative diagonals: ${c}×${e}×${g} + ${b}×${d}×${i} + ${a}×${f}×${h} = ${neg}
+det(A) = ${pos} - ${neg} = ${det}`;
+        }
+
+        // Lab 3: Trace
+        function calcTrace() {
+            const a=+document.getElementById('tr_00').value;
+            const e=+document.getElementById('tr_11').value;
+            const i=+document.getElementById('tr_22').value;
+            const tr = a + e + i;
+            document.getElementById('traceOutput').innerHTML = 
+`trace(A) = sum of diagonal elements
+         = aâ‚â‚ + aâ‚‚â‚‚ + aâ‚ƒâ‚ƒ
+         = ${a} + ${e} + ${i}
+         = ${tr}
+
+Note: trace(A) = sum of eigenvalues`;
+        }
+
+        // Lab 4: Eigenvalues 2x2
+        const eigenCanvas = document.getElementById('eigenCanvas');
+        const eigenCtx = eigenCanvas.getContext('2d');
+
+        function calcEigen() {
+            const a=+document.getElementById('eig_00').value, b=+document.getElementById('eig_01').value;
+            const c=+document.getElementById('eig_10').value, d=+document.getElementById('eig_11').value;
+            
+            const trace = a + d;
+            const det = a*d - b*c;
+            const disc = trace*trace - 4*det;
+            
+            let output = `Matrix A = [[${a}, ${b}], [${c}, ${d}]]
+Characteristic polynomial: Î»Â² - ${trace}Î» + ${det} = 0
+Discriminant = ${disc.toFixed(3)}\n\n`;
+            
+            if (disc >= 0) {
+                const l1 = (trace + Math.sqrt(disc))/2;
+                const l2 = (trace - Math.sqrt(disc))/2;
+                output += `Eigenvalues: Î»â‚ = ${l1.toFixed(3)}, Î»â‚‚ = ${l2.toFixed(3)}\n`;
+                output += `\nVerification:\n`;
+                output += `Î»â‚ + Î»â‚‚ = ${(l1+l2).toFixed(3)} = trace âœ“\n`;
+                output += `Î»â‚ × Î»â‚‚ = ${(l1*l2).toFixed(3)} = det âœ“`;
+                
+                // Draw
+                const w=eigenCanvas.width=eigenCanvas.offsetWidth, h=eigenCanvas.height=eigenCanvas.offsetHeight;
+                const cx=w/2, cy=h/2, scale=30;
+                eigenCtx.clearRect(0,0,w,h);
+                eigenCtx.strokeStyle='#94a3b8'; eigenCtx.lineWidth=1;
+                eigenCtx.beginPath(); eigenCtx.moveTo(0,cy); eigenCtx.lineTo(w,cy); eigenCtx.moveTo(cx,0); eigenCtx.lineTo(cx,h); eigenCtx.stroke();
+                
+                // Draw eigenvector for l1
+                if (Math.abs(b) > 0.001 || Math.abs(c) > 0.001) {
+                    let v1x = b, v1y = l1 - a;
+                    if (Math.abs(b) < 0.001) { v1x = l1 - d; v1y = c; }
+                    const mag = Math.sqrt(v1x*v1x + v1y*v1y);
+                    v1x /= mag; v1y /= mag;
+                    eigenCtx.strokeStyle = '#ff9000'; eigenCtx.lineWidth = 3;
+                    eigenCtx.beginPath();
+                    eigenCtx.moveTo(cx - v1x*scale*2, cy + v1y*scale*2);
+                    eigenCtx.lineTo(cx + v1x*scale*2, cy - v1y*scale*2);
+                    eigenCtx.stroke();
+                    eigenCtx.fillStyle = '#ff9000';
+                    eigenCtx.fillText(`Î»â‚=${l1.toFixed(1)}`, cx + v1x*scale*2 + 5, cy - v1y*scale*2);
+                }
+            } else {
+                output += `Complex eigenvalues (disc < 0)`;
+            }
+            
+            document.getElementById('eigenOutput').innerHTML = output;
+        }
+
+        // Lab 5: Characteristic Polynomial
+        function calcCharPoly() {
+            const a=+document.getElementById('cp_00').value, b=+document.getElementById('cp_01').value;
+            const c=+document.getElementById('cp_10').value, d=+document.getElementById('cp_11').value;
+            const trace = a + d;
+            const det = a*d - b*c;
+            document.getElementById('cpOutput').innerHTML = 
+`det(A - Î»I) = det([[${a}-Î», ${b}], [${c}, ${d}-Î»]])
+            = (${a}-Î»)(${d}-Î») - (${b})(${c})
+            = Î»Â² - ${trace}Î» + ${det}
+
+Characteristic polynomial: p(Î») = Î»Â² - ${trace}Î» + ${det}
+
+Coefficients:
+  - Coefficient of Î»Â¹: -trace(A) = -${trace}
+  - Constant term: det(A) = ${det}`;
+        }
+
+        // Lab 6: Diagonalization Check
+        function checkDiag() {
+            const a=+document.getElementById('diag_00').value, b=+document.getElementById('diag_01').value;
+            const c=+document.getElementById('diag_10').value, d=+document.getElementById('diag_11').value;
+            const trace = a + d;
+            const det = a*d - b*c;
+            const disc = trace*trace - 4*det;
+            
+            let output = `Matrix A = [[${a}, ${b}], [${c}, ${d}]]\n`;
+            output += `Discriminant = ${disc.toFixed(3)}\n\n`;
+            
+            if (disc > 0) {
+                output += `âœ… DIAGONALIZABLE\n`;
+                output += `Two distinct real eigenvalues ←’ 2 independent eigenvectors`;
+            } else if (disc === 0) {
+                const lambda = trace/2;
+                // Check if defective
+                const rankDeficiency = (a-lambda === 0 && b === 0 && c === 0 && d-lambda === 0);
+                if (rankDeficiency) {
+                    output += `âœ… DIAGONALIZABLE (A = Î»I, already diagonal)`;
+                } else {
+                    output += `âŒ NOT DIAGONALIZABLE (defective)\n`;
+                    output += `Repeated eigenvalue Î» = ${lambda.toFixed(2)} but only 1 eigenvector`;
+                }
+            } else {
+                output += `Complex eigenvalues - not diagonalizable over â„`;
+            }
+            document.getElementById('diagOutput').innerHTML = output;
+        }
+
+        // Lab 7: SVD 2x2
+        function calcSVD() {
+            const a=+document.getElementById('svd_00').value, b=+document.getElementById('svd_01').value;
+            const c=+document.getElementById('svd_10').value, d=+document.getElementById('svd_11').value;
+            
+            // Compute Aáµ€A
+            const ata00 = a*a + c*c, ata01 = a*b + c*d;
+            const ata10 = ata01, ata11 = b*b + d*d;
+            
+            // Eigenvalues of Aáµ€A
+            const trace = ata00 + ata11;
+            const det = ata00*ata11 - ata01*ata10;
+            const disc = Math.sqrt(Math.max(0, trace*trace - 4*det));
+            const l1 = (trace + disc)/2, l2 = (trace - disc)/2;
+            const s1 = Math.sqrt(Math.max(0, l1)), s2 = Math.sqrt(Math.max(0, l2));
+            
+            document.getElementById('svdOutput').innerHTML = 
+`A = UÎ£Váµ€
+
+Step 1: Compute Aáµ€A = [[${ata00.toFixed(2)}, ${ata01.toFixed(2)}], [${ata10.toFixed(2)}, ${ata11.toFixed(2)}]]
+
+Step 2: Eigenvalues of Aáµ€A: Î»â‚ = ${l1.toFixed(3)}, Î»â‚‚ = ${l2.toFixed(3)}
+
+Step 3: Singular values: ÏÆ’â‚ = âˆÅ¡Î»â‚ = ${s1.toFixed(3)}, Ïƒâ‚‚ = âˆšÎ»â‚‚ = ${s2.toFixed(3)}
+
+Î£ = [[${s1.toFixed(3)}, 0], [0, ${s2.toFixed(3)}]]
+
+Note: V columns = eigenvectors of Aáµ€A
+      U columns = Aváµ€Â¢/Ïƒáµ€Â¢`;
+        }
+
+        // Lab 8: Matrix Power
+        function calcMatrixPower() {
+            const a=+document.getElementById('pow_00').value, b=+document.getElementById('pow_01').value;
+            const c=+document.getElementById('pow_10').value, d=+document.getElementById('pow_11').value;
+            const n=+document.getElementById('pow_n').value;
+            
+            // Eigenvalues
+            const trace = a + d, det = a*d - b*c;
+            const disc = trace*trace - 4*det;
+            
+            if (disc < 0) {
+                document.getElementById('powOutput').innerHTML = `Complex eigenvalues - computation more involved`;
+                return;
+            }
+            
+            const l1 = (trace + Math.sqrt(disc))/2;
+            const l2 = (trace - Math.sqrt(disc))/2;
+            
+            // Direct matrix power (for verification)
+            let M = [[a,b],[c,d]];
+            for (let i = 1; i < n; i++) {
+                const newM = [
+                    [M[0][0]*a + M[0][1]*c, M[0][0]*b + M[0][1]*d],
+                    [M[1][0]*a + M[1][1]*c, M[1][0]*b + M[1][1]*d]
+                ];
+                M = newM;
+            }
+            
+            document.getElementById('powOutput').innerHTML = 
+`A = PDPâ»Â¹ where D = diag(${l1.toFixed(2)}, ${l2.toFixed(2)})
+
+Aâ¿ = PDâ¿Pâ»Â¹ where Dâ¿ = diag(${Math.pow(l1,n).toFixed(2)}, ${Math.pow(l2,n).toFixed(2)})
+
+A^${n} = [[${M[0][0].toFixed(2)}, ${M[0][1].toFixed(2)}],
+       [${M[1][0].toFixed(2)}, ${M[1][1].toFixed(2)}]]
+
+Eigenvalues raised to power n: Î»â‚^${n} = ${Math.pow(l1,n).toFixed(2)}, Î»â‚‚^${n} = ${Math.pow(l2,n).toFixed(2)}`;
+        }
+
+        // Lab 9: Cholesky
+        function calcCholesky() {
+            const a=+document.getElementById('chol_00').value, b=+document.getElementById('chol_01').value;
+            const c=+document.getElementById('chol_10').value, d=+document.getElementById('chol_11').value;
+            
+            if (b !== c) {
+                document.getElementById('cholOutput').innerHTML = `âŒ Matrix must be symmetric (aâ‚â‚â€š = aâ‚â€šâ‚)`;
+                return;
+            }
+            
+            if (a <= 0) {
+                document.getElementById('cholOutput').innerHTML = `âŒ Matrix must be positive definite (aâ‚â‚ > 0)`;
+                return;
+            }
+            
+            const l11 = Math.sqrt(a);
+            const l21 = b / l11;
+            const l22sq = d - l21*l21;
+            
+            if (l22sq <= 0) {
+                document.getElementById('cholOutput').innerHTML = `âŒ Matrix is not positive definite`;
+                return;
+            }
+            
+            const l22 = Math.sqrt(l22sq);
+            
+            document.getElementById('cholOutput').innerHTML = 
+`A = LLáµ€ where L is lower triangular
+
+Lâ‚â‚ = âˆšaâ‚â‚ = âˆš${a} = ${l11.toFixed(4)}
+Lâ‚â€šâ‚ = aâ‚â€šâ‚/Lâ‚â‚ = ${b}/${l11.toFixed(4)} = ${l21.toFixed(4)}
+Lâ‚‚â‚‚ = âˆš(aâ‚‚â‚‚ - Lâ‚â€šâ‚Ã‚Â²) = âˆš(${d} - ${(l21*l21).toFixed(4)}) = ${l22.toFixed(4)}
+
+L = [[${l11.toFixed(4)}, 0],
+     [${l21.toFixed(4)}, ${l22.toFixed(4)}]]
+
+Verification: LLáµ€ = [[${(l11*l11).toFixed(2)}, ${(l11*l21).toFixed(2)}],
+                      [${(l21*l11).toFixed(2)}, ${(l21*l21+l22*l22).toFixed(2)}]] âœ“`;
+        }
+
+        // Lab 10: Eigenvalue Transformation Visualizer
+        const eigvizCanvas = document.getElementById('eigvizCanvas');
+        const eigvizCtx = eigvizCanvas.getContext('2d');
+
+        function vizEigenTransform() {
+            const a=+document.getElementById('eigviz_00').value, b=+document.getElementById('eigviz_01').value;
+            const c=+document.getElementById('eigviz_10').value, d=+document.getElementById('eigviz_11').value;
+            
+            const w=eigvizCanvas.width=eigvizCanvas.offsetWidth, h=eigvizCanvas.height=eigvizCanvas.offsetHeight;
+            const cx=w/2, cy=h/2, scale=25;
+            eigvizCtx.clearRect(0,0,w,h);
+            
+            // Grid
+            eigvizCtx.strokeStyle='#e8eaf6'; eigvizCtx.lineWidth=1;
+            for(let i=-10;i<=10;i++){
+                eigvizCtx.beginPath(); eigvizCtx.moveTo(cx+i*scale,0); eigvizCtx.lineTo(cx+i*scale,h); eigvizCtx.stroke();
+                eigvizCtx.beginPath(); eigvizCtx.moveTo(0,cy+i*scale); eigvizCtx.lineTo(w,cy+i*scale); eigvizCtx.stroke();
+            }
+            eigvizCtx.strokeStyle='#94a3b8'; eigvizCtx.lineWidth=2;
+            eigvizCtx.beginPath(); eigvizCtx.moveTo(0,cy); eigvizCtx.lineTo(w,cy); eigvizCtx.moveTo(cx,0); eigvizCtx.lineTo(cx,h); eigvizCtx.stroke();
+            
+            // Draw unit circle and transformed ellipse
+            eigvizCtx.strokeStyle='rgba(11,47,160,0.3)'; eigvizCtx.lineWidth=2;
+            eigvizCtx.beginPath();
+            for (let t = 0; t <= 2*Math.PI; t += 0.05) {
+                const x = Math.cos(t), y = Math.sin(t);
+                const px = cx + x*scale, py = cy - y*scale;
+                if (t === 0) eigvizCtx.moveTo(px, py);
+                else eigvizCtx.lineTo(px, py);
+            }
+            eigvizCtx.closePath(); eigvizCtx.stroke();
+            
+            // Transformed
+            eigvizCtx.strokeStyle='#ff9000'; eigvizCtx.lineWidth=3;
+            eigvizCtx.beginPath();
+            for (let t = 0; t <= 2*Math.PI; t += 0.05) {
+                const x = Math.cos(t), y = Math.sin(t);
+                const tx = a*x + b*y, ty = c*x + d*y;
+                const px = cx + tx*scale, py = cy - ty*scale;
+                if (t === 0) eigvizCtx.moveTo(px, py);
+                else eigvizCtx.lineTo(px, py);
+            }
+            eigvizCtx.closePath(); eigvizCtx.stroke();
+            
+            const det = a*d - b*c;
+            const trace = a + d;
+            document.getElementById('eigvizOutput').innerHTML = 
+`Blue circle ←’ Orange ellipse under transformation A
+det(A) = ${det.toFixed(3)} (area scaling = |det|)
+trace(A) = ${trace.toFixed(3)} (sum of eigenvalues)`;
+        }
+
+        // Lab 11: Low-Rank Approximation
+        function calcLowRank() {
+            document.getElementById('lrOutput').innerHTML = 
+`Low-Rank Approximation via SVD:
+
+Original 3×3 matrix A with rank r
+Truncated SVD: Aâ‚– = Î£áµ€Â¢â±¼â‚áµ€ Ïƒáµ€Â¢uáµ€Â¢váµ€Â¢áµ€
+
+For the given matrix [[1,2,3],[4,5,6],[7,8,9]]:
+This matrix has rank 2 (row 3 = row 1 + 2×(row 2 - row 1))
+
+Keeping k=1: Captures largest singular value direction
+Keeping k=2: Captures all the information (rank = 2)
+
+Error = ||A - Aâ‚–||_F = âˆš(Î£áµ€Â¢â±¼â‚"â‚â‚›â‚ Ïƒáµ€Â¢Â²)
+
+This is the Eckart-Young theorem - optimal in Frobenius norm!`;
+        }
+
+        // Lab 12: Trace-Det Relationship
+        function calcTDRelation() {
+            const a=+document.getElementById('td_00').value, b=+document.getElementById('td_01').value;
+            const c=+document.getElementById('td_10').value, d=+document.getElementById('td_11').value;
+            
+            const trace = a + d;
+            const det = a*d - b*c;
+            const disc = trace*trace - 4*det;
+            
+            let l1, l2;
+            if (disc >= 0) {
+                l1 = (trace + Math.sqrt(disc))/2;
+                l2 = (trace - Math.sqrt(disc))/2;
+            }
+            
+            document.getElementById('tdOutput').innerHTML = 
+`Matrix A: trace = ${trace}, det = ${det}
+Eigenvalues: Î»â‚ = ${l1?.toFixed(3) || 'complex'}, Î»â‚‚ = ${l2?.toFixed(3) || 'complex'}
+
+FUNDAMENTAL RELATIONSHIPS:
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+trace(A) = Î»â‚ + Î»â‚‚ = ${l1 && l2 ? (l1+l2).toFixed(3) : 'N/A'} ${l1 && l2 && Math.abs(trace - (l1+l2)) < 0.001 ? 'âœ“' : ''}
+det(A)   = Î»â‚ × Î»â‚‚ = ${l1 && l2 ? (l1*l2).toFixed(3) : 'N/A'} ${l1 && l2 && Math.abs(det - l1*l2) < 0.001 ? 'âœ“' : ''}
+
+These hold for ALL square matrices!`;
+        }
+
+        // Lab 13: Spectral Norm
+        function calcSpectralNorm() {
+            const a=+document.getElementById('sn_00').value, b=+document.getElementById('sn_01').value;
+            const c=+document.getElementById('sn_10').value, d=+document.getElementById('sn_11').value;
+            
+            // Compute Aáµ€A
+            const ata00 = a*a + c*c, ata01 = a*b + c*d;
+            const ata11 = b*b + d*d;
+            
+            const trace = ata00 + ata11;
+            const det = ata00*ata11 - ata01*ata01;
+            const disc = Math.sqrt(Math.max(0, trace*trace - 4*det));
+            const l1 = (trace + disc)/2;
+            const sigma1 = Math.sqrt(l1);
+            
+            document.getElementById('snOutput').innerHTML = 
+`Spectral Norm ||A||â‚‚ = Ïƒ_max (largest singular value)
+
+Aáµ€A = [[${ata00.toFixed(2)}, ${ata01.toFixed(2)}],
+       [${ata01.toFixed(2)}, ${ata11.toFixed(2)}]]
+
+Largest eigenvalue of Aáµ€A: Î»_max = ${l1.toFixed(4)}
+
+||A||â‚‚ = âˆšÎ»_max = ${sigma1.toFixed(4)}
+
+Interpretation: Maximum stretching factor of A`;
+        }
+
+        // Lab 14: Condition Number
+        function calcCondition() {
+            const a=+document.getElementById('cn_00').value, b=+document.getElementById('cn_01').value;
+            const c=+document.getElementById('cn_10').value, d=+document.getElementById('cn_11').value;
+            
+            const ata00 = a*a + c*c, ata01 = a*b + c*d;
+            const ata11 = b*b + d*d;
+            
+            const trace = ata00 + ata11;
+            const det = ata00*ata11 - ata01*ata01;
+            const disc = Math.sqrt(Math.max(0, trace*trace - 4*det));
+            const l1 = (trace + disc)/2, l2 = (trace - disc)/2;
+            const s1 = Math.sqrt(Math.max(0.0001, l1)), s2 = Math.sqrt(Math.max(0.0001, l2));
+            const kappa = s1 / s2;
+            
+            document.getElementById('cnOutput').innerHTML = 
+`Condition Number Îº(A) = Ïƒ_max / Ïƒ_min
+
+Ïƒ_max = ${s1.toFixed(4)}, Ïƒ_min = ${s2.toFixed(4)}
+
+Îº(A) = ${kappa.toFixed(4)}
+
+Interpretation:
+${kappa < 10 ? 'âœ… Well-conditioned (Îº < 10)' : kappa < 100 ? 'Ã…Â¡Ã‚Â  Moderately ill-conditioned' : 'âŒ Ill-conditioned (numerical instability likely)'}
+
+High Îº ←’ small input changes cause large output changes`;
+        }
+
+        // Lab 15: PageRank
+        function calcPageRank() {
+            const P = [
+                [+document.getElementById('pr_00').value, +document.getElementById('pr_01').value, +document.getElementById('pr_02').value],
+                [+document.getElementById('pr_10').value, +document.getElementById('pr_11').value, +document.getElementById('pr_12').value],
+                [+document.getElementById('pr_20').value, +document.getElementById('pr_21').value, +document.getElementById('pr_22').value]
+            ];
+            const iters = +document.getElementById('pr_iter').value;
+            
+            // Initial uniform distribution
+            let x = [1/3, 1/3, 1/3];
+            let history = [`Iter 0: [${x.map(v=>v.toFixed(4)).join(', ')}]`];
+            
+            for (let i = 0; i < iters; i++) {
+                const newX = [
+                    P[0][0]*x[0] + P[0][1]*x[1] + P[0][2]*x[2],
+                    P[1][0]*x[0] + P[1][1]*x[1] + P[1][2]*x[2],
+                    P[2][0]*x[0] + P[2][1]*x[1] + P[2][2]*x[2]
+                ];
+                x = newX;
+                if (i < 5 || i === iters-1) {
+                    history.push(`Iter ${i+1}: [${x.map(v=>v.toFixed(4)).join(', ')}]`);
+                } else if (i === 5) {
+                    history.push('...');
+                }
+            }
+            
+            document.getElementById('prOutput').innerHTML = 
+`PageRank Power Iteration: x_{n+1} = P × x_n
+
+${history.join('\n')}
+
+Final PageRank (stationary distribution):
+Page 1: ${(x[0]*100).toFixed(1)}%
+Page 2: ${(x[1]*100).toFixed(1)}%
+Page 3: ${(x[2]*100).toFixed(1)}%
+
+This is the principal eigenvector (Î»=1) of P`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

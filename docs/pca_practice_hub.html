@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Dimensionality Reduction with PCA Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-weight: 700; color: var(--quanskill-orange); }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 60px; bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-equation {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .quiz-container.answered-wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.05); }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select, .control-group input[type="range"] {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select { width: 160px; }
+
+        .demo-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 80px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--gradient-blue); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); }
+        .btn-orange { background: var(--gradient-orange); color: white; }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px; left: 300px; right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(255, 144, 0, 0.05) 100%);
+            border: 1px solid var(--quanskill-blue);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item"><span>Score:</span><span class="stat-value" id="headerScore">0/25</span></div>
+                <div class="stat-item"><span>Accuracy:</span><span class="stat-value" id="headerAccuracy">0%</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 10 Â· PCA & Dimensionality Reduction</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Q1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: PCA Goal</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Covariance Matrix</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Principal Component</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Eigenvalue Meaning</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Orthonormal Basis</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Centering</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Code z</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Reconstruction</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Q9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Max Variance</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Lagrangian</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Variance Captured</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Recon Error</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Projection Matrix</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: SVD Connection</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Standardization</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Relative Variance</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Eckart-Young</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Q18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: High Dimensions</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: PPCA Model</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: PPCA Likelihood</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Posterior</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: Auto-encoder</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Power Iteration</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Rank-M Approx</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Dimensionality Reduction with PCA</h1>
+                <p class="hero-subtitle">
+                    Master Principal Component Analysis with 25 questions and 15 interactive labs covering maximum variance, projection perspectives, SVD connections, and probabilistic PCA.
+                </p>
+                <div class="hero-equation">
+                    <strong>Core Idea:</strong> z = Báµ€x (encode), xÌƒ = Bz (decode)
+                    <br><strong>Key Result:</strong> Principal components = eigenvectors of S with largest Î»
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Covariance Matrix</span>
+                    <span class="topic-tag">Eigenvectors</span>
+                    <span class="topic-tag">Maximum Variance</span>
+                    <span class="topic-tag">Reconstruction Error</span>
+                    <span class="topic-tag">SVD</span>
+                    <span class="topic-tag">Orthogonal Projection</span>
+                    <span class="topic-tag">PPCA</span>
+                    <span class="topic-tag">Auto-encoder</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Labs Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. These labs cover PCA from data centering to probabilistic interpretations.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Why PCA matters for AI agents:</strong> Agents process high-dimensional sensory data (images, sensor readings). PCA enables efficient state representation, faster learning, and better generalization by focusing on the most informative dimensions.</p>
+            </div>
+
+            <!-- Lab 1: 2D Data Visualization -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>2D Data & Principal Directions</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Correlation</label>
+                        <input type="range" id="correlation" min="-0.9" max="0.9" step="0.1" value="0.7">
+                    </div>
+                    <div class="control-group">
+                        <label>N Points</label>
+                        <input type="number" id="numPoints2D" value="100" min="20" max="500">
+                    </div>
+                    <button class="btn btn-primary" onclick="visualize2DPCA()">Find Principal Components</button>
+                </div>
+                <canvas id="pca2DCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="pca2DOutput">Click to visualize principal component directions...</div>
+            </div>
+
+            <!-- Lab 2: Covariance Matrix -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Data Covariance Matrix S</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Variance xâ‚</label>
+                        <input type="number" id="var1" value="4" min="0.5" max="10" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Variance xâ‚‚</label>
+                        <input type="number" id="var2" value="1" min="0.5" max="10" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Correlation Ï</label>
+                        <input type="number" id="rho" value="0.5" min="-0.9" max="0.9" step="0.1">
+                    </div>
+                    <button class="btn btn-orange" onclick="computeCovariance()">Compute S</button>
+                </div>
+                <canvas id="covCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="covOutput">Click to compute and visualize the covariance matrix...</div>
+            </div>
+
+            <!-- Lab 3: Eigendecomposition -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Eigendecomposition of S</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="showEigendecomposition()">Compute Eigenvalues & Eigenvectors</button>
+                </div>
+                <canvas id="eigenCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="eigenOutput">Click to see eigenvalue decomposition of the covariance matrix...</div>
+            </div>
+
+            <!-- Lab 4: Projection onto 1D -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Projection onto Principal Subspace</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Projection Direction Î¸</label>
+                        <input type="range" id="projAngle" min="0" max="180" value="45">
+                    </div>
+                    <button class="btn btn-orange" onclick="projectData()">Project Data</button>
+                    <button class="btn btn-primary" onclick="findOptimalProjection()">Find Optimal (PC1)</button>
+                </div>
+                <canvas id="projCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="projOutput">Adjust angle to see variance of projected data...</div>
+            </div>
+
+            <!-- Lab 5: Variance Captured -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Variance Captured vs Number of PCs</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Original Dimension D</label>
+                        <input type="number" id="origDim" value="10" min="3" max="50">
+                    </div>
+                    <button class="btn btn-primary" onclick="plotVarianceCaptured()">Plot Variance Curve</button>
+                </div>
+                <canvas id="varCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="varOutput">Click to see cumulative variance explained...</div>
+            </div>
+
+            <!-- Lab 6: Reconstruction Error -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Reconstruction Error</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Number of PCs (M)</label>
+                        <input type="number" id="numPCs" value="1" min="1" max="5">
+                    </div>
+                    <button class="btn btn-orange" onclick="showReconstruction()">Show Reconstruction</button>
+                </div>
+                <canvas id="reconCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="reconOutput">Click to see original vs reconstructed data...</div>
+            </div>
+
+            <!-- Lab 7: Centering & Standardization -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Data Centering & Standardization</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Processing Step</label>
+                        <select id="preprocessStep">
+                            <option value="original">Original Data</option>
+                            <option value="centered">Centered (subtract Î¼)</option>
+                            <option value="standardized">Standardized (Ã·Ïƒ)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="showPreprocessing()">Apply</button>
+                </div>
+                <canvas id="preprocCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="preprocOutput">Click to see preprocessing effects...</div>
+            </div>
+
+            <!-- Lab 8: Encoder-Decoder View -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Encoder-Decoder (Auto-encoder) View</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Bottleneck Dim M</label>
+                        <input type="number" id="bottleneck" value="1" min="1" max="3">
+                    </div>
+                    <button class="btn btn-orange" onclick="showAutoencoder()">Encode ←’ Decode</button>
+                </div>
+                <canvas id="aeCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="aeOutput">Click to see the auto-encoder interpretation of PCA...</div>
+            </div>
+
+            <!-- Lab 9: SVD Connection -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>SVD and PCA Connection</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="showSVDConnection()">Show X = UÎ£Váµ€</button>
+                </div>
+                <canvas id="svdCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="svdOutput">Click to see connection between SVD and PCA...</div>
+            </div>
+
+            <!-- Lab 10: Scree Plot -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Scree Plot (Eigenvalue Spectrum)</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Eigenvalue Decay</label>
+                        <select id="eigenDecay">
+                            <option value="fast">Fast Decay</option>
+                            <option value="medium" selected>Medium Decay</option>
+                            <option value="slow">Slow Decay</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="plotScree()">Plot Scree</button>
+                </div>
+                <canvas id="screeCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="screeOutput">Click to see eigenvalue spectrum (scree plot)...</div>
+            </div>
+
+            <!-- Lab 11: High-Dimensional Trick -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>High-D Trick: When N << D</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Dimensions D</label>
+                        <input type="number" id="highD" value="1000" min="100" max="10000">
+                    </div>
+                    <div class="control-group">
+                        <label>Samples N</label>
+                        <input type="number" id="lowN" value="50" min="10" max="200">
+                    </div>
+                    <button class="btn btn-primary" onclick="showHighDimTrick()">Compare Approaches</button>
+                </div>
+                <canvas id="highDCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="highDOutput">Click to compare standard vs dual PCA...</div>
+            </div>
+
+            <!-- Lab 12: PPCA Generative Model -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Probabilistic PCA: Generative Model</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Noise ÏƒÂ²</label>
+                        <input type="number" id="ppcaNoise" value="0.5" min="0.01" max="2" step="0.1">
+                    </div>
+                    <button class="btn btn-orange" onclick="samplePPCA()">Sample from PPCA</button>
+                </div>
+                <canvas id="ppcaCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="ppcaOutput">Click to sample data from the PPCA generative model...</div>
+            </div>
+
+            <!-- Lab 13: Projection Matrix Visualization -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Projection Matrix BBáµ€</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <button class="btn btn-primary" onclick="visualizeProjMatrix()">Show BBáµ€</button>
+                </div>
+                <canvas id="projMatCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="projMatOutput">Click to visualize the projection matrix...</div>
+            </div>
+
+            <!-- Lab 14: MNIST-like Visualization -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>Image Compression with PCA</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>PCs to Keep</label>
+                        <select id="imgPCs">
+                            <option value="1">1 PC</option>
+                            <option value="5">5 PCs</option>
+                            <option value="20" selected>20 PCs</option>
+                            <option value="50">50 PCs</option>
+                            <option value="100">100 PCs</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-orange" onclick="compressImage()">Compress & Reconstruct</button>
+                </div>
+                <canvas id="imgCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="imgOutput">Click to see image compression with PCA...</div>
+            </div>
+
+            <!-- Lab 15: Choosing M -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Choosing Number of Components M</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Threshold %</label>
+                        <input type="number" id="varThreshold" value="95" min="50" max="99">
+                    </div>
+                    <button class="btn btn-primary" onclick="chooseM()">Find Optimal M</button>
+                </div>
+                <canvas id="chooseMCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="chooseMOutput">Click to find M that captures desired variance...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: VisionAI Vietnam</span>
+                <p>You're a ML engineer at <strong>VisionAI Vietnam</strong> in Ho Chi Minh City, processing high-resolution images for quality control. Understanding PCA helps you compress image data while retaining essential features for defect detection.</p>
+            </div>
+
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The main goal of PCA is to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) Find a low-dimensional representation that retains maximum information</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) Classify data into categories</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) Predict continuous outputs from inputs</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) Cluster data into groups</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">S = (1/N) Î£â‚™ xâ‚™xâ‚™áµ€</div>
+                <div class="quiz-question">The data covariance matrix S is computed from:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) Centered data (mean-subtracted), outer products averaged</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) Raw data without any preprocessing</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) Inner products of data points</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) Sum of data points</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The first principal component is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) The eigenvector of S with the largest eigenvalue</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) The eigenvector of S with the smallest eigenvalue</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) Any random unit vector</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) The mean of the data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The eigenvalue Î»â‚˜ associated with principal component bâ‚˜ represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) The variance of data projected onto bâ‚˜</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) The length of bâ‚˜</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) The number of data points</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) The reconstruction error</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">The principal components bâ‚, bâ‚‚, ..., bâ‚˜ form:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) An orthonormal basis (báµ€Â¢áµ€bâˆ‚Â¼ = 0 if iâ‰ j, báµ€Â¢áµ€báµ€Â¢ = 1)</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) A set of parallel vectors</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) Random directions</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) The original data points</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-question">Why do we center the data (subtract mean) before PCA?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) To ensure the covariance matrix captures spread around the origin</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) To make all values positive</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) To reduce computational cost</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) Centering is optional and doesn't affect results</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">z = Báµ€x âˆˆ â„á´¹</div>
+                <div class="quiz-question">The low-dimensional code z represents:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) Coordinates of x with respect to the principal component basis</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) The original data unchanged</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) The eigenvalues of S</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) The mean of the data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">xÌƒ = Bz = BBáµ€x</div>
+                <div class="quiz-question">The reconstruction xÌƒ lives in:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) â„á´° (original data space), but on M-dimensional principal subspace</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) â„á´¹ (low-dimensional space)</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) A completely different space</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) The same as the code z</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: DataCompress Labs</span>
+                <p>You're at <strong>DataCompress Labs</strong> in Hanoi, developing efficient data compression for IoT sensors. Understanding the mathematics of PCA helps you balance compression ratio with information retention.</p>
+            </div>
+
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The maximum variance perspective of PCA seeks to maximize:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) V = báµ€Sb subject to ||b||Â² = 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) V = báµ€b subject to ||b||Â² = 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) V = ||x - xÌƒ||Â²</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) V = trace(S)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Setting âˆ‚L/âˆ‚b = 0 for the Lagrangian L = báµ€Sb + Î»(1 - báµ€b) gives:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) Sb = Î»b (eigenvalue equation)</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) b = Î»S</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) S = Î»I</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) b = 0</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The total variance captured by M principal components equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) Î£â‚˜ Î»â‚˜ (sum of M largest eigenvalues)</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) Î»â‚ only (just the largest)</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) M × Î»â‚</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) trace(B)</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">Jâ‚˜ = (1/N) Î£â‚™ ||xâ‚™ - xÌƒâ‚™||Â²</div>
+                <div class="quiz-question">The average reconstruction error Jâ‚˜ equals:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) Î£âˆ‚áµ¢â±¼â‚Ã‹Å“â‚Ã…Â â‚á´° Î»âˆ‚Â¼ (sum of discarded eigenvalues)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) Î£â‚˜ Î»â‚˜ (sum of kept eigenvalues)</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) Î»â‚ - Î»â‚˜</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) N × D</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The projection matrix P = BBáµ€ has the property that:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) PÂ² = P and Páµ€ = P (idempotent and symmetric)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) P = I (identity)</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) Pâ»Â¹ = P</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) det(P) = 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">X = UÎ£Váµ€ (SVD)</div>
+                <div class="quiz-question">The eigenvalues of the covariance S = (1/N)XXáµ€ relate to singular values by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) Î»â‚ = ÏÆ’â‚Ã‚Â²/N (eigenvalues are squared singular values scaled)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) Î»â‚ = ÏÆ’â‚ (eigenvalues equal singular values)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) Î»â‚ = 1/ÏÆ’â‚</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) No relationship exists</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">Standardization (dividing by Ïƒ per dimension) before PCA is useful when:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) Features have different scales/units (e.g., meters vs kilograms)</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) Data is already centered</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) All features have the same unit</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) Never - standardization hurts PCA</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The relative variance captured by M components is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) (Î£â‚˜ Î»â‚˜) / (Î£á´° Î»áµ€Â¢) = Vâ‚˜/Vá´°</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) M / D</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) Î»â‚ / Î»á´°</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) N / D</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-question">The Eckart-Young theorem states that the best rank-M approximation of X is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) The truncated SVD: XÌƒâ‚˜ = Uâ‚˜Î£â‚˜Vâ‚˜áµ€</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) Any random M columns of X</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) The mean repeated M times</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) X multiplied by M/D</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Concepts (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: LatentSpace Research</span>
+                <p>You're at <strong>LatentSpace Research</strong> in Da Nang, developing probabilistic models for representation learning. Deep understanding of PPCA and its connections to modern deep learning is essential.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <ul>
+                    <li><strong>State Representation:</strong> Agents compress high-D observations into compact states</li>
+                    <li><strong>Efficient Learning:</strong> Lower dimensions ←’ faster training, less data needed</li>
+                    <li><strong>Generalization:</strong> Ignoring noise dimensions improves robustness</li>
+                    <li><strong>Generative Models:</strong> PPCA is a foundation for VAEs and other latent models</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">When N << D (few samples, high dimensions), the efficient approach is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) Compute eigendecomposition of (1/N)Xáµ€X âˆˆ â„á´ºË£á´º instead of S âˆˆ â„á´°Ã‹Â£á´°</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) Always compute the D×D covariance matrix</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) Skip PCA entirely</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) Use random projections instead</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">PPCA: x = Bz + Î¼ + Îµ, z ~ N(0,I), Îµ ~ N(0,ÏƒÂ²I)</div>
+                <div class="quiz-question">In Probabilistic PCA, the generative model assumes:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) Latent z is standard normal, x is linear transform plus Gaussian noise</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) z is deterministic, x is random</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) Both z and x are deterministic</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) x is the latent variable</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The marginal likelihood p(x) in PPCA (integrating out z) is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) N(x | Î¼, BBáµ€ + ÏƒÂ²I) - Gaussian with expanded covariance</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) N(x | Î¼, ÏƒÂ²I) - just the noise</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) N(z | 0, I) - the prior</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) Uniform distribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">The posterior p(z|x) in PPCA is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) Gaussian N(m, C) where m depends on x but C doesn't</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) Always the same as the prior N(0, I)</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) A point mass at a single value</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) Uniform distribution</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">PCA can be viewed as a linear auto-encoder where:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) Encoder = Báµ€, Decoder = B, minimizing ||x - BBáµ€x||Â²</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) Encoder and decoder are both nonlinear</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) There is no decoder in PCA</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) The bottleneck is larger than input</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">xâ‚"â‚Å â‚ = Sxâ‚– / ||Sxâ‚–||</div>
+                <div class="quiz-question">Power iteration converges to:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) The eigenvector with the largest eigenvalue (first PC)</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) The eigenvector with the smallest eigenvalue</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) A random vector</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) The mean of the data</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-question">PCA finds the best rank-M approximation BB^T of:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) The identity matrix I (minimizing ||x - BBáµ€x||)</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) The covariance matrix S</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) The data matrix X</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) The mean vector Î¼</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> An agent processing 1M-pixel camera images for navigation.
+                </div>
+                <div class="quiz-question">PCA helps the agent by:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) Reducing state dimension while preserving navigational information</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Making images brighter</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Adding more dimensions for better accuracy</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) Replacing the camera with sensors</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat"><div class="value" id="totalCorrect">0</div><div class="label">Correct</div></div>
+                    <div class="summary-stat"><div class="value" id="totalAttempted">0</div><div class="label">Attempted</div></div>
+                    <div class="summary-stat"><div class="value" id="accuracyPercent">0%</div><div class="label">Accuracy</div></div>
+                    <div class="summary-stat"><div class="value" id="progressPercent">0%</div><div class="label">Complete</div></div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <strong>Key Formulas to Remember:</strong><br><br>
+                â€¢ Covariance: S = (1/N) Î£â‚™ xâ‚™xâ‚™áµ€<br>
+                â€¢ Encoding: z = Báµ€x (project to low-D)<br>
+                â€¢ Decoding: xÌƒ = Bz = BBáµ€x (reconstruct)<br>
+                â€¢ Variance captured: Vâ‚˜ = Î£â‚˜ Î»â‚˜<br>
+                â€¢ Reconstruction error: Jâ‚˜ = Î£âˆ‚áµ¢â±¼â‚Ã‹Å“â‚Ã…Â â‚á´° Î»âˆ‚Â¼<br>
+                â€¢ SVD relation: Î»â‚ = ÏÆ’â‚Ã‚Â²/N
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <ul>
+                    <li><strong>Chapter 11:</strong> Density Estimation - Gaussian Mixture Models</li>
+                    <li><strong>Chapter 12:</strong> Classification - SVMs and decision boundaries</li>
+                    <li><strong>Deep Learning:</strong> Variational Auto-encoders extend PPCA</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {
+            1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0,
+            9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0,
+            18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:0
+        };
+        
+        const explanations = {
+            1: "PCA's main goal is dimensionality reduction while retaining maximum information (variance).",
+            2: "S = (1/N)Î£xâ‚™xâ‚™áµ€ requires centered data (mean subtracted) for correct covariance computation.",
+            3: "The first PC is the eigenvector of S with the largest eigenvalue - direction of maximum variance.",
+            4: "Eigenvalue Î»â‚˜ equals the variance of data projected onto corresponding eigenvector bâ‚˜: V = báµ€Sb = Î».",
+            5: "Principal components are eigenvectors of symmetric S, forming an orthonormal basis by spectral theorem.",
+            6: "Centering ensures the covariance matrix captures variance around the origin, not the mean.",
+            7: "Code z = Báµ€x gives coordinates of x in the principal component basis (compressed representation).",
+            8: "Reconstruction xÌƒ = Bz âˆˆ â„á´° lives in original space but constrained to M-dimensional principal subspace.",
+            9: "Maximum variance perspective: maximize V = báµ€Sb subject to ||b||Â² = 1 (unit vector constraint).",
+            10: "Lagrangian optimization yields Sb = Î»b - the eigenvalue equation. PCs are eigenvectors of S.",
+            11: "Total variance with M PCs = Î£â‚˜ Î»â‚˜, sum of M largest eigenvalues of covariance matrix.",
+            12: "Reconstruction error Jâ‚˜ = Î£âˆ‚áµ¢â±¼â‚Ã‹Å“â‚Ã…Â â‚á´° Î»âˆ‚Â¼ - sum of discarded eigenvalues (lost variance).",
+            13: "Projection matrix P = BBáµ€ is idempotent (PÂ² = P) and symmetric (Páµ€ = P).",
+            14: "For X = UÎ£Váµ€, eigenvalues of S = (1/N)XXáµ€ are Î»â‚ = ÏÆ’â‚Ã‚Â²/N (squared singular values scaled).",
+            15: "Standardization equalizes feature scales - prevents large-scale features from dominating PCA.",
+            16: "Relative variance = (Î£â‚˜ Î»â‚˜)/(Î£á´° Î»áµ€Â¢) = Vâ‚˜/Vá´° - fraction of total variance captured.",
+            17: "Eckart-Young theorem: best rank-M approximation is truncated SVD XÌƒâ‚˜ = Uâ‚˜Î£â‚˜Vâ‚˜áµ€.",
+            18: "When N << D, compute N×N matrix (1/N)Xáµ€X instead of D×D covariance - same nonzero eigenvalues.",
+            19: "PPCA: z ~ N(0,I) latent, x = Bz + Î¼ + Îµ with Gaussian noise Îµ ~ N(0,ÏƒÂ²I).",
+            20: "Marginal p(x) = âˆ«p(x|z)p(z)dz = N(x|Î¼, BBáµ€ + ÏƒÂ²I) - Gaussian with combined covariance.",
+            21: "Posterior p(z|x) is Gaussian with mean depending on x but covariance C independent of x.",
+            22: "PCA = linear auto-encoder: Encoder Báµ€ maps to low-D code, Decoder B reconstructs.",
+            23: "Power iteration xâ‚"â‚Å â‚ = Sxâ‚–/||Sxâ‚–|| converges to eigenvector with largest eigenvalue.",
+            24: "PCA finds best rank-M approximation BBáµ€ of I, minimizing ||x - BBáµ€x||Â² reconstruction error.",
+            25: "PCA reduces 1M-D images to compact state vectors, enabling efficient navigation learning."
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB FUNCTIONS ==========
+
+        function randn() {
+            const u1 = Math.random(), u2 = Math.random();
+            return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        }
+
+        // Lab 1: 2D PCA Visualization
+        function visualize2DPCA() {
+            const corr = parseFloat(document.getElementById('correlation').value);
+            const N = parseInt(document.getElementById('numPoints2D').value);
+            
+            // Generate correlated 2D data
+            const data = [];
+            for (let i = 0; i < N; i++) {
+                const z1 = randn(), z2 = randn();
+                const x1 = z1;
+                const x2 = corr * z1 + Math.sqrt(1 - corr*corr) * z2;
+                data.push({x: x1, y: x2});
+            }
+            
+            // Compute mean
+            let mx = 0, my = 0;
+            data.forEach(d => { mx += d.x; my += d.y; });
+            mx /= N; my /= N;
+            
+            // Center data
+            data.forEach(d => { d.x -= mx; d.y -= my; });
+            
+            // Compute covariance
+            let sxx = 0, syy = 0, sxy = 0;
+            data.forEach(d => { sxx += d.x*d.x; syy += d.y*d.y; sxy += d.x*d.y; });
+            sxx /= N; syy /= N; sxy /= N;
+            
+            // Eigenvalues and eigenvectors (2x2)
+            const trace = sxx + syy;
+            const det = sxx * syy - sxy * sxy;
+            const lambda1 = trace/2 + Math.sqrt(trace*trace/4 - det);
+            const lambda2 = trace/2 - Math.sqrt(trace*trace/4 - det);
+            
+            // First eigenvector
+            let v1x = sxy, v1y = lambda1 - sxx;
+            const norm1 = Math.sqrt(v1x*v1x + v1y*v1y);
+            v1x /= norm1; v1y /= norm1;
+            
+            // Draw
+            const canvas = document.getElementById('pca2DCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            ctx.clearRect(0, 0, w, h);
+            
+            const scale = 60;
+            const cx = w/2, cy = h/2;
+            
+            // Draw data points
+            ctx.fillStyle = '#ff9000';
+            data.forEach(d => {
+                ctx.beginPath();
+                ctx.arc(cx + d.x * scale, cy - d.y * scale, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw PC1
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx - v1x * 150, cy + v1y * 150);
+            ctx.lineTo(cx + v1x * 150, cy - v1y * 150);
+            ctx.stroke();
+            
+            // Draw PC2 (perpendicular)
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(cx + v1y * 100, cy + v1x * 100);
+            ctx.lineTo(cx - v1y * 100, cy - v1x * 100);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Legend
+            ctx.font = '12px Space Grotesk';
+            ctx.fillStyle = '#0b2fa0';
+            ctx.fillText(`PC1 (Î»â‚=${lambda1.toFixed(2)})`, 20, 20);
+            ctx.fillStyle = '#10b981';
+            ctx.fillText(`PC2 (Î»â‚‚=${lambda2.toFixed(2)})`, 20, 40);
+            
+            document.getElementById('pca2DOutput').innerHTML = 
+`2D PCA Analysis
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Correlation: ${corr}
+N = ${N} points
+
+Covariance Matrix S:
+[${sxx.toFixed(3)}, ${sxy.toFixed(3)}]
+[${sxy.toFixed(3)}, ${syy.toFixed(3)}]
+
+Eigenvalues:
+Î»â‚ = ${lambda1.toFixed(4)} (variance along PC1)
+Î»â‚‚ = ${lambda2.toFixed(4)} (variance along PC2)
+
+Variance captured by PC1: ${(lambda1/(lambda1+lambda2)*100).toFixed(1)}%`;
+        }
+
+        // Lab 2: Covariance Matrix
+        function computeCovariance() {
+            const var1 = parseFloat(document.getElementById('var1').value);
+            const var2 = parseFloat(document.getElementById('var2').value);
+            const rho = parseFloat(document.getElementById('rho').value);
+            const cov = rho * Math.sqrt(var1 * var2);
+            
+            document.getElementById('covOutput').innerHTML = 
+`Data Covariance Matrix S
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Given:
+  Var(xâ‚) = ${var1}
+  Var(xâ‚‚) = ${var2}
+  Correlation Ï = ${rho}
+
+Covariance: Cov(xâ‚,xâ‚‚) = ÏâˆÅ¡(Varâ‚Ã‚Â·Varâ‚‚) = ${cov.toFixed(3)}
+
+S = [${var1.toFixed(2)}, ${cov.toFixed(2)}]
+    [${cov.toFixed(2)}, ${var2.toFixed(2)}]
+
+S is symmetric positive semi-definite
+trace(S) = ${(var1 + var2).toFixed(2)} (total variance)
+det(S) = ${(var1*var2 - cov*cov).toFixed(3)}`;
+        }
+
+        // Lab 3: Eigendecomposition
+        function showEigendecomposition() {
+            document.getElementById('eigenOutput').innerHTML = 
+`Eigendecomposition of S
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+S = PÎ›Páµ€ where:
+â€¢ P = [bâ‚, bâ‚‚, ..., bá´°] - eigenvector matrix
+â€¢ Î› = diag(Î»â‚, Î»â‚‚, ..., Î»á´°) - eigenvalue matrix
+
+Properties:
+â€¢ S is symmetric ←’ eigenvectors are orthonormal
+â€¢ Eigenvalues Î»áµ€Â¢ â‰¥ 0 (S is PSD)
+â€¢ Eigenvectors báµ€Â¢ are principal components
+â€¢ Î»áµ€Â¢ = variance along báµ€Â¢
+
+Spectral Theorem guarantees:
+â€¢ D distinct eigenvectors (orthonormal basis)
+â€¢ S can be reconstructed from eigendecomposition`;
+        }
+
+        // Lab 4: Projection
+        function projectData() {
+            const angle = parseFloat(document.getElementById('projAngle').value);
+            const rad = angle * Math.PI / 180;
+            
+            // Direction vector
+            const bx = Math.cos(rad), by = Math.sin(rad);
+            
+            document.getElementById('projOutput').innerHTML = 
+`Projection onto direction Î¸ = ${angle}Â°
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Direction vector b = [${bx.toFixed(3)}, ${by.toFixed(3)}]áµ€
+
+For each point x:
+  z = báµ€x (scalar coordinate)
+  xÌƒ = zb = bbáµ€x (projection in â„Ã‚Â²)
+
+Projected variance V = báµ€Sb
+(depends on angle - maximal along PC1)
+
+To maximize variance:
+←’ Choose b as eigenvector with largest Î»`;
+        }
+
+        function findOptimalProjection() {
+            document.getElementById('projOutput').innerHTML = 
+`Optimal Projection Found!
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+The optimal direction maximizes V = báµ€Sb
+
+Solution: b = eigenvector of S with max eigenvalue
+
+This gives:
+â€¢ Maximum variance in projected data
+â€¢ Minimum reconstruction error
+â€¢ First Principal Component
+
+Constrained optimization:
+max báµ€Sb subject to ||b||Â² = 1
+←’ Lagrangian ←’ Sb = Î»b (eigenvalue equation)`;
+        }
+
+        // Lab 5: Variance Captured
+        function plotVarianceCaptured() {
+            const D = parseInt(document.getElementById('origDim').value);
+            
+            // Generate decreasing eigenvalues
+            let eigenvalues = [];
+            let total = 0;
+            for (let i = 0; i < D; i++) {
+                const ev = Math.exp(-0.3 * i) + 0.05;
+                eigenvalues.push(ev);
+                total += ev;
+            }
+            
+            // Cumulative variance
+            let cumulative = [];
+            let sum = 0;
+            for (let i = 0; i < D; i++) {
+                sum += eigenvalues[i];
+                cumulative.push(sum / total * 100);
+            }
+            
+            // Find 95% threshold
+            let m95 = 0;
+            for (let i = 0; i < D; i++) {
+                if (cumulative[i] >= 95) { m95 = i + 1; break; }
+            }
+            
+            document.getElementById('varOutput').innerHTML = 
+`Cumulative Variance Explained
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+D = ${D} original dimensions
+
+M=1: ${cumulative[0].toFixed(1)}%
+M=2: ${cumulative[1].toFixed(1)}%
+M=3: ${cumulative[2].toFixed(1)}%
+M=5: ${cumulative[4].toFixed(1)}%
+M=10: ${cumulative[Math.min(9, D-1)].toFixed(1)}%
+
+To capture 95% variance: M = ${m95} components
+
+Formula: Relative variance = (Î£â‚˜ Î»â‚˜) / (Î£á´° Î»áµ€Â¢)`;
+        }
+
+        // Lab 6: Reconstruction
+        function showReconstruction() {
+            const M = parseInt(document.getElementById('numPCs').value);
+            
+            document.getElementById('reconOutput').innerHTML = 
+`Reconstruction with M = ${M} PC(s)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Process:
+1. Encode: z = Báµ€x âˆˆ â„á´¹
+2. Decode: xÌƒ = Bz = BBáµ€x âˆˆ â„á´°
+
+Reconstruction error:
+Jâ‚˜ = (1/N) Î£â‚™ ||xâ‚™ - xÌƒâ‚™||Â²
+   = Î£âˆ‚áµ¢â±¼â‚Ã‹Å“â‚Ã…Â â‚á´° Î»âˆ‚Â¼ (sum of discarded eigenvalues)
+
+Information retained: Î£â‚˜ Î»â‚˜
+Information lost: Î£âˆ‚áµ¢â±¼â‚Ã‹Å“â‚Ã…Â â‚á´° Î»âˆ‚Â¼
+
+As M increases:
+â€¢ Reconstruction improves
+â€¢ Code dimension increases
+â€¢ Compression ratio decreases`;
+        }
+
+        // Lab 7: Preprocessing
+        function showPreprocessing() {
+            const step = document.getElementById('preprocessStep').value;
+            
+            const descriptions = {
+                'original': `Original Data
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+â€¢ Raw data as collected
+â€¢ May have nonzero mean
+â€¢ Different scales per dimension
+â€¢ Not suitable for direct PCA`,
+                'centered': `Centered Data (Step 1)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+xÌ‚â‚™ = xâ‚™ - Î¼ where Î¼ = (1/N)Î£xâ‚™
+
+After centering:
+â€¢ Mean is zero: E[xÃŒ'] = 0
+â€¢ Covariance captures spread from origin
+â€¢ Essential for correct PCA`,
+                'standardized': `Standardized Data (Step 2)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+xÃŒâ€šâ‚â„¢(áµ€) = (xâ‚â„¢(áµ€) - Î¼áµ€Ë†) / Ïƒáµ€Ë†
+
+After standardization:
+â€¢ Mean = 0, Variance = 1 per dimension
+â€¢ All features on same scale
+â€¢ Prevents large-scale features from dominating
+â€¢ Use when features have different units`
+            };
+            
+            document.getElementById('preprocOutput').innerHTML = descriptions[step];
+        }
+
+        // Lab 8: Auto-encoder
+        function showAutoencoder() {
+            const M = parseInt(document.getElementById('bottleneck').value);
+            
+            document.getElementById('aeOutput').innerHTML = 
+`Linear Auto-encoder View of PCA
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      x âˆˆ â„á´°
+         â”‚
+    "Î‰"Û‰"Û‰"Û‰"Û‰-Â¼"Û‰"Û‰"Û‰"Û‰"Ã‚
+    â”‚ Encoder â”‚  Báµ€ (D×M)
+    â”‚  z=Báµ€x  â”‚
+    â„“"Û‰"Û‰"Û‰"Û‰"â€°"Û‰"Û‰"Û‰"Û‰"Ã‹Å“
+         â”‚
+      z âˆˆ â„á´¹   ← Bottleneck (M=${M})
+         â”‚
+    "Î‰"Û‰"Û‰"Û‰"Û‰-Â¼"Û‰"Û‰"Û‰"Û‰"Ã‚
+    â”‚ Decoder â”‚  B (M×D)
+    â”‚  xÌƒ=Bz  â”‚
+    â„“"Û‰"Û‰"Û‰"Û‰"â€°"Û‰"Û‰"Û‰"Û‰"Ã‹Å“
+         â”‚
+      xÌƒ âˆˆ â„á´°
+
+Loss: ||x - xÌƒ||Â² = ||x - BBáµ€x||Â²
+
+PCA finds B that minimizes this loss!
+Deep auto-encoders: replace linear B with neural networks`;
+        }
+
+        // Lab 9: SVD Connection
+        function showSVDConnection() {
+            document.getElementById('svdOutput').innerHTML = 
+`SVD and PCA Connection
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Data matrix: X = [xâ‚,...,xâ‚™] âˆˆ â„á´°Ã‹Â£á´º
+
+SVD: X = UÎ£Váµ€
+â€¢ U âˆˆ â„á´°Ã‹Â£á´° - left singular vectors
+â€¢ Î£ âˆˆ â„á´°Ã‹Â£á´º - singular values on diagonal
+â€¢ V âˆˆ â„á´ºË£á´º - right singular vectors
+
+Covariance: S = (1/N)XXáµ€ = (1/N)UÎ£Î£áµ€Uáµ€
+
+Key relationships:
+â€¢ Columns of U are eigenvectors of S
+â€¢ Î»â‚ = ÏÆ’â‚Ã‚Â²/N (eigenvalue = squared singular value / N)
+â€¢ Principal components = left singular vectors
+
+Computational advantage:
+SVD is numerically more stable than eigendecomposition`;
+        }
+
+        // Lab 10: Scree Plot
+        function plotScree() {
+            const decay = document.getElementById('eigenDecay').value;
+            const rates = {'fast': 0.5, 'medium': 0.3, 'slow': 0.15};
+            const rate = rates[decay];
+            
+            document.getElementById('screeOutput').innerHTML = 
+`Scree Plot (Eigenvalue Spectrum)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Decay rate: ${decay}
+
+Eigenvalues (first 10):
+${Array.from({length: 10}, (_, i) => 
+    `Î»${i+1} = ${Math.exp(-rate * i).toFixed(4)}`).join('\n')}
+
+Scree plot shows:
+â€¢ Eigenvalues sorted descending
+â€¢ "Elbow" suggests natural cutoff for M
+â€¢ Fast decay ←’ few PCs needed
+â€¢ Slow decay ←’ many PCs needed
+
+Rule of thumb: Choose M at the "elbow" where
+eigenvalues stop decreasing rapidly`;
+        }
+
+        // Lab 11: High-D Trick
+        function showHighDimTrick() {
+            const D = parseInt(document.getElementById('highD').value);
+            const N = parseInt(document.getElementById('lowN').value);
+            
+            document.getElementById('highDOutput').innerHTML = 
+`High-Dimensional PCA Trick
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+D = ${D} dimensions
+N = ${N} samples
+
+Standard approach:
+â€¢ Compute S = (1/N)XXáµ€ âˆˆ â„${D}×${D}
+â€¢ Eigendecompose ${D}×${D} matrix
+â€¢ Complexity: O(DÂ³) - EXPENSIVE!
+
+Dual PCA (when N << D):
+â€¢ Compute (1/N)Xáµ€X âˆˆ â„${N}×${N}
+â€¢ Eigendecompose ${N}×${N} matrix
+â€¢ Complexity: O(NÂ³) - MUCH CHEAPER!
+â€¢ Same nonzero eigenvalues!
+
+Recovery: If Xáµ€Xc = Î»c, then
+eigenvector of XXáµ€ is b = Xc/âˆš(NÎ»)
+
+Speedup: ${(D*D*D / (N*N*N)).toFixed(0)}× faster!`;
+        }
+
+        // Lab 12: PPCA
+        function samplePPCA() {
+            const sigma2 = parseFloat(document.getElementById('ppcaNoise').value);
+            
+            document.getElementById('ppcaOutput').innerHTML = 
+`Probabilistic PCA (PPCA)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Generative Model:
+1. z ~ N(0, I)         [sample latent]
+2. x = Bz + Î¼ + Îµ      [generate observation]
+   where Îµ ~ N(0, ÏƒÂ²I)
+
+Noise variance ÏƒÂ² = ${sigma2}
+
+Marginal likelihood:
+p(x) = âˆ«p(x|z)p(z)dz = N(x | Î¼, BBáµ€ + ÏƒÂ²I)
+
+Key insight:
+â€¢ Data covariance = BBáµ€ + ÏƒÂ²I
+â€¢ BBáµ€: variance from latent structure
+â€¢ ÏƒÂ²I: isotropic noise variance
+
+MLE solutions:
+â€¢ Î¼_ML = sample mean
+â€¢ B_ML related to PCA eigenvectors
+â€¢ ÏƒÂ²_ML = average discarded eigenvalues`;
+        }
+
+        // Lab 13: Projection Matrix
+        function visualizeProjMatrix() {
+            document.getElementById('projMatOutput').innerHTML = 
+`Projection Matrix P = BBáµ€
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+B = [bâ‚, ..., bâ‚˜] âˆˆ â„á´°Ã‹Â£á´¹ (orthonormal columns)
+
+Properties of P = BBáµ€:
+â€¢ P âˆˆ â„á´°Ã‹Â£á´°
+â€¢ Páµ€ = P (symmetric)
+â€¢ PÂ² = P (idempotent)
+â€¢ rank(P) = M
+â€¢ Eigenvalues: M ones, (D-M) zeros
+
+Action on x:
+â€¢ Px = BBáµ€x = xÌƒ (projection onto span(B))
+â€¢ (I-P)x = x - xÌƒ (component in orthogonal complement)
+
+P projects onto M-dimensional principal subspace
+(I-P) projects onto (D-M)-dimensional complement`;
+        }
+
+        // Lab 14: Image Compression
+        function compressImage() {
+            const numPCs = parseInt(document.getElementById('imgPCs').value);
+            
+            const originalSize = 784; // 28x28
+            const compressedSize = numPCs;
+            const ratio = (originalSize / compressedSize).toFixed(1);
+            
+            document.getElementById('imgOutput').innerHTML = 
+`Image Compression with PCA
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Original: 28×28 = 784 pixels
+Principal Components: ${numPCs}
+
+Compression ratio: ${ratio}:1
+Storage: ${compressedSize} values instead of ${originalSize}
+
+Quality vs Compression:
+â€¢ 1 PC:   Very blurry, basic shape only
+â€¢ 5 PCs:  Rough outline visible
+â€¢ 20 PCs: Main features clear
+â€¢ 50 PCs: Good quality
+â€¢ 100 PCs: Near-perfect reconstruction
+
+Each PC captures a "eigenface/eigendigit" pattern
+Low PCs: global structure
+High PCs: fine details`;
+        }
+
+        // Lab 15: Choosing M
+        function chooseM() {
+            const threshold = parseFloat(document.getElementById('varThreshold').value);
+            
+            // Simulate eigenvalues
+            let eigenvalues = [];
+            let total = 0;
+            for (let i = 0; i < 50; i++) {
+                const ev = Math.exp(-0.25 * i);
+                eigenvalues.push(ev);
+                total += ev;
+            }
+            
+            // Find M for threshold
+            let sum = 0, M = 0;
+            for (let i = 0; i < 50; i++) {
+                sum += eigenvalues[i];
+                if (sum / total * 100 >= threshold) { M = i + 1; break; }
+            }
+            
+            document.getElementById('chooseMOutput').innerHTML = 
+`Choosing Number of Components M
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+Target: Capture ${threshold}% of variance
+
+Result: M = ${M} components needed
+
+Methods for choosing M:
+1. Variance threshold (e.g., 95%)
+2. Scree plot "elbow" method
+3. Cross-validation on downstream task
+4. Bayesian model selection (PPCA)
+
+Trade-off:
+â€¢ Larger M ←’ Better reconstruction, more storage
+â€¢ Smaller M ←’ More compression, some info lost
+
+For ${threshold}% variance: Use M = ${M}`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

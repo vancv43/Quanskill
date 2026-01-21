@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Data Visualization | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-orange: #ff9000;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --matplotlib-color: #11557c;
+            --seaborn-color: #4c72b0;
+            --chart-color: #dd8452;
+            --style-color: #55a868;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.8; font-size: 17px; }
+        .header { background: var(--gradient-blue); color: white; padding: 1rem 2rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .header-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .sidebar { position: fixed; left: 0; top: 60px; bottom: 0; width: 300px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; padding: 1.5rem 0; z-index: 900; transition: transform 0.3s; }
+        .sidebar-header { padding: 0 1.5rem 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--quanskill-orange); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+        .logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--quanskill-blue); }
+        .chapter-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); }
+        .nav-section { padding: 0.5rem 1.5rem; }
+        .nav-section-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); padding: 0.5rem 1rem; font-weight: 600; }
+        .nav-link { display: block; padding: 0.6rem 1rem; color: var(--text-secondary); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; border-radius: 8px; margin-bottom: 0.25rem; transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+        .nav-link.active { background: rgba(11, 47, 160, 0.1); color: var(--quanskill-blue); border-left-color: var(--quanskill-orange); font-weight: 500; }
+        .main-content { margin-left: 300px; padding: 80px 2rem 4rem; max-width: calc(100% - 300px); }
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+        .hero { background: var(--gradient-blue); color: white; padding: 4rem 3rem; border-radius: 20px; margin-bottom: 3rem; position: relative; overflow: hidden; }
+        .hero::after { content: '📊'; position: absolute; bottom: 20px; right: 40px; font-size: 80px; opacity: 0.15; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-badge { display: inline-block; background: var(--quanskill-orange); padding: 0.35rem 1rem; border-radius: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.15rem; opacity: 0.9; max-width: 600px; }
+        .hero-quote { margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-left: 4px solid var(--quanskill-orange); border-radius: 0 12px 12px 0; font-style: italic; }
+        .key-concepts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .concept-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; transition: transform 0.2s; }
+        .concept-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .concept-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; font-size: 1.25rem; }
+        .concept-card.matplotlib .icon { background: linear-gradient(135deg, #11557c 0%, #2980b9 100%); }
+        .concept-card.seaborn .icon { background: linear-gradient(135deg, #4c72b0 0%, #6b8fd4 100%); }
+        .concept-card.chart .icon { background: linear-gradient(135deg, #dd8452 0%, #e9a178 100%); }
+        .concept-card.style .icon { background: linear-gradient(135deg, #55a868 0%, #7bc48c 100%); }
+        .concept-card h5 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .concept-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0; }
+        .section { background: var(--bg-card); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
+        .section-number { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: white; padding: 0.5rem 1rem; border-radius: 8px; white-space: nowrap; }
+        .section-number.matplotlib { background: linear-gradient(135deg, #11557c 0%, #2980b9 100%); }
+        .section-number.seaborn { background: linear-gradient(135deg, #4c72b0 0%, #6b8fd4 100%); }
+        .section-number.chart { background: linear-gradient(135deg, #dd8452 0%, #e9a178 100%); }
+        .section-number.style { background: linear-gradient(135deg, #55a868 0%, #7bc48c 100%); }
+        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 600; color: var(--quanskill-blue); }
+        .section h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 600; margin: 2rem 0 1rem; }
+        .section p { margin-bottom: 1.25rem; }
+        .definition-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%); border-left: 4px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .definition-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: block; }
+        .note-box { background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%); border-left: 4px solid var(--quanskill-orange); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .note-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #e68200; margin-bottom: 0.75rem; display: block; }
+        .matplotlib-box { background: linear-gradient(135deg, rgba(17, 85, 124, 0.08) 0%, rgba(17, 85, 124, 0.03) 100%); border-left: 4px solid var(--matplotlib-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .matplotlib-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--matplotlib-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .matplotlib-box .label::before { content: '📈'; }
+        .seaborn-box { background: linear-gradient(135deg, rgba(76, 114, 176, 0.08) 0%, rgba(76, 114, 176, 0.03) 100%); border-left: 4px solid var(--seaborn-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .seaborn-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--seaborn-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .seaborn-box .label::before { content: '📝Ž¨'; }
+        .chart-box { background: linear-gradient(135deg, rgba(221, 132, 82, 0.08) 0%, rgba(221, 132, 82, 0.03) 100%); border-left: 4px solid var(--chart-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .chart-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--chart-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .chart-box .label::before { content: '📊'; }
+        .style-box { background: linear-gradient(135deg, rgba(85, 168, 104, 0.08) 0%, rgba(85, 168, 104, 0.03) 100%); border-left: 4px solid var(--style-color); padding: 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
+        .style-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--style-color); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .style-box .label::before { content: 'âœ¨'; }
+        .quanskill-box { background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%); border: 2px solid var(--quanskill-blue); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; position: relative; }
+        .quanskill-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-orange); border-radius: 12px 12px 0 0; }
+        .quanskill-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--quanskill-blue); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quanskill-box .label::before { content: '🎓'; }
+        code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: var(--quanskill-blue); }
+        pre { background: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.6; }
+        pre code { background: transparent; padding: 0; color: #e2e8f0; }
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .data-table, .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .data-table th, .comparison-table th { background: var(--code-bg); font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--quanskill-blue); padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid var(--border-color); }
+        .data-table td, .comparison-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .data-table tr:hover td, .comparison-table tr:hover td { background: rgba(11, 47, 160, 0.02); }
+        .quiz-box { background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px dashed var(--quanskill-orange); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; }
+        .quiz-box .label { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 700; color: #e68200; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .quiz-box .label::before { content: '🧠'; }
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .quiz-option { padding: 0.75rem 1rem; background: white; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; }
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        .quiz-feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+        .summary-box { background: var(--gradient-blue); color: white; padding: 2rem; border-radius: 16px; margin: 2rem 0; }
+        .summary-box h3 { font-family: 'Space Grotesk', sans-serif; color: white; margin-top: 0; }
+        .summary-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .summary-item { display: flex; align-items: center; gap: 0.5rem; }
+        .summary-item::before { content: '🐍'; background: var(--quanskill-orange); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+        .plot-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .plot-card { background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 1rem; transition: all 0.3s; text-align: center; }
+        .plot-card:hover { border-color: var(--seaborn-color); box-shadow: 0 4px 16px rgba(76, 114, 176, 0.15); }
+        .plot-card .plot-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .plot-card h5 { font-family: 'Space Grotesk', sans-serif; color: var(--seaborn-color); margin-bottom: 0.25rem; }
+        .plot-card .desc { font-size: 0.8rem; color: var(--text-secondary); }
+        .color-palette { display: flex; gap: 0.25rem; margin: 1rem 0; flex-wrap: wrap; }
+        .color-swatch { width: 40px; height: 40px; border-radius: 6px; }
+        .floating-back-btn { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-blue); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; text-decoration: none !important; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.85rem; z-index: 9999; box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3); transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .floating-back-btn:hover { transform: translateY(-2px); background: var(--gradient-orange); }
+        .progress-bar { position: fixed; top: 60px; left: 300px; right: 0; height: 3px; background: var(--border-color); z-index: 800; }
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+        .mobile-menu-btn { display: none; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--quanskill-blue); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 1.25rem; }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn { top: auto; bottom: 20px; right: 15px; padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 10 Â· Visualization</div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Matplotlib</div>
+            <a href="#section-10-1" class="nav-link">Figures & Axes</a>
+            <a href="#section-10-2" class="nav-link">Line Plots</a>
+            <a href="#section-10-3" class="nav-link">Customization</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Chart Types</div>
+            <a href="#section-10-4" class="nav-link">Bar & Histogram</a>
+            <a href="#section-10-5" class="nav-link">Scatter Plots</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Seaborn</div>
+            <a href="#section-10-6" class="nav-link">Statistical Plots</a>
+            <a href="#section-10-7" class="nav-link">Styling & Themes</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Summary</a>
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 10</span>
+                <h1>Data Visualization</h1>
+                <p class="hero-subtitle">Master Matplotlib and Seaborn to create compelling visualizations that tell stories with data.</p>
+                <div class="hero-quote">"The greatest value of a picture is when it forces us to notice what we never expected to see."<br><br>- <strong>John Tukey, Statistician</strong></div>
+            </div>
+        </section>
+
+        <!-- Key Concepts -->
+        <div class="key-concepts">
+            <div class="concept-card matplotlib"><div class="icon">📈</div><h5>Matplotlib</h5><p>Foundation library</p></div>
+            <div class="concept-card seaborn"><div class="icon">📝Ž¨</div><h5>Seaborn</h5><p>Statistical graphics</p></div>
+            <div class="concept-card chart"><div class="icon">📊</div><h5>Chart Types</h5><p>Line, bar, scatter</p></div>
+            <div class="concept-card style"><div class="icon">âœ¨</div><h5>Styling</h5><p>Colors & themes</p></div>
+            <div class="concept-card matplotlib"><div class="icon">📝–¼</div><h5>Subplots</h5><p>Multiple plots</p></div>
+            <div class="concept-card seaborn"><div class="icon">📝’¾</div><h5>Export</h5><p>Save to files</p></div>
+        </div>
+
+        <!-- Section 10.1: Figures & Axes -->
+        <section class="section" id="section-10-1">
+            <div class="section-header"><span class="section-number matplotlib">10.1</span><h2>Figures and Axes</h2></div>
+            <p>In Matplotlib, plots are built on a <strong>Figure</strong> (the canvas) containing one or more <strong>Axes</strong> (the actual plots).</p>
+            <div class="definition-box">
+                <span class="label">Key Concepts</span>
+                <p><strong>Figure:</strong> The entire window/canvas. <strong>Axes:</strong> An individual plot with its own coordinate system. <strong>Axis:</strong> The x or y axis with ticks and labels.</p>
+            </div>
+            <pre><code><span class="code-keyword">import</span> matplotlib.pyplot <span class="code-keyword">as</span> plt
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+<span class="code-comment"># Create figure and axes</span>
+fig, ax = plt.<span class="code-function">subplots</span>()
+
+<span class="code-comment"># Plot on the axes</span>
+x = np.<span class="code-function">linspace</span>(<span class="code-number">0</span>, <span class="code-number">10</span>, <span class="code-number">100</span>)
+ax.<span class="code-function">plot</span>(x, np.<span class="code-function">sin</span>(x))
+plt.<span class="code-function">show</span>()</code></pre>
+            <h3>Multiple Subplots</h3>
+            <pre><code><span class="code-comment"># Create 2x2 grid of subplots</span>
+fig, axes = plt.<span class="code-function">subplots</span>(<span class="code-number">2</span>, <span class="code-number">2</span>, figsize=(<span class="code-number">10</span>, <span class="code-number">8</span>))
+
+axes[<span class="code-number">0</span>, <span class="code-number">0</span>].<span class="code-function">plot</span>(x, np.<span class="code-function">sin</span>(x))
+axes[<span class="code-number">0</span>, <span class="code-number">1</span>].<span class="code-function">plot</span>(x, np.<span class="code-function">cos</span>(x))
+axes[<span class="code-number">1</span>, <span class="code-number">0</span>].<span class="code-function">plot</span>(x, np.<span class="code-function">tan</span>(x))
+axes[<span class="code-number">1</span>, <span class="code-number">1</span>].<span class="code-function">plot</span>(x, x**<span class="code-number">2</span>)
+
+plt.<span class="code-function">tight_layout</span>()  <span class="code-comment"># Prevent overlapping</span>
+plt.<span class="code-function">show</span>()</code></pre>
+            <div class="matplotlib-box">
+                <span class="label">Object-Oriented vs Pyplot</span>
+                <p><strong>Pyplot style:</strong> <code>plt.plot(x, y)</code> - Quick and simple.<br>
+                <strong>OO style:</strong> <code>ax.plot(x, y)</code> - More control, recommended for complex plots.</p>
+            </div>
+        </section>
+
+        <!-- Section 10.2: Line Plots -->
+        <section class="section" id="section-10-2">
+            <div class="section-header"><span class="section-number matplotlib">10.2</span><h2>Line Plots</h2></div>
+            <p>Line plots connect data points with lines - ideal for showing trends over time or continuous data.</p>
+            <pre><code>fig, ax = plt.<span class="code-function">subplots</span>(figsize=(<span class="code-number">10</span>, <span class="code-number">6</span>))
+
+x = np.<span class="code-function">linspace</span>(<span class="code-number">0</span>, <span class="code-number">10</span>, <span class="code-number">100</span>)
+
+<span class="code-comment"># Multiple lines with styling</span>
+ax.<span class="code-function">plot</span>(x, np.<span class="code-function">sin</span>(x), label=<span class="code-string">'sin(x)'</span>, color=<span class="code-string">'blue'</span>, linewidth=<span class="code-number">2</span>)
+ax.<span class="code-function">plot</span>(x, np.<span class="code-function">cos</span>(x), label=<span class="code-string">'cos(x)'</span>, color=<span class="code-string">'red'</span>, linestyle=<span class="code-string">'--'</span>)
+
+<span class="code-comment"># Add labels and title</span>
+ax.<span class="code-function">set_xlabel</span>(<span class="code-string">'X axis'</span>)
+ax.<span class="code-function">set_ylabel</span>(<span class="code-string">'Y axis'</span>)
+ax.<span class="code-function">set_title</span>(<span class="code-string">'Trigonometric Functions'</span>)
+ax.<span class="code-function">legend</span>()
+ax.<span class="code-function">grid</span>(<span class="code-keyword">True</span>, alpha=<span class="code-number">0.3</span>)
+
+plt.<span class="code-function">show</span>()</code></pre>
+            <table class="data-table">
+                <thead><tr><th>Parameter</th><th>Description</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td><code>color</code></td><td>Line color</td><td>'blue', '#FF5733', 'C0'</td></tr>
+                    <tr><td><code>linestyle</code></td><td>Line style</td><td>'-', '--', ':', '-.'</td></tr>
+                    <tr><td><code>linewidth</code></td><td>Line thickness</td><td>1, 2, 3</td></tr>
+                    <tr><td><code>marker</code></td><td>Data point marker</td><td>'o', 's', '^', 'x'</td></tr>
+                    <tr><td><code>alpha</code></td><td>Transparency</td><td>0.0 to 1.0</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 10.3: Customization -->
+        <section class="section" id="section-10-3">
+            <div class="section-header"><span class="section-number matplotlib">10.3</span><h2>Customization</h2></div>
+            <p>Make your plots publication-ready with titles, labels, legends, and annotations.</p>
+            <pre><code>fig, ax = plt.<span class="code-function">subplots</span>(figsize=(<span class="code-number">10</span>, <span class="code-number">6</span>))
+
+ax.<span class="code-function">plot</span>(x, y)
+
+<span class="code-comment"># Titles and labels</span>
+ax.<span class="code-function">set_title</span>(<span class="code-string">'Stock Price Over Time'</span>, fontsize=<span class="code-number">16</span>, fontweight=<span class="code-string">'bold'</span>)
+ax.<span class="code-function">set_xlabel</span>(<span class="code-string">'Date'</span>, fontsize=<span class="code-number">12</span>)
+ax.<span class="code-function">set_ylabel</span>(<span class="code-string">'Price ($)'</span>, fontsize=<span class="code-number">12</span>)
+
+<span class="code-comment"># Axis limits</span>
+ax.<span class="code-function">set_xlim</span>(<span class="code-number">0</span>, <span class="code-number">100</span>)
+ax.<span class="code-function">set_ylim</span>(<span class="code-number">0</span>, <span class="code-number">500</span>)
+
+<span class="code-comment"># Add annotation</span>
+ax.<span class="code-function">annotate</span>(<span class="code-string">'Peak!'</span>, xy=(<span class="code-number">50</span>, <span class="code-number">400</span>), xytext=(<span class="code-number">60</span>, <span class="code-number">450</span>),
+            arrowprops=<span class="code-function">dict</span>(arrowstyle=<span class="code-string">'->'</span>))
+
+<span class="code-comment"># Save to file</span>
+fig.<span class="code-function">savefig</span>(<span class="code-string">'my_plot.png'</span>, dpi=<span class="code-number">300</span>, bbox_inches=<span class="code-string">'tight'</span>)</code></pre>
+            <div class="note-box">
+                <span class="label">📝’¡ Saving Plots</span>
+                <p>Use <code>savefig()</code> with <code>dpi=300</code> for print quality. Supported formats: PNG, PDF, SVG, JPG.</p>
+            </div>
+        </section>
+
+        <!-- Section 10.4: Bar & Histogram -->
+        <section class="section" id="section-10-4">
+            <div class="section-header"><span class="section-number chart">10.4</span><h2>Bar Charts & Histograms</h2></div>
+            <p><strong>Bar charts</strong> compare categorical data. <strong>Histograms</strong> show distribution of continuous data.</p>
+            <h3>Bar Charts</h3>
+            <pre><code>categories = [<span class="code-string">'A'</span>, <span class="code-string">'B'</span>, <span class="code-string">'C'</span>, <span class="code-string">'D'</span>]
+values = [<span class="code-number">25</span>, <span class="code-number">40</span>, <span class="code-number">30</span>, <span class="code-number">55</span>]
+
+fig, ax = plt.<span class="code-function">subplots</span>()
+ax.<span class="code-function">bar</span>(categories, values, color=<span class="code-string">'steelblue'</span>)
+ax.<span class="code-function">set_ylabel</span>(<span class="code-string">'Sales'</span>)
+ax.<span class="code-function">set_title</span>(<span class="code-string">'Sales by Category'</span>)
+
+<span class="code-comment"># Horizontal bar chart</span>
+ax.<span class="code-function">barh</span>(categories, values)</code></pre>
+            <h3>Histograms</h3>
+            <pre><code>data = np.random.<span class="code-function">randn</span>(<span class="code-number">1000</span>)  <span class="code-comment"># Normal distribution</span>
+
+fig, ax = plt.<span class="code-function">subplots</span>()
+ax.<span class="code-function">hist</span>(data, bins=<span class="code-number">30</span>, color=<span class="code-string">'steelblue'</span>, edgecolor=<span class="code-string">'white'</span>, alpha=<span class="code-number">0.7</span>)
+ax.<span class="code-function">set_xlabel</span>(<span class="code-string">'Value'</span>)
+ax.<span class="code-function">set_ylabel</span>(<span class="code-string">'Frequency'</span>)
+ax.<span class="code-function">set_title</span>(<span class="code-string">'Distribution of Values'</span>)</code></pre>
+            <div class="chart-box">
+                <span class="label">Pandas Integration</span>
+<pre style="margin-bottom: 0;"><code><span class="code-comment"># Plot directly from DataFrame</span>
+df[<span class="code-string">'column'</span>].plot.<span class="code-function">hist</span>(bins=<span class="code-number">20</span>)
+df.plot.<span class="code-function">bar</span>(x=<span class="code-string">'category'</span>, y=<span class="code-string">'value'</span>)</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 10.5: Scatter Plots -->
+        <section class="section" id="section-10-5">
+            <div class="section-header"><span class="section-number chart">10.5</span><h2>Scatter Plots</h2></div>
+            <p>Scatter plots reveal relationships between two variables. Great for correlation analysis!</p>
+            <pre><code>x = np.random.<span class="code-function">randn</span>(<span class="code-number">100</span>)
+y = <span class="code-number">2</span> * x + np.random.<span class="code-function">randn</span>(<span class="code-number">100</span>) * <span class="code-number">0.5</span>
+sizes = np.<span class="code-function">abs</span>(np.random.<span class="code-function">randn</span>(<span class="code-number">100</span>)) * <span class="code-number">100</span>
+colors = np.random.<span class="code-function">randn</span>(<span class="code-number">100</span>)
+
+fig, ax = plt.<span class="code-function">subplots</span>(figsize=(<span class="code-number">8</span>, <span class="code-number">6</span>))
+scatter = ax.<span class="code-function">scatter</span>(x, y, s=sizes, c=colors, cmap=<span class="code-string">'viridis'</span>, alpha=<span class="code-number">0.6</span>)
+
+<span class="code-comment"># Add colorbar</span>
+plt.<span class="code-function">colorbar</span>(scatter, label=<span class="code-string">'Color Value'</span>)
+
+ax.<span class="code-function">set_xlabel</span>(<span class="code-string">'X Variable'</span>)
+ax.<span class="code-function">set_ylabel</span>(<span class="code-string">'Y Variable'</span>)
+ax.<span class="code-function">set_title</span>(<span class="code-string">'Scatter Plot with Size and Color'</span>)</code></pre>
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">What parameter controls the size of points in <code>scatter()</code>?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">size</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">s</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">markersize</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Use 's' for size and 'c' for color in scatter plots.</div>
+                <div class="quiz-feedback incorrect">The parameter is 's' (short for size). 'c' controls color.</div>
+            </div>
+        </section>
+
+        <!-- Section 10.6: Seaborn Statistical Plots -->
+        <section class="section" id="section-10-6">
+            <div class="section-header"><span class="section-number seaborn">10.6</span><h2>Seaborn Statistical Plots</h2></div>
+            <p><strong>Seaborn</strong> builds on Matplotlib with beautiful defaults and high-level statistical visualization functions.</p>
+            <pre><code><span class="code-keyword">import</span> seaborn <span class="code-keyword">as</span> sns
+
+<span class="code-comment"># Set the aesthetic style</span>
+sns.<span class="code-function">set_style</span>(<span class="code-string">'whitegrid'</span>)
+
+<span class="code-comment"># Load example dataset</span>
+tips = sns.<span class="code-function">load_dataset</span>(<span class="code-string">'tips'</span>)</code></pre>
+            <div class="plot-cards">
+                <div class="plot-card"><div class="plot-icon">📊</div><h5>histplot()</h5><p class="desc">Histogram + KDE</p></div>
+                <div class="plot-card"><div class="plot-icon">📈</div><h5>lineplot()</h5><p class="desc">Line with CI</p></div>
+                <div class="plot-card"><div class="plot-icon">🔍µ</div><h5>scatterplot()</h5><p class="desc">Enhanced scatter</p></div>
+                <div class="plot-card"><div class="plot-icon">📦</div><h5>boxplot()</h5><p class="desc">Box & whisker</p></div>
+                <div class="plot-card"><div class="plot-icon">📝Ž»</div><h5>violinplot()</h5><p class="desc">Distribution shape</p></div>
+                <div class="plot-card"><div class="plot-icon">🔍¥</div><h5>heatmap()</h5><p class="desc">Correlation matrix</p></div>
+            </div>
+            <pre><code><span class="code-comment"># Bar plot with automatic confidence intervals</span>
+sns.<span class="code-function">barplot</span>(x=<span class="code-string">'day'</span>, y=<span class="code-string">'total_bill'</span>, data=tips)
+
+<span class="code-comment"># Box plot</span>
+sns.<span class="code-function">boxplot</span>(x=<span class="code-string">'day'</span>, y=<span class="code-string">'total_bill'</span>, hue=<span class="code-string">'smoker'</span>, data=tips)
+
+<span class="code-comment"># Scatter with regression line</span>
+sns.<span class="code-function">regplot</span>(x=<span class="code-string">'total_bill'</span>, y=<span class="code-string">'tip'</span>, data=tips)
+
+<span class="code-comment"># Pair plot for all numeric columns</span>
+sns.<span class="code-function">pairplot</span>(tips, hue=<span class="code-string">'smoker'</span>)
+
+<span class="code-comment"># Heatmap for correlation</span>
+sns.<span class="code-function">heatmap</span>(tips.<span class="code-function">corr</span>(), annot=<span class="code-keyword">True</span>, cmap=<span class="code-string">'coolwarm'</span>)</code></pre>
+            <div class="seaborn-box">
+                <span class="label">Seaborn Advantage</span>
+                <p>Seaborn integrates directly with Pandas DataFrames. Just pass column names as strings and the <code>data</code> parameter!</p>
+            </div>
+        </section>
+
+        <!-- Section 10.7: Styling & Themes -->
+        <section class="section" id="section-10-7">
+            <div class="section-header"><span class="section-number style">10.7</span><h2>Styling & Themes</h2></div>
+            <p>Transform your plots from default to professional with built-in themes and color palettes.</p>
+            <h3>Seaborn Styles</h3>
+            <pre><code><span class="code-comment"># Available styles: darkgrid, whitegrid, dark, white, ticks</span>
+sns.<span class="code-function">set_style</span>(<span class="code-string">'whitegrid'</span>)
+
+<span class="code-comment"># Context scales: paper, notebook, talk, poster</span>
+sns.<span class="code-function">set_context</span>(<span class="code-string">'talk'</span>)  <span class="code-comment"># Larger fonts for presentations</span></code></pre>
+            <h3>Color Palettes</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background: #4c72b0;" title="deep"></div>
+                <div class="color-swatch" style="background: #dd8452;" title="muted"></div>
+                <div class="color-swatch" style="background: #55a868;" title="pastel"></div>
+                <div class="color-swatch" style="background: #c44e52;" title="bright"></div>
+                <div class="color-swatch" style="background: #8172b3;" title="dark"></div>
+                <div class="color-swatch" style="background: #937860;" title="colorblind"></div>
+            </div>
+            <pre><code><span class="code-comment"># Built-in palettes: deep, muted, pastel, bright, dark, colorblind</span>
+sns.<span class="code-function">set_palette</span>(<span class="code-string">'colorblind'</span>)
+
+<span class="code-comment"># Custom palette</span>
+custom_colors = [<span class="code-string">'#0b2fa0'</span>, <span class="code-string">'#ff9000'</span>, <span class="code-string">'#10b981'</span>]
+sns.<span class="code-function">set_palette</span>(custom_colors)
+
+<span class="code-comment"># Matplotlib style sheets</span>
+plt.style.<span class="code-function">use</span>(<span class="code-string">'seaborn-v0_8'</span>)
+plt.style.<span class="code-function">use</span>(<span class="code-string">'ggplot'</span>)</code></pre>
+            <div class="style-box">
+                <span class="label">Professional Tips</span>
+                <p>Use <code>'colorblind'</code> palette for accessibility. Set <code>set_context('talk')</code> for presentations. Always include axis labels and titles!</p>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header"><span class="section-number" style="background: var(--gradient-orange);">Summary</span><h2>Chapter 10 Review</h2></div>
+            <p>You've learned data visualization with Matplotlib and Seaborn - essential for communicating insights.</p>
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Figure contains Axes (plots)</div>
+                    <div class="summary-item">plt.subplots() for layout</div>
+                    <div class="summary-item">plot(), bar(), hist(), scatter()</div>
+                    <div class="summary-item">Customize: title, labels, legend</div>
+                    <div class="summary-item">savefig() exports to files</div>
+                    <div class="summary-item">Seaborn for statistical plots</div>
+                    <div class="summary-item">set_style() for themes</div>
+                    <div class="summary-item">heatmap() for correlations</div>
+                </div>
+            </div>
+            <h3>Essential Functions</h3>
+            <table class="comparison-table">
+                <thead><tr><th>Library</th><th>Functions</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Matplotlib Basic</strong></td><td><code>subplots(), plot(), show(), savefig()</code></td></tr>
+                    <tr><td><strong>Chart Types</strong></td><td><code>bar(), barh(), hist(), scatter(), pie()</code></td></tr>
+                    <tr><td><strong>Customize</strong></td><td><code>set_title(), set_xlabel(), legend(), annotate()</code></td></tr>
+                    <tr><td><strong>Seaborn Plots</strong></td><td><code>barplot(), boxplot(), histplot(), heatmap()</code></td></tr>
+                    <tr><td><strong>Seaborn Style</strong></td><td><code>set_style(), set_palette(), set_context()</code></td></tr>
+                </tbody>
+            </table>
+            <h3>What's Next?</h3>
+            <p>In <strong>Chapter 11</strong>, you'll apply everything you've learned to a real-world data science project, from data loading to visualization!</p>
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Sales Dashboard Visualization:</strong></p>
+                <ol>
+                    <li>Create a 2x2 subplot figure</li>
+                    <li>Plot monthly sales trend (line plot)</li>
+                    <li>Compare categories (bar chart)</li>
+                    <li>Show revenue distribution (histogram)</li>
+                    <li>Display correlations (heatmap)</li>
+                </ol>
+            </div>
+        </section>
+
+        </div>
+    </main>
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressFill').style.width = (winScroll / height) * 100 + '%';
+        });
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 100) current = section.getAttribute('id'); });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

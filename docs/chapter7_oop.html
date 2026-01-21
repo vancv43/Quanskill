@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Object-Oriented Programming | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --class-color: #8b5cf6;
+            --object-color: #06b6d4;
+            --method-color: #ec4899;
+            --inherit-color: #10b981;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover { background: var(--code-bg); color: var(--quanskill-blue); }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper { max-width: 900px; margin: 0 auto; }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '📝—ï¸';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 80px;
+            opacity: 0.15;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card.class .icon { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .concept-card.object .icon { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .concept-card.method .icon { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .concept-card.inherit .icon { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-number.class { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        .section-number.object { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .section-number.method { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
+        .section-number.inherit { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p { margin-bottom: 1.25rem; }
+
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .class-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border-left: 4px solid var(--class-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .class-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--class-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .class-box .label::before { content: '🐍"'; }
+
+        .object-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
+            border-left: 4px solid var(--object-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .object-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--object-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .object-box .label::before { content: '🎯'; }
+
+        .method-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.03) 100%);
+            border-left: 4px solid var(--method-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .method-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--method-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .method-box .label::before { content: 'âš¡'; }
+
+        .inherit-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--inherit-color);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .inherit-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--inherit-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .inherit-box .label::before { content: '📝§¬'; }
+
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before { content: '🎓'; }
+
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .note-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before { content: '🌍'; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .code-comment { color: #64748b; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5f3fc; }
+        .code-number { color: #fbbf24; }
+        .code-function { color: #c4b5fd; }
+        .code-output { color: #86efac; }
+        .code-class { color: #fbbf24; }
+        .code-self { color: #f472b6; }
+
+        .data-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th, .comparison-table th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td, .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover td, .comparison-table tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before { content: '🧠'; }
+
+        .quiz-question { font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.05); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1.5rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .progress-bar { left: 0; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill { height: 100%; background: var(--gradient-orange); width: 0%; transition: width 0.1s; }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        /* Floating back button - RIGHT side */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+
+        .syntax-box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--quanskill-orange);
+        }
+
+        .syntax-box .syntax-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange);
+            margin-bottom: 0.75rem;
+        }
+
+        .syntax-box code {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        .summary-box {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            margin-top: 0;
+        }
+
+        .summary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item::before {
+            content: '🐍';
+            background: var(--quanskill-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .oop-diagram {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .oop-diagram-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .class-blueprint {
+            display: inline-block;
+            background: white;
+            border: 3px solid var(--class-color);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 250px;
+            text-align: left;
+        }
+
+        .class-blueprint-header {
+            background: var(--class-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            margin: -1.5rem -2rem 1rem;
+            border-radius: 9px 9px 0 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .class-blueprint-section {
+            margin-bottom: 1rem;
+        }
+
+        .class-blueprint-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .class-blueprint-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            padding: 0.25rem 0;
+        }
+
+        .objects-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .object-instance {
+            background: white;
+            border: 2px solid var(--object-color);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 150px;
+        }
+
+        .object-instance-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--object-color);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .object-instance-item {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .arrow-down {
+            font-size: 2rem;
+            color: var(--quanskill-orange);
+            margin: 1rem 0;
+        }
+
+        .method-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .method-type-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .method-type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .method-type-card.instance { border-color: var(--object-color); }
+        .method-type-card.classm { border-color: var(--class-color); }
+        .method-type-card.static { border-color: var(--method-color); }
+
+        .method-type-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .method-type-card.instance h5 { color: var(--object-color); }
+        .method-type-card.classm h5 { color: var(--class-color); }
+        .method-type-card.static h5 { color: var(--method-color); }
+
+        .method-type-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .method-type-card code {
+            display: block;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 15px;
+                left: auto;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 7 Â· OOP</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">Introduction</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Core Concepts</div>
+            <a href="#section-7-1" class="nav-link">Classes</a>
+            <a href="#section-7-2" class="nav-link">Objects</a>
+            <a href="#section-7-3" class="nav-link">The __init__ Method</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Methods & Attributes</div>
+            <a href="#section-7-4" class="nav-link">Instance vs Class Variables</a>
+            <a href="#section-7-5" class="nav-link">Method Types</a>
+            <a href="#section-7-6" class="nav-link">Access Specifiers</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Advanced OOP</div>
+            <a href="#section-7-7" class="nav-link">Inheritance</a>
+            <a href="#section-7-8" class="nav-link">Encapsulation</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Wrap Up</div>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Chapter 7</span>
+                <h1>Object-Oriented Programming</h1>
+                <p class="hero-subtitle">
+                    Learn to model real-world entities with classes and objects. OOP brings organization, reusability, and maintainability to your Python programs - essential skills for building data science applications.
+                </p>
+                <div class="hero-quote">
+                    "OOP isn't just about writing code - it's about thinking in terms of objects, their properties, and their behaviors. This mindset transforms how you approach problem-solving."
+                    <br><br>- <strong>Quanskill Programming Philosophy</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Concepts Overview -->
+        <div class="key-concepts">
+            <div class="concept-card class">
+                <div class="icon">🐍"</div>
+                <h5>Classes</h5>
+                <p>Blueprint for objects</p>
+            </div>
+            <div class="concept-card object">
+                <div class="icon">🎯</div>
+                <h5>Objects</h5>
+                <p>Instances of classes</p>
+            </div>
+            <div class="concept-card method">
+                <div class="icon">âš¡</div>
+                <h5>Methods</h5>
+                <p>Functions in classes</p>
+            </div>
+            <div class="concept-card class">
+                <div class="icon">📦</div>
+                <h5>Attributes</h5>
+                <p>Data stored in objects</p>
+            </div>
+            <div class="concept-card inherit">
+                <div class="icon">📝§¬</div>
+                <h5>Inheritance</h5>
+                <p>Extend existing classes</p>
+            </div>
+            <div class="concept-card method">
+                <div class="icon">🐍"</div>
+                <h5>Encapsulation</h5>
+                <p>Hide internal details</p>
+            </div>
+        </div>
+
+        <!-- Section 7.1: Classes -->
+        <section class="section" id="section-7-1">
+            <div class="section-header">
+                <span class="section-number class">7.1</span>
+                <h2>Python Classes</h2>
+            </div>
+
+            <p>
+                A <strong>class</strong> is a blueprint or template that defines the structure and behavior of objects. It groups related data (attributes) and functions (methods) into a single logical unit.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">What is a Class?</span>
+                <p>A <strong>class</strong> is a user-defined data type that contains attributes (variables) and methods (functions). Think of it as a template from which you create individual objects. For example, a <code>Student</code> class might define that every student has a name, age, and grade - but each actual student object has specific values for these attributes.</p>
+            </div>
+
+            <div class="syntax-box">
+                <div class="syntax-title">Class Syntax</div>
+                <pre style="margin: 0; background: transparent;"><code><span class="code-keyword">class</span> <span class="code-class">ClassName</span>:
+    <span class="code-string">"""Docstring describing the class."""</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, param1, param2):
+        <span class="code-self">self</span>.attribute1 = param1
+        <span class="code-self">self</span>.attribute2 = param2
+    
+    <span class="code-keyword">def</span> <span class="code-function">method_name</span>(<span class="code-self">self</span>):
+        <span class="code-comment"># Method logic here</span>
+        <span class="code-keyword">pass</span></code></pre>
+            </div>
+
+            <pre><code><span class="code-comment"># Define a Student class</span>
+<span class="code-keyword">class</span> <span class="code-class">Student</span>:
+    <span class="code-string">"""A class to represent a student."""</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name, age, marks):
+        <span class="code-self">self</span>.name = name
+        <span class="code-self">self</span>.age = age
+        <span class="code-self">self</span>.marks = marks
+    
+    <span class="code-keyword">def</span> <span class="code-function">display</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"Name: {self.name}, Age: {self.age}, Marks: {self.marks}"</span>)
+
+<span class="code-comment"># Create objects from the class</span>
+s1 = Student(<span class="code-string">"Rama"</span>, <span class="code-number">15</span>, <span class="code-number">80</span>)
+s2 = Student(<span class="code-string">"Krishna"</span>, <span class="code-number">12</span>, <span class="code-number">60</span>)
+
+<span class="code-comment"># Access attributes</span>
+<span class="code-function">print</span>(s1.name)   <span class="code-comment"># Rama</span>
+<span class="code-function">print</span>(s2.marks)  <span class="code-comment"># 60</span>
+
+<span class="code-comment"># Call methods</span>
+s1.display()  <span class="code-comment"># Name: Rama, Age: 15, Marks: 80</span></code></pre>
+
+            <div class="class-box">
+                <span class="label">Advantages of Classes</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Organization:</strong> Group related data and functions together</li>
+                    <li><strong>Reusability:</strong> Create multiple objects from one class</li>
+                    <li><strong>Inheritance:</strong> Extend classes to add new features</li>
+                    <li><strong>Readability:</strong> Clear structure makes code easier to understand</li>
+                    <li><strong>Maintainability:</strong> Changes in one place affect all objects</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 7.2: Objects -->
+        <section class="section" id="section-7-2">
+            <div class="section-header">
+                <span class="section-number object">7.2</span>
+                <h2>Python Objects</h2>
+            </div>
+
+            <p>
+                An <strong>object</strong> is an instance of a class. When you create an object, you're creating a specific entity with its own data values based on the class blueprint.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Object Components</span>
+                <p>Every object has three components:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>State:</strong> The data/attributes (e.g., name, age)</li>
+                    <li><strong>Behavior:</strong> The methods/functions it can perform</li>
+                    <li><strong>Identity:</strong> A unique identifier distinguishing it from other objects</li>
+                </ul>
+            </div>
+
+            <div class="oop-diagram">
+                <div class="oop-diagram-title">Class ←’ Objects Relationship</div>
+                <div class="class-blueprint">
+                    <div class="class-blueprint-header">class Person</div>
+                    <div class="class-blueprint-section">
+                        <div class="class-blueprint-section-title">Attributes</div>
+                        <div class="class-blueprint-item">â€¢ name</div>
+                        <div class="class-blueprint-item">â€¢ age</div>
+                        <div class="class-blueprint-item">â€¢ profession</div>
+                    </div>
+                    <div class="class-blueprint-section" style="margin-bottom: 0;">
+                        <div class="class-blueprint-section-title">Methods</div>
+                        <div class="class-blueprint-item">â€¢ work()</div>
+                        <div class="class-blueprint-item">â€¢ study()</div>
+                    </div>
+                </div>
+                <div class="arrow-down">←“</div>
+                <div class="objects-row">
+                    <div class="object-instance">
+                        <div class="object-instance-header">jessa</div>
+                        <div class="object-instance-item">name: "Jessa"</div>
+                        <div class="object-instance-item">age: 28</div>
+                        <div class="object-instance-item">profession: "Engineer"</div>
+                    </div>
+                    <div class="object-instance">
+                        <div class="object-instance-header">jon</div>
+                        <div class="object-instance-item">name: "Jon"</div>
+                        <div class="object-instance-item">age: 35</div>
+                        <div class="object-instance-item">profession: "Lawyer"</div>
+                    </div>
+                </div>
+            </div>
+
+            <pre><code><span class="code-comment"># Define the Person class</span>
+<span class="code-keyword">class</span> <span class="code-class">Person</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name, age, profession):
+        <span class="code-self">self</span>.name = name
+        <span class="code-self">self</span>.age = age
+        <span class="code-self">self</span>.profession = profession
+    
+    <span class="code-keyword">def</span> <span class="code-function">work</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} is working as a {self.profession}"</span>)
+    
+    <span class="code-keyword">def</span> <span class="code-function">study</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} is studying"</span>)
+
+<span class="code-comment"># Create objects (instances)</span>
+jessa = Person(<span class="code-string">"Jessa"</span>, <span class="code-number">28</span>, <span class="code-string">"Software Engineer"</span>)
+jon = Person(<span class="code-string">"Jon"</span>, <span class="code-number">35</span>, <span class="code-string">"Lawyer"</span>)
+
+<span class="code-comment"># Each object has its own state</span>
+jessa.work()  <span class="code-comment"># Jessa is working as a Software Engineer</span>
+jon.work()    <span class="code-comment"># Jon is working as a Lawyer</span></code></pre>
+        </section>
+
+        <!-- Section 7.3: The __init__ Method -->
+        <section class="section" id="section-7-3">
+            <div class="section-header">
+                <span class="section-number class">7.3</span>
+                <h2>The __init__ Constructor</h2>
+            </div>
+
+            <p>
+                The <code>__init__</code> method is a special method called the <strong>constructor</strong>. It's automatically called when you create a new object and is used to initialize the object's attributes.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Understanding self</span>
+                <p><code>self</code> is a reference to the current instance of the class. It allows you to access the object's attributes and methods from within the class. The first parameter of every instance method must be <code>self</code> (though you can technically name it anything).</p>
+            </div>
+
+            <pre><code><span class="code-keyword">class</span> <span class="code-class">BankAccount</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, owner, balance=<span class="code-number">0</span>):
+        <span class="code-string">"""Initialize account with owner and optional balance."""</span>
+        <span class="code-self">self</span>.owner = owner       <span class="code-comment"># Required</span>
+        <span class="code-self">self</span>.balance = balance   <span class="code-comment"># Default value: 0</span>
+        <span class="code-function">print</span>(<span class="code-string">f"Account created for {owner}"</span>)
+    
+    <span class="code-keyword">def</span> <span class="code-function">deposit</span>(<span class="code-self">self</span>, amount):
+        <span class="code-self">self</span>.balance += amount
+        <span class="code-function">print</span>(<span class="code-string">f"Deposited ${amount}. New balance: ${self.balance}"</span>)
+    
+    <span class="code-keyword">def</span> <span class="code-function">withdraw</span>(<span class="code-self">self</span>, amount):
+        <span class="code-keyword">if</span> amount <= <span class="code-self">self</span>.balance:
+            <span class="code-self">self</span>.balance -= amount
+            <span class="code-function">print</span>(<span class="code-string">f"Withdrew ${amount}. Remaining: ${self.balance}"</span>)
+        <span class="code-keyword">else</span>:
+            <span class="code-function">print</span>(<span class="code-string">"Insufficient funds!"</span>)
+
+<span class="code-comment"># Create accounts</span>
+acc1 = BankAccount(<span class="code-string">"Alice"</span>)           <span class="code-comment"># Account created for Alice</span>
+acc2 = BankAccount(<span class="code-string">"Bob"</span>, <span class="code-number">1000</span>)       <span class="code-comment"># Account created for Bob</span>
+
+<span class="code-comment"># Use methods</span>
+acc1.deposit(<span class="code-number">500</span>)     <span class="code-comment"># Deposited $500. New balance: $500</span>
+acc2.withdraw(<span class="code-number">200</span>)    <span class="code-comment"># Withdrew $200. Remaining: $800</span></code></pre>
+
+            <div class="note-box">
+                <span class="label">📝’¡ Key Points about __init__</span>
+                <ul style="margin-bottom: 0;">
+                    <li>Called automatically when creating an object</li>
+                    <li>Used to initialize instance attributes</li>
+                    <li>Can have default parameter values</li>
+                    <li>Does NOT return anything (implicitly returns None)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 7.4: Instance vs Class Variables -->
+        <section class="section" id="section-7-4">
+            <div class="section-header">
+                <span class="section-number object">7.4</span>
+                <h2>Instance vs Class Variables</h2>
+            </div>
+
+            <p>
+                Python has two types of variables in classes: <strong>instance variables</strong> (unique to each object) and <strong>class variables</strong> (shared by all objects).
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Instance Variables</th>
+                        <th>Class Variables</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Defined inside <code>__init__</code> using <code>self</code></td>
+                        <td>Defined directly in the class body</td>
+                    </tr>
+                    <tr>
+                        <td>Unique to each object</td>
+                        <td>Shared by all objects</td>
+                    </tr>
+                    <tr>
+                        <td>Access: <code>self.variable</code></td>
+                        <td>Access: <code>ClassName.variable</code></td>
+                    </tr>
+                    <tr>
+                        <td>Each object has its own copy</td>
+                        <td>One copy for the entire class</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-keyword">class</span> <span class="code-class">Student</span>:
+    <span class="code-comment"># Class variable - shared by ALL students</span>
+    school_name = <span class="code-string">"Quanskill Academy"</span>
+    student_count = <span class="code-number">0</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name, grade):
+        <span class="code-comment"># Instance variables - unique to each student</span>
+        <span class="code-self">self</span>.name = name
+        <span class="code-self">self</span>.grade = grade
+        <span class="code-comment"># Increment class variable</span>
+        Student.student_count += <span class="code-number">1</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">display</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} studies at {Student.school_name}"</span>)
+
+<span class="code-comment"># Create students</span>
+s1 = Student(<span class="code-string">"Alice"</span>, <span class="code-string">"A"</span>)
+s2 = Student(<span class="code-string">"Bob"</span>, <span class="code-string">"B"</span>)
+
+<span class="code-comment"># Instance variables are different</span>
+<span class="code-function">print</span>(s1.name)  <span class="code-comment"># Alice</span>
+<span class="code-function">print</span>(s2.name)  <span class="code-comment"># Bob</span>
+
+<span class="code-comment"># Class variable is shared</span>
+<span class="code-function">print</span>(Student.school_name)  <span class="code-comment"># Quanskill Academy</span>
+<span class="code-function">print</span>(Student.student_count)  <span class="code-comment"># 2</span>
+
+<span class="code-comment"># Changing class variable affects all</span>
+Student.school_name = <span class="code-string">"New Academy"</span>
+s1.display()  <span class="code-comment"># Alice studies at New Academy</span>
+s2.display()  <span class="code-comment"># Bob studies at New Academy</span></code></pre>
+
+            <div class="object-box">
+                <span class="label">When to Use Each</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Instance variables:</strong> Data unique to each object (name, age, balance)</li>
+                    <li><strong>Class variables:</strong> Data shared across all objects (counters, constants, default settings)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 7.5: Method Types -->
+        <section class="section" id="section-7-5">
+            <div class="section-header">
+                <span class="section-number method">7.5</span>
+                <h2>Method Types</h2>
+            </div>
+
+            <p>
+                Python classes support three types of methods: <strong>instance methods</strong>, <strong>class methods</strong>, and <strong>static methods</strong>.
+            </p>
+
+            <div class="method-types">
+                <div class="method-type-card instance">
+                    <h5>Instance Method</h5>
+                    <p class="desc">Access/modify object state</p>
+                    <code>def method(self):</code>
+                </div>
+                <div class="method-type-card classm">
+                    <h5>Class Method</h5>
+                    <p class="desc">Access/modify class state</p>
+                    <code>@classmethod<br>def method(cls):</code>
+                </div>
+                <div class="method-type-card static">
+                    <h5>Static Method</h5>
+                    <p class="desc">Utility function, no state access</p>
+                    <code>@staticmethod<br>def method():</code>
+                </div>
+            </div>
+
+            <pre><code><span class="code-keyword">class</span> <span class="code-class">Calculator</span>:
+    <span class="code-comment"># Class variable</span>
+    version = <span class="code-string">"1.0"</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name):
+        <span class="code-self">self</span>.name = name
+    
+    <span class="code-comment"># Instance method - uses self</span>
+    <span class="code-keyword">def</span> <span class="code-function">greet</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"Calculator: {self.name}"</span>)
+    
+    <span class="code-comment"># Class method - uses cls (the class)</span>
+    <span class="code-keyword">@classmethod</span>
+    <span class="code-keyword">def</span> <span class="code-function">get_version</span>(cls):
+        <span class="code-keyword">return</span> <span class="code-string">f"Version: {cls.version}"</span>
+    
+    <span class="code-comment"># Static method - no self or cls</span>
+    <span class="code-keyword">@staticmethod</span>
+    <span class="code-keyword">def</span> <span class="code-function">add</span>(x, y):
+        <span class="code-keyword">return</span> x + y
+    
+    <span class="code-keyword">@staticmethod</span>
+    <span class="code-keyword">def</span> <span class="code-function">multiply</span>(x, y):
+        <span class="code-keyword">return</span> x * y
+
+<span class="code-comment"># Using instance method</span>
+calc = Calculator(<span class="code-string">"MyCalc"</span>)
+calc.greet()  <span class="code-comment"># Calculator: MyCalc</span>
+
+<span class="code-comment"># Using class method</span>
+<span class="code-function">print</span>(Calculator.get_version())  <span class="code-comment"># Version: 1.0</span>
+
+<span class="code-comment"># Using static methods</span>
+<span class="code-function">print</span>(Calculator.add(<span class="code-number">5</span>, <span class="code-number">3</span>))       <span class="code-comment"># 8</span>
+<span class="code-function">print</span>(Calculator.multiply(<span class="code-number">4</span>, <span class="code-number">7</span>))  <span class="code-comment"># 28</span></code></pre>
+
+            <div class="method-box">
+                <span class="label">When to Use Each Method Type</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Instance method:</strong> When you need to access/modify object attributes</li>
+                    <li><strong>Class method:</strong> When you need to access/modify class variables or create alternative constructors</li>
+                    <li><strong>Static method:</strong> Utility functions that logically belong to the class but don't need class/instance data</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 7.6: Access Specifiers -->
+        <section class="section" id="section-7-6">
+            <div class="section-header">
+                <span class="section-number class">7.6</span>
+                <h2>Access Specifiers</h2>
+            </div>
+
+            <p>
+                Python uses naming conventions to indicate the intended visibility of attributes and methods. Unlike some languages, Python doesn't enforce strict access control - it relies on programmer discipline.
+            </p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Convention</th>
+                        <th>Prefix</th>
+                        <th>Access</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Public</strong></td>
+                        <td>None</td>
+                        <td>Accessible everywhere</td>
+                        <td><code>self.name</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Protected</strong></td>
+                        <td><code>_</code></td>
+                        <td>Internal use (convention only)</td>
+                        <td><code>self._internal</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Private</strong></td>
+                        <td><code>__</code></td>
+                        <td>Name mangling applied</td>
+                        <td><code>self.__secret</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <pre><code><span class="code-keyword">class</span> <span class="code-class">Student</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name, age, rollno):
+        <span class="code-self">self</span>.name = name          <span class="code-comment"># Public</span>
+        <span class="code-self">self</span>._age = age           <span class="code-comment"># Protected (convention)</span>
+        <span class="code-self">self</span>.__rollno = rollno    <span class="code-comment"># Private (name mangling)</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">display</span>(<span class="code-self">self</span>):
+        <span class="code-comment"># Can access all attributes inside class</span>
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name}, {self._age}, {self.__rollno}"</span>)
+    
+    <span class="code-keyword">def</span> <span class="code-function">get_rollno</span>(<span class="code-self">self</span>):
+        <span class="code-comment"># Getter method for private attribute</span>
+        <span class="code-keyword">return</span> <span class="code-self">self</span>.__rollno
+
+s = Student(<span class="code-string">"Alice"</span>, <span class="code-number">20</span>, <span class="code-number">12345</span>)
+
+<span class="code-comment"># Public - accessible</span>
+<span class="code-function">print</span>(s.name)  <span class="code-comment"># Alice</span>
+
+<span class="code-comment"># Protected - accessible but discouraged</span>
+<span class="code-function">print</span>(s._age)  <span class="code-comment"># 20</span>
+
+<span class="code-comment"># Private - NOT directly accessible</span>
+<span class="code-comment"># print(s.__rollno)  # AttributeError!</span>
+
+<span class="code-comment"># Access via getter method</span>
+<span class="code-function">print</span>(s.get_rollno())  <span class="code-comment"># 12345</span>
+
+<span class="code-comment"># Private is still accessible via name mangling (not recommended)</span>
+<span class="code-function">print</span>(s._Student__rollno)  <span class="code-comment"># 12345</span></code></pre>
+
+            <div class="note-box">
+                <span class="label">âš  Python's Philosophy</span>
+                <p>Python follows "We're all consenting adults here." Access specifiers are conventions, not strict enforcement. Use <code>_</code> to signal "internal use" and <code>__</code> for name mangling when you want to avoid accidental overrides in subclasses.</p>
+            </div>
+        </section>
+
+        <!-- Section 7.7: Inheritance -->
+        <section class="section" id="section-7-7">
+            <div class="section-header">
+                <span class="section-number inherit">7.7</span>
+                <h2>Inheritance</h2>
+            </div>
+
+            <p>
+                <strong>Inheritance</strong> allows a class (child/derived) to inherit attributes and methods from another class (parent/base). This promotes code reuse and establishes an "is-a" relationship.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Inheritance Concept</span>
+                <p>A child class <strong>inherits</strong> all the attributes and methods from its parent class. The child can also add new attributes/methods or <strong>override</strong> inherited ones to provide specialized behavior.</p>
+            </div>
+
+            <pre><code><span class="code-comment"># Parent class</span>
+<span class="code-keyword">class</span> <span class="code-class">Animal</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name):
+        <span class="code-self">self</span>.name = name
+    
+    <span class="code-keyword">def</span> <span class="code-function">speak</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} makes a sound"</span>)
+    
+    <span class="code-keyword">def</span> <span class="code-function">eat</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} is eating"</span>)
+
+<span class="code-comment"># Child class - inherits from Animal</span>
+<span class="code-keyword">class</span> <span class="code-class">Dog</span>(Animal):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, name, breed):
+        <span class="code-comment"># Call parent constructor</span>
+        <span class="code-function">super</span>().__init__(name)
+        <span class="code-self">self</span>.breed = breed
+    
+    <span class="code-comment"># Override parent method</span>
+    <span class="code-keyword">def</span> <span class="code-function">speak</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} barks: Woof!"</span>)
+    
+    <span class="code-comment"># New method specific to Dog</span>
+    <span class="code-keyword">def</span> <span class="code-function">fetch</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} is fetching the ball"</span>)
+
+<span class="code-comment"># Another child class</span>
+<span class="code-keyword">class</span> <span class="code-class">Cat</span>(Animal):
+    <span class="code-keyword">def</span> <span class="code-function">speak</span>(<span class="code-self">self</span>):
+        <span class="code-function">print</span>(<span class="code-string">f"{self.name} meows: Meow!"</span>)
+
+<span class="code-comment"># Create objects</span>
+dog = Dog(<span class="code-string">"Buddy"</span>, <span class="code-string">"Golden Retriever"</span>)
+cat = Cat(<span class="code-string">"Whiskers"</span>)
+
+<span class="code-comment"># Inherited method</span>
+dog.eat()    <span class="code-comment"># Buddy is eating</span>
+cat.eat()    <span class="code-comment"># Whiskers is eating</span>
+
+<span class="code-comment"># Overridden method</span>
+dog.speak()  <span class="code-comment"># Buddy barks: Woof!</span>
+cat.speak()  <span class="code-comment"># Whiskers meows: Meow!</span>
+
+<span class="code-comment"># Dog-specific method</span>
+dog.fetch()  <span class="code-comment"># Buddy is fetching the ball</span></code></pre>
+
+            <div class="inherit-box">
+                <span class="label">The super() Function</span>
+                <p><code>super()</code> returns a proxy object that allows you to call methods from the parent class. It's commonly used in <code>__init__</code> to initialize inherited attributes before adding new ones.</p>
+            </div>
+
+            <div class="quiz-box">
+                <span class="label">Quick Check</span>
+                <p class="quiz-question">If Dog inherits from Animal, and Animal has an eat() method, what happens when you call dog.eat()?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Error: Dog doesn't have eat()</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Animal's eat() method is called</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Nothing happens</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">You must define eat() in Dog</div>
+                </div>
+                <div class="quiz-feedback correct">Correct! Dog inherits eat() from Animal, so the parent's method is used unless Dog overrides it.</div>
+                <div class="quiz-feedback incorrect">Remember: inheritance means the child automatically gets all parent methods unless it overrides them.</div>
+            </div>
+        </section>
+
+        <!-- Section 7.8: Encapsulation -->
+        <section class="section" id="section-7-8">
+            <div class="section-header">
+                <span class="section-number method">7.8</span>
+                <h2>Encapsulation</h2>
+            </div>
+
+            <p>
+                <strong>Encapsulation</strong> is the bundling of data and methods that operate on that data within a single unit (class), while restricting direct access to some components. This protects internal state from unintended modification.
+            </p>
+
+            <div class="definition-box">
+                <span class="label">Why Encapsulation?</span>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Data Protection:</strong> Prevent invalid data from being set</li>
+                    <li><strong>Controlled Access:</strong> Use getters/setters to validate changes</li>
+                    <li><strong>Flexibility:</strong> Change internal implementation without affecting external code</li>
+                    <li><strong>Abstraction:</strong> Hide complex internal workings</li>
+                </ul>
+            </div>
+
+            <pre><code><span class="code-keyword">class</span> <span class="code-class">BankAccount</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, owner, balance=<span class="code-number">0</span>):
+        <span class="code-self">self</span>.owner = owner
+        <span class="code-self">self</span>.__balance = balance  <span class="code-comment"># Private attribute</span>
+    
+    <span class="code-comment"># Getter - controlled read access</span>
+    <span class="code-keyword">def</span> <span class="code-function">get_balance</span>(<span class="code-self">self</span>):
+        <span class="code-keyword">return</span> <span class="code-self">self</span>.__balance
+    
+    <span class="code-comment"># Setter - controlled write access with validation</span>
+    <span class="code-keyword">def</span> <span class="code-function">deposit</span>(<span class="code-self">self</span>, amount):
+        <span class="code-keyword">if</span> amount > <span class="code-number">0</span>:
+            <span class="code-self">self</span>.__balance += amount
+            <span class="code-keyword">return</span> <span class="code-keyword">True</span>
+        <span class="code-function">print</span>(<span class="code-string">"Deposit must be positive!"</span>)
+        <span class="code-keyword">return</span> <span class="code-keyword">False</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">withdraw</span>(<span class="code-self">self</span>, amount):
+        <span class="code-keyword">if</span> <span class="code-number">0</span> < amount <= <span class="code-self">self</span>.__balance:
+            <span class="code-self">self</span>.__balance -= amount
+            <span class="code-keyword">return</span> <span class="code-keyword">True</span>
+        <span class="code-function">print</span>(<span class="code-string">"Invalid withdrawal amount!"</span>)
+        <span class="code-keyword">return</span> <span class="code-keyword">False</span>
+
+<span class="code-comment"># Create account</span>
+account = BankAccount(<span class="code-string">"Alice"</span>, <span class="code-number">1000</span>)
+
+<span class="code-comment"># Can't access balance directly</span>
+<span class="code-comment"># print(account.__balance)  # AttributeError!</span>
+
+<span class="code-comment"># Must use getter</span>
+<span class="code-function">print</span>(account.get_balance())  <span class="code-comment"># 1000</span>
+
+<span class="code-comment"># Deposit with validation</span>
+account.deposit(<span class="code-number">500</span>)   <span class="code-comment"># Works</span>
+account.deposit(-<span class="code-number">100</span>)  <span class="code-comment"># Deposit must be positive!</span>
+
+<span class="code-comment"># Withdraw with validation</span>
+account.withdraw(<span class="code-number">200</span>)   <span class="code-comment"># Works</span>
+account.withdraw(<span class="code-number">5000</span>)  <span class="code-comment"># Invalid withdrawal amount!</span>
+
+<span class="code-function">print</span>(account.get_balance())  <span class="code-comment"># 1300</span></code></pre>
+
+            <div class="realworld-box">
+                <span class="label">Data Science Example: Protected Model</span>
+                <pre style="margin-bottom: 0;"><code><span class="code-keyword">class</span> <span class="code-class">MLModel</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>):
+        <span class="code-self">self</span>.__weights = <span class="code-keyword">None</span>  <span class="code-comment"># Private</span>
+        <span class="code-self">self</span>.__is_trained = <span class="code-keyword">False</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">train</span>(<span class="code-self">self</span>, X, y):
+        <span class="code-comment"># Training logic here</span>
+        <span class="code-self">self</span>.__weights = <span class="code-string">"trained_weights"</span>
+        <span class="code-self">self</span>.__is_trained = <span class="code-keyword">True</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">predict</span>(<span class="code-self">self</span>, X):
+        <span class="code-keyword">if not</span> <span class="code-self">self</span>.__is_trained:
+            <span class="code-keyword">raise</span> <span class="code-class">Exception</span>(<span class="code-string">"Model must be trained first!"</span>)
+        <span class="code-comment"># Use weights for prediction</span>
+        <span class="code-keyword">return</span> <span class="code-string">"predictions"</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">Summary</span>
+                <h2>Chapter 7 Review</h2>
+            </div>
+
+            <p>
+                You've learned the foundations of Object-Oriented Programming in Python - the paradigm that powers modern software development and many data science libraries like scikit-learn and pandas.
+            </p>
+
+            <div class="summary-box">
+                <h3>🎯 Key Takeaways</h3>
+                <div class="summary-list">
+                    <div class="summary-item">Classes are blueprints for objects</div>
+                    <div class="summary-item">__init__ initializes object attributes</div>
+                    <div class="summary-item">self refers to the current instance</div>
+                    <div class="summary-item">Instance vs class variables matter</div>
+                    <div class="summary-item">Inheritance promotes code reuse</div>
+                    <div class="summary-item">Encapsulation protects data</div>
+                </div>
+            </div>
+
+            <h3>OOP Concepts Summary</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Purpose</th>
+                        <th>Python Implementation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Class</strong></td>
+                        <td>Define blueprint for objects</td>
+                        <td><code>class ClassName:</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Object</strong></td>
+                        <td>Instance of a class</td>
+                        <td><code>obj = ClassName()</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Encapsulation</strong></td>
+                        <td>Hide internal data</td>
+                        <td><code>self.__private</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inheritance</strong></td>
+                        <td>Extend existing classes</td>
+                        <td><code>class Child(Parent):</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>What's Next?</h3>
+
+            <p>In <strong>Chapter 8</strong>, you'll dive into NumPy for numerical computing:</p>
+
+            <ul>
+                <li><strong>NumPy Arrays:</strong> Efficient numerical data structures</li>
+                <li><strong>Array Operations:</strong> Vectorized computations</li>
+                <li><strong>Broadcasting:</strong> Operations on different shaped arrays</li>
+                <li><strong>Linear Algebra:</strong> Matrix operations for data science</li>
+            </ul>
+
+            <div class="quanskill-box">
+                <span class="label">Quanskill Practice Challenge</span>
+                <p><strong>Build a Library System:</strong></p>
+                <ol>
+                    <li>Create a <code>Book</code> class with title, author, ISBN, and available status</li>
+                    <li>Create a <code>Library</code> class that manages a collection of books</li>
+                    <li>Implement methods: add_book(), remove_book(), find_book(), borrow_book(), return_book()</li>
+                    <li>Use private attributes for the book collection</li>
+                    <li>Add a <code>EBook</code> class that inherits from <code>Book</code> with file_size attribute</li>
+                </ol>
+                <p>This exercise combines classes, objects, methods, inheritance, and encapsulation!</p>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Quiz functionality
+        function checkQuiz(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedbacks = element.parentElement.parentElement.querySelectorAll('.quiz-feedback');
+            
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            feedbacks.forEach(fb => fb.classList.remove('show'));
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.correct').classList.add('show');
+            } else {
+                element.classList.add('incorrect');
+                element.parentElement.parentElement.querySelector('.quiz-feedback.incorrect').classList.add('show');
+            }
+        }
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

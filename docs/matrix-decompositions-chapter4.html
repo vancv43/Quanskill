@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Decompositions | Mathematics for Machine Learning | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '🔍²';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Definition Boxes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.05) 0%, rgba(11, 47, 160, 0.02) 100%);
+            border-left: 4px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .definition-box .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Theorem/Remark Boxes */
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(255, 144, 0, 0.08) 0%, rgba(255, 144, 0, 0.03) 100%);
+            border-left: 4px solid var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        /* ML Connection Boxes */
+        .ml-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .ml-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ml-box .label::before {
+            content: '📝¤“';
+        }
+
+        /* Quanskill Training Box */
+        .quanskill-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quanskill-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .quanskill-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quanskill-box .label::before {
+            content: '🎓';
+        }
+
+        /* Real World Example Boxes */
+        .realworld-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .realworld-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .realworld-box .label::before {
+            content: '🎯';
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-box .label::before {
+            content: 'â–¸';
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Quiz Box */
+        .quiz-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+            border: 2px dashed var(--quanskill-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--quanskill-orange-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-box .label::before {
+            content: '🧠';
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Math Display */
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+        }
+
+        .katex-display {
+            margin: 1rem 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--quanskill-orange);
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .interactive-demo h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interactive-demo h4::before {
+            content: 'âš¡';
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .demo-input label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .demo-input input, .demo-input select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            width: 80px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .demo-input input:focus, .demo-input select:focus {
+            outline: none;
+            border-color: var(--quanskill-blue);
+        }
+
+        .demo-btn {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(11, 47, 160, 0.3);
+        }
+
+        .demo-btn.secondary {
+            background: var(--gradient-orange);
+        }
+
+        .demo-result {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Key Concepts Summary */
+        .key-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept-card .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .concept-card h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--code-bg);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+        }
+
+        tr:hover td {
+            background: rgba(11, 47, 160, 0.02);
+        }
+
+        /* Visualization canvas */
+        .viz-canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* Slider Styles */
+        .slider-container {
+            margin: 1rem 0;
+        }
+
+        .slider-container input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--quanskill-blue);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--quanskill-blue);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .progress-bar {
+                left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+            }
+
+            body {
+                font-size: 16px;
+            }
+        }
+
+        /* Scroll animations */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Matrix visualization */
+        .matrix-viz {
+            display: grid;
+            gap: 2px;
+            background: var(--border-color);
+            padding: 2px;
+            border-radius: 8px;
+            width: fit-content;
+            margin: 1rem auto;
+        }
+
+        .matrix-cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .matrix-cell.highlight {
+            background: rgba(255, 144, 0, 0.2);
+        }
+
+        /* SVD visualization */
+        .svd-equation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .svd-matrix {
+            background: var(--code-bg);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .svd-matrix .name {
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .svd-matrix .dims {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 50px; border-radius: 8px;"></a>
+                <span>Quanskill</span>
+            </div>
+            <button class="nav-toggle" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Chapter 4</div>
+            <div class="chapter-title">Matrix Decompositions</div>
+        </div>
+        <nav class="nav-section">
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#section-4-1" class="nav-link">Determinant and Trace</a>
+            <a href="#section-4-2" class="nav-link">Eigenvalues & Eigenvectors</a>
+            <a href="#section-4-3" class="nav-link">Cholesky Decomposition</a>
+            <a href="#section-4-4" class="nav-link">Eigendecomposition</a>
+            <a href="#section-4-5" class="nav-link">Singular Value Decomposition</a>
+            <a href="#section-4-6" class="nav-link">Matrix Approximation</a>
+            <a href="#summary" class="nav-link">Chapter Summary</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero" id="intro">
+                <div class="hero-content">
+                    <span class="hero-badge">Quanskill ML Foundations</span>
+                    <h1>Matrix Decompositions</h1>
+                    <p>Learn to break down complex matrices into simpler, interpretable components. These techniques power everything from image compression to recommendation systems - the core tools every ML engineer needs.</p>
+                </div>
+            </section>
+
+            <!-- Key Concepts Overview -->
+            <div class="key-concepts">
+                <div class="concept-card">
+                    <div class="icon">🐍"</div>
+                    <h5>Determinants</h5>
+                    <p>Measure how transformations scale space - key for invertibility</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">âš¡</div>
+                    <h5>Eigenvalues</h5>
+                    <p>The "DNA" of a matrix - reveal its fundamental behavior</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">📊</div>
+                    <h5>SVD</h5>
+                    <p>The Swiss Army knife of matrix decompositions</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon">📝—„"</div>
+                    <h5>Low-Rank Approximation</h5>
+                    <p>Compress data while preserving essential information</p>
+                </div>
+            </div>
+
+            <div class="quanskill-box">
+                <div class="label">Your Quanskill Learning Path</div>
+                <p>Matrix decompositions are the secret weapons of ML practitioners. At Quanskill, you'll use these techniques to build image compression systems, recommendation engines, and dimensionality reduction pipelines. By the end of this chapter, you'll understand why Netflix, Spotify, and Google rely on these exact methods!</p>
+            </div>
+
+            <!-- Section 4.1: Determinant and Trace -->
+            <section class="section" id="section-4-1">
+                <div class="section-header">
+                    <span class="section-number">4.1</span>
+                    <h2>Determinant and Trace</h2>
+                </div>
+
+                <p>Before we can decompose matrices, we need ways to characterize them with single numbers. The determinant and trace are two fundamental quantities that tell us essential properties of a matrix at a glance.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>The determinant tells you if a matrix is invertible - critical when solving linear systems in regression. It also measures how a transformation scales volume, which appears in probability distributions (the Jacobian determinant in normalizing flows). The trace shows up everywhere: in regularization terms, covariance matrices, and as the sum of eigenvalues used in spectral analysis.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Determinant</div>
+                    <p>The <strong>determinant</strong> of a square matrix \(\mathbf{A} \in \mathbb{R}^{n \times n}\) is a function that maps \(\mathbf{A}\) to a real number, written as \(\det(\mathbf{A})\) or \(|\mathbf{A}|\).</p>
+                    <p>For a 2×2 matrix:</p>
+                    <div class="math-display">
+                        $$\det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc$$
+                    </div>
+                </div>
+
+                <!-- Interactive: 2x2 Determinant Calculator -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Visualize the Determinant</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">The determinant measures the signed area of the parallelogram formed by column vectors:</p>
+                    <div class="demo-controls">
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Matrix A:</p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <div class="demo-input"><input type="number" id="det_a" value="2" oninput="updateDeterminant()"></div>
+                                <div class="demo-input"><input type="number" id="det_b" value="1" oninput="updateDeterminant()"></div>
+                                <div class="demo-input"><input type="number" id="det_c" value="1" oninput="updateDeterminant()"></div>
+                                <div class="demo-input"><input type="number" id="det_d" value="3" oninput="updateDeterminant()"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="detCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-result" id="detResult">
+                        <p style="font-size: 1.25rem; text-align: center;"><strong>det(A) = </strong><span id="detValue">5</span></p>
+                        <p id="detInterpretation" style="text-align: center; color: var(--text-secondary);"></p>
+                    </div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Key Insight</div>
+                    <p>The determinant measures the <strong>signed volume</strong> of the parallelepiped formed by the column vectors:</p>
+                    <ul>
+                        <li>\(\det(\mathbf{A}) > 0\): Transformation preserves orientation</li>
+                        <li>\(\det(\mathbf{A}) < 0\): Transformation reverses orientation (reflection)</li>
+                        <li>\(\det(\mathbf{A}) = 0\): Matrix is <strong>singular</strong> (not invertible) - columns are linearly dependent</li>
+                    </ul>
+                </div>
+
+                <h3>Computing Determinants</h3>
+                <p>For larger matrices, we use the <strong>Laplace expansion</strong> (cofactor expansion):</p>
+                <div class="math-display">
+                    $$\det(\mathbf{A}) = \sum_{j=1}^{n} (-1)^{1+j} a_{1j} \det(\mathbf{A}_{1,j})$$
+                </div>
+                <p>where \(\mathbf{A}_{1,j}\) is the matrix obtained by deleting row 1 and column j.</p>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Determinants</div>
+                    <p class="quiz-question">A matrix has det(A) = 0. What does this tell you?</p>
+                    <div class="quiz-options" id="quiz1">
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">A) The matrix is the identity</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, true)">B) The matrix is singular (not invertible)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">C) All eigenvalues are positive</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">D) The matrix is symmetric</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+
+                <h3>The Trace</h3>
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Trace</div>
+                    <p>The <strong>trace</strong> of a square matrix is the sum of its diagonal elements:</p>
+                    <div class="math-display">
+                        $$\text{tr}(\mathbf{A}) = \sum_{i=1}^{n} a_{ii}$$
+                    </div>
+                </div>
+
+                <h4>Important Properties</h4>
+                <ul>
+                    <li>\(\text{tr}(\mathbf{A} + \mathbf{B}) = \text{tr}(\mathbf{A}) + \text{tr}(\mathbf{B})\)</li>
+                    <li>\(\text{tr}(\mathbf{AB}) = \text{tr}(\mathbf{BA})\) - cyclic property!</li>
+                    <li>\(\text{tr}(\mathbf{A}) = \sum_i \lambda_i\) - sum of eigenvalues</li>
+                    <li>\(\det(\mathbf{A}) = \prod_i \lambda_i\) - product of eigenvalues</li>
+                </ul>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Application</div>
+                    <p>In Quanskill's <strong>Deep Learning</strong> module, you'll see the trace appear in regularization. The Frobenius norm \(\|\mathbf{A}\|_F^2 = \text{tr}(\mathbf{A}^\top\mathbf{A})\) is used to penalize large weights. You'll also compute determinants when working with Gaussian distributions!</p>
+                </div>
+            </section>
+
+            <!-- Section 4.2: Eigenvalues and Eigenvectors -->
+            <section class="section" id="section-4-2">
+                <div class="section-header">
+                    <span class="section-number">4.2</span>
+                    <h2>Eigenvalues and Eigenvectors</h2>
+                </div>
+
+                <p>Eigenvalues and eigenvectors reveal the fundamental behavior of a matrix transformation. They tell us which directions are preserved (only scaled) when the transformation is applied - like finding the "natural axes" of the transformation.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p><strong>PCA</strong> finds the eigenvectors of the covariance matrix - these are the principal components! <strong>Google's PageRank</strong> is the eigenvector of the web's link matrix. <strong>Spectral clustering</strong> uses eigenvectors to partition data. Understanding eigenvalues helps you understand why some models converge faster than others (condition numbers) and how to design stable optimization algorithms.</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Eigenvalue and Eigenvector</div>
+                    <p>For a square matrix \(\mathbf{A} \in \mathbb{R}^{n \times n}\), a scalar \(\lambda\) is an <strong>eigenvalue</strong> and a non-zero vector \(\mathbf{x}\) is the corresponding <strong>eigenvector</strong> if:</p>
+                    <div class="math-display">
+                        $$\mathbf{Ax} = \lambda\mathbf{x}$$
+                    </div>
+                    <p>In other words, \(\mathbf{A}\) only <em>scales</em> the eigenvector - it doesn't change its direction!</p>
+                </div>
+
+                <!-- Interactive: Eigenvector Visualization -->
+                <div class="interactive-demo">
+                    <h4>Interactive: See Eigenvectors in Action</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Watch how eigenvectors (red/blue) stay on their line while other vectors rotate:</p>
+                    <div class="demo-controls">
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Matrix A:</p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <div class="demo-input"><input type="number" id="eig_a" value="2" oninput="updateEigenDemo()"></div>
+                                <div class="demo-input"><input type="number" id="eig_b" value="1" oninput="updateEigenDemo()"></div>
+                                <div class="demo-input"><input type="number" id="eig_c" value="1" oninput="updateEigenDemo()"></div>
+                                <div class="demo-input"><input type="number" id="eig_d" value="2" oninput="updateEigenDemo()"></div>
+                            </div>
+                        </div>
+                        <button class="demo-btn" onclick="animateEigen()">â–¶ Animate Transform</button>
+                    </div>
+                    <canvas id="eigenCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-result" id="eigenResult">
+                        <p><strong>Eigenvalues:</strong> <span id="eigenvalues">Î»â‚ = 3, Î»â‚‚ = 1</span></p>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;" id="eigenExplanation"></p>
+                    </div>
+                </div>
+
+                <h3>Finding Eigenvalues</h3>
+                <p>To find eigenvalues, we solve the <strong>characteristic polynomial</strong>:</p>
+                <div class="math-display">
+                    $$\det(\mathbf{A} - \lambda\mathbf{I}) = 0$$
+                </div>
+                <p>This gives us a polynomial equation in \(\lambda\). The roots are the eigenvalues!</p>
+
+                <div class="example-box">
+                    <div class="label">Example: Computing Eigenvalues</div>
+                    <p>For \(\mathbf{A} = \begin{pmatrix} 4 & 2 \\ 1 & 3 \end{pmatrix}\):</p>
+                    <div class="math-display">
+                        $$\det\begin{pmatrix} 4-\lambda & 2 \\ 1 & 3-\lambda \end{pmatrix} = (4-\lambda)(3-\lambda) - 2 = \lambda^2 - 7\lambda + 10 = 0$$
+                    </div>
+                    <p>Factoring: \((\lambda - 5)(\lambda - 2) = 0\), so \(\lambda_1 = 5\) and \(\lambda_2 = 2\).</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Eigenvalues</div>
+                    <p class="quiz-question">If A has eigenvalues 3 and 5, what is det(A)?</p>
+                    <div class="quiz-options" id="quiz2">
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">A) 8</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, true)">B) 15</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">C) 2</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">D) Cannot determine</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Spectral Theorem</div>
+                    <p>If \(\mathbf{A}\) is <strong>symmetric</strong> (\(\mathbf{A} = \mathbf{A}^\top\)), then:</p>
+                    <ul>
+                        <li>All eigenvalues are <strong>real</strong></li>
+                        <li>Eigenvectors form an <strong>orthonormal basis</strong></li>
+                        <li>\(\mathbf{A}\) can be diagonalized: \(\mathbf{A} = \mathbf{PDP}^\top\)</li>
+                    </ul>
+                    <p>This is why covariance matrices (which are symmetric) have such nice properties in PCA!</p>
+                </div>
+
+                <div class="realworld-box">
+                    <div class="label">Quanskill Real-World Application</div>
+                    <p><strong>Google PageRank</strong>: The importance of a webpage is the eigenvector (with eigenvalue 1) of the web's link matrix. In Quanskill's <strong>Graph ML</strong> module, you'll implement PageRank from scratch and see how eigenvectors naturally emerge as the "steady state" of random walks on graphs!</p>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill PCA Project</div>
+                    <p>In our <strong>Dimensionality Reduction</strong> course, you'll compute eigenvectors of real datasets to find principal components. You'll see how the largest eigenvalues correspond to directions of maximum variance - and use this to compress images and visualize high-dimensional data!</p>
+                </div>
+            </section>
+
+            <!-- Section 4.3: Cholesky Decomposition -->
+            <section class="section" id="section-4-3">
+                <div class="section-header">
+                    <span class="section-number">4.3</span>
+                    <h2>Cholesky Decomposition</h2>
+                </div>
+
+                <p>The Cholesky decomposition is like taking the "square root" of a matrix. Just as \(9 = 3 \times 3\), we can decompose certain matrices into \(\mathbf{A} = \mathbf{LL}^\top\). This only works for symmetric, positive definite matrices - but those are everywhere in ML!</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>Covariance matrices are symmetric positive definite, and Cholesky decomposition is the standard way to work with them. <strong>Gaussian processes</strong> use Cholesky to sample from multivariate normals and compute likelihoods efficiently. <strong>Variational autoencoders</strong> use the "reparameterization trick" which relies on Cholesky. It's also 2x faster than general matrix decomposition!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Cholesky Decomposition</div>
+                    <p>For a symmetric, positive definite matrix \(\mathbf{A}\), the Cholesky decomposition is:</p>
+                    <div class="math-display">
+                        $$\mathbf{A} = \mathbf{LL}^\top$$
+                    </div>
+                    <p>where \(\mathbf{L}\) is a <strong>lower triangular matrix</strong> with positive diagonal entries. \(\mathbf{L}\) is called the <strong>Cholesky factor</strong>.</p>
+                </div>
+
+                <!-- Interactive: Cholesky Calculator -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Cholesky Decomposition</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Enter a 2×2 symmetric positive definite matrix:</p>
+                    <div class="demo-controls">
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Matrix A (symmetric):</p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <div class="demo-input"><input type="number" id="chol_a" value="4" oninput="updateCholesky()"></div>
+                                <div class="demo-input"><input type="number" id="chol_b" value="2" oninput="updateCholesky()"></div>
+                                <div class="demo-input"><input type="number" id="chol_c" value="2" oninput="updateCholesky()" disabled style="background: #eee;"></div>
+                                <div class="demo-input"><input type="number" id="chol_d" value="5" oninput="updateCholesky()"></div>
+                            </div>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">* Lower-left is auto-mirrored for symmetry</p>
+                        </div>
+                    </div>
+                    <div class="demo-result" id="choleskyResult">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="text-align: center;">
+                                <p style="font-weight: 600; color: var(--quanskill-blue);">L =</p>
+                                <p id="choleskyL" style="font-family: 'JetBrains Mono', monospace;"></p>
+                            </div>
+                            <span style="font-size: 1.5rem;">×</span>
+                            <div style="text-align: center;">
+                                <p style="font-weight: 600; color: var(--quanskill-blue);">L<sup>T</sup> =</p>
+                                <p id="choleskyLT" style="font-family: 'JetBrains Mono', monospace;"></p>
+                            </div>
+                        </div>
+                        <p id="choleskyStatus" style="text-align: center; margin-top: 1rem;"></p>
+                    </div>
+                </div>
+
+                <h3>Why Cholesky is Efficient</h3>
+                <ul>
+                    <li><strong>Solving linear systems</strong>: Instead of inverting \(\mathbf{A}\), solve \(\mathbf{Ly} = \mathbf{b}\) then \(\mathbf{L}^\top\mathbf{x} = \mathbf{y}\) - both are easy triangular systems!</li>
+                    <li><strong>Computing determinants</strong>: \(\det(\mathbf{A}) = \det(\mathbf{L})^2 = (\prod_i l_{ii})^2\)</li>
+                    <li><strong>Sampling</strong>: To sample \(\mathbf{x} \sim \mathcal{N}(\boldsymbol{\mu}, \mathbf{\Sigma})\), compute \(\mathbf{x} = \boldsymbol{\mu} + \mathbf{Lz}\) where \(\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</li>
+                </ul>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Cholesky</div>
+                    <p class="quiz-question">Which matrix type can have a Cholesky decomposition?</p>
+                    <div class="quiz-options" id="quiz3">
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">A) Any square matrix</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">B) Any symmetric matrix</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, true)">C) Symmetric positive definite matrices</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">D) Only diagonal matrices</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Gaussian Processes Lab</div>
+                    <p>In Quanskill's <strong>Probabilistic ML</strong> course, you'll implement Gaussian Process regression using Cholesky decomposition. You'll see how <code>np.linalg.cholesky()</code> is much faster than <code>np.linalg.inv()</code> and numerically more stable - essential for real-world applications!</p>
+                </div>
+            </section>
+
+            <!-- Section 4.4: Eigendecomposition -->
+            <section class="section" id="section-4-4">
+                <div class="section-header">
+                    <span class="section-number">4.4</span>
+                    <h2>Eigendecomposition and Diagonalization</h2>
+                </div>
+
+                <p>If a matrix has enough linearly independent eigenvectors, we can decompose it into a beautiful form that makes matrix powers, exponentials, and other operations trivial to compute.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p><strong>PCA</strong> is eigendecomposition of the covariance matrix. <strong>Spectral clustering</strong> uses eigendecomposition of graph Laplacians. Understanding diagonalization helps you see why certain ML algorithms converge (the eigenvalues of the Hessian determine optimization speed) and how to analyze recurrent neural networks (eigenvalues determine if gradients explode or vanish).</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Eigendecomposition</div>
+                    <p>A square matrix \(\mathbf{A} \in \mathbb{R}^{n \times n}\) is <strong>diagonalizable</strong> if it can be written as:</p>
+                    <div class="math-display">
+                        $$\mathbf{A} = \mathbf{PDP}^{-1}$$
+                    </div>
+                    <p>where \(\mathbf{P}\) contains eigenvectors as columns and \(\mathbf{D}\) is diagonal with eigenvalues:</p>
+                    <div class="math-display">
+                        $$\mathbf{D} = \begin{pmatrix} \lambda_1 & 0 & \cdots \\ 0 & \lambda_2 & \cdots \\ \vdots & & \ddots \end{pmatrix}$$
+                    </div>
+                </div>
+
+                <!-- Interactive: Eigendecomposition Visualizer -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Eigendecomposition as Transformations</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See how A = PDPâ»Â¹ breaks a transformation into three steps:</p>
+                    <div style="text-align: center; margin: 1.5rem 0;">
+                        <div class="svd-equation">
+                            <div class="svd-matrix" style="background: rgba(11, 47, 160, 0.1);">
+                                <div class="name">A</div>
+                                <div class="dims">Original transform</div>
+                            </div>
+                            <span>=</span>
+                            <div class="svd-matrix" style="background: rgba(255, 144, 0, 0.1);">
+                                <div class="name">P</div>
+                                <div class="dims">Change to eigenbasis</div>
+                            </div>
+                            <span>×</span>
+                            <div class="svd-matrix" style="background: rgba(16, 185, 129, 0.1);">
+                                <div class="name">D</div>
+                                <div class="dims">Scale by eigenvalues</div>
+                            </div>
+                            <span>×</span>
+                            <div class="svd-matrix" style="background: rgba(255, 144, 0, 0.1);">
+                                <div class="name">Pâ»Â¹</div>
+                                <div class="dims">Change back</div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="eigendecompCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-controls" style="justify-content: center; margin-top: 1rem;">
+                        <button class="demo-btn" onclick="stepEigendecomp(0)">1. Original</button>
+                        <button class="demo-btn secondary" onclick="stepEigendecomp(1)">2. Pâ»Â¹</button>
+                        <button class="demo-btn" onclick="stepEigendecomp(2)">3. D</button>
+                        <button class="demo-btn secondary" onclick="stepEigendecomp(3)">4. P (Final)</button>
+                    </div>
+                </div>
+
+                <h3>Powers of Matrices</h3>
+                <p>Eigendecomposition makes matrix powers easy:</p>
+                <div class="math-display">
+                    $$\mathbf{A}^k = \mathbf{PD}^k\mathbf{P}^{-1} = \mathbf{P}\begin{pmatrix} \lambda_1^k & 0 \\ 0 & \lambda_2^k \end{pmatrix}\mathbf{P}^{-1}$$
+                </div>
+                <p>No need to multiply \(\mathbf{A}\) by itself \(k\) times - just raise the eigenvalues to power \(k\)!</p>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Diagonalization</div>
+                    <p class="quiz-question">Matrix A has repeated eigenvalue Î»=2 but only one eigenvector. Is A diagonalizable?</p>
+                    <div class="quiz-options" id="quiz4">
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">A) Yes, all square matrices are diagonalizable</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, true)">B) No, it's defective (not enough independent eigenvectors)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">C) Only if the matrix is symmetric</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">D) Yes, use the same eigenvector twice</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">When Can We Diagonalize?</div>
+                    <ul>
+                        <li><strong>Symmetric matrices</strong>: Always diagonalizable (Spectral Theorem)</li>
+                        <li><strong>Distinct eigenvalues</strong>: Always diagonalizable</li>
+                        <li><strong>Defective matrices</strong>: Not diagonalizable (geometric multiplicity < algebraic multiplicity)</li>
+                    </ul>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill RNN Analysis</div>
+                    <p>In <strong>Deep Learning Foundations</strong>, you'll analyze RNN stability using eigendecomposition. When eigenvalues of the recurrent weight matrix have magnitude > 1, gradients explode; < 1, they vanish. This explains why vanilla RNNs struggle with long sequences and why LSTM/GRU architectures were invented!</p>
+                </div>
+            </section>
+
+            <!-- Section 4.5: Singular Value Decomposition -->
+            <section class="section" id="section-4-5">
+                <div class="section-header">
+                    <span class="section-number">4.5</span>
+                    <h2>Singular Value Decomposition (SVD)</h2>
+                </div>
+
+                <p>The SVD is the "crown jewel" of matrix decompositions - it works for <em>any</em> matrix (not just square ones!) and provides deep insight into the structure of linear transformations. It's been called the "fundamental theorem of linear algebra."</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p>SVD is everywhere in ML! <strong>Latent Semantic Analysis</strong> uses SVD to find topics in documents. <strong>Recommender systems</strong> (Netflix, Spotify) use SVD for collaborative filtering. <strong>Image compression</strong> exploits low-rank SVD approximations. <strong>Pseudoinverse</strong> for least squares uses SVD. <strong>PCA</strong> can be computed via SVD of the data matrix. It's the Swiss Army knife of linear algebra!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Singular Value Decomposition</div>
+                    <p>Any matrix \(\mathbf{A} \in \mathbb{R}^{m \times n}\) can be decomposed as:</p>
+                    <div class="math-display">
+                        $$\mathbf{A} = \mathbf{U\Sigma V}^\top$$
+                    </div>
+                    <p>where:</p>
+                    <ul>
+                        <li>\(\mathbf{U} \in \mathbb{R}^{m \times m}\) - orthogonal matrix of <strong>left singular vectors</strong></li>
+                        <li>\(\mathbf{\Sigma} \in \mathbb{R}^{m \times n}\) - diagonal matrix of <strong>singular values</strong> \(\sigma_1 \geq \sigma_2 \geq \cdots \geq 0\)</li>
+                        <li>\(\mathbf{V} \in \mathbb{R}^{n \times n}\) - orthogonal matrix of <strong>right singular vectors</strong></li>
+                    </ul>
+                </div>
+
+                <!-- Interactive: SVD Visualization -->
+                <div class="interactive-demo">
+                    <h4>Interactive: SVD = Rotate ←’ Scale ←’ Rotate</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">Watch how SVD decomposes any transformation into three intuitive steps:</p>
+                    <div style="text-align: center; margin: 1.5rem 0;">
+                        <div class="svd-equation">
+                            <div class="svd-matrix" style="background: rgba(11, 47, 160, 0.1);">
+                                <div class="name">A</div>
+                                <div class="dims">m × n</div>
+                            </div>
+                            <span>=</span>
+                            <div class="svd-matrix" style="background: rgba(255, 144, 0, 0.1);">
+                                <div class="name">U</div>
+                                <div class="dims">m × m (rotate in output)</div>
+                            </div>
+                            <span>×</span>
+                            <div class="svd-matrix" style="background: rgba(16, 185, 129, 0.1);">
+                                <div class="name">Î£</div>
+                                <div class="dims">m × n (scale)</div>
+                            </div>
+                            <span>×</span>
+                            <div class="svd-matrix" style="background: rgba(124, 58, 237, 0.1);">
+                                <div class="name">V<sup>T</sup></div>
+                                <div class="dims">n × n (rotate in input)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="svdCanvas" class="viz-canvas" width="400" height="300"></canvas>
+                    <div class="demo-controls" style="justify-content: center; margin-top: 1rem;">
+                        <button class="demo-btn" onclick="stepSVD(0)">1. Original</button>
+                        <button class="demo-btn secondary" onclick="stepSVD(1)">2. V<sup>T</sup></button>
+                        <button class="demo-btn" onclick="stepSVD(2)">3. Î£</button>
+                        <button class="demo-btn secondary" onclick="stepSVD(3)">4. U (Final)</button>
+                    </div>
+                    <div class="demo-result" style="margin-top: 1rem;">
+                        <p id="svdStep" style="text-align: center;">Click buttons to see each transformation step</p>
+                    </div>
+                </div>
+
+                <h3>Key Relationships</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Formula</th>
+                        <th>ML Application</th>
+                    </tr>
+                    <tr>
+                        <td>Left singular vectors</td>
+                        <td>Eigenvectors of \(\mathbf{AA}^\top\)</td>
+                        <td>Document-topic associations (LSA)</td>
+                    </tr>
+                    <tr>
+                        <td>Right singular vectors</td>
+                        <td>Eigenvectors of \(\mathbf{A}^\top\mathbf{A}\)</td>
+                        <td>Word-topic associations (LSA)</td>
+                    </tr>
+                    <tr>
+                        <td>Singular values</td>
+                        <td>\(\sigma_i = \sqrt{\lambda_i(\mathbf{A}^\top\mathbf{A})}\)</td>
+                        <td>Importance of each component</td>
+                    </tr>
+                    <tr>
+                        <td>Matrix rank</td>
+                        <td>Number of nonzero \(\sigma_i\)</td>
+                        <td>True dimensionality of data</td>
+                    </tr>
+                </table>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: SVD</div>
+                    <p class="quiz-question">A 100×50 matrix has rank 30. How many non-zero singular values does it have?</p>
+                    <div class="quiz-options" id="quiz5">
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">A) 100</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">B) 50</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, true)">C) 30</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">D) Cannot determine</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+
+                <div class="realworld-box">
+                    <div class="label">Quanskill Real-World Application</div>
+                    <p><strong>Netflix Prize</strong>: The famous $1M competition was won using matrix factorization (SVD-like methods). A user-movie rating matrix is decomposed to discover latent factors like "action movies" or "romantic comedies" - without ever explicitly defining these categories!</p>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Recommender Systems Project</div>
+                    <p>In Quanskill's <strong>Recommender Systems</strong> bootcamp, you'll build a movie recommendation engine using SVD. You'll see how a sparse rating matrix (most users haven't rated most movies) can be approximated by a low-rank matrix to predict missing ratings!</p>
+                </div>
+            </section>
+
+            <!-- Section 4.6: Matrix Approximation -->
+            <section class="section" id="section-4-6">
+                <div class="section-header">
+                    <span class="section-number">4.6</span>
+                    <h2>Matrix Approximation</h2>
+                </div>
+
+                <p>One of the most powerful applications of SVD is approximating a matrix with a simpler, lower-rank version. This is the foundation of data compression, noise reduction, and dimensionality reduction in ML.</p>
+
+                <div class="ml-box">
+                    <div class="label">Why This Matters in ML</div>
+                    <p><strong>Image compression</strong>: Store only the top-k singular values/vectors instead of millions of pixels. <strong>Noise reduction</strong>: Small singular values often correspond to noise - truncate them! <strong>Dimensionality reduction</strong>: PCA keeps top-k principal components. <strong>Latent factor models</strong>: Approximate high-dimensional data with low-dimensional representations. The Eckart-Young theorem guarantees this is <em>optimal</em>!</p>
+                </div>
+
+                <div class="definition-box">
+                    <div class="label">Definition</div>
+                    <div class="title">Rank-k Approximation</div>
+                    <p>Given SVD \(\mathbf{A} = \mathbf{U\Sigma V}^\top\), the <strong>rank-k approximation</strong> is:</p>
+                    <div class="math-display">
+                        $$\hat{\mathbf{A}}_k = \sum_{i=1}^{k} \sigma_i \mathbf{u}_i \mathbf{v}_i^\top$$
+                    </div>
+                    <p>This keeps only the \(k\) largest singular values and their corresponding singular vectors.</p>
+                </div>
+
+                <!-- Interactive: Image Compression Demo -->
+                <div class="interactive-demo">
+                    <h4>Interactive: Low-Rank Approximation</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">See how keeping different numbers of singular values affects reconstruction:</p>
+                    <div class="demo-controls" style="flex-direction: column; align-items: center;">
+                        <label style="font-family: 'Space Grotesk', sans-serif; margin-bottom: 0.5rem;">
+                            <strong>Rank k:</strong> <span id="rankValue">5</span>
+                        </label>
+                        <input type="range" id="rankSlider" min="1" max="20" value="5" style="width: 100%; max-width: 400px;" oninput="updateRankApprox()">
+                    </div>
+                    <canvas id="approxCanvas" class="viz-canvas" width="400" height="200"></canvas>
+                    <div class="demo-result">
+                        <p style="text-align: center;"><strong>Compression ratio:</strong> <span id="compressionRatio">--</span></p>
+                        <p style="text-align: center;"><strong>Energy retained:</strong> <span id="energyRetained">--</span></p>
+                        <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Energy = (Î£ÏƒÂ²<sub>kept</sub>) / (Î£ÏƒÂ²<sub>total</sub>)</p>
+                    </div>
+                </div>
+
+                <div class="theorem-box">
+                    <div class="label">Eckart-Young Theorem</div>
+                    <p>The rank-k SVD approximation is the <strong>best possible</strong> rank-k approximation in both Frobenius and spectral norms:</p>
+                    <div class="math-display">
+                        $$\hat{\mathbf{A}}_k = \arg\min_{\text{rank}(\mathbf{B})=k} \|\mathbf{A} - \mathbf{B}\|$$
+                    </div>
+                    <p>The approximation error is \(\|\mathbf{A} - \hat{\mathbf{A}}_k\|_2 = \sigma_{k+1}\) (the next singular value).</p>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-box">
+                    <div class="label">Quick Check: Matrix Approximation</div>
+                    <p class="quiz-question">An image matrix is 1000×1000. A rank-50 approximation stores how many numbers?</p>
+                    <div class="quiz-options" id="quiz6">
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">A) 1,000,000 (same as original)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, true)">B) 100,050 (50×1000 + 50×1000 + 50)</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">C) 50,000</div>
+                        <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">D) 2,500</div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+
+                <h3>Storage Savings</h3>
+                <p>Original matrix: \(m \times n\) numbers</p>
+                <p>Rank-k approximation: \(k \times (m + n + 1)\) numbers</p>
+                <p>When \(k \ll \min(m,n)\), this is a massive compression!</p>
+
+                <div class="example-box">
+                    <div class="label">Example: Image Compression</div>
+                    <p>A 1000×1000 grayscale image = 1,000,000 values</p>
+                    <p>Rank-50 approximation = 50 × (1000 + 1000 + 1) = 100,050 values</p>
+                    <p><strong>~10× compression</strong> while retaining most visual quality!</p>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Quanskill Image Processing Project</div>
+                    <p>In Quanskill's <strong>Computer Vision Foundations</strong> course, you'll implement SVD-based image compression from scratch. You'll compress photos, analyze the trade-off between compression and quality, and understand why JPEG uses similar ideas (DCT is related to SVD)!</p>
+                </div>
+            </section>
+
+            <!-- Summary Section -->
+            <section class="section" id="summary">
+                <div class="section-header">
+                    <span class="section-number">🐍"</span>
+                    <h2>Chapter Summary</h2>
+                </div>
+
+                <div class="key-concepts">
+                    <div class="concept-card">
+                        <div class="icon">🐍"</div>
+                        <h5>Determinant</h5>
+                        <p>Measures signed volume change. det=0 means singular (not invertible).</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">âš¡</div>
+                        <h5>Eigenvalues</h5>
+                        <p>Ax = Î»x. Reveal scaling along special directions. Sum = trace, product = det.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🐍"</div>
+                        <h5>Cholesky</h5>
+                        <p>A = LL<sup>T</sup> for symmetric positive definite. Fast & stable for covariances.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">🔍„</div>
+                        <h5>Eigendecomposition</h5>
+                        <p>A = PDP<sup>-1</sup>. Makes powers easy. Works for diagonalizable matrices.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">📝Ž¸</div>
+                        <h5>SVD</h5>
+                        <p>A = UÎ£V<sup>T</sup>. Works for ANY matrix. The ultimate decomposition.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="icon">📝—„"</div>
+                        <h5>Low-Rank Approx</h5>
+                        <p>Keep top-k singular values. Optimal compression (Eckart-Young).</p>
+                    </div>
+                </div>
+
+                <div class="ml-box">
+                    <div class="label">Key ML Takeaways</div>
+                    <ul>
+                        <li><strong>PCA</strong> = eigendecomposition of covariance (or SVD of centered data)</li>
+                        <li><strong>Recommender systems</strong> = low-rank matrix factorization via SVD</li>
+                        <li><strong>Gaussian processes</strong> = Cholesky for sampling and likelihood</li>
+                        <li><strong>Spectral methods</strong> = eigenvalues of graph Laplacians</li>
+                        <li><strong>Compression</strong> = truncated SVD keeps essential information</li>
+                    </ul>
+                </div>
+
+                <div class="quanskill-box">
+                    <div class="label">Your Next Steps with Quanskill</div>
+                    <p>🎯Â° <strong>Congratulations!</strong> You've mastered the core matrix decomposition techniques. Here's your Quanskill learning path:</p>
+                    <ul>
+                        <li><strong>Chapter 5</strong>: Vector Calculus - gradients and optimization for ML</li>
+                        <li><strong>Chapter 6</strong>: Probability - foundations for statistical ML</li>
+                        <li><strong>Quanskill Project</strong>: Build a complete image compression + recommendation system using SVD!</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Ready to apply these decompositions?</strong> Join Quanskill's hands-on bootcamps where you'll implement everything from scratch and build real ML systems!</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer style="text-align: center; padding: 3rem 0; color: var(--text-secondary); font-size: 0.9rem;">
+                <p><strong>Quanskill</strong> - Making ML Education Accessible</p>
+                <p style="margin-top: 1rem; font-size: 0.8rem;">© 2024 Quanskill. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Render LaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false
+            });
+
+            // Initialize demos
+            updateDeterminant();
+            updateEigenDemo();
+            updateCholesky();
+            initEigendecomp();
+            initSVD();
+            updateRankApprox();
+
+            // Initialize section visibility
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => observer.observe(section));
+
+            updateProgress();
+        });
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Update active navigation link and progress
+        window.addEventListener('scroll', function() {
+            updateActiveNav();
+            updateProgress();
+        });
+
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function updateProgress() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        }
+
+        // Quiz functionality
+        function checkQuiz(quizId, element, isCorrect) {
+            const options = document.querySelectorAll(`#${quizId} .quiz-option`);
+            const feedback = document.getElementById(`${quizId}-feedback`);
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.innerHTML = 'âœ… Correct! Great understanding!';
+                feedback.className = 'quiz-feedback show correct';
+            } else {
+                element.classList.add('incorrect');
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.innerHTML = 'âŒ Not quite. The correct answer is highlighted above.';
+                feedback.className = 'quiz-feedback show incorrect';
+            }
+        }
+
+        // Determinant visualization
+        function updateDeterminant() {
+            const a = parseFloat(document.getElementById('det_a').value) || 0;
+            const b = parseFloat(document.getElementById('det_b').value) || 0;
+            const c = parseFloat(document.getElementById('det_c').value) || 0;
+            const d = parseFloat(document.getElementById('det_d').value) || 0;
+            
+            const det = a * d - b * c;
+            document.getElementById('detValue').textContent = det.toFixed(2);
+            
+            let interpretation = '';
+            if (Math.abs(det) < 0.001) {
+                interpretation = 'Ã…Â¡Ã‚Â  Singular matrix (not invertible) - columns are linearly dependent';
+            } else if (det > 0) {
+                interpretation = 'âœ“ Invertible, preserves orientation. Area scaled by ' + Math.abs(det).toFixed(2);
+            } else {
+                interpretation = 'âœ“ Invertible, reverses orientation (reflection). Area scaled by ' + Math.abs(det).toFixed(2);
+            }
+            document.getElementById('detInterpretation').textContent = interpretation;
+            
+            // Draw parallelogram
+            const canvas = document.getElementById('detCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 30;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.stroke();
+            
+            // Draw parallelogram
+            ctx.fillStyle = det >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)';
+            ctx.strokeStyle = det >= 0 ? '#10b981' : '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + a * scale, cy - c * scale);
+            ctx.lineTo(cx + (a + b) * scale, cy - (c + d) * scale);
+            ctx.lineTo(cx + b * scale, cy - d * scale);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw column vectors
+            ctx.strokeStyle = '#0b2fa0';
+            ctx.lineWidth = 3;
+            drawArrow(ctx, cx, cy, cx + a * scale, cy - c * scale);
+            ctx.strokeStyle = '#ff9000';
+            drawArrow(ctx, cx, cy, cx + b * scale, cy - d * scale);
+        }
+
+        function drawArrow(ctx, fromX, fromY, toX, toY) {
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+            
+            const angle = Math.atan2(fromY - toY, fromX - toX);
+            const headLength = 10;
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX + headLength * Math.cos(angle - Math.PI / 6), toY + headLength * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(toX + headLength * Math.cos(angle + Math.PI / 6), toY + headLength * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Eigenvalue demo
+        function updateEigenDemo() {
+            const a = parseFloat(document.getElementById('eig_a').value) || 0;
+            const b = parseFloat(document.getElementById('eig_b').value) || 0;
+            const c = parseFloat(document.getElementById('eig_c').value) || 0;
+            const d = parseFloat(document.getElementById('eig_d').value) || 0;
+            
+            // Calculate eigenvalues for 2x2: Î»Â² - (a+d)Î» + (ad-bc) = 0
+            const trace = a + d;
+            const det = a * d - b * c;
+            const discriminant = trace * trace - 4 * det;
+            
+            let eigText = '';
+            let explanation = '';
+            
+            if (discriminant >= 0) {
+                const lambda1 = (trace + Math.sqrt(discriminant)) / 2;
+                const lambda2 = (trace - Math.sqrt(discriminant)) / 2;
+                eigText = `Î»â‚ = ${lambda1.toFixed(2)}, Î»â‚‚ = ${lambda2.toFixed(2)}`;
+                explanation = 'Real eigenvalues - matrix stretches/compresses along eigenvector directions';
+            } else {
+                const real = trace / 2;
+                const imag = Math.sqrt(-discriminant) / 2;
+                eigText = `Î» = ${real.toFixed(2)} Â± ${imag.toFixed(2)}i`;
+                explanation = 'Complex eigenvalues - matrix involves rotation';
+            }
+            
+            document.getElementById('eigenvalues').textContent = eigText;
+            document.getElementById('eigenExplanation').textContent = explanation;
+            
+            drawEigenCanvas(a, b, c, d);
+        }
+
+        function drawEigenCanvas(a, b, c, d) {
+            const canvas = document.getElementById('eigenCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 40;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Calculate eigenvalues and eigenvectors
+            const trace = a + d;
+            const det = a * d - b * c;
+            const discriminant = trace * trace - 4 * det;
+            
+            if (discriminant >= 0) {
+                const lambda1 = (trace + Math.sqrt(discriminant)) / 2;
+                const lambda2 = (trace - Math.sqrt(discriminant)) / 2;
+                
+                // Draw eigenvector 1 (simplified calculation)
+                let v1x = 1, v1y = 0;
+                if (Math.abs(b) > 0.001) {
+                    v1y = (lambda1 - a) / b;
+                    const len = Math.sqrt(1 + v1y * v1y);
+                    v1x /= len; v1y /= len;
+                } else if (Math.abs(c) > 0.001) {
+                    v1x = (lambda1 - d) / c;
+                    const len = Math.sqrt(v1x * v1x + 1);
+                    v1x /= len; v1y = 1 / len;
+                }
+                
+                ctx.strokeStyle = '#ef4444';
+                ctx.fillStyle = '#ef4444';
+                ctx.lineWidth = 3;
+                drawArrow(ctx, cx - v1x * scale * 2, cy + v1y * scale * 2, cx + v1x * scale * 2, cy - v1y * scale * 2);
+                
+                // Draw eigenvector 2
+                let v2x = 1, v2y = 0;
+                if (Math.abs(b) > 0.001) {
+                    v2y = (lambda2 - a) / b;
+                    const len = Math.sqrt(1 + v2y * v2y);
+                    v2x /= len; v2y /= len;
+                } else if (Math.abs(c) > 0.001) {
+                    v2x = (lambda2 - d) / c;
+                    const len = Math.sqrt(v2x * v2x + 1);
+                    v2x /= len; v2y = 1 / len;
+                }
+                
+                ctx.strokeStyle = '#3b82f6';
+                ctx.fillStyle = '#3b82f6';
+                drawArrow(ctx, cx - v2x * scale * 2, cy + v2y * scale * 2, cx + v2x * scale * 2, cy - v2y * scale * 2);
+            }
+            
+            // Draw some sample vectors
+            ctx.strokeStyle = '#ccc';
+            ctx.fillStyle = '#ccc';
+            ctx.lineWidth = 1;
+            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 6) {
+                const x = Math.cos(angle);
+                const y = Math.sin(angle);
+                ctx.beginPath();
+                ctx.arc(cx + x * scale * 1.5, cy - y * scale * 1.5, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animateEigen() {
+            // Simple animation placeholder
+            alert('Animation coming soon! For now, modify matrix values to see eigenvector directions.');
+        }
+
+        // Cholesky decomposition
+        function updateCholesky() {
+            const a = parseFloat(document.getElementById('chol_a').value) || 0;
+            const b = parseFloat(document.getElementById('chol_b').value) || 0;
+            const d = parseFloat(document.getElementById('chol_d').value) || 0;
+            
+            // Mirror for symmetry
+            document.getElementById('chol_c').value = b;
+            
+            // Check if positive definite: a > 0 and det > 0
+            const det = a * d - b * b;
+            
+            if (a <= 0 || det <= 0) {
+                document.getElementById('choleskyL').textContent = '[ ? ]';
+                document.getElementById('choleskyLT').textContent = '[ ? ]';
+                document.getElementById('choleskyStatus').innerHTML = '<span style="color: var(--error);">Ã…Â¡Ã‚Â  Matrix is not positive definite. Try: a > 0 and ad > bÂ²</span>';
+                return;
+            }
+            
+            // Compute Cholesky: L11 = sqrt(a), L21 = b/L11, L22 = sqrt(d - L21Â²)
+            const l11 = Math.sqrt(a);
+            const l21 = b / l11;
+            const l22 = Math.sqrt(d - l21 * l21);
+            
+            document.getElementById('choleskyL').innerHTML = `[${l11.toFixed(2)}, 0]<br>[${l21.toFixed(2)}, ${l22.toFixed(2)}]`;
+            document.getElementById('choleskyLT').innerHTML = `[${l11.toFixed(2)}, ${l21.toFixed(2)}]<br>[0, ${l22.toFixed(2)}]`;
+            document.getElementById('choleskyStatus').innerHTML = '<span style="color: var(--success);">âœ“ Cholesky decomposition successful!</span>';
+        }
+
+        // Eigendecomposition visualization
+        let eigenStep = 0;
+        function initEigendecomp() {
+            stepEigendecomp(0);
+        }
+
+        function stepEigendecomp(step) {
+            eigenStep = step;
+            const canvas = document.getElementById('eigendecompCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 40;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // Draw unit circle points transformed at each step
+            ctx.fillStyle = '#0b2fa0';
+            const stepLabels = ['Original unit circle', 'After Pâ»Â¹: Aligned with axes', 'After D: Scaled by eigenvalues', 'After P: Final transformation'];
+            
+            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
+                let x = Math.cos(angle);
+                let y = Math.sin(angle);
+                
+                // Example transformation A = [[2,1],[1,2]] with eigenvalues 3,1
+                if (step >= 1) {
+                    // P^-1 rotation (eigenvectors at 45 degrees)
+                    const temp = x;
+                    x = (x + y) / Math.sqrt(2);
+                    y = (-temp + y) / Math.sqrt(2);
+                }
+                if (step >= 2) {
+                    // D scaling
+                    x *= 3; // lambda1
+                    y *= 1; // lambda2
+                }
+                if (step >= 3) {
+                    // P rotation back
+                    const temp = x;
+                    x = (x - y) / Math.sqrt(2);
+                    y = (temp + y) / Math.sqrt(2);
+                }
+                
+                ctx.beginPath();
+                ctx.arc(cx + x * scale * 0.8, cy - y * scale * 0.8, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.stroke();
+            
+            // Label
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Space Grotesk';
+            ctx.textAlign = 'center';
+            ctx.fillText(stepLabels[step], cx, 30);
+        }
+
+        // SVD visualization
+        let svdStep = 0;
+        function initSVD() {
+            stepSVD(0);
+        }
+
+        function stepSVD(step) {
+            svdStep = step;
+            const canvas = document.getElementById('svdCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const cx = width / 2;
+            const cy = height / 2;
+            const scale = 35;
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            const stepLabels = [
+                'Original: Unit circle',
+                'V^T: Rotate input space',
+                'Î£: Scale axes (singular values)',
+                'U: Rotate output space (Final)'
+            ];
+            const stepDescriptions = [
+                'Click through to see SVD decomposition',
+                'V^T aligns input with singular directions',
+                'Î£ stretches by ÏÆ’â‚=2.5, Ïƒâ‚‚=1',
+                'U rotates to final orientation - this is Ax!'
+            ];
+            
+            document.getElementById('svdStep').innerHTML = `<strong>${stepLabels[step]}</strong><br><span style="color: var(--text-secondary);">${stepDescriptions[step]}</span>`;
+            
+            // Draw transformed points
+            ctx.fillStyle = '#0b2fa0';
+            
+            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 20) {
+                let x = Math.cos(angle);
+                let y = Math.sin(angle);
+                
+                if (step >= 1) {
+                    // V^T: rotate by 30 degrees
+                    const cos30 = Math.cos(Math.PI / 6);
+                    const sin30 = Math.sin(Math.PI / 6);
+                    const temp = x;
+                    x = cos30 * x + sin30 * y;
+                    y = -sin30 * temp + cos30 * y;
+                }
+                if (step >= 2) {
+                    // Î£: scale
+                    x *= 2.5;
+                    y *= 1;
+                }
+                if (step >= 3) {
+                    // U: rotate by -20 degrees
+                    const cos20 = Math.cos(-Math.PI / 9);
+                    const sin20 = Math.sin(-Math.PI / 9);
+                    const temp = x;
+                    x = cos20 * x + sin20 * y;
+                    y = -sin20 * temp + cos20 * y;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(cx + x * scale * 0.7, cy - y * scale * 0.7, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy);
+            ctx.lineTo(width, cy);
+            ctx.stroke();
+        }
+
+        // Low-rank approximation demo
+        function updateRankApprox() {
+            const k = parseInt(document.getElementById('rankSlider').value);
+            document.getElementById('rankValue').textContent = k;
+            
+            const canvas = document.getElementById('approxCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Simulate singular values (exponentially decaying)
+            const n = 20;
+            const singularValues = [];
+            for (let i = 0; i < n; i++) {
+                singularValues.push(Math.exp(-i * 0.3) * 100);
+            }
+            
+            const maxSV = singularValues[0];
+            const barWidth = (width - 40) / n;
+            
+            // Draw bars
+            for (let i = 0; i < n; i++) {
+                const barHeight = (singularValues[i] / maxSV) * (height - 40);
+                const x = 20 + i * barWidth;
+                const y = height - 20 - barHeight;
+                
+                ctx.fillStyle = i < k ? '#0b2fa0' : '#e0e0e0';
+                ctx.fillRect(x, y, barWidth - 2, barHeight);
+            }
+            
+            // Draw cutoff line
+            if (k < n) {
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                const cutoffX = 20 + k * barWidth - 1;
+                ctx.beginPath();
+                ctx.moveTo(cutoffX, 10);
+                ctx.lineTo(cutoffX, height - 10);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            // Calculate compression ratio and energy
+            const totalEnergy = singularValues.reduce((a, b) => a + b * b, 0);
+            const keptEnergy = singularValues.slice(0, k).reduce((a, b) => a + b * b, 0);
+            const energyRatio = (keptEnergy / totalEnergy * 100).toFixed(1);
+            
+            // Assume original is 100x100, approximation stores k*(100+100+1)
+            const originalStorage = 100 * 100;
+            const approxStorage = k * (100 + 100 + 1);
+            const compressionRatio = (originalStorage / approxStorage).toFixed(1);
+            
+            document.getElementById('compressionRatio').textContent = `${compressionRatio}× (keeping ${k}/${n} components)`;
+            document.getElementById('energyRetained').textContent = `${energyRatio}%`;
+        }
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Linear Algebra Practice Hub | Quanskill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --quanskill-blue: #0b2fa0;
+            --quanskill-blue-dark: #081f6b;
+            --quanskill-blue-light: #1a4fd0;
+            --quanskill-orange: #ff9000;
+            --quanskill-orange-dark: #e68200;
+            --quanskill-orange-light: #ffab33;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --bg-primary: #fafbff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e8eaf6;
+            --code-bg: #f5f7ff;
+            --success: #10b981;
+            --error: #ef4444;
+            --ml-accent: #7c3aed;
+            --gradient-blue: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            --gradient-orange: linear-gradient(135deg, #ff9000 0%, #ffab33 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(11, 47, 160, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--quanskill-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--quanskill-blue);
+        }
+
+        .chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .score-display {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 1rem;
+            margin: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-display .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .score-display .score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .nav-section { padding: 0.5rem 1.5rem; }
+
+        .nav-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+        }
+
+        .nav-link.active {
+            background: rgba(11, 47, 160, 0.1);
+            color: var(--quanskill-blue);
+            border-left-color: var(--quanskill-orange);
+            font-weight: 500;
+        }
+
+        .nav-link .difficulty-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .difficulty-medium { background: rgba(255, 144, 0, 0.2); color: var(--quanskill-orange-dark); }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 80px 2rem 4rem;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: var(--quanskill-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '🔍¢';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--quanskill-orange);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-quote {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--quanskill-orange);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-orange);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--quanskill-blue);
+            line-height: 1.3;
+        }
+
+        .case-study-box {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.03) 100%);
+            border-left: 4px solid var(--ml-accent);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .case-study-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ml-accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-study-box .label::before { content: '🐍Â¢'; }
+
+        .agentic-ai-box {
+            background: linear-gradient(135deg, rgba(11, 47, 160, 0.1) 0%, rgba(255, 144, 0, 0.1) 100%);
+            border: 2px solid var(--quanskill-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .agentic-ai-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-orange);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .agentic-ai-box .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--quanskill-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agentic-ai-box .label::before { content: '📝¤“'; }
+
+        .quiz-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            border-color: var(--quanskill-blue);
+            box-shadow: 0 8px 30px rgba(11, 47, 160, 0.1);
+        }
+
+        .quiz-container.answered-correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .quiz-container.answered-wrong {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .quiz-difficulty {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 10px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .quiz-context {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--quanskill-orange);
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .quiz-option {
+            padding: 0.85rem 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--quanskill-blue);
+            background: rgba(11, 47, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected { border-color: var(--quanskill-blue); background: rgba(11, 47, 160, 0.1); }
+        .quiz-option.correct { border-color: var(--success); background: rgba(16, 185, 129, 0.15); }
+        .quiz-option.incorrect { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+        .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(16, 185, 129, 0.1); color: var(--success); border-left: 3px solid var(--success); }
+        .quiz-feedback.incorrect { background: rgba(239, 68, 68, 0.1); color: var(--error); border-left: 3px solid var(--error); }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 2px solid var(--quanskill-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--quanskill-blue);
+            font-size: 1.1rem;
+        }
+
+        .demo-header::before { content: 'âš¡'; }
+
+        .demo-number {
+            background: var(--gradient-orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 10px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .control-group label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .control-group input[type="number"], .control-group select {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-group select {
+            width: 120px;
+        }
+
+        .demo-canvas {
+            width: 100%;
+            height: 280px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .demo-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            min-height: 60px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .matrix-input {
+            display: grid;
+            gap: 0.25rem;
+            margin: 0.5rem 0;
+        }
+
+        .matrix-input .row {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .matrix-input input {
+            width: 50px;
+            padding: 0.4rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+        }
+
+        .btn-orange {
+            background: var(--gradient-orange);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .progress-container {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .math-display {
+            overflow-x: auto;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--code-bg);
+            border-radius: 8px;
+        }
+
+        .katex-display { margin: 0.75rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--quanskill-blue);
+        }
+
+        .summary-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .summary-stat .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--quanskill-orange);
+        }
+
+        .summary-stat .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--quanskill-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; max-width: 100%; padding: 80px 1rem 3rem; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 1.25rem; }
+            .header-stats { display: none; }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+            .interactive-grid { grid-template-columns: 1fr; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 300px;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 800;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-orange);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li::marker { color: var(--quanskill-orange); }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(255, 144, 0, 0.2) 0%, rgba(255, 144, 0, 0.1) 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .topic-tag {
+            background: var(--code-bg);
+            color: var(--quanskill-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tab-container {
+            margin-bottom: 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--quanskill-blue);
+        }
+
+        .tab-btn.active {
+            background: var(--quanskill-blue);
+            color: white;
+            border-color: var(--quanskill-blue);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    
+        /* Floating Back to Main Button */
+        .floating-back-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #0b2fa0 0%, #1a4fd0 100%);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(11, 47, 160, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .floating-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 47, 160, 0.4);
+            background: linear-gradient(135deg, #ff9000 0%, #e68200 100%);
+        }
+        @media (max-width: 900px) {
+            .floating-back-btn {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Back to Main Page Button -->
+    <a href="index.html" class="floating-back-btn">← Main Page</a>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 40px; border-radius: 8px;"></a>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span>Score:</span>
+                    <span class="stat-value" id="headerScore">0/25</span>
+                </div>
+                <div class="stat-item">
+                    <span>Accuracy:</span>
+                    <span class="stat-value" id="headerAccuracy">0%</span>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">â˜°</button>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo"><img src="Logo_for_Print.jpg" alt="Quanskill" style="height: 36px; border-radius: 6px;"></a>
+            <div class="chapter-title">Chapter 2 Â· Linear Algebra Practice Hub</div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-value" id="sidebarScore">0/25</div>
+            <div class="score-label">Questions Correct</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#intro" class="nav-link active">🎯 Practice Hub Home</a>
+            <a href="#interactive" class="nav-link">âš¡ Interactive Labs (15)</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Easy (Questions 1-8)</div>
+            <a href="#q1" class="nav-link"><span>Q1: Vector Basics</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q2" class="nav-link"><span>Q2: Matrix Shape</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q3" class="nav-link"><span>Q3: Vector Addition</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q4" class="nav-link"><span>Q4: Scalar Multiplication</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q5" class="nav-link"><span>Q5: Identity Matrix</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q6" class="nav-link"><span>Q6: Transpose</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q7" class="nav-link"><span>Q7: Vector Space</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+            <a href="#q8" class="nav-link"><span>Q8: Matrix Entry</span><span class="difficulty-badge difficulty-easy">Easy</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Medium (Questions 9-17)</div>
+            <a href="#q9" class="nav-link"><span>Q9: Matrix Multiplication</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q10" class="nav-link"><span>Q10: Linear Independence</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q11" class="nav-link"><span>Q11: Inverse Matrix</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q12" class="nav-link"><span>Q12: Rank Concept</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q13" class="nav-link"><span>Q13: Span</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q14" class="nav-link"><span>Q14: Gaussian Elimination</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q15" class="nav-link"><span>Q15: Dot Product</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q16" class="nav-link"><span>Q16: Basis Vectors</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+            <a href="#q17" class="nav-link"><span>Q17: Determinant</span><span class="difficulty-badge difficulty-medium">Medium</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Hard (Questions 18-25)</div>
+            <a href="#q18" class="nav-link"><span>Q18: Eigenvalues</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q19" class="nav-link"><span>Q19: Linear Mapping</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q20" class="nav-link"><span>Q20: Null Space</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q21" class="nav-link"><span>Q21: Change of Basis</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q22" class="nav-link"><span>Q22: PCA Application</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q23" class="nav-link"><span>Q23: Neural Network</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q24" class="nav-link"><span>Q24: Recommender System</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+            <a href="#q25" class="nav-link"><span>Q25: Agentic AI</span><span class="difficulty-badge difficulty-hard">Hard</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Summary</div>
+            <a href="#summary" class="nav-link">📊 Your Results</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero" id="intro">
+            <div class="hero-content">
+                <span class="hero-badge">Practice Hub</span>
+                <h1>Linear Algebra Mastery Challenge</h1>
+                <p class="hero-subtitle">
+                    Test your understanding with 25 carefully crafted questions and 15 interactive labs ranging from fundamental concepts to advanced applications in Data Science and Agentic AI.
+                </p>
+                <div class="hero-quote">
+                    "Linear algebra is the foundation of modern AI. Master these concepts to unlock your potential in building intelligent systems."
+                    <br><small>- Quanskill Learning Path</small>
+                </div>
+                <div class="topic-tags">
+                    <span class="topic-tag">Vectors</span>
+                    <span class="topic-tag">Matrices</span>
+                    <span class="topic-tag">Linear Independence</span>
+                    <span class="topic-tag">Eigenvalues</span>
+                    <span class="topic-tag">Linear Mappings</span>
+                    <span class="topic-tag">Data Science</span>
+                    <span class="topic-tag">Agentic AI</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Lab Section -->
+        <section class="section" id="interactive">
+            <div class="section-header">
+                <span class="section-number">Lab</span>
+                <h2>15 Interactive Practice Labs</h2>
+            </div>
+
+            <p>Build intuition through hands-on exploration. Each lab lets you experiment with core linear algebra concepts essential for Data Science and Agentic AI.</p>
+
+            <div class="agentic-ai-box">
+                <span class="label">Quanskill Learning Path</span>
+                <p><strong>Why these labs matter:</strong> Every operation here forms the backbone of neural networks, transformer architectures, and autonomous AI agents. Master these to excel in our Agentic AI Bootcamp!</p>
+            </div>
+
+            <!-- Lab 1: Vector Operations -->
+            <div class="demo-container" id="lab1">
+                <div class="demo-header">
+                    <h4>Vector Operations Visualizer</h4>
+                    <span class="demo-number">Lab 1/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector A [aâ‚, aâ‚‚]</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="number" id="vecA1" value="3" step="0.5">
+                            <input type="number" id="vecA2" value="2" step="0.5">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Vector B [bâ‚, bâ‚‚]</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="number" id="vecB1" value="1" step="0.5">
+                            <input type="number" id="vecB2" value="4" step="0.5">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Scalar Î»</label>
+                        <input type="number" id="scalar" value="1.5" step="0.1">
+                    </div>
+                    <button class="btn btn-primary" onclick="updateVectorViz()">Update</button>
+                </div>
+                <canvas id="vectorCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="vectorOutput">Click "Update" to see vector operations...</div>
+            </div>
+
+            <!-- Lab 2: Matrix Multiplication -->
+            <div class="demo-container" id="lab2">
+                <div class="demo-header">
+                    <h4>Matrix Multiplication Calculator</h4>
+                    <span class="demo-number">Lab 2/15</span>
+                </div>
+                <div class="demo-controls" style="flex-direction: column;">
+                    <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+                        <div class="control-group">
+                            <label>Matrix A (2×2)</label>
+                            <div class="matrix-input">
+                                <div class="row">
+                                    <input type="number" id="matA00" value="2">
+                                    <input type="number" id="matA01" value="1">
+                                </div>
+                                <div class="row">
+                                    <input type="number" id="matA10" value="3">
+                                    <input type="number" id="matA11" value="4">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; font-size: 1.5rem; color: var(--quanskill-blue);">×</div>
+                        <div class="control-group">
+                            <label>Matrix B (2×2)</label>
+                            <div class="matrix-input">
+                                <div class="row">
+                                    <input type="number" id="matB00" value="1">
+                                    <input type="number" id="matB01" value="0">
+                                </div>
+                                <div class="row">
+                                    <input type="number" id="matB10" value="2">
+                                    <input type="number" id="matB11" value="1">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-orange" onclick="multiplyMatrices()">Calculate</button>
+                    </div>
+                </div>
+                <div class="demo-output" id="matrixOutput">Click "Calculate" to perform matrix multiplication...</div>
+            </div>
+
+            <!-- Lab 3: Transpose Visualizer -->
+            <div class="demo-container" id="lab3">
+                <div class="demo-header">
+                    <h4>Matrix Transpose Visualizer</h4>
+                    <span class="demo-number">Lab 3/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix (2×3)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="t00" value="1">
+                                <input type="number" id="t01" value="2">
+                                <input type="number" id="t02" value="3">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="t10" value="4">
+                                <input type="number" id="t11" value="5">
+                                <input type="number" id="t12" value="6">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="computeTranspose()">Transpose</button>
+                </div>
+                <div class="demo-output" id="transposeOutput">Click "Transpose" to see the result...</div>
+            </div>
+
+            <!-- Lab 4: Determinant Calculator -->
+            <div class="demo-container" id="lab4">
+                <div class="demo-header">
+                    <h4>Determinant & Invertibility Checker</h4>
+                    <span class="demo-number">Lab 4/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="d00" value="4">
+                                <input type="number" id="d01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="d10" value="1">
+                                <input type="number" id="d11" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="computeDeterminant()">Compute</button>
+                </div>
+                <div class="demo-output" id="detOutput">Click "Compute" to calculate determinant...</div>
+            </div>
+
+            <!-- Lab 5: Matrix Inverse -->
+            <div class="demo-container" id="lab5">
+                <div class="demo-header">
+                    <h4>Matrix Inverse Calculator</h4>
+                    <span class="demo-number">Lab 5/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="inv00" value="4">
+                                <input type="number" id="inv01" value="7">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="inv10" value="2">
+                                <input type="number" id="inv11" value="6">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="computeInverse()">Find Inverse</button>
+                </div>
+                <div class="demo-output" id="inverseOutput">Click "Find Inverse" to calculate...</div>
+            </div>
+
+            <!-- Lab 6: Dot Product & Angle -->
+            <div class="demo-container" id="lab6">
+                <div class="demo-header">
+                    <h4>Dot Product & Angle Calculator</h4>
+                    <span class="demo-number">Lab 6/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector U</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="dot_u1" value="1" style="width:50px">
+                            <input type="number" id="dot_u2" value="2" style="width:50px">
+                            <input type="number" id="dot_u3" value="3" style="width:50px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Vector V</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="dot_v1" value="4" style="width:50px">
+                            <input type="number" id="dot_v2" value="5" style="width:50px">
+                            <input type="number" id="dot_v3" value="6" style="width:50px">
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="computeDotProduct()">Calculate</button>
+                </div>
+                <div class="demo-output" id="dotOutput">Click "Calculate" for dot product & angle...</div>
+            </div>
+
+            <!-- Lab 7: Linear Independence Checker -->
+            <div class="demo-container" id="lab7">
+                <div class="demo-header">
+                    <h4>Linear Independence Checker</h4>
+                    <span class="demo-number">Lab 7/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector 1</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="li_v1_1" value="1" style="width:50px">
+                            <input type="number" id="li_v1_2" value="2" style="width:50px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Vector 2</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="li_v2_1" value="2" style="width:50px">
+                            <input type="number" id="li_v2_2" value="4" style="width:50px">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="checkLinearIndependence()">Check</button>
+                </div>
+                <div class="demo-output" id="liOutput">Click "Check" to test linear independence...</div>
+            </div>
+
+            <!-- Lab 8: Span Visualizer -->
+            <div class="demo-container" id="lab8">
+                <div class="demo-header">
+                    <h4>Span Visualizer (2D)</h4>
+                    <span class="demo-number">Lab 8/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector 1</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="span_v1_x" value="2" step="0.5" style="width:60px">
+                            <input type="number" id="span_v1_y" value="1" step="0.5" style="width:60px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Vector 2</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="span_v2_x" value="1" step="0.5" style="width:60px">
+                            <input type="number" id="span_v2_y" value="3" step="0.5" style="width:60px">
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="visualizeSpan()">Visualize</button>
+                </div>
+                <canvas id="spanCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="spanOutput">Click "Visualize" to see the span...</div>
+            </div>
+
+            <!-- Lab 9: Linear Transformation -->
+            <div class="demo-container" id="lab9">
+                <div class="demo-header">
+                    <h4>Linear Transformation Visualizer</h4>
+                    <span class="demo-number">Lab 9/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Transformation Matrix</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="lt00" value="2" step="0.1">
+                                <input type="number" id="lt01" value="0" step="0.1">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="lt10" value="0" step="0.1">
+                                <input type="number" id="lt11" value="1" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Preset</label>
+                        <select id="ltPreset" onchange="setLTPreset()">
+                            <option value="custom">Custom</option>
+                            <option value="scale">Scale (2x, 1x)</option>
+                            <option value="rotate">Rotate 45Â°</option>
+                            <option value="shear">Shear X</option>
+                            <option value="reflect">Reflect Y</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="applyTransformation()">Apply</button>
+                </div>
+                <canvas id="ltCanvas" class="demo-canvas"></canvas>
+                <div class="demo-output" id="ltOutput">Click "Apply" to see transformation...</div>
+            </div>
+
+            <!-- Lab 10: Gaussian Elimination -->
+            <div class="demo-container" id="lab10">
+                <div class="demo-header">
+                    <h4>Gaussian Elimination Step-by-Step</h4>
+                    <span class="demo-number">Lab 10/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Augmented Matrix [A|b]</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="ge00" value="2">
+                                <input type="number" id="ge01" value="1">
+                                <input type="number" id="ge02" value="5" style="border-left: 2px solid var(--quanskill-orange);">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="ge10" value="4">
+                                <input type="number" id="ge11" value="3">
+                                <input type="number" id="ge12" value="11" style="border-left: 2px solid var(--quanskill-orange);">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="gaussianElimination()">Solve</button>
+                </div>
+                <div class="demo-output" id="geOutput">Click "Solve" to see step-by-step solution...</div>
+            </div>
+
+            <!-- Lab 11: Rank Calculator -->
+            <div class="demo-container" id="lab11">
+                <div class="demo-header">
+                    <h4>Matrix Rank Calculator</h4>
+                    <span class="demo-number">Lab 11/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix (3×3)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="rk00" value="1">
+                                <input type="number" id="rk01" value="2">
+                                <input type="number" id="rk02" value="3">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="rk10" value="4">
+                                <input type="number" id="rk11" value="5">
+                                <input type="number" id="rk12" value="6">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="rk20" value="7">
+                                <input type="number" id="rk21" value="8">
+                                <input type="number" id="rk22" value="9">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="computeRank()">Compute Rank</button>
+                </div>
+                <div class="demo-output" id="rankOutput">Click "Compute Rank" to analyze...</div>
+            </div>
+
+            <!-- Lab 12: Eigenvalue Calculator -->
+            <div class="demo-container" id="lab12">
+                <div class="demo-header">
+                    <h4>Eigenvalue & Eigenvector Finder</h4>
+                    <span class="demo-number">Lab 12/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Matrix (2×2)</label>
+                        <div class="matrix-input">
+                            <div class="row">
+                                <input type="number" id="eig00" value="4">
+                                <input type="number" id="eig01" value="2">
+                            </div>
+                            <div class="row">
+                                <input type="number" id="eig10" value="1">
+                                <input type="number" id="eig11" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" onclick="computeEigen()">Find Eigenvalues</button>
+                </div>
+                <canvas id="eigenCanvas" class="demo-canvas" style="height:200px"></canvas>
+                <div class="demo-output" id="eigenOutput">Click to compute eigenvalues & eigenvectors...</div>
+            </div>
+
+            <!-- Lab 13: Basis Change -->
+            <div class="demo-container" id="lab13">
+                <div class="demo-header">
+                    <h4>Change of Basis Calculator</h4>
+                    <span class="demo-number">Lab 13/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Vector in Standard Basis</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="cob_v1" value="3" style="width:60px">
+                            <input type="number" id="cob_v2" value="4" style="width:60px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>New Basis bâ‚</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="cob_b1_1" value="1" style="width:60px">
+                            <input type="number" id="cob_b1_2" value="1" style="width:60px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>New Basis bâ‚‚</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="cob_b2_1" value="-1" style="width:60px">
+                            <input type="number" id="cob_b2_2" value="1" style="width:60px">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="changeOfBasis()">Transform</button>
+                </div>
+                <div class="demo-output" id="cobOutput">Click "Transform" to change basis...</div>
+            </div>
+
+            <!-- Lab 14: System of Equations Solver -->
+            <div class="demo-container" id="lab14">
+                <div class="demo-header">
+                    <h4>System of Linear Equations Solver</h4>
+                    <span class="demo-number">Lab 14/15</span>
+                </div>
+                <div class="demo-controls" style="flex-direction:column; gap:0.5rem;">
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size:0.9rem;">
+                        <span id="eq1_a1">2</span>x + <span id="eq1_a2">3</span>y = <span id="eq1_b">8</span><br>
+                        <span id="eq2_a1">1</span>x + <span id="eq2_a2">4</span>y = <span id="eq2_b">9</span>
+                    </div>
+                    <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:0.5rem;">
+                        <div class="control-group">
+                            <label>Equation 1</label>
+                            <div style="display:flex; gap:0.25rem;">
+                                <input type="number" id="sys_a1" value="2" style="width:50px" onchange="updateEqDisplay()">
+                                <input type="number" id="sys_b1" value="3" style="width:50px" onchange="updateEqDisplay()">
+                                <input type="number" id="sys_c1" value="8" style="width:50px" onchange="updateEqDisplay()">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>Equation 2</label>
+                            <div style="display:flex; gap:0.25rem;">
+                                <input type="number" id="sys_a2" value="1" style="width:50px" onchange="updateEqDisplay()">
+                                <input type="number" id="sys_b2" value="4" style="width:50px" onchange="updateEqDisplay()">
+                                <input type="number" id="sys_c2" value="9" style="width:50px" onchange="updateEqDisplay()">
+                            </div>
+                        </div>
+                        <button class="btn btn-orange" onclick="solveSystem()">Solve</button>
+                    </div>
+                </div>
+                <canvas id="sysCanvas" class="demo-canvas" style="height:220px"></canvas>
+                <div class="demo-output" id="sysOutput">Click "Solve" to find intersection...</div>
+            </div>
+
+            <!-- Lab 15: Neural Network Layer Simulator -->
+            <div class="demo-container" id="lab15">
+                <div class="demo-header">
+                    <h4>Neural Network Layer Simulator</h4>
+                    <span class="demo-number">Lab 15/15</span>
+                </div>
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Input Vector (3D)</label>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <input type="number" id="nn_x1" value="0.5" step="0.1" style="width:60px">
+                            <input type="number" id="nn_x2" value="0.8" step="0.1" style="width:60px">
+                            <input type="number" id="nn_x3" value="0.3" step="0.1" style="width:60px">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Activation</label>
+                        <select id="nn_activation">
+                            <option value="linear">Linear</option>
+                            <option value="relu">ReLU</option>
+                            <option value="sigmoid">Sigmoid</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="simulateNNLayer()">Forward Pass</button>
+                </div>
+                <div class="demo-output" id="nnOutput">Click "Forward Pass" to simulate neural layer...</div>
+            </div>
+
+        </section>
+
+        <!-- EASY QUESTIONS (1-8) -->
+        <section class="section" id="easy-section">
+            <div class="section-header">
+                <span class="section-number">Level 1</span>
+                <h2>Foundational Concepts (Easy)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: E-commerce Inventory System</span>
+                <p>You're building an inventory management system for <strong>ShopViet</strong>, a Vietnamese e-commerce platform. Products are represented as vectors containing [quantity, price, weight, rating]. Understanding vectors is crucial for this data representation.</p>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="quiz-container" id="q1">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 1</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>ShopViet Scenario:</strong> A product "Ã£o DÃ i Traditional" is represented as vector $\mathbf{p} = [50, 450000, 0.3, 4.8]$ representing [quantity, price (VND), weight (kg), rating].
+                </div>
+                <div class="quiz-question">
+                    What is the dimension of this product vector?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(1, 0)">A) 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 1)">B) 4</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 2)">C) 50</div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 3)">D) The sum of all elements</div>
+                </div>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-container" id="q2">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 2</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>ShopViet Scenario:</strong> The inventory system stores data for 1000 products, each with 4 attributes. This forms a matrix $\mathbf{X}$ where each row is a product.
+                </div>
+                <div class="quiz-question">
+                    What is the shape of matrix $\mathbf{X}$?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(2, 0)">A) 4 × 1000</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 1)">B) 1000 × 4</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 2)">C) 1000 × 1000</div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 3)">D) 4 × 4</div>
+                </div>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-container" id="q3">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 3</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Warehouse Merge:</strong> Two warehouses have inventory vectors: Hanoi $\mathbf{h} = [100, 50, 75]$ and HCMC $\mathbf{s} = [80, 120, 45]$ for 3 products.
+                </div>
+                <div class="quiz-question">
+                    After merging warehouses, what is the combined inventory vector $\mathbf{h} + \mathbf{s}$?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(3, 0)">A) [180, 170, 120]</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 1)">B) [20, -70, 30]</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 2)">C) [8000, 6000, 3375]</div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 3)">D) Cannot add vectors of different types</div>
+                </div>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="quiz-container" id="q4">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 4</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Flash Sale:</strong> During Táº¿t sale, all prices are scaled by factor 0.7 (30% off). Original price vector: $\mathbf{p} = [200000, 500000, 150000]$ VND.
+                </div>
+                <div class="quiz-question">
+                    What is the new price vector $0.7 \cdot \mathbf{p}$?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(4, 0)">A) [140000, 350000, 105000]</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 1)">B) [60000, 150000, 45000]</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 2)">C) [200000.7, 500000.7, 150000.7]</div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 3)">D) [285714, 714286, 214286]</div>
+                </div>
+                <div class="quiz-feedback" id="feedback4"></div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="quiz-container" id="q5">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 5</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Data Transformation:</strong> When transforming product features, multiplying by the identity matrix $\mathbf{I}$ keeps data unchanged.
+                </div>
+                <div class="quiz-question">
+                    What is the 3×3 identity matrix $\mathbf{I}_3$?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(5, 0)">A) A matrix with all 1s</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 1)">B) A matrix with 1s on the diagonal and 0s elsewhere</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 2)">C) A matrix with all 0s</div>
+                    <div class="quiz-option" onclick="checkAnswer(5, 3)">D) A 3×3 matrix with entries [1,2,3] repeated</div>
+                </div>
+                <div class="quiz-feedback" id="feedback5"></div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="quiz-container" id="q6">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 6</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Data Reshaping:</strong> Customer purchase matrix: $\mathbf{A} = \begin{bmatrix} 2 & 5 & 1 \\ 3 & 0 & 4 \end{bmatrix}$ (2 customers × 3 products)
+                </div>
+                <div class="quiz-question">
+                    What is the shape of transpose $\mathbf{A}^T$?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(6, 0)">A) 2 × 3 (unchanged)</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 1)">B) 3 × 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 2)">C) 6 × 1</div>
+                    <div class="quiz-option" onclick="checkAnswer(6, 3)">D) 1 × 6</div>
+                </div>
+                <div class="quiz-feedback" id="feedback6"></div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="quiz-container" id="q7">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 7</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>ML Theory:</strong> In machine learning, we work with vector spaces where vectors can be added and scaled.
+                </div>
+                <div class="quiz-question">
+                    Which of the following is NOT a valid vector according to vector space axioms?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(7, 0)">A) A list of pixel intensities in an image</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 1)">B) Audio signal samples</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 2)">C) A categorical variable like "red", "blue", "green"</div>
+                    <div class="quiz-option" onclick="checkAnswer(7, 3)">D) Polynomial coefficients</div>
+                </div>
+                <div class="quiz-feedback" id="feedback7"></div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="quiz-container" id="q8">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 8</span>
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Matrix Access:</strong> Rating matrix $\mathbf{R} = \begin{bmatrix} 4.5 & 3.0 & 5.0 \\ 2.5 & 4.0 & 3.5 \end{bmatrix}$ for 2 users × 3 products.
+                </div>
+                <div class="quiz-question">
+                    What is $R_{2,3}$ (row 2, column 3)?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(8, 0)">A) 5.0</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 1)">B) 2.5</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 2)">C) 3.5</div>
+                    <div class="quiz-option" onclick="checkAnswer(8, 3)">D) 4.0</div>
+                </div>
+                <div class="quiz-feedback" id="feedback8"></div>
+            </div>
+        </section>
+
+        <!-- MEDIUM QUESTIONS (9-17) -->
+        <section class="section" id="medium-section">
+            <div class="section-header">
+                <span class="section-number">Level 2</span>
+                <h2>Applied Concepts (Medium)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: AI-Powered Credit Scoring</span>
+                <p>You're developing a credit scoring model for <strong>VietFintech</strong>, a digital lending platform. Customer features are stored as matrices, and model predictions rely on matrix operations.</p>
+            </div>
+
+            <!-- Question 9-17 -->
+            <div class="quiz-container" id="q9">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 9</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Neural Layer:</strong> Input $\mathbf{X}$ (3×2) is multiplied by weight matrix $\mathbf{W}$ (2×4) in a neural network layer.
+                </div>
+                <div class="quiz-question">What is the shape of output $\mathbf{Y} = \mathbf{X} \cdot \mathbf{W}$?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(9, 0)">A) 3 × 4</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 1)">B) 2 × 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 2)">C) 3 × 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(9, 3)">D) Multiplication not possible</div>
+                </div>
+                <div class="quiz-feedback" id="feedback9"></div>
+            </div>
+
+            <div class="quiz-container" id="q10">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 10</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Feature Selection:</strong> VietFintech has 3 features: $\mathbf{f}_1 = [1, 2, 3]$, $\mathbf{f}_2 = [2, 4, 6]$, $\mathbf{f}_3 = [1, 0, 1]$
+                </div>
+                <div class="quiz-question">Which statement about linear independence is TRUE?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(10, 0)">A) All three features are linearly independent</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 1)">B) $\mathbf{f}_2$ is linearly dependent on $\mathbf{f}_1$ (fâ‚‚ = 2Â·fâ‚)</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 2)">C) $\mathbf{f}_3$ is linearly dependent on $\mathbf{f}_1$</div>
+                    <div class="quiz-option" onclick="checkAnswer(10, 3)">D) None are linearly dependent</div>
+                </div>
+                <div class="quiz-feedback" id="feedback10"></div>
+            </div>
+
+            <div class="quiz-container" id="q11">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 11</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>System Solving:</strong> To find model parameters, we solve $\mathbf{A}\mathbf{x} = \mathbf{b}$. If $\mathbf{A}$ is invertible, $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$.
+                </div>
+                <div class="quiz-question">A matrix $\mathbf{A}$ is invertible if and only if:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(11, 0)">A) It is square and has full rank</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 1)">B) It has more rows than columns</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 2)">C) All entries are positive</div>
+                    <div class="quiz-option" onclick="checkAnswer(11, 3)">D) It is symmetric</div>
+                </div>
+                <div class="quiz-feedback" id="feedback11"></div>
+            </div>
+
+            <div class="quiz-container" id="q12">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 12</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Data Quality:</strong> Feature matrix $\mathbf{X}$ (1000×5) has rank 3.
+                </div>
+                <div class="quiz-question">What does rank 3 imply for this 5-feature dataset?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(12, 0)">A) 2 features are redundant</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 1)">B) We need 3 more features</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 2)">C) The matrix has 3 rows</div>
+                    <div class="quiz-option" onclick="checkAnswer(12, 3)">D) All features are independent</div>
+                </div>
+                <div class="quiz-feedback" id="feedback12"></div>
+            </div>
+
+            <div class="quiz-container" id="q13">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 13</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Feature Space:</strong> Given vectors $\{[1, 2], [2, 4]\}$.
+                </div>
+                <div class="quiz-question">The span of these vectors is:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(13, 0)">A) All of $\mathbb{R}^2$</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 1)">B) A line through the origin</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 2)">C) A single point</div>
+                    <div class="quiz-option" onclick="checkAnswer(13, 3)">D) Two separate lines</div>
+                </div>
+                <div class="quiz-feedback" id="feedback13"></div>
+            </div>
+
+            <div class="quiz-container" id="q14">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 14</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Solving Systems:</strong> After Gaussian elimination, a row [0, 0, 0 | 5] appears.
+                </div>
+                <div class="quiz-question">This row means:</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(14, 0)">A) Infinitely many solutions</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 1)">B) No solution (inconsistent)</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 2)">C) Exactly one solution</div>
+                    <div class="quiz-option" onclick="checkAnswer(14, 3)">D) Need more rows</div>
+                </div>
+                <div class="quiz-feedback" id="feedback14"></div>
+            </div>
+
+            <div class="quiz-container" id="q15">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 15</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Similarity:</strong> Vectors $\mathbf{u} = [1, 2, 3]$ and $\mathbf{v} = [4, 5, 6]$.
+                </div>
+                <div class="quiz-question">What is $\mathbf{u}^T \mathbf{v}$ (dot product)?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(15, 0)">A) [4, 10, 18]</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 1)">B) 32</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 2)">C) [5, 7, 9]</div>
+                    <div class="quiz-option" onclick="checkAnswer(15, 3)">D) A 3×3 matrix</div>
+                </div>
+                <div class="quiz-feedback" id="feedback15"></div>
+            </div>
+
+            <div class="quiz-container" id="q16">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 16</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Dimensionality:</strong> A basis of $\mathbb{R}^3$ spans all of $\mathbb{R}^3$.
+                </div>
+                <div class="quiz-question">How many vectors are needed in a basis for $\mathbb{R}^3$?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(16, 0)">A) 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 1)">B) 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 2)">C) Any number greater than 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(16, 3)">D) 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback16"></div>
+            </div>
+
+            <div class="quiz-container" id="q17">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 17</span>
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Invertibility:</strong> Matrix $\mathbf{A} = \begin{bmatrix} 1 & 2 \\ 3 & 6 \end{bmatrix}$
+                </div>
+                <div class="quiz-question">What is det($\mathbf{A}$) and is $\mathbf{A}$ invertible?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(17, 0)">A) det = 0, NOT invertible</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 1)">B) det = 6, invertible</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 2)">C) det = -6, invertible</div>
+                    <div class="quiz-option" onclick="checkAnswer(17, 3)">D) det = 12, invertible</div>
+                </div>
+                <div class="quiz-feedback" id="feedback17"></div>
+            </div>
+        </section>
+
+        <!-- HARD QUESTIONS (18-25) -->
+        <section class="section" id="hard-section">
+            <div class="section-header">
+                <span class="section-number">Level 3</span>
+                <h2>Advanced Applications (Hard)</h2>
+            </div>
+
+            <div class="case-study-box">
+                <span class="label">Case Study: Autonomous Driving AI Agent</span>
+                <p>You're developing an <strong>Agentic AI system</strong> for autonomous vehicles at <strong>VinAI</strong>. The AI agent must process sensor data, make real-time decisions, and transform coordinate systems.</p>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Agentic AI Connection</span>
+                <p><strong>Why Agentic AI needs Linear Algebra:</strong></p>
+                <ul>
+                    <li><strong>Eigenvalues:</strong> Identify principal modes in environment data</li>
+                    <li><strong>Linear Mappings:</strong> Transform sensor readings between coordinates</li>
+                    <li><strong>Null Space:</strong> Identify redundant sensor information</li>
+                    <li><strong>Basis Change:</strong> Switch between robot and world coordinates</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="q18">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 18</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Sensor Covariance:</strong> Matrix $\mathbf{C} = \begin{bmatrix} 4 & 2 \\ 2 & 3 \end{bmatrix}$. If $\lambda_1 = 5$, find $\lambda_2$. (Hint: trace = sum of eigenvalues)
+                </div>
+                <div class="quiz-question">What is Î»â‚‚?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(18, 0)">A) Î»â‚‚ = 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 1)">B) Î»â‚‚ = 7</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 2)">C) Î»â‚‚ = 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(18, 3)">D) Î»â‚‚ = 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback18"></div>
+            </div>
+
+            <div class="quiz-container" id="q19">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 19</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Coordinate Transform:</strong> A linear mapping $\Phi: \mathbb{R}^3 \to \mathbb{R}^3$ transforms coordinates.
+                </div>
+                <div class="quiz-question">A linear mapping must satisfy which property?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(19, 0)">A) $\Phi(\mathbf{x} + \mathbf{y}) = \Phi(\mathbf{x}) + \Phi(\mathbf{y})$ and $\Phi(\lambda\mathbf{x}) = \lambda\Phi(\mathbf{x})$</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 1)">B) $\Phi(\mathbf{x}) > 0$ for all $\mathbf{x}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 2)">C) $\Phi(\mathbf{x}) = \mathbf{x}^2$</div>
+                    <div class="quiz-option" onclick="checkAnswer(19, 3)">D) $\Phi$ must be invertible</div>
+                </div>
+                <div class="quiz-feedback" id="feedback19"></div>
+            </div>
+
+            <div class="quiz-container" id="q20">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 20</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Null Space:</strong> Matrix $\mathbf{A}$ is 3×5 with rank 3. (Rank-Nullity: dim(domain) = rank + dim(kernel))
+                </div>
+                <div class="quiz-question">What is dim(ker($\mathbf{A}$))?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(20, 0)">A) 0</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 1)">B) 2</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 2)">C) 3</div>
+                    <div class="quiz-option" onclick="checkAnswer(20, 3)">D) 5</div>
+                </div>
+                <div class="quiz-feedback" id="feedback20"></div>
+            </div>
+
+            <div class="quiz-container" id="q21">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 21</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Basis Change:</strong> Transform from basis $B$ to $\tilde{B}$ using matrix $\mathbf{S}$.
+                </div>
+                <div class="quiz-question">If $\mathbf{A}_B$ is a transformation matrix w.r.t. $B$, what is the matrix w.r.t. $\tilde{B}$?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(21, 0)">A) $\mathbf{S}^{-1}\mathbf{A}_B\mathbf{S}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 1)">B) $\mathbf{S}\mathbf{A}_B\mathbf{S}^{-1}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 2)">C) $\mathbf{A}_B\mathbf{S}$</div>
+                    <div class="quiz-option" onclick="checkAnswer(21, 3)">D) $\mathbf{S}\mathbf{A}_B$</div>
+                </div>
+                <div class="quiz-feedback" id="feedback21"></div>
+            </div>
+
+            <div class="quiz-container" id="q22">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 22</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>PCA:</strong> Reducing 100D to 10D using PCA.
+                </div>
+                <div class="quiz-question">Which eigenvectors are kept in PCA?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(22, 0)">A) Those with largest eigenvalues</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 1)">B) Those with smallest eigenvalues</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 2)">C) Random eigenvectors</div>
+                    <div class="quiz-option" onclick="checkAnswer(22, 3)">D) Eigenvectors with eigenvalue = 1</div>
+                </div>
+                <div class="quiz-feedback" id="feedback22"></div>
+            </div>
+
+            <div class="quiz-container" id="q23">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 23</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Transformer:</strong> Input $\mathbf{X}$ is 512×768, weight $\mathbf{W}_Q$ is 768×64.
+                </div>
+                <div class="quiz-question">Shape of queries $\mathbf{Q} = \mathbf{X}\mathbf{W}_Q$?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(23, 0)">A) 512 × 64</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 1)">B) 768 × 768</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 2)">C) 512 × 768</div>
+                    <div class="quiz-option" onclick="checkAnswer(23, 3)">D) 64 × 512</div>
+                </div>
+                <div class="quiz-feedback" id="feedback23"></div>
+            </div>
+
+            <div class="quiz-container" id="q24">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 24</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Recommender:</strong> $\mathbf{R} \approx \mathbf{U}\mathbf{V}^T$ where $\mathbf{U}$ is 1M×50 and $\mathbf{V}$ is 10K×50.
+                </div>
+                <div class="quiz-question">What does the 50D latent space represent?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(24, 0)">A) Hidden features for preferences</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 1)">B) Number of ratings per user</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 2)">C) Exact ratings</div>
+                    <div class="quiz-option" onclick="checkAnswer(24, 3)">D) Error terms</div>
+                </div>
+                <div class="quiz-feedback" id="feedback24"></div>
+            </div>
+
+            <div class="quiz-container" id="q25">
+                <div class="quiz-header">
+                    <span class="quiz-number">Question 25</span>
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                </div>
+                <div class="quiz-context">
+                    <strong>Agentic AI:</strong> In MDPs, the principal eigenvector of transition matrix is important.
+                </div>
+                <div class="quiz-question">Why is the principal eigenvector important for AI agents?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(25, 0)">A) It's the stationary distribution</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 1)">B) Fastest path to goal</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 2)">C) Minimizes determinant</div>
+                    <div class="quiz-option" onclick="checkAnswer(25, 3)">D) Error checking only</div>
+                </div>
+                <div class="quiz-feedback" id="feedback25"></div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section class="section" id="summary">
+            <div class="section-header">
+                <span class="section-number">📊</span>
+                <h2>Your Practice Hub Results</h2>
+            </div>
+
+            <div class="summary-card">
+                <h3>📈 Performance Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="value" id="totalCorrect">0</div>
+                        <div class="label">Correct</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="value" id="totalAttempted">0</div>
+                        <div class="label">Attempted</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="value" id="accuracyPercent">0%</div>
+                        <div class="label">Accuracy</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="value" id="progressPercent">0%</div>
+                        <div class="label">Complete</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div class="summary-stat" style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--success);" id="easyScore">0/8</div>
+                    <div class="label" style="color: var(--success);">Easy Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(255, 144, 0, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--quanskill-orange);" id="mediumScore">0/9</div>
+                    <div class="label" style="color: var(--quanskill-orange);">Medium Level</div>
+                </div>
+                <div class="summary-stat" style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px;">
+                    <div class="value" style="color: var(--error);" id="hardScore">0/8</div>
+                    <div class="label" style="color: var(--error);">Hard Level</div>
+                </div>
+            </div>
+
+            <div class="agentic-ai-box">
+                <span class="label">Next Steps with Quanskill</span>
+                <p><strong>Continue Your Learning Journey:</strong></p>
+                <ul>
+                    <li><strong>Data Science Track:</strong> Apply these in our ML Bootcamp</li>
+                    <li><strong>Agentic AI Specialization:</strong> Master autonomous AI systems</li>
+                    <li><strong>Hands-on Projects:</strong> Build AI agents with NumPy & PyTorch</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600;">🎓 Join Quanskill's Agentic AI Bootcamp!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetQuiz()" style="margin-right: 1rem;">🔍„ Reset Quiz</button>
+                <button class="btn btn-orange" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">â¬† Back to Top</button>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Quiz Logic
+        const totalQuestions = 25;
+        const answers = {1:1,2:1,3:0,4:0,5:1,6:1,7:2,8:2,9:0,10:1,11:0,12:0,13:1,14:1,15:1,16:1,17:0,18:0,19:0,20:1,21:0,22:0,23:0,24:0,25:0};
+        const explanations = {
+            1: "The dimension of a vector is the number of elements: 4 elements here.",
+            2: "Rows = samples (1000), columns = features (4): shape 1000×4.",
+            3: "Vector addition is element-wise: [100+80, 50+120, 75+45] = [180, 170, 120].",
+            4: "Scalar multiplication: [0.7×200000, 0.7×500000, 0.7×150000].",
+            5: "Identity matrix has 1s on diagonal, 0s elsewhere.",
+            6: "Transpose swaps rows and columns: 2×3 becomes 3×2.",
+            7: "Categorical variables can't be added/scaled meaningfully.",
+            8: "Râ‚‚,â‚ƒ = element at row 2, column 3 = 3.5.",
+            9: "(3×2) × (2×4) = 3×4. Inner dimensions match.",
+            10: "fâ‚‚ = [2,4,6] = 2×[1,2,3] = 2Â·fâ‚, so linearly dependent.",
+            11: "Invertible iff square and full rank (det â‰  0).",
+            12: "Rank 3 with 5 columns means 2 are redundant.",
+            13: "[2,4] = 2×[1,2], same direction = line through origin.",
+            14: "[0,0,0|5] means 0=5, which is impossible.",
+            15: "Dot product: 1×4 + 2×5 + 3×6 = 32.",
+            16: "dim(â„Ã‚Â³) = 3, so exactly 3 basis vectors.",
+            17: "det = 1×6 - 2×3 = 0. Not invertible.",
+            18: "trace = 4+3 = 7 = Î»â‚+Î»â‚‚. If Î»â‚=5, then Î»â‚‚=2.",
+            19: "Linear = preserves addition and scalar multiplication.",
+            20: "Rank-Nullity: 5 = 3 + dim(ker), so dim(ker) = 2.",
+            21: "Basis change:  = Sâ»Â¹AS.",
+            22: "PCA keeps largest eigenvalue eigenvectors (most variance).",
+            23: "(512×768) × (768×64) = 512×64.",
+            24: "Latent space = hidden features explaining preferences.",
+            25: "Principal eigenvector = stationary distribution in MDPs."
+        };
+
+        let userAnswers = {}, correctCount = 0, attemptedCount = 0;
+        let easyCorrect = 0, mediumCorrect = 0, hardCorrect = 0;
+
+        function checkAnswer(q, sel) {
+            if (userAnswers[q] !== undefined) return;
+            userAnswers[q] = sel;
+            attemptedCount++;
+            const container = document.getElementById(`q${q}`);
+            const options = container.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${q}`);
+            const correct = answers[q];
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correct) opt.classList.add('correct');
+                else if (i === sel && sel !== correct) opt.classList.add('incorrect');
+            });
+            if (sel === correct) {
+                correctCount++;
+                container.classList.add('answered-correct');
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = `âœ… <strong>Correct!</strong> ${explanations[q]}`;
+                if (q <= 8) easyCorrect++;
+                else if (q <= 17) mediumCorrect++;
+                else hardCorrect++;
+            } else {
+                container.classList.add('answered-wrong');
+                feedback.className = 'quiz-feedback show incorrect';
+                feedback.innerHTML = `âŒ <strong>Incorrect.</strong> ${explanations[q]}`;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const acc = attemptedCount > 0 ? Math.round((correctCount/attemptedCount)*100) : 0;
+            const prog = Math.round((attemptedCount/totalQuestions)*100);
+            document.getElementById('headerScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('headerAccuracy').textContent = `${acc}%`;
+            document.getElementById('sidebarScore').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('scoreProgress').style.width = `${(correctCount/totalQuestions)*100}%`;
+            document.getElementById('progressFill').style.width = `${prog}%`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalAttempted').textContent = attemptedCount;
+            document.getElementById('accuracyPercent').textContent = `${acc}%`;
+            document.getElementById('progressPercent').textContent = `${prog}%`;
+            document.getElementById('easyScore').textContent = `${easyCorrect}/8`;
+            document.getElementById('mediumScore').textContent = `${mediumCorrect}/9`;
+            document.getElementById('hardScore').textContent = `${hardCorrect}/8`;
+        }
+
+        function resetQuiz() {
+            userAnswers = {}; correctCount = 0; attemptedCount = 0;
+            easyCorrect = 0; mediumCorrect = 0; hardCorrect = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const c = document.getElementById(`q${i}`);
+                c.classList.remove('answered-correct', 'answered-wrong');
+                c.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('disabled','correct','incorrect'));
+                document.getElementById(`feedback${i}`).className = 'quiz-feedback';
+            }
+            updateStats();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        // ========== LAB 1: Vector Operations ==========
+        const vectorCanvas = document.getElementById('vectorCanvas');
+        const vectorCtx = vectorCanvas.getContext('2d');
+
+        function updateVectorViz() {
+            const a1 = parseFloat(document.getElementById('vecA1').value)||0;
+            const a2 = parseFloat(document.getElementById('vecA2').value)||0;
+            const b1 = parseFloat(document.getElementById('vecB1').value)||0;
+            const b2 = parseFloat(document.getElementById('vecB2').value)||0;
+            const s = parseFloat(document.getElementById('scalar').value)||1;
+            const w = vectorCanvas.width = vectorCanvas.offsetWidth;
+            const h = vectorCanvas.height = vectorCanvas.offsetHeight;
+            const cx = w/2, cy = h/2, scale = 30;
+            vectorCtx.clearRect(0,0,w,h);
+            // Grid
+            vectorCtx.strokeStyle = '#e8eaf6'; vectorCtx.lineWidth = 1;
+            for(let x=0;x<w;x+=scale){vectorCtx.beginPath();vectorCtx.moveTo(x,0);vectorCtx.lineTo(x,h);vectorCtx.stroke();}
+            for(let y=0;y<h;y+=scale){vectorCtx.beginPath();vectorCtx.moveTo(0,y);vectorCtx.lineTo(w,y);vectorCtx.stroke();}
+            // Axes
+            vectorCtx.strokeStyle = '#94a3b8'; vectorCtx.lineWidth = 2;
+            vectorCtx.beginPath(); vectorCtx.moveTo(0,cy); vectorCtx.lineTo(w,cy); vectorCtx.moveTo(cx,0); vectorCtx.lineTo(cx,h); vectorCtx.stroke();
+            
+            function drawVec(x,y,col,lbl){
+                const ex=cx+x*scale, ey=cy-y*scale;
+                vectorCtx.strokeStyle=col; vectorCtx.lineWidth=3;
+                vectorCtx.beginPath(); vectorCtx.moveTo(cx,cy); vectorCtx.lineTo(ex,ey); vectorCtx.stroke();
+                const ang=Math.atan2(-y,x), arr=10;
+                vectorCtx.beginPath(); vectorCtx.moveTo(ex,ey);
+                vectorCtx.lineTo(ex-arr*Math.cos(ang-0.3),ey+arr*Math.sin(ang-0.3));
+                vectorCtx.moveTo(ex,ey);
+                vectorCtx.lineTo(ex-arr*Math.cos(ang+0.3),ey+arr*Math.sin(ang+0.3));
+                vectorCtx.stroke();
+                vectorCtx.fillStyle=col; vectorCtx.font='bold 12px Space Grotesk';
+                vectorCtx.fillText(lbl,ex+5,ey-5);
+            }
+            drawVec(a1,a2,'#0b2fa0','A');
+            drawVec(b1,b2,'#ff9000','B');
+            drawVec(a1+b1,a2+b2,'#10b981','A+B');
+            drawVec(s*a1,s*a2,'#7c3aed',`${s}A`);
+            const dot = a1*b1+a2*b2;
+            document.getElementById('vectorOutput').innerHTML = 
+`A = [${a1}, ${a2}]  |  B = [${b1}, ${b2}]
+A + B = [${a1+b1}, ${a2+b2}]
+${s}A = [${(s*a1).toFixed(2)}, ${(s*a2).toFixed(2)}]
+Dot Product AÂ·B = ${dot}`;
+        }
+
+        // ========== LAB 2: Matrix Multiplication ==========
+        function multiplyMatrices() {
+            const A = [[+document.getElementById('matA00').value,+document.getElementById('matA01').value],
+                       [+document.getElementById('matA10').value,+document.getElementById('matA11').value]];
+            const B = [[+document.getElementById('matB00').value,+document.getElementById('matB01').value],
+                       [+document.getElementById('matB10').value,+document.getElementById('matB11').value]];
+            const C = [[A[0][0]*B[0][0]+A[0][1]*B[1][0], A[0][0]*B[0][1]+A[0][1]*B[1][1]],
+                       [A[1][0]*B[0][0]+A[1][1]*B[1][0], A[1][0]*B[0][1]+A[1][1]*B[1][1]]];
+            document.getElementById('matrixOutput').innerHTML = 
+`Result C = A × B:
+"Ã…' ${C[0][0].toFixed(1)}  ${C[0][1].toFixed(1)} â”€
+â„“ ${C[1][0].toFixed(1)}  ${C[1][1].toFixed(1)} "Ã‹Å“
+det(A) = ${(A[0][0]*A[1][1]-A[0][1]*A[1][0]).toFixed(2)}`;
+        }
+
+        // ========== LAB 3: Transpose ==========
+        function computeTranspose() {
+            const M = [[+document.getElementById('t00').value,+document.getElementById('t01').value,+document.getElementById('t02').value],
+                       [+document.getElementById('t10').value,+document.getElementById('t11').value,+document.getElementById('t12').value]];
+            document.getElementById('transposeOutput').innerHTML = 
+`Original (2×3):          Transpose (3×2):
+"Ã…' ${M[0][0]} ${M[0][1]} ${M[0][2]} â”€        "Ã…' ${M[0][0]} ${M[1][0]} â”€
+â„“ ${M[1][0]} ${M[1][1]} ${M[1][2]} "Ã‹Å“        â”‚ ${M[0][1]} ${M[1][1]} â”‚
+                         â„“ ${M[0][2]} ${M[1][2]} "Ã‹Å“`;
+        }
+
+        // ========== LAB 4: Determinant ==========
+        function computeDeterminant() {
+            const a=+document.getElementById('d00').value, b=+document.getElementById('d01').value;
+            const c=+document.getElementById('d10').value, d=+document.getElementById('d11').value;
+            const det = a*d - b*c;
+            document.getElementById('detOutput').innerHTML = 
+`det(A) = (${a})(${d}) - (${b})(${c}) = ${a*d} - ${b*c} = ${det}
+Invertible: ${det !== 0 ? 'âœ… YES (det â‰  0)' : 'âŒ NO (det = 0)'}`;
+        }
+
+        // ========== LAB 5: Matrix Inverse ==========
+        function computeInverse() {
+            const a=+document.getElementById('inv00').value, b=+document.getElementById('inv01').value;
+            const c=+document.getElementById('inv10').value, d=+document.getElementById('inv11').value;
+            const det = a*d - b*c;
+            if (det === 0) {
+                document.getElementById('inverseOutput').innerHTML = `det = 0 ←’ Matrix is NOT invertible!`;
+                return;
+            }
+            const inv = [[d/det, -b/det], [-c/det, a/det]];
+            document.getElementById('inverseOutput').innerHTML = 
+`det(A) = ${det}
+Aâ»Â¹ = (1/${det}) × "Ã…' ${d}  ${-b} â”€
+                   â„“ ${-c}   ${a} "Ã‹Å“
+     = "Ã…' ${inv[0][0].toFixed(3)}  ${inv[0][1].toFixed(3)} â”€
+       â„“ ${inv[1][0].toFixed(3)}  ${inv[1][1].toFixed(3)} "Ã‹Å“`;
+        }
+
+        // ========== LAB 6: Dot Product ==========
+        function computeDotProduct() {
+            const u = [+document.getElementById('dot_u1').value,+document.getElementById('dot_u2').value,+document.getElementById('dot_u3').value];
+            const v = [+document.getElementById('dot_v1').value,+document.getElementById('dot_v2').value,+document.getElementById('dot_v3').value];
+            const dot = u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+            const magU = Math.sqrt(u[0]**2+u[1]**2+u[2]**2);
+            const magV = Math.sqrt(v[0]**2+v[1]**2+v[2]**2);
+            const cosTheta = dot/(magU*magV);
+            const angle = Math.acos(Math.max(-1,Math.min(1,cosTheta))) * 180/Math.PI;
+            document.getElementById('dotOutput').innerHTML = 
+`UÂ·V = ${u[0]}×${v[0]} + ${u[1]}×${v[1]} + ${u[2]}×${v[2]} = ${dot}
+|U| = ${magU.toFixed(3)}, |V| = ${magV.toFixed(3)}
+cos(Î¸) = ${cosTheta.toFixed(4)}
+Angle = ${angle.toFixed(1)}Â°
+${Math.abs(dot) < 0.001 ? 'âŠ¥ Vectors are ORTHOGONAL!' : ''}`;
+        }
+
+        // ========== LAB 7: Linear Independence ==========
+        function checkLinearIndependence() {
+            const v1 = [+document.getElementById('li_v1_1').value, +document.getElementById('li_v1_2').value];
+            const v2 = [+document.getElementById('li_v2_1').value, +document.getElementById('li_v2_2').value];
+            const det = v1[0]*v2[1] - v1[1]*v2[0];
+            const ratio1 = v2[0]/v1[0], ratio2 = v2[1]/v1[1];
+            const isDependent = Math.abs(det) < 0.0001;
+            document.getElementById('liOutput').innerHTML = 
+`Vâ‚ = [${v1[0]}, ${v1[1]}], Vâ‚‚ = [${v2[0]}, ${v2[1]}]
+det([Vâ‚|Vâ‚‚]) = ${v1[0]}×${v2[1]} - ${v1[1]}×${v2[0]} = ${det.toFixed(4)}
+
+Result: ${isDependent ? 
+    `âŒ LINEARLY DEPENDENT (det â‰ˆ 0)
+Vâ‚‚ = ${(v2[0]/v1[0]).toFixed(2)} × Vâ‚` : 
+    `âœ… LINEARLY INDEPENDENT (det â‰  0)
+Vectors span all of â„Ã‚Â²`}`;
+        }
+
+        // ========== LAB 8: Span Visualizer ==========
+        const spanCanvas = document.getElementById('spanCanvas');
+        const spanCtx = spanCanvas.getContext('2d');
+
+        function visualizeSpan() {
+            const v1x=+document.getElementById('span_v1_x').value, v1y=+document.getElementById('span_v1_y').value;
+            const v2x=+document.getElementById('span_v2_x').value, v2y=+document.getElementById('span_v2_y').value;
+            const w=spanCanvas.width=spanCanvas.offsetWidth, h=spanCanvas.height=spanCanvas.offsetHeight;
+            const cx=w/2, cy=h/2, scale=25;
+            spanCtx.clearRect(0,0,w,h);
+            // Grid
+            spanCtx.strokeStyle='#e8eaf6'; spanCtx.lineWidth=1;
+            for(let x=0;x<w;x+=scale){spanCtx.beginPath();spanCtx.moveTo(x,0);spanCtx.lineTo(x,h);spanCtx.stroke();}
+            for(let y=0;y<h;y+=scale){spanCtx.beginPath();spanCtx.moveTo(0,y);spanCtx.lineTo(w,y);spanCtx.stroke();}
+            spanCtx.strokeStyle='#94a3b8'; spanCtx.lineWidth=2;
+            spanCtx.beginPath(); spanCtx.moveTo(0,cy); spanCtx.lineTo(w,cy); spanCtx.moveTo(cx,0); spanCtx.lineTo(cx,h); spanCtx.stroke();
+            
+            const det = v1x*v2y - v1y*v2x;
+            const isLine = Math.abs(det) < 0.001;
+            
+            if (isLine) {
+                // Draw line through origin
+                spanCtx.strokeStyle = 'rgba(255,144,0,0.4)'; spanCtx.lineWidth = 3;
+                spanCtx.beginPath();
+                spanCtx.moveTo(cx - v1x*scale*10, cy + v1y*scale*10);
+                spanCtx.lineTo(cx + v1x*scale*10, cy - v1y*scale*10);
+                spanCtx.stroke();
+            } else {
+                // Fill entire plane with light color
+                spanCtx.fillStyle = 'rgba(11,47,160,0.1)';
+                spanCtx.fillRect(0, 0, w, h);
+            }
+            
+            // Draw vectors
+            function drawVec(x,y,col,lbl) {
+                const ex=cx+x*scale, ey=cy-y*scale;
+                spanCtx.strokeStyle=col; spanCtx.lineWidth=3;
+                spanCtx.beginPath(); spanCtx.moveTo(cx,cy); spanCtx.lineTo(ex,ey); spanCtx.stroke();
+                spanCtx.fillStyle=col; spanCtx.font='bold 12px Space Grotesk';
+                spanCtx.fillText(lbl,ex+5,ey-5);
+            }
+            drawVec(v1x, v1y, '#0b2fa0', 'Vâ‚');
+            drawVec(v2x, v2y, '#ff9000', 'Vâ‚‚');
+            
+            document.getElementById('spanOutput').innerHTML = 
+`det = ${det.toFixed(3)}
+Span = ${isLine ? '1D (a line through origin)' : '2D (entire â„Ã‚Â² plane)'}
+${isLine ? 'Vectors are parallel/collinear!' : 'Vectors are linearly independent!'}`;
+        }
+
+        // ========== LAB 9: Linear Transformation ==========
+        const ltCanvas = document.getElementById('ltCanvas');
+        const ltCtx = ltCanvas.getContext('2d');
+
+        function setLTPreset() {
+            const p = document.getElementById('ltPreset').value;
+            if (p === 'scale') { document.getElementById('lt00').value=2; document.getElementById('lt01').value=0; document.getElementById('lt10').value=0; document.getElementById('lt11').value=1; }
+            else if (p === 'rotate') { const c=0.707; document.getElementById('lt00').value=c; document.getElementById('lt01').value=-c; document.getElementById('lt10').value=c; document.getElementById('lt11').value=c; }
+            else if (p === 'shear') { document.getElementById('lt00').value=1; document.getElementById('lt01').value=1; document.getElementById('lt10').value=0; document.getElementById('lt11').value=1; }
+            else if (p === 'reflect') { document.getElementById('lt00').value=-1; document.getElementById('lt01').value=0; document.getElementById('lt10').value=0; document.getElementById('lt11').value=1; }
+        }
+
+        function applyTransformation() {
+            const a=+document.getElementById('lt00').value, b=+document.getElementById('lt01').value;
+            const c=+document.getElementById('lt10').value, d=+document.getElementById('lt11').value;
+            const w=ltCanvas.width=ltCanvas.offsetWidth, h=ltCanvas.height=ltCanvas.offsetHeight;
+            const cx=w/2, cy=h/2, scale=20;
+            ltCtx.clearRect(0,0,w,h);
+            // Axes
+            ltCtx.strokeStyle='#94a3b8'; ltCtx.lineWidth=1;
+            ltCtx.beginPath(); ltCtx.moveTo(0,cy); ltCtx.lineTo(w,cy); ltCtx.moveTo(cx,0); ltCtx.lineTo(cx,h); ltCtx.stroke();
+            
+            // Original grid (blue)
+            ltCtx.strokeStyle='rgba(11,47,160,0.3)'; ltCtx.lineWidth=1;
+            for (let i=-5; i<=5; i++) {
+                ltCtx.beginPath(); ltCtx.moveTo(cx+i*scale, cy-5*scale); ltCtx.lineTo(cx+i*scale, cy+5*scale); ltCtx.stroke();
+                ltCtx.beginPath(); ltCtx.moveTo(cx-5*scale, cy-i*scale); ltCtx.lineTo(cx+5*scale, cy-i*scale); ltCtx.stroke();
+            }
+            
+            // Transformed grid (orange)
+            ltCtx.strokeStyle='rgba(255,144,0,0.7)'; ltCtx.lineWidth=2;
+            for (let i=-5; i<=5; i++) {
+                ltCtx.beginPath();
+                for (let j=-5; j<=5; j++) {
+                    const tx = a*i + b*j, ty = c*i + d*j;
+                    if (j===-5) ltCtx.moveTo(cx+tx*scale, cy-ty*scale);
+                    else ltCtx.lineTo(cx+tx*scale, cy-ty*scale);
+                }
+                ltCtx.stroke();
+            }
+            for (let j=-5; j<=5; j++) {
+                ltCtx.beginPath();
+                for (let i=-5; i<=5; i++) {
+                    const tx = a*i + b*j, ty = c*i + d*j;
+                    if (i===-5) ltCtx.moveTo(cx+tx*scale, cy-ty*scale);
+                    else ltCtx.lineTo(cx+tx*scale, cy-ty*scale);
+                }
+                ltCtx.stroke();
+            }
+            
+            const det = a*d - b*c;
+            document.getElementById('ltOutput').innerHTML = 
+`Transformation Matrix:
+"Ã…' ${a.toFixed(2)}  ${b.toFixed(2)} â”€
+â„“ ${c.toFixed(2)}  ${d.toFixed(2)} "Ã‹Å“
+det = ${det.toFixed(3)} ←’ ${det > 0 ? 'Preserves orientation' : det < 0 ? 'Flips orientation' : 'Collapses to line/point'}
+${Math.abs(det).toFixed(2)}x area scaling`;
+        }
+
+        // ========== LAB 10: Gaussian Elimination ==========
+        function gaussianElimination() {
+            let a1=+document.getElementById('ge00').value, b1=+document.getElementById('ge01').value, c1=+document.getElementById('ge02').value;
+            let a2=+document.getElementById('ge10').value, b2=+document.getElementById('ge11').value, c2=+document.getElementById('ge12').value;
+            let steps = `Step 0: Original system\n${a1}x + ${b1}y = ${c1}\n${a2}x + ${b2}y = ${c2}\n\n`;
+            
+            if (a1 === 0) {
+                [a1,b1,c1,a2,b2,c2] = [a2,b2,c2,a1,b1,c1];
+                steps += `Swap rows\n\n`;
+            }
+            
+            const factor = a2/a1;
+            const newB2 = b2 - factor*b1;
+            const newC2 = c2 - factor*c1;
+            steps += `Step 1: R2 = R2 - (${factor.toFixed(2)})R1\n`;
+            steps += `${a1}x + ${b1}y = ${c1}\n0x + ${newB2.toFixed(2)}y = ${newC2.toFixed(2)}\n\n`;
+            
+            if (Math.abs(newB2) < 0.0001) {
+                steps += Math.abs(newC2) < 0.0001 ? `Infinitely many solutions!` : `No solution! (0 = ${newC2.toFixed(2)})`;
+            } else {
+                const y = newC2/newB2;
+                const x = (c1 - b1*y)/a1;
+                steps += `Step 2: Back substitution\ny = ${y.toFixed(3)}\nx = ${x.toFixed(3)}\n\nâœ… Solution: x = ${x.toFixed(3)}, y = ${y.toFixed(3)}`;
+            }
+            document.getElementById('geOutput').innerHTML = steps;
+        }
+
+        // ========== LAB 11: Rank Calculator ==========
+        function computeRank() {
+            const M = [
+                [+document.getElementById('rk00').value, +document.getElementById('rk01').value, +document.getElementById('rk02').value],
+                [+document.getElementById('rk10').value, +document.getElementById('rk11').value, +document.getElementById('rk12').value],
+                [+document.getElementById('rk20').value, +document.getElementById('rk21').value, +document.getElementById('rk22').value]
+            ];
+            // Simple rank estimation via row reduction
+            let A = M.map(r => [...r]);
+            let rank = 0;
+            for (let col = 0; col < 3 && rank < 3; col++) {
+                let pivot = -1;
+                for (let row = rank; row < 3; row++) {
+                    if (Math.abs(A[row][col]) > 0.0001) { pivot = row; break; }
+                }
+                if (pivot === -1) continue;
+                [A[rank], A[pivot]] = [A[pivot], A[rank]];
+                for (let row = rank + 1; row < 3; row++) {
+                    const f = A[row][col] / A[rank][col];
+                    for (let c = col; c < 3; c++) A[row][c] -= f * A[rank][c];
+                }
+                rank++;
+            }
+            document.getElementById('rankOutput').innerHTML = 
+`Rank = ${rank}
+Null space dimension = ${3 - rank}
+${rank === 3 ? 'âœ… Full rank - Matrix is invertible!' : 'Ã…Â¡Ã‚Â  Rank deficient - Columns are linearly dependent'}`;
+        }
+
+        // ========== LAB 12: Eigenvalues ==========
+        const eigenCanvas = document.getElementById('eigenCanvas');
+        const eigenCtx = eigenCanvas.getContext('2d');
+
+        function computeEigen() {
+            const a=+document.getElementById('eig00').value, b=+document.getElementById('eig01').value;
+            const c=+document.getElementById('eig10').value, d=+document.getElementById('eig11').value;
+            const trace = a + d;
+            const det = a*d - b*c;
+            const disc = trace*trace - 4*det;
+            
+            let output = `Characteristic equation: Î»Â² - ${trace}Î» + ${det} = 0\n`;
+            output += `Discriminant = ${disc.toFixed(3)}\n\n`;
+            
+            if (disc >= 0) {
+                const l1 = (trace + Math.sqrt(disc))/2;
+                const l2 = (trace - Math.sqrt(disc))/2;
+                output += `Î»â‚ = ${l1.toFixed(3)}, Î»â‚‚ = ${l2.toFixed(3)}\n`;
+                
+                // Draw eigenvectors
+                const w=eigenCanvas.width=eigenCanvas.offsetWidth, h=eigenCanvas.height=eigenCanvas.offsetHeight;
+                const cx=w/2, cy=h/2, scale=30;
+                eigenCtx.clearRect(0,0,w,h);
+                eigenCtx.strokeStyle='#94a3b8'; eigenCtx.lineWidth=1;
+                eigenCtx.beginPath(); eigenCtx.moveTo(0,cy); eigenCtx.lineTo(w,cy); eigenCtx.moveTo(cx,0); eigenCtx.lineTo(cx,h); eigenCtx.stroke();
+                
+                // Compute eigenvector for l1
+                let v1x, v1y;
+                if (Math.abs(b) > 0.0001) { v1x = b; v1y = l1 - a; }
+                else if (Math.abs(c) > 0.0001) { v1x = l1 - d; v1y = c; }
+                else { v1x = 1; v1y = 0; }
+                const mag = Math.sqrt(v1x*v1x + v1y*v1y);
+                v1x /= mag; v1y /= mag;
+                
+                eigenCtx.strokeStyle = '#ff9000'; eigenCtx.lineWidth = 3;
+                eigenCtx.beginPath();
+                eigenCtx.moveTo(cx - v1x*scale*3, cy + v1y*scale*3);
+                eigenCtx.lineTo(cx + v1x*scale*3, cy - v1y*scale*3);
+                eigenCtx.stroke();
+                eigenCtx.fillStyle = '#ff9000';
+                eigenCtx.fillText('Î»â‚=' + l1.toFixed(1), cx + v1x*scale*3 + 5, cy - v1y*scale*3);
+                
+                output += `Eigenvector for Î»â‚: [${v1x.toFixed(3)}, ${v1y.toFixed(3)}]`;
+            } else {
+                output += `Complex eigenvalues (no real eigenvectors)`;
+            }
+            
+            document.getElementById('eigenOutput').innerHTML = output;
+        }
+
+        // ========== LAB 13: Change of Basis ==========
+        function changeOfBasis() {
+            const v = [+document.getElementById('cob_v1').value, +document.getElementById('cob_v2').value];
+            const b1 = [+document.getElementById('cob_b1_1').value, +document.getElementById('cob_b1_2').value];
+            const b2 = [+document.getElementById('cob_b2_1').value, +document.getElementById('cob_b2_2').value];
+            
+            const det = b1[0]*b2[1] - b1[1]*b2[0];
+            if (Math.abs(det) < 0.0001) {
+                document.getElementById('cobOutput').innerHTML = 'âŒ Error: New basis vectors are not linearly independent!';
+                return;
+            }
+            
+            // S = [b1 | b2], solve S * coords = v
+            const c1 = (v[0]*b2[1] - v[1]*b2[0]) / det;
+            const c2 = (b1[0]*v[1] - b1[1]*v[0]) / det;
+            
+            document.getElementById('cobOutput').innerHTML = 
+`Standard basis: v = [${v[0]}, ${v[1]}]
+
+New basis B = {bâ‚, bâ‚‚}:
+bâ‚ = [${b1[0]}, ${b1[1]}]
+bâ‚‚ = [${b2[0]}, ${b2[1]}]
+
+Change of basis matrix S:
+"Ã…' ${b1[0]}  ${b2[0]} â”€
+â„“ ${b1[1]}  ${b2[1]} "Ã‹Å“
+
+Coordinates in new basis:
+[v]_B = [${c1.toFixed(3)}, ${c2.toFixed(3)}]
+
+Verification: ${c1.toFixed(2)}Â·bâ‚ + ${c2.toFixed(2)}Â·bâ‚‚ = [${(c1*b1[0]+c2*b2[0]).toFixed(2)}, ${(c1*b1[1]+c2*b2[1]).toFixed(2)}] âœ“`;
+        }
+
+        // ========== LAB 14: System Solver ==========
+        const sysCanvas = document.getElementById('sysCanvas');
+        const sysCtx = sysCanvas.getContext('2d');
+
+        function updateEqDisplay() {
+            document.getElementById('eq1_a1').textContent = document.getElementById('sys_a1').value;
+            document.getElementById('eq1_a2').textContent = document.getElementById('sys_b1').value;
+            document.getElementById('eq1_b').textContent = document.getElementById('sys_c1').value;
+            document.getElementById('eq2_a1').textContent = document.getElementById('sys_a2').value;
+            document.getElementById('eq2_a2').textContent = document.getElementById('sys_b2').value;
+            document.getElementById('eq2_b').textContent = document.getElementById('sys_c2').value;
+        }
+
+        function solveSystem() {
+            const a1=+document.getElementById('sys_a1').value, b1=+document.getElementById('sys_b1').value, c1=+document.getElementById('sys_c1').value;
+            const a2=+document.getElementById('sys_a2').value, b2=+document.getElementById('sys_b2').value, c2=+document.getElementById('sys_c2').value;
+            
+            const w=sysCanvas.width=sysCanvas.offsetWidth, h=sysCanvas.height=sysCanvas.offsetHeight;
+            const cx=w/2, cy=h/2, scale=20;
+            sysCtx.clearRect(0,0,w,h);
+            
+            // Draw grid
+            sysCtx.strokeStyle='#e8eaf6'; sysCtx.lineWidth=1;
+            for(let i=-10;i<=10;i++){
+                sysCtx.beginPath(); sysCtx.moveTo(cx+i*scale,0); sysCtx.lineTo(cx+i*scale,h); sysCtx.stroke();
+                sysCtx.beginPath(); sysCtx.moveTo(0,cy+i*scale); sysCtx.lineTo(w,cy+i*scale); sysCtx.stroke();
+            }
+            sysCtx.strokeStyle='#94a3b8'; sysCtx.lineWidth=2;
+            sysCtx.beginPath(); sysCtx.moveTo(0,cy); sysCtx.lineTo(w,cy); sysCtx.moveTo(cx,0); sysCtx.lineTo(cx,h); sysCtx.stroke();
+            
+            // Draw lines
+            function drawLine(a, b, c, color) {
+                sysCtx.strokeStyle = color; sysCtx.lineWidth = 2;
+                sysCtx.beginPath();
+                if (Math.abs(b) > 0.0001) {
+                    const y0 = (c - a*(-10))/b, y1 = (c - a*10)/b;
+                    sysCtx.moveTo(cx - 10*scale, cy - y0*scale);
+                    sysCtx.lineTo(cx + 10*scale, cy - y1*scale);
+                } else if (Math.abs(a) > 0.0001) {
+                    const x = c/a;
+                    sysCtx.moveTo(cx + x*scale, 0);
+                    sysCtx.lineTo(cx + x*scale, h);
+                }
+                sysCtx.stroke();
+            }
+            
+            drawLine(a1, b1, c1, '#0b2fa0');
+            drawLine(a2, b2, c2, '#ff9000');
+            
+            const det = a1*b2 - a2*b1;
+            let output = `Equation 1 (blue): ${a1}x + ${b1}y = ${c1}\n`;
+            output += `Equation 2 (orange): ${a2}x + ${b2}y = ${c2}\n\n`;
+            
+            if (Math.abs(det) < 0.0001) {
+                output += `det = 0 ←’ Lines are parallel\n${Math.abs(a1*c2-a2*c1) < 0.0001 ? 'Infinitely many solutions (same line)' : 'No solution (parallel lines)'}`;
+            } else {
+                const x = (c1*b2 - c2*b1)/det;
+                const y = (a1*c2 - a2*c1)/det;
+                output += `Solution: x = ${x.toFixed(3)}, y = ${y.toFixed(3)}`;
+                
+                // Draw intersection point
+                sysCtx.fillStyle = '#10b981';
+                sysCtx.beginPath();
+                sysCtx.arc(cx + x*scale, cy - y*scale, 6, 0, Math.PI*2);
+                sysCtx.fill();
+                sysCtx.fillStyle = '#10b981';
+                sysCtx.font = 'bold 12px Space Grotesk';
+                sysCtx.fillText(`(${x.toFixed(1)}, ${y.toFixed(1)})`, cx + x*scale + 10, cy - y*scale - 10);
+            }
+            
+            document.getElementById('sysOutput').innerHTML = output;
+        }
+
+        // ========== LAB 15: Neural Network Layer ==========
+        function simulateNNLayer() {
+            const x = [+document.getElementById('nn_x1').value, +document.getElementById('nn_x2').value, +document.getElementById('nn_x3').value];
+            const activation = document.getElementById('nn_activation').value;
+            
+            // Random weight matrix 3x2 (for demo)
+            const W = [[0.5, -0.3], [0.2, 0.8], [-0.4, 0.6]];
+            const b = [0.1, -0.2];
+            
+            // Forward pass: z = Wx + b
+            const z = [
+                W[0][0]*x[0] + W[1][0]*x[1] + W[2][0]*x[2] + b[0],
+                W[0][1]*x[0] + W[1][1]*x[1] + W[2][1]*x[2] + b[1]
+            ];
+            
+            // Activation
+            let a;
+            if (activation === 'relu') {
+                a = z.map(v => Math.max(0, v));
+            } else if (activation === 'sigmoid') {
+                a = z.map(v => 1/(1 + Math.exp(-v)));
+            } else {
+                a = z;
+            }
+            
+            document.getElementById('nnOutput').innerHTML = 
+`Input (3D): x = [${x.map(v=>v.toFixed(2)).join(', ')}]
+
+Weight Matrix W (3×2):
+"Ã…' ${W[0][0].toFixed(1)}  ${W[0][1].toFixed(1)} â”€
+â”‚ ${W[1][0].toFixed(1)}  ${W[1][1].toFixed(1)} â”‚
+â„“ ${W[2][0].toFixed(1)}  ${W[2][1].toFixed(1)} "Ã‹Å“
+
+Bias: b = [${b.map(v=>v.toFixed(1)).join(', ')}]
+
+Linear: z = Wáµ€x + b = [${z.map(v=>v.toFixed(3)).join(', ')}]
+
+Activation (${activation}): a = [${a.map(v=>v.toFixed(3)).join(', ')}]
+
+Output dimension: 2 (from 3D input ←’ 2D output)`;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            updateVectorViz();
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '\\(', right: '\\)', display: false}
+                ]
+            });
+        });
+        window.addEventListener('resize', () => { updateVectorViz(); });
+    </script>
+</body>
+</html>
